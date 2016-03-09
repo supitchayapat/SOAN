@@ -2,6 +2,8 @@ import QtQuick 2.4
 import Material 0.2
 import "define_values.js" as Defines_values
 import Material.ListItems 0.1 as ListItem
+
+
 Page {
     FontLoader { id: fixedFont; name: "Roboto" }
     visible: true
@@ -39,7 +41,7 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Units.dp(30)
             TextField {
-                id: oldPassword
+                id: newPassword
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:changepassword.width - changepassword.width/5
                 font.pixelSize: Units.dp( Defines_values.text_font)
@@ -49,7 +51,7 @@ Page {
                 helperText: ""
             }
             TextField {
-                id: newPassword1
+                id: newPasswordConfirmation
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:changepassword.width - changepassword.width/5
                 font.pixelSize: Units.dp( Defines_values.text_font)
