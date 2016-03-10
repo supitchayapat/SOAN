@@ -2,12 +2,22 @@ import QtQuick 2.4
 import Material 0.2
 import "define_values.js" as Margin_values
 import "../qml"
+
 TabbedPage {
     id: page
     title: "Ambulance App"
     property var sectionTitles: [ "Contact", "Adresse", "Login" ]
+    property string emailAdressString: "Contact@ahmed-arif.com"
+    property string accountNameString: "Alliance"
     backAction: navDrawer.action
-    NavigationDrawer {id:navDrawer;Navdrawer{anchors.fill: parent}}
+    NavigationDrawer {
+        id:navDrawer;
+        Navdrawer{
+            anchors.fill: parent
+            email: emailAdressString
+            accountName:accountNameString
+        }
+    }
     Tab {
         title: sectionTitles[0]
         sourceComponent: contact
@@ -139,7 +149,6 @@ TabbedPage {
             id: addContent
             onTriggered:
             {
-
                 snackbar.open("Envoyer!")
             }
         }

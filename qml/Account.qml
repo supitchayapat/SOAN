@@ -7,7 +7,6 @@ import Material.ListItems 0.1 as ListItem
 Page {
     FontLoader { id: fixedFont; name: "Roboto" }
     visible: true
-    width: 300
     anchors.fill: parent
     Dialog {
         id: confirmed
@@ -95,7 +94,7 @@ Page {
         title: ""
         backAction: navDrawer.action
         NavigationDrawer {id:navDrawer;Navdrawer{anchors.fill: parent}}
-
+        anchors.fill: parent
         actions: [
             Action {
                 iconName: "image/edit"
@@ -111,11 +110,12 @@ Page {
         ]
         Column {
             id: column1
-            anchors.fill: parent
+            //anchors.fill: parent
             anchors.leftMargin: Units.dp(parent.width/30)
             anchors.rightMargin: Units.dp(parent.width/30)
             spacing: Units.dp(Defines_values.horizontalspacing)
             anchors{
+                right: parent.right
                 top:parent.top
                 topMargin: Units.dp(50)
                 left:parent.left

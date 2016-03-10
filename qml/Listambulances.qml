@@ -5,7 +5,6 @@ import Material.ListItems 0.1 as ListItem
 TabbedPage {
     id: page
     title: "Liste d'Ambulances"
-
     actionBar.backgroundColor: Palette.colors.grey['200']
     actionBar.decorationColor: Palette.colors.grey['300']
     property var amb_liste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]

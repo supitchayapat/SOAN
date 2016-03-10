@@ -1,6 +1,5 @@
 import QtQuick 2.4
 import Material 0.2
-
 import "define_values.js" as Margin_values
 
 ApplicationWindow {
@@ -8,7 +7,6 @@ ApplicationWindow {
     visible: true
     id: ambulance
     width: 300
-    //height: 400
     theme {
         primaryColor: "blue"
         accentColor: "blue"
@@ -90,8 +88,10 @@ ApplicationWindow {
                 elevation: 1
                 activeFocusOnPress: true
                 backgroundColor: Theme.primaryColor
-                onClicked: alertWithTitleBar.show()
                 width: parent.width
+                onClicked:{
+                    pageStack.push(Qt.resolvedUrl("oldsignup.qml"))
+                }
             }
             Button {
                 text: "Creer un compte"
@@ -99,7 +99,7 @@ ApplicationWindow {
                 activeFocusOnPress: true
                 backgroundColor: Theme.primaryColor
                 onClicked:{
-                    pageStack.push(Qt.resolvedUrl("Signup.qml"))
+                    pageStack.push(Qt.resolvedUrl("SignupMain.qml"))
                 }
                 width: parent.width
 
