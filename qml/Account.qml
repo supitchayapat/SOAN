@@ -1,13 +1,10 @@
 import QtQuick 2.4
 import Material 0.2
 import "define_values.js" as Defines_values
-import Material.ListItems 0.1 as ListItem
-
-
 Page {
+    id: page
     FontLoader { id: fixedFont; name: "Roboto" }
-    visible: true
-    anchors.fill: parent
+    title: ""
     Dialog {
         id: confirmed
         width: parent.width - parent.width/6
@@ -70,159 +67,137 @@ Page {
                 helperText: ""
             }
         }
-
         onAccepted: {
             dialogSnackBar.open("You entered: %1".arg(newPassword2.text))
             confirmed.show()
         }
-
         positiveButtonText: "Valider"
         negativeButtonText: "Annuler"
     }
-    Switch {
-            anchors{
-                right: parent.right
-                rightMargin: Units.dp(10)
-                top: parent.top
-                topMargin: Units.dp(13)
-            }
+    backAction: navDrawer.action
+    property string emailAdressString: "Contact@ahmed-arif.com"
+    property string accountNameString: "Alliance"
+    NavigationDrawer {
+        id:navDrawer;
+        Navdrawer{
+            anchors.fill: parent
+            email: emailAdressString
+            accountName:accountNameString
         }
+    }    anchors.fill: parent
+   // width: parent
+    Column {
+        id: column1
+        spacing: Units.dp(Defines_values.horizontalspacing)
 
+        anchors{
+            top:parent.top
+            topMargin: Units.dp(Defines_values.top_margin)
+            horizontalCenter: parent.horizontalCenter
+        }
+        width: parent.width - parent.width/5
+        Row{
+            anchors.horizontalCenter: parent.horizontalCenter
+            id:row1
+            spacing : Units.dp(15)
+            Icon {
+                id:icon1
+                name: "action/account_circle"
+                size: Units.dp(Defines_values.iconsize)
+            }
+            Label {
 
-    Page {
-        id: page
-        title: ""
-        backAction: navDrawer.action
-        NavigationDrawer {id:navDrawer;Navdrawer{anchors.fill: parent}}
-        anchors.fill: parent
-        actions: [
-            Action {
-                iconName: "image/edit"
-                name: "Accounts"
-
-            },
-            Action {
-                //an empty Icon to make spacing
-                name: "Language"
-                enabled: false
-            }
-
-        ]
-        Column {
-            id: column1
-            //anchors.fill: parent
-            anchors.leftMargin: Units.dp(parent.width/30)
-            anchors.rightMargin: Units.dp(parent.width/30)
-            spacing: Units.dp(Defines_values.horizontalspacing)
-            anchors{
-                right: parent.right
-                top:parent.top
-                topMargin: Units.dp(50)
-                left:parent.left
-            }
-            Row{
-                id:row1
-                spacing : Units.dp(15)
-
-                Icon {
-                    id:icon1
-                    name: "action/account_circle"
-                    size: Units.dp(Defines_values.iconsize)
-                }
-                Label {
-
-                    id:nom_prenom
-                    text:"Morgan Ponty"
-                    font.pixelSize: Units.dp(Defines_values.text_font)
-                    width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
-                }
-            }
-            Row{
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing : Units.dp(15)
-                Icon {
-                    //name: "communication/call"
-                    size: Units.dp(Defines_values.iconsize)
-                }
-                Label{
-                    id:nom_de_la_structure
-                    text: "Accords Ambulances"
-                    width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
-                    font.pixelSize: Units.dp(Defines_values.text_font)
-
-                }
-            }
-            Row{
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing : Units.dp(15)
-                Icon {
-                    name: "maps/place"
-                    size: Units.dp(Defines_values.iconsize)
-                }
-                Label{
-                    id:rue
-                    text: "141 rue Merlot 340130 Mauguio"
-                    font.pixelSize: Units.dp(Defines_values.text_font)
-                    width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
-                }
-            }
-            Row{
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing : Units.dp(15)
-                Icon {
-                    name: "communication/email"
-                    size: Units.dp(Defines_values.iconsize)
-                }
-                Label {
-                    id:email
-                    text: "Morganponty@email.com"
-                    font.pixelSize: Units.dp(Defines_values.text_font)
-                    width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
-                }
-            }
-            Row{
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing : Units.dp(15)
-                Icon {
-                    name: "communication/call"
-                    size: Units.dp(Defines_values.iconsize)
-                }
-                Label{
-                    id:tel
-                    text: "tel: 0x xx xx xx xx"
-                    font.pixelSize: Units.dp(Defines_values.text_font)
-                    width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
-                }
-            }
-            Row{
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing : Units.dp(15)
-                Icon {
-                    name: "maps/local_hospital"
-                    size: Units.dp(Defines_values.iconsize)
-                }
-                Label {
-                    id:te
-                    text: "VST et Ambulance"
-                    font.pixelSize: Units.dp(Defines_values.text_font)
-                    width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
-                }
-            }
-            Row{
-                anchors.horizontalCenter: parent.horizontalCenter
+                id:nom_prenom
+                text:"Morgan Ponty"
+                font.pixelSize: Units.dp(Defines_values.text_font)
                 width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
-                Button {
-                    text:"Changer le mot de passe"
-                    elevation: 1
-                    activeFocusOnPress: true
-                    backgroundColor: Theme.primaryColor
-                    onClicked: changepassword.show()
-
-                }
             }
         }
-        Snackbar {
-            id: dialogSnackBar
+        Row{
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing : Units.dp(15)
+            Icon {
+                //name: "communication/call"
+                size: Units.dp(Defines_values.iconsize)
+            }
+            Label{
+                id:nom_de_la_structure
+                text: "Accords Ambulances"
+                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                font.pixelSize: Units.dp(Defines_values.text_font)
+
+            }
         }
+        Row{
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing : Units.dp(15)
+            Icon {
+                name: "maps/place"
+                size: Units.dp(Defines_values.iconsize)
+            }
+            Label{
+                id:rue
+                text: "141 rue Merlot 340130 Mauguio"
+                font.pixelSize: Units.dp(Defines_values.text_font)
+                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+            }
+        }
+        Row{
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing : Units.dp(15)
+            Icon {
+                name: "communication/email"
+                size: Units.dp(Defines_values.iconsize)
+            }
+            Label {
+                id:email
+                text: "Morganponty@email.com"
+                font.pixelSize: Units.dp(Defines_values.text_font)
+                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+            }
+        }
+        Row{
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing : Units.dp(15)
+            Icon {
+                name: "communication/call"
+                size: Units.dp(Defines_values.iconsize)
+            }
+            Label{
+                id:tel
+                text: "tel: 0x xx xx xx xx"
+                font.pixelSize: Units.dp(Defines_values.text_font)
+                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+            }
+        }
+        Row{
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing : Units.dp(15)
+            Icon {
+                name: "maps/local_hospital"
+                size: Units.dp(Defines_values.iconsize)
+            }
+            Label {
+                id:te
+                text: "VST et Ambulance"
+                font.pixelSize: Units.dp(Defines_values.text_font)
+                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+            }
+        }
+        Row{
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+            Button {
+                text:"Changer le mot de passe"
+                elevation: 1
+                activeFocusOnPress: true
+                backgroundColor: Theme.primaryColor
+                onClicked: changepassword.show()
+
+            }
+        }
+    }
+    Snackbar {
+        id: dialogSnackBar
     }
 }

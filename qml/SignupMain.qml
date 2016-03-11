@@ -5,7 +5,7 @@ import "define_values.js" as Margin_values
 Page {
     id:windows
     visible: true
-    hiddenBar: true
+    actionBar.hidden: true
     property bool checkIn: false
     Loader {
         id: fixedLoader
@@ -42,7 +42,6 @@ Page {
           iconName: "content/send"
           action: Action {
               id: addContent
-
               onTriggered:
               {
                   checkIn = true

@@ -9,8 +9,7 @@ TabbedPage {
     actionBar.decorationColor: Palette.colors.grey['300']
     property var amb_liste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]
     onGoBack: {
-        confirmationDialog.show()
-        event.accepted = true
+        //event on going back, this will bsy be used later
     }
     View{
         anchors.fill: parent
