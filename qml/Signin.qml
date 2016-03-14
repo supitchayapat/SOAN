@@ -69,17 +69,18 @@ ApplicationWindow {
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             TextField {
-                text: "email"
+                placeholderText: "Email"
                 font.family: fixedFont.name
                 font.pixelSize: Units.dp(20)
                 validator: RegExpValidator { regExp:/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/ }
                 width: parent.width
             }
             TextField {
-                text: "mot de passe"
+                placeholderText: "mot de passe"
                 font.family: fixedFont.name
                 font.pixelSize: Units.dp(20)
                 width: parent.width
+                echoMode: TextInput.Password
             }
         }
         Column{
