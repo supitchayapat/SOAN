@@ -11,6 +11,7 @@ TabbedPage {
     onGoBack: {
         //event on going back, this will bsy be used later
     }
+
     View{
         anchors.fill: parent
         ListView{
@@ -23,16 +24,20 @@ TabbedPage {
                     size: Units.dp(32)
                     color:"#2196F3"
                 }
-                        Icon {
-                           // anchors.centerIn: parent
+
+                Button {
                     anchors{
                         right: parent.right
                         verticalCenter: parent.verticalCenter
                         rightMargin: Units.dp(17)
                     }
-                    name: "communication/call"
-                    size: Units.dp(32)
-                    color:"#2196F3"
+                    width: Units.dp(32)
+                    Icon {
+                        name: "communication/call"
+                        size: Units.dp(32)
+                        color:"#2196F3"
+                    }
+                    //onClicked:
                 }
             }
             model:amb_liste
