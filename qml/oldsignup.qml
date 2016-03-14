@@ -1,7 +1,6 @@
-import QtQuick 2.4
+import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Margin_values
-import "../qml"
 
 TabbedPage {
     id: page
