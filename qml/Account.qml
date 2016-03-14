@@ -32,10 +32,15 @@ Page {
         width: parent.width - parent.width/6
         text: "Mot de passe oublié"
         z:1
+
         Column{
             id:column12
+            spacing: Units.dp(25)
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: Units.dp(30)
+            TextField {
+                id: spaced
+                visible: false
+            }
             TextField {
                 id: newPassword
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -46,6 +51,7 @@ Page {
                 echoMode: TextInput.Password
                 helperText: ""
             }
+
             TextField {
                 id: newPasswordConfirmation
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -67,6 +73,7 @@ Page {
                 helperText: ""
             }
         }
+
         onAccepted: {
             dialogSnackBar.open("You entered: %1".arg(newPassword2.text))
             confirmed.show()
@@ -85,7 +92,7 @@ Page {
             accountName:accountNameString
         }
     }    anchors.fill: parent
-   // width: parent
+    // width: parent
     Column {
         id: column1
         spacing: Units.dp(Defines_values.horizontalspacing)
@@ -190,7 +197,6 @@ Page {
             Button {
                 text:"Changer le mot de passe"
                 elevation: 1
-                activeFocusOnPress: true
                 backgroundColor: Theme.primaryColor
                 onClicked: changepassword.show()
 

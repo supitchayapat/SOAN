@@ -13,12 +13,12 @@ ApplicationWindow {
     theme {
         primaryColor: "blue"
         accentColor: "blue"
-        tabHighlightColor: "white"
+        tabHighlightColor: "red"
         backgroundColor: "white"
     }
     title: "Ambulance App"
     Dialog {
-        id: fo
+        id: confirmed
         width: parent.width - parent.width/6
         hasActions: false
         z:1
@@ -53,6 +53,10 @@ ApplicationWindow {
             validator: RegExpValidator { regExp:/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/ }
             onTextChanged: {
             }
+        }
+        onAccepted: {
+            //a signal with email name will be emited to a function,lets show confirmed dialog
+            confirmed.show()
         }
         positiveButtonText: "Valider"
         negativeButtonText: "Annuler"
@@ -116,7 +120,7 @@ ApplicationWindow {
             }
         }
         Label {
-            text: "utilisateur/mot de passe est invalide"
+            text: "Utilisateur/mot de passe est invalide"
             font.family: fixedFont.name
             anchors.horizontalCenter: parent.horizontalCenter
             color: Theme.tabHighlightColor

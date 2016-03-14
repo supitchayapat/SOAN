@@ -16,7 +16,7 @@ TabbedPage {
         anchors.fill: parent
         ListView{
             anchors.fill: parent
-            delegate: ListItem.Subtitled{
+            delegate: ListItem.Standard{
                 text:modelData
                 action: Icon {
                     anchors.centerIn: parent
