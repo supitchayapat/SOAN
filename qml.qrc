@@ -10,5 +10,11 @@
         <file>qml/SignupProgressbySteps.qml</file>
         <file>qml/SignupPage1.qml</file>
         <file>qml/SignupPage2.qml</file>
+        <file>qondorite/asteroid.qml.js</file>
+        <file>qondorite/ddp.js</file>
+        <file>qondorite/Log.js</file>
+        <file>qondorite/q.js</file>
+        <file>qml/Qondrite.qml</file>
+        <file>qondorite/AsteroidListeners.js</file>
     </qresource>
 </RCC>
