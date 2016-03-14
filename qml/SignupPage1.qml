@@ -19,7 +19,7 @@ Item{
               }
               TextField {
                 id:nom_prenom
-                text:"Nom et Prénom"
+                placeholderText:"Nom et Prénom"
                 font.pixelSize: Units.dp(Defines_values.text_font)
                 width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
               }
@@ -48,7 +48,7 @@ Item{
               }
               TextField {
                 id:rue
-                text: "N de rue"
+                placeholderText: "N de rue"
                 font.pixelSize: Units.dp(Defines_values.text_font)
                 width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
               }
@@ -58,13 +58,13 @@ Item{
               spacing : Units.dp(Defines_values.border_margins)
               TextField {
                   id:commune
-                text: "Code Postal"
+                placeholderText: "Code Postal"
                 font.pixelSize: Units.dp(Defines_values.text_font)
                 width: Units.dp(100)
               }
               TextField {
                 id:cde_postal
-                text: "Commune"
+                placeholderText: "Commune"
                 font.pixelSize: Units.dp(Defines_values.text_font)
                 width: Units.dp(100)
               }
@@ -78,7 +78,7 @@ Item{
               }
               TextField {
                id:email
-               text: "Email"
+               placeholderText: "Email"
                font.pixelSize: Units.dp(Defines_values.text_font)
                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
              }
@@ -92,7 +92,7 @@ Item{
               }
               TextField {
                 id:tel
-                text: "tel: 0x xx xx xx xx"
+                placeholderText: "tel: 0x xx xx xx xx"
                 font.pixelSize: Units.dp(Defines_values.text_font)
                 width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
               }

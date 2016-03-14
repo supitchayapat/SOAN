@@ -22,13 +22,13 @@ Item{
     }
       Column {
           id: column2
-          spacing: Units.dp(Defines_values.border_margins)
+          spacing: Units.dp(Margin_values.horizontalspacing )
           anchors.top:column1.bottom
           anchors.topMargin: Units.dp(0)
           anchors.horizontalCenter: parent.horizontalCenter
           TextField {
             id: passwordField
-            font.pixelSize: Units.dp(Defines_values.text_font)
+            font.pixelSize: Units.dp(Margin_values.text_font)
             placeholderText: "Mot de passe"
             floatingLabel: true
             echoMode: TextInput.Password
@@ -37,7 +37,7 @@ Item{
           }
           TextField {
             id: passwordField2
-            font.pixelSize: Units.dp(Defines_values.text_font)
+            font.pixelSize: Units.dp(Margin_values.text_font)
             placeholderText: "Confirmer le Mot de passe"
             floatingLabel: true
             echoMode: TextInput.Password
