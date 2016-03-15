@@ -29,7 +29,7 @@ Page {
             top: fixedLoader.bottom
         }
         asynchronous: true
-        source: Qt.resolvedUrl("SignupPage1.qml")
+        source: Qt.resolvedUrl("Signupstep1.qml")
     }
     ActionButton {
           x:40
@@ -45,7 +45,7 @@ Page {
               onTriggered:
               {
                   checkIn = true
-                  shiftLodaer.source = Qt.resolvedUrl("SignupPage2.qml")
+                  shiftLodaer.source = Qt.resolvedUrl("Signupstep2.qml")
               }
           }
      }

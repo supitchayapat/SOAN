@@ -34,39 +34,35 @@ Page {
         z:1
         ColumnLayout{
             spacing: Units.dp(Defines_values.textfield_margin)
-            //anchors.fill: parent
             anchors.horizontalCenter: parent.horizontalCenter
             TextField {
-                id: newPassword
+                id: oldPassword
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:parent.width - parent.width/3
                 font.pixelSize: Units.dp( Defines_values.text_font)
                 placeholderText: "ancien mot de passe"
-                //height: parent.height / (3+1)
                 floatingLabel: true
                 echoMode: TextInput.Password
                 helperText: ""
                 Layout.topMargin:Units.dp(Defines_values.top_account_textfield_margin)
             }
             TextField {
-                id: newPasswordConfirmation
+                id: newPassword
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:parent.width - parent.width/3
                 font.pixelSize: Units.dp( Defines_values.text_font)
                 placeholderText: "nouveau mot de passe"
                 floatingLabel: true
-               // height: parent.height / (3+1)
                 echoMode: TextInput.Password
                 helperText: ""
             }
             TextField {
-                id: newPassword2
+                id: newPasswordConfirmation
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:parent.width - parent.width/3
                 font.pixelSize: Units.dp( Defines_values.text_font)
                 placeholderText: "confirmer le mot de passe"
                 floatingLabel: true
-                //height: parent.height / (3+1)
                 echoMode: TextInput.Password
                 helperText: ""
             }
@@ -99,8 +95,7 @@ Page {
             topMargin: Units.dp(Defines_values.top_margin)
             horizontalCenter: parent.horizontalCenter
         }
-        Row{
-            anchors.horizontalCenter: parent.horizontalCenter
+        RowLayout{
             id:row1
             spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
@@ -116,11 +111,9 @@ Page {
                 width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
-        Row{
-            anchors.horizontalCenter: parent.horizontalCenter
+        RowLayout{
             spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
-                //name: "communication/call"
                 size: Units.dp(Defines_values.iconsize)
             }
             Label{
@@ -131,8 +124,7 @@ Page {
 
             }
         }
-        Row{
-            anchors.horizontalCenter: parent.horizontalCenter
+        RowLayout{
             spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 name: "maps/place"
@@ -145,8 +137,7 @@ Page {
                 width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
-        Row{
-            anchors.horizontalCenter: parent.horizontalCenter
+        RowLayout{
             spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 name: "communication/email"
@@ -159,36 +150,31 @@ Page {
                 width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
-        Row{
-            anchors.horizontalCenter: parent.horizontalCenter
+        RowLayout{
             spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 name: "communication/call"
                 size: Units.dp(Defines_values.iconsize)
             }
             Label{
-                id:tel
                 text: "tel: 0x xx xx xx xx"
                 font.pixelSize: Units.dp(Defines_values.text_font)
                 width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
-        Row{
-            anchors.horizontalCenter: parent.horizontalCenter
+        RowLayout{
             spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 name: "maps/local_hospital"
                 size: Units.dp(Defines_values.iconsize)
             }
             Label {
-                id:te
                 text: "VST et Ambulance"
                 font.pixelSize: Units.dp(Defines_values.text_font)
                 width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
-        Row{
-            anchors.horizontalCenter: parent.horizontalCenter
+        RowLayout{
             width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
             Button {
                 text:"Changer le mot de passe"

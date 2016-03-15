@@ -2,6 +2,7 @@ import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Margin_values
 import QtQuick.Window 2.0
+
 ApplicationWindow {
     FontLoader { id: fixedFont; name: "Roboto" }
     visible: true

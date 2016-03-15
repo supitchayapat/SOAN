@@ -8,7 +8,8 @@
         <file>qml/Signin.qml</file>
         <file>qml/SignupMain.qml</file>
         <file>qml/SignupProgressbySteps.qml</file>
-        <file>qml/SignupPage1.qml</file>
-        <file>qml/SignupPage2.qml</file>
+        <file>qml/Signupstep1.qml</file>
+        <file>qml/Signupstep2.qml</file>
+        <file>main.qml</file>
     </qresource>
 </RCC>

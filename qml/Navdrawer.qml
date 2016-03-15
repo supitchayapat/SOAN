@@ -1,6 +1,6 @@
 import QtQuick 2.5
 import Material 0.2
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.2
 import "define_values.js" as Margin_values
 import Material.ListItems 0.1 as ListItem
 
@@ -8,21 +8,21 @@ Rectangle{
     property string email
     property string accountName
     Rectangle{
-        id: rect_sidebar
+        id: sidebar
         anchors{
             top: parent.top
             left: parent.left
             right: parent.right
         }
-        height:  Units.dp(150)
-        color: "#2196F3"
+        height:  Units.dp(Margin_values.sidebar_height)
+        color: Theme.primaryColor
         Label {
             id: acc_name
             anchors{
-                verticalCenter:  rect_sidebar.verticalCenter
+                verticalCenter:  sidebar.verticalCenter
                 verticalCenterOffset: -4
                 left: parent.left
-                leftMargin: Units.dp(10)
+                leftMargin: Units.dp(Margin_values.leftMargin)
             }
             text: accountName
             style: "title"
@@ -31,10 +31,10 @@ Rectangle{
         Label {
             id: acc_email
             anchors{
-                bottom: rect_sidebar.bottom
-                bottomMargin: Units.dp(5)
+                bottom: sidebar.bottom
+                bottomMargin: Units.dp(Margin_values.bottomMargin)
                 left: parent.left
-                leftMargin: Units.dp(10)
+                leftMargin: Units.dp(Margin_values.leftMargin)
             }
             text: email
             style: "body2"
@@ -43,8 +43,8 @@ Rectangle{
     }
     View {
         anchors{
-            top:rect_sidebar.bottom
-            topMargin: Units.dp(7)
+            top:sidebar.bottom
+            topMargin: Units.dp(Margin_values.view_topMargin)
             left: parent.left
             right: parent.right
             bottom: parent.bottom
@@ -56,7 +56,7 @@ Rectangle{
                     anchors.centerIn: parent
                     name: "action/account_box"
                     size: Units.dp(Margin_values.iconsize)
-                    color:"#2196F3"
+                    color:Theme.primaryColor
                 }
                 onClicked:{
                     navDrawer.close()
@@ -69,7 +69,7 @@ Rectangle{
                     anchors.centerIn: parent
                     name: "action/account_circle"
                     size: Units.dp(Margin_values.iconsize)
-                    color:"#2196F3"
+                    color:Theme.primaryColor
                 }
                 onClicked:{
                     navDrawer.close()
