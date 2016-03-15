@@ -1,10 +1,10 @@
 import QtQuick 2.5
 import Material 0.2
+import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 Page {
     id: page
     FontLoader { id: fixedFont; name: "Roboto" }
-    title: ""
     Dialog {
         id: confirmed
         width: parent.width - parent.width/6
@@ -32,43 +32,42 @@ Page {
         width: parent.width - parent.width/6
         text: "Mot de passe oublié"
         z:1
-
-        Column{
+        ColumnLayout{
             id:column12
             spacing: Units.dp(25)
+            //anchors.fill: parent
             anchors.horizontalCenter: parent.horizontalCenter
-            TextField {
-                id: spaced
-                visible: false
-            }
             TextField {
                 id: newPassword
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:changepassword.width - changepassword.width/5
+                width:parent.width - parent.width/3
                 font.pixelSize: Units.dp( Defines_values.text_font)
                 placeholderText: "ancien mot de passe"
+                //height: parent.height / (3+1)
                 floatingLabel: true
                 echoMode: TextInput.Password
                 helperText: ""
+                Layout.topMargin:Units.dp(8)
             }
-
             TextField {
                 id: newPasswordConfirmation
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:changepassword.width - changepassword.width/5
+                width:parent.width - parent.width/3
                 font.pixelSize: Units.dp( Defines_values.text_font)
                 placeholderText: "nouveau mot de passe"
                 floatingLabel: true
+               // height: parent.height / (3+1)
                 echoMode: TextInput.Password
                 helperText: ""
             }
             TextField {
                 id: newPassword2
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:changepassword.width - changepassword.width/5
+                width:parent.width - parent.width/3
                 font.pixelSize: Units.dp( Defines_values.text_font)
                 placeholderText: "confirmer le mot de passe"
                 floatingLabel: true
+                //height: parent.height / (3+1)
                 echoMode: TextInput.Password
                 helperText: ""
             }
@@ -81,7 +80,6 @@ Page {
         positiveButtonText: "Valider"
         negativeButtonText: "Annuler"
     }
-    backAction: navDrawer.action
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
     NavigationDrawer {
@@ -91,18 +89,17 @@ Page {
             email: emailAdressString
             accountName:accountNameString
         }
-    }    anchors.fill: parent
-    // width: parent
-    Column {
+    }
+    anchors.fill: parent
+    Column{
         id: column1
         spacing: Units.dp(Defines_values.horizontalspacing)
-
+        width: parent.width - parent.width/5
         anchors{
             top:parent.top
             topMargin: Units.dp(Defines_values.top_margin)
             horizontalCenter: parent.horizontalCenter
         }
-        width: parent.width - parent.width/5
         Row{
             anchors.horizontalCenter: parent.horizontalCenter
             id:row1
