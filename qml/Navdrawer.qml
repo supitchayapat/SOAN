@@ -7,7 +7,6 @@ import Material.ListItems 0.1 as ListItem
 Rectangle{
     property string email
     property string accountName
-
     Rectangle{
         id: rect_sidebar
         anchors{

@@ -10,7 +10,7 @@ TabbedPage {
     property string accountNameString: "Alliance"
     backAction: navDrawer.action
     NavigationDrawer {
-        id:navDrawer;
+        id:navDrawer
         Navdrawer{
             anchors.fill: parent
             email: emailAdressString
@@ -141,7 +141,6 @@ TabbedPage {
             right: parent.right
             bottom: parent.bottom
             top: contact.bottom
-
             margins: Units.dp(32)
         }
         action: Action {

@@ -10,7 +10,7 @@ Item{
         spacing: Units.dp(Defines_values.horizontalspacing)
           Row{
               id:row1
-              spacing : Units.dp(5)
+              spacing : Units.dp(Defines_values.rowSpacing)
               anchors.horizontalCenter: parent.horizontalCenter
               Icon {
                   id:icon1
@@ -26,7 +26,7 @@ Item{
           }
           Row{
               anchors.horizontalCenter: parent.horizontalCenter
-              spacing : Units.dp(5)
+              spacing : Units.dp(Defines_values.rowSpacing)
               Icon {
                   //name: "communication/call"
                   size: Units.dp(Defines_values.iconsize)
@@ -41,7 +41,7 @@ Item{
           }
           Row{
               anchors.horizontalCenter: parent.horizontalCenter
-              spacing : Units.dp(5)
+              spacing : Units.dp(Defines_values.rowSpacing)
               Icon {
                   name: "maps/place"
                   size: Units.dp(Defines_values.iconsize)
@@ -71,7 +71,7 @@ Item{
           }
           Row{
               anchors.horizontalCenter: parent.horizontalCenter
-              spacing : Units.dp(5)
+              spacing : Units.dp(Defines_values.rowSpacing)
               Icon {
                   name: "communication/email"
                   size: Units.dp(Defines_values.iconsize)
@@ -85,7 +85,7 @@ Item{
           }
           Row{
               anchors.horizontalCenter: parent.horizontalCenter
-              spacing : Units.dp(5)
+              spacing : Units.dp(Defines_values.rowSpacing)
               Icon {
                   name: "communication/call"
                   size: Units.dp(Defines_values.iconsize)
