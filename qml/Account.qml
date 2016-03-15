@@ -33,8 +33,7 @@ Page {
         text: "Mot de passe oublié"
         z:1
         ColumnLayout{
-            id:column12
-            spacing: Units.dp(25)
+            spacing: Units.dp(Defines_values.textfield_margin)
             //anchors.fill: parent
             anchors.horizontalCenter: parent.horizontalCenter
             TextField {
@@ -47,7 +46,7 @@ Page {
                 floatingLabel: true
                 echoMode: TextInput.Password
                 helperText: ""
-                Layout.topMargin:Units.dp(8)
+                Layout.topMargin:Units.dp(Defines_values.top_account_textfield_margin)
             }
             TextField {
                 id: newPasswordConfirmation
@@ -103,7 +102,7 @@ Page {
         Row{
             anchors.horizontalCenter: parent.horizontalCenter
             id:row1
-            spacing : Units.dp(15)
+            spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 id:icon1
                 name: "action/account_circle"
@@ -119,7 +118,7 @@ Page {
         }
         Row{
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(15)
+            spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 //name: "communication/call"
                 size: Units.dp(Defines_values.iconsize)
@@ -134,7 +133,7 @@ Page {
         }
         Row{
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(15)
+            spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 name: "maps/place"
                 size: Units.dp(Defines_values.iconsize)
@@ -148,7 +147,7 @@ Page {
         }
         Row{
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(15)
+            spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 name: "communication/email"
                 size: Units.dp(Defines_values.iconsize)
@@ -162,7 +161,7 @@ Page {
         }
         Row{
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(15)
+            spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 name: "communication/call"
                 size: Units.dp(Defines_values.iconsize)
@@ -176,7 +175,7 @@ Page {
         }
         Row{
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(15)
+            spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 name: "maps/local_hospital"
                 size: Units.dp(Defines_values.iconsize)

@@ -56,7 +56,7 @@ Rectangle{
                 action: Icon {
                     anchors.centerIn: parent
                     name: "action/account_box"
-                    size: Units.dp(32)
+                    size: Units.dp(Margin_values.iconsize)
                     color:"#2196F3"
                 }
                 onClicked:{
@@ -69,7 +69,7 @@ Rectangle{
                 action: Icon {
                     anchors.centerIn: parent
                     name: "action/account_circle"
-                    size: Units.dp(32)
+                    size: Units.dp(Margin_values.iconsize)
                     color:"#2196F3"
                 }
                 onClicked:{
