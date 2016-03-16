@@ -8,6 +8,7 @@ ApplicationWindow {
     visible: true
     id: ambulance
     width: 300
+    title: "Ambulance App"
     //uncomment this if your are deploying android
     //width: Screen.width
     //height: Screen.height
@@ -17,7 +18,6 @@ ApplicationWindow {
         tabHighlightColor: "red"
         backgroundColor: "white"
     }
-    title: "Ambulance App"
     Dialog {
         id: confirmed
         width: parent.width - parent.width/6

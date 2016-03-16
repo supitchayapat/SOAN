@@ -49,7 +49,7 @@ Page {
               }
           }
      }
-     Snackbar {
+    Snackbar {
           id: snackbar
      }
 }

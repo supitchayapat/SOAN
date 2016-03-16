@@ -4,10 +4,10 @@ import "define_values.js" as Margin_values
 
 TabbedPage {
     id: page
-    title: "Ambulance App"
     property var sectionTitles: [ "Contact", "Adresse", "Login" ]
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
+    title: "Ambulance App"
     backAction: navDrawer.action
     NavigationDrawer {
         id:navDrawer

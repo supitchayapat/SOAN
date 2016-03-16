@@ -4,6 +4,9 @@ import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 Page {
     id: page
+    anchors.fill: parent
+    property string emailAdressString: "Contact@ahmed-arif.com"
+    property string accountNameString: "Alliance"
     FontLoader { id: fixedFont; name: "Roboto" }
     Dialog {
         id: confirmed
@@ -75,8 +78,6 @@ Page {
         positiveButtonText: "Valider"
         negativeButtonText: "Annuler"
     }
-    property string emailAdressString: "Contact@ahmed-arif.com"
-    property string accountNameString: "Alliance"
     NavigationDrawer {
         id:navDrawer;
         Navdrawer{
@@ -85,7 +86,6 @@ Page {
             accountName:accountNameString
         }
     }
-    anchors.fill: parent
     Column{
         id: column1
         spacing: Units.dp(Defines_values.horizontalspacing)

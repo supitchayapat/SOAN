@@ -24,7 +24,6 @@ Item{
         id: column2
         spacing: Units.dp(Margin_values.horizontalspacing )
         anchors{
-
             top:column1.bottom
             topMargin: Units.dp(0)
             horizontalCenter: parent.horizontalCenter
