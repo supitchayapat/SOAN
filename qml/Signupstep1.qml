@@ -3,17 +3,15 @@ import Material 0.2
 import "define_values.js" as Defines_values
 
 Item{
-    id:item1
       Column {
           id: column1
           width: windows.width
         spacing: Units.dp(Defines_values.horizontalspacing)
           Row{
-              id:row1
               spacing : Units.dp(Defines_values.rowSpacing)
               anchors.horizontalCenter: parent.horizontalCenter
               Icon {
-                  id:icon1
+                  id:icon
                   name: "action/account_circle"
                   size: Units.dp(Defines_values.iconsize)
               }
@@ -21,7 +19,7 @@ Item{
                 id:nom_prenom
                 placeholderText:"Nom et Prénom"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column1.width - icon.width - Units.dp(Defines_values.border_margins)
               }
           }
           Row{
@@ -34,7 +32,7 @@ Item{
               TextField {
                 id:nom_de_la_structure
                 text: "Nom de la structure"
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column1.width - icon.width - Units.dp(Defines_values.border_margins)
                 font.pixelSize: Units.dp(Defines_values.text_font)
 
               }
@@ -50,7 +48,7 @@ Item{
                 id:rue
                 placeholderText: "N de rue"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column1.width - icon.width - Units.dp(Defines_values.border_margins)
               }
           }
           Row{
@@ -80,7 +78,7 @@ Item{
                id:email
                placeholderText: "Email"
                font.pixelSize: Units.dp(Defines_values.text_font)
-               width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+               width: column1.width - icon.width - Units.dp(Defines_values.border_margins)
              }
           }
           Row{
@@ -94,7 +92,7 @@ Item{
                 id:tel
                 placeholderText: "tel: 0x xx xx xx xx"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column1.width - icon.width - Units.dp(Defines_values.border_margins)
               }
           }
     }

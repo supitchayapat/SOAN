@@ -5,7 +5,7 @@ import "define_values.js" as Margin_values
 Item{
     anchors.horizontalCenter: parent.horizontalCenter
     Column {
-        id: column1
+        id: topColumn
         spacing: Units.dp(Margin_values.border_margins)
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width - Units.dp(70)
@@ -21,10 +21,9 @@ Item{
         }
     }
     Column {
-        id: column2
         spacing: Units.dp(Margin_values.horizontalspacing )
         anchors{
-            top:column1.bottom
+            top:topColumn.bottom
             topMargin: Units.dp(0)
             horizontalCenter: parent.horizontalCenter
         }
@@ -38,7 +37,7 @@ Item{
             helperText: "Eviter les caractères spéciaux"
         }
         TextField {
-            id: passwordField2
+            id: passwordFieldconfirmation
             font.pixelSize: Units.dp(Margin_values.text_font)
             placeholderText: "Confirmer le Mot de passe"
             floatingLabel: true
