@@ -10,6 +10,6 @@
         <file>qml/SignupProgressbySteps.qml</file>
         <file>qml/Signupstep1.qml</file>
         <file>qml/Signupstep2.qml</file>
-        <file>main.qml</file>
+        <file>qml/main.qml</file>
     </qresource>
 </RCC>

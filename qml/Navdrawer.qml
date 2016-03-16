@@ -7,6 +7,7 @@ import Material.ListItems 0.1 as ListItem
 Rectangle{
     property string email
     property string accountName
+
     Rectangle{
         id: sidebar
         anchors{
@@ -17,7 +18,7 @@ Rectangle{
         height:  Units.dp(Margin_values.sidebar_height)
         color: Theme.primaryColor
         Label {
-            id: acc_name
+            id: accountname
             anchors{
                 verticalCenter:  sidebar.verticalCenter
                 verticalCenterOffset: -4
@@ -29,7 +30,7 @@ Rectangle{
             color: "white"
         }
         Label {
-            id: acc_email
+            id: accountemail
             anchors{
                 bottom: sidebar.bottom
                 bottomMargin: Units.dp(Margin_values.bottomMargin)
@@ -41,6 +42,7 @@ Rectangle{
             color: "white"
         }
     }
+
     View {
         anchors{
             top:sidebar.bottom
@@ -48,8 +50,11 @@ Rectangle{
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-        }        Column {
+        }
+
+        Column {
             anchors.fill: parent
+
             ListItem.Standard {
                 text: "Liste d'Ambulances"
                 action: Icon {
@@ -63,6 +68,7 @@ Rectangle{
                     pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
                 }
             }
+
             ListItem.Standard {
                 text: "Mon compte"
                 action: Icon {
@@ -76,6 +82,7 @@ Rectangle{
                     pageStack.push(Qt.resolvedUrl("Account.qml"))
                 }
             }
+
         }
     }
 }

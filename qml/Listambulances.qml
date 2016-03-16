@@ -3,14 +3,15 @@ import Material 0.2
 import Material.ListItems 0.1 as ListItem
 
 Page {
+
     id: page
-    property var amb_liste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]
+    property var ambliste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]
     title: "Liste d'Ambulances"
     actionBar.backgroundColor: Palette.colors.grey['200']
     actionBar.decorationColor: Palette.colors.grey['300']
     onGoBack: {
-        //event on going back, this will be used later
     }
+
     ListView{
         anchors.fill: parent
         delegate: ListItem.Standard{
@@ -36,8 +37,9 @@ Page {
                 //onClicked:
             }
         }
-        model:amb_liste
+        model:ambliste
     }
+
     Dialog {
         id: confirmationDialog
         title: "Voulez-vous revenir?"

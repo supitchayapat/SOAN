@@ -3,11 +3,14 @@ import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 Page {
+
     id: page
     anchors.fill: parent
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
+
     FontLoader { id: fixedFont; name: "Roboto" }
+
     Dialog {
         id: confirmed
         width: parent.width - parent.width/6
@@ -30,6 +33,7 @@ Page {
             }
         }
     }
+
     Dialog {
         id: changepassword
         width: parent.width - parent.width/6
@@ -43,7 +47,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:parent.width - parent.width/3
                 font.pixelSize: Units.dp( Defines_values.text_font)
-                placeholderText: "ancien mot de passe"
+                placeholderText: "Ancien mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
                 helperText: ""
@@ -54,7 +58,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:parent.width - parent.width/3
                 font.pixelSize: Units.dp( Defines_values.text_font)
-                placeholderText: "nouveau mot de passe"
+                placeholderText: "Nouveau mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
                 helperText: ""
@@ -64,7 +68,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:parent.width - parent.width/3
                 font.pixelSize: Units.dp( Defines_values.text_font)
-                placeholderText: "confirmer le mot de passe"
+                placeholderText: "Confirmer le mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
                 helperText: ""
@@ -72,12 +76,13 @@ Page {
         }
 
         onAccepted: {
-            dialogSnackBar.open("You entered: %1".arg(newPassword2.text))
+            dialogSnackBar.open("test, You entered: %1".arg(newPasswordConfirmation.text))
             confirmed.show()
         }
         positiveButtonText: "Valider"
         negativeButtonText: "Annuler"
     }
+
     NavigationDrawer {
         id:navDrawer;
         Navdrawer{
@@ -86,8 +91,9 @@ Page {
             accountName:accountNameString
         }
     }
-    Column{
-        id: column1
+
+    ColumnLayout{
+        id: column
         spacing: Units.dp(Defines_values.horizontalspacing)
         width: parent.width - parent.width/5
         anchors{
@@ -96,7 +102,6 @@ Page {
             horizontalCenter: parent.horizontalCenter
         }
         RowLayout{
-            id:row1
             spacing : Units.dp(Defines_values.verticalspacing)
             Icon {
                 id:icon1
@@ -108,7 +113,7 @@ Page {
                 id:nom_prenom
                 text:"Morgan Ponty"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
         RowLayout{
@@ -119,7 +124,7 @@ Page {
             Label{
                 id:nom_de_la_structure
                 text: "Accords Ambulances"
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column.width - icon1.width - Units.dp(Defines_values.border_margins)
                 font.pixelSize: Units.dp(Defines_values.text_font)
 
             }
@@ -134,7 +139,7 @@ Page {
                 id:rue
                 text: "141 rue Merlot 340130 Mauguio"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
         RowLayout{
@@ -147,7 +152,7 @@ Page {
                 id:email
                 text: "Morganponty@email.com"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
         RowLayout{
@@ -159,7 +164,7 @@ Page {
             Label{
                 text: "tel: 0x xx xx xx xx"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
         RowLayout{
@@ -171,11 +176,11 @@ Page {
             Label {
                 text: "VST et Ambulance"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+                width: column.width - icon1.width - Units.dp(Defines_values.border_margins)
             }
         }
         RowLayout{
-            width: column1.width - icon1.width - Units.dp(Defines_values.border_margins)
+            width: column.width - icon1.width - Units.dp(Defines_values.border_margins)
             Button {
                 text:"Changer le mot de passe"
                 elevation: 1
@@ -185,6 +190,7 @@ Page {
             }
         }
     }
+
     Snackbar {
         id: dialogSnackBar
     }

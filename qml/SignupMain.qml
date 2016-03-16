@@ -3,10 +3,12 @@ import Material 0.2
 import "define_values.js" as Margin_values
 
 Page {
+
     id:windows
     visible: true
     actionBar.hidden: true
     property bool checkIn: false
+
     Loader {
         id: fixedLoader
         height: Units.dp(50)
@@ -19,6 +21,7 @@ Page {
         asynchronous: true
         source: Qt.resolvedUrl("SignupProgressbySteps.qml")
     }
+
     Loader {
         id: shiftLodaer
         anchors{
@@ -31,6 +34,7 @@ Page {
         asynchronous: true
         source: Qt.resolvedUrl("Signupstep1.qml")
     }
+
     ActionButton {
           x:40
           anchors {
@@ -49,6 +53,7 @@ Page {
               }
           }
      }
+
     Snackbar {
           id: snackbar
      }

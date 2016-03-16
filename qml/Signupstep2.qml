@@ -1,10 +1,13 @@
 import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Margin_values
+import QtQuick.Layouts 1.2
 
 Item{
+
     anchors.horizontalCenter: parent.horizontalCenter
-    Column {
+
+    ColumnLayout {
         id: topColumn
         spacing: Units.dp(Margin_values.border_margins)
         anchors.horizontalCenter: parent.horizontalCenter
@@ -20,7 +23,8 @@ Item{
             text: "Recevoir des demande en VSL"
         }
     }
-    Column {
+
+    ColumnLayout {
         spacing: Units.dp(Margin_values.horizontalspacing )
         anchors{
             top:topColumn.bottom
@@ -41,7 +45,6 @@ Item{
             font.pixelSize: Units.dp(Margin_values.text_font)
             placeholderText: "Confirmer le Mot de passe"
             floatingLabel: true
-
             echoMode: TextInput.Password
             helperText: "Eviter les caractères spéciaux"
         }

@@ -2,6 +2,7 @@ import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Margin_values
 import QtQuick.Window 2.0
+import QtQuick.Layouts 1.2
 
 ApplicationWindow {
     FontLoader { id: fixedFont; name: "Roboto" }
@@ -12,18 +13,20 @@ ApplicationWindow {
     //uncomment this if your are deploying android
     //width: Screen.width
     //height: Screen.height
+
     theme {
         primaryColor: "blue"
         accentColor: "blue"
         tabHighlightColor: "red"
         backgroundColor: "white"
     }
+
     Dialog {
         id: confirmed
         width: parent.width - parent.width/6
         hasActions: false
         z:1
-        Column{
+        ColumnLayout{
             anchors.horizontalCenter: parent.horizontalCenter
             Icon{
                 name:"action/done"
@@ -40,6 +43,7 @@ ApplicationWindow {
             }
         }
     }
+
     Dialog {
         id: forgottenPasswordBar
         width: parent.width - parent.width/6
@@ -48,6 +52,7 @@ ApplicationWindow {
 
         TextField {
             id: textEmail
+            inputMethodHints: Qt.ImhEmailCharactersOnly
             width: parent.width
             echoMode: TextInput.Normal
             placeholderText: qsTr( "Adresse email" )
@@ -62,22 +67,21 @@ ApplicationWindow {
         positiveButtonText: "Valider"
         negativeButtonText: "Annuler"
     }
-    Column{
-        id: r1
+
+    ColumnLayout{
         z:-1
         width: parent.width - parent.width/6
         anchors.centerIn: parent
         spacing:Units.dp(40)
-        Column{
-            id:r2
+        ColumnLayout{
             spacing:Units.dp(20)
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             TextField {
                 placeholderText: "Email"
+                inputMethodHints: Qt.ImhEmailCharactersOnly
                 font.family: fixedFont.name
                 font.pixelSize: Units.dp(20)
-                validator: RegExpValidator { regExp:/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/ }
                 width: parent.width
             }
             TextField {
@@ -88,30 +92,32 @@ ApplicationWindow {
                 echoMode: TextInput.Password
             }
         }
-        Column{
+
+        ColumnLayout{
             spacing: Units.dp(10)
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             Button {
+                anchors.horizontalCenter: parent.horizontalCenter
                 text: "Connexion"
                 elevation: 1
+                width: parent.width
                 activeFocusOnPress: true
                 backgroundColor: Theme.primaryColor
-                width: parent.width
                 onClicked:{
                     pageStack.push(Qt.resolvedUrl("oldsignup.qml"))
                 }
             }
             Button {
+                anchors.horizontalCenter: parent.horizontalCenter
                 text: "Creer un compte"
                 elevation: 1
+                width: parent.width
                 activeFocusOnPress: true
                 backgroundColor: Theme.primaryColor
                 onClicked:{
                     pageStack.push(Qt.resolvedUrl("SignupMain.qml"))
                 }
-                width: parent.width
-
             }
             Button {
                 text:"mot de passe oublié ? cliquez ici"
@@ -120,6 +126,7 @@ ApplicationWindow {
                 textColor: Theme.accentColor
             }
         }
+
         Label {
             text: "Utilisateur/mot de passe est invalide"
             font.family: fixedFont.name

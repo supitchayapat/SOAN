@@ -1,14 +1,17 @@
 import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Margin_values
+import QtQuick.Layouts 1.2
 
 TabbedPage {
+
     id: page
     property var sectionTitles: [ "Contact", "Adresse", "Login" ]
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
     title: "Ambulance App"
     backAction: navDrawer.action
+
     NavigationDrawer {
         id:navDrawer
         Navdrawer{
@@ -17,20 +20,26 @@ TabbedPage {
             accountName:accountNameString
         }
     }
+
     Tab {
         title: sectionTitles[0]
         sourceComponent: contact
     }
+
     Tab {
         title: sectionTitles[1]
         sourceComponent: adresse
     }
+
     Tab {
         title: sectionTitles[2]
         sourceComponent: login
     }
+
     Component {
+
         id: contact
+
         Item {
             anchors {
                 left: parent.left
@@ -38,7 +47,7 @@ TabbedPage {
                 top: parent.top
                 topMargin: Units.dp(50)
             }
-            Column {
+            ColumnLayout {
                 id: column
                 spacing: Units.dp(Margin_values.textfield_margin)
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -60,6 +69,7 @@ TabbedPage {
             }
         }
     }
+
     Component {
         id: adresse
         Item {
@@ -70,22 +80,22 @@ TabbedPage {
                 topMargin: Units.dp(50)
             }
 
-            Column {
-                id: column1
+            ColumnLayout {
+                id: columnLayout
                 spacing: Units.dp(Margin_values.textfield_margin)
                 anchors.horizontalCenter: parent.horizontalCenter
                 TextField {
-                    id:adr_pr
+                    id:adressePrincipale
                     text: "Adresse"
                     font.pixelSize: Units.dp(Margin_values.text_font)
                 }
                 TextField {
-                    id:adr_sec
+                    id:adresseSecondaire
                     text: "complément Adresse"
                     font.pixelSize: Units.dp(Margin_values.text_font)
                 }
                 TextField {
-                    id:code_pos
+                    id:codePostal
                     text: "Code Postal"
                     font.pixelSize: Units.dp(Margin_values.text_font)
                 }
@@ -97,6 +107,7 @@ TabbedPage {
             }
         }
     }
+
     Component {
         id: login
         Item {
@@ -106,8 +117,7 @@ TabbedPage {
                 top: parent.top
                 topMargin: Units.dp(50)
             }
-            Column {
-                id: column1
+            ColumnLayout {
                 spacing: Units.dp(Margin_values.textfield_margin)
                 anchors.horizontalCenter: parent.horizontalCenter
                 TextField {
@@ -132,9 +142,11 @@ TabbedPage {
             }
         }
     }
+
     Snackbar {
         id: snackbar
     }
+
     ActionButton {
         x:40
         anchors {

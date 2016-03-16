@@ -1,6 +1,5 @@
 import QtQuick 2.5
 import Material 0.2
-import ""
 ApplicationWindow {
 
     FontLoader { id: fixedFont; name: "Roboto" }
@@ -19,10 +18,8 @@ ApplicationWindow {
         backgroundColor: "white"
     }
 
-    Loader {
-        id: primaryLoader
-        height: Units.dp(50)
+
+    Signin{
         anchors.fill: parent
-        source: Qt.resolvedUrl("qml/Signin.qml")
     }
 }

@@ -3,7 +3,9 @@ import Material 0.2
 import "define_values.js" as Margin_values
 
 Item{
+
     anchors.horizontalCenter: parent.horizontalCenter
+
     Rectangle {
         id:lineIn
         anchors.centerIn: parent
@@ -11,6 +13,7 @@ Item{
         height: 3
         color:"#219FFF"
         radius: width*0.5
+
         Rectangle {
             id:lineIn2
             anchors.fill: parent
@@ -24,6 +27,7 @@ Item{
             }
         }
     }
+
     Rectangle {
         Text{
             visible: !checkIn
@@ -43,6 +47,7 @@ Item{
         color: "#2196F3"
         radius: width*0.5
     }
+
     Rectangle {
         Text{
             anchors.centerIn: parent
