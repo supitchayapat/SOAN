@@ -68,14 +68,28 @@ Item {
 
     ColumnLayout{
         z:-1
-        width: parent.width - parent.width/6
-        anchors.centerIn: parent
+
+
+        anchors{
+            centerIn: parent
+            left: parent.left
+            right :parent.right
+            leftMargin: parent.width/12
+            rightMargin: parent.width/12
+        }
+        width: parent.width - parent.width/12
         spacing:Units.dp(40)
 
         Column{
 
             spacing:Units.dp(20)
-            anchors.horizontalCenter: parent.horizontalCenter
+
+            anchors {
+                right :parent.right
+                left  :parent.left
+                margins: Units.dp(10)
+            }
+
             width: parent.width
 
             TextField {
@@ -98,7 +112,13 @@ Item {
         Column{
 
             spacing: Units.dp(10)
-            anchors.horizontalCenter: parent.horizontalCenter
+
+            anchors {
+                right :parent.right
+                left  :parent.left
+                margins: Units.dp(10)
+            }
+
             width: parent.width
 
             Button {
@@ -132,9 +152,15 @@ Item {
         }
 
         Button {
-            text:"mot de passe oublié ? cliquez ici"
+            id : forgottenPassword_btn
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                margins: Units.dp(10)
+            }
+
+            text:"mot de passe oublié ?"
+            width: parent.width < implicitWidth  ? parent.width : implicitWidth
             onClicked: forgottenPasswordBar.show()
-            anchors.horizontalCenter: parent.horizontalCenter
             textColor: Theme.accentColor
         }
 
