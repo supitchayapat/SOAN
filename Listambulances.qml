@@ -1,7 +1,7 @@
 import QtQuick 2.5
 import Material 0.2
 import Material.ListItems 0.1 as ListItem
-import "../js/define_values.js" as Defines_values
+import "define_values.js" as Defines_values
 
 Page {
 

@@ -1,14 +1,14 @@
 import QtQuick 2.5
 import Material 0.2
+import QtQuick.Window 2.0
+
 ApplicationWindow {
+
     visible: true
     id: ambulance
-    width: 300
 
-    //uncomment this if your are deploying android
-    //width: Screen.width
-    //height: Screen.height
-    FontLoader { id: fixedFont; name: "Roboto" }
+    width: Screen.width
+    height: Screen.height
 
     theme {
         primaryColor: "blue"
@@ -17,8 +17,5 @@ ApplicationWindow {
         backgroundColor: "white"
     }
 
-
-    Signin{
-        anchors.fill: parent
-    }
+    initialPage : Qt.resolvedUrl("Signin.qml")
 }

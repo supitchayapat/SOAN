@@ -13,3 +13,8 @@ var verticalspacing = 15;
 var view_topMargin = 7;
 var sidebar_height = 150;
 var bottomMargin = 5;
+
+
+// fonts :
+var textFieldsFontFamily= "Roboto";
+var labelFieldsFontFamily = "Roboto";

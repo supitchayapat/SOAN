@@ -1,7 +1,7 @@
 import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
-import "../js/define_values.js" as Defines_values
+import "define_values.js" as Defines_values
 
 Item{
 
