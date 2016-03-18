@@ -25,7 +25,7 @@ Page {
             }
 
             Button {
-                width: Units.dp(32)
+                width: Units.dp(80)
 
                 anchors{
                     right: parent.right
@@ -35,6 +35,7 @@ Page {
 
                 Icon {
                     name: "communication/call"
+                    anchors.centerIn: parent
                     size: Units.dp(32)
                     color:"#2196F3"
                 }

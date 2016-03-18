@@ -22,6 +22,8 @@ Page {
         source: Qt.resolvedUrl("SignupProgressbySteps.qml")
     }
 
+
+
     Loader {
         id: shiftLodaer
         anchors{
@@ -58,10 +60,6 @@ Page {
 
     Snackbar {
         id: snackbar
-    }
-
-    Navdrawer{
-        id : navDrawer
     }
 }
 
