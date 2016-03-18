@@ -46,6 +46,7 @@ Page {
     }
 
     Dialog {
+
         id: confirmationDialog
         title: "Voulez-vous revenir?"
         positiveButtonText: "Retour"

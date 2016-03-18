@@ -72,7 +72,7 @@ Item {
         anchors.centerIn: parent
         spacing:Units.dp(40)
 
-        ColumnLayout{
+        Column{
 
             spacing:Units.dp(20)
             anchors.horizontalCenter: parent.horizontalCenter
@@ -95,7 +95,7 @@ Item {
             }
         }
 
-        ColumnLayout{
+        Column{
 
             spacing: Units.dp(10)
             anchors.horizontalCenter: parent.horizontalCenter
@@ -129,13 +129,13 @@ Item {
                     pageStack.push(Qt.resolvedUrl("SignupMain.qml"))
                 }
             }
+        }
 
-            Button {
-                text:"mot de passe oublié ? cliquez ici"
-                onClicked: forgottenPasswordBar.show()
-                width: parent.width
-                textColor: Theme.accentColor
-            }
+        Button {
+            text:"mot de passe oublié ? cliquez ici"
+            onClicked: forgottenPasswordBar.show()
+            anchors.horizontalCenter: parent.horizontalCenter
+            textColor: Theme.accentColor
         }
 
         Label {

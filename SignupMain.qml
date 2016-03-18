@@ -6,7 +6,7 @@ Page {
 
     id:windows
     visible: true
-    actionBar.hidden: true
+
     property bool checkIn: false
 
     Loader {
