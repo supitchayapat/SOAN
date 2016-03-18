@@ -1,6 +1,6 @@
 import QtQuick 2.5
 import Material 0.2
-import "define_values.js" as Margin_values
+import "../js/define_values.js" as Defines_values
 import QtQuick.Layouts 1.2
 
 TabbedPage {
@@ -49,22 +49,22 @@ TabbedPage {
             }
             ColumnLayout {
                 id: column
-                spacing: Units.dp(Margin_values.textfield_margin)
+                spacing: Units.dp(Defines_values.textfield_margin)
                 anchors.horizontalCenter: parent.horizontalCenter
                 TextField {
                     id:email
                     text: "Email"
-                    font.pixelSize: Units.dp(Margin_values.text_font)
+                    font.pixelSize: Units.dp(Defines_values.text_font)
                 }
                 TextField {
                     id:nom
                     text: "Nom"
-                    font.pixelSize: Units.dp(Margin_values.text_font)
+                    font.pixelSize: Units.dp(Defines_values.text_font)
                 }
                 TextField {
                     id:numero
                     text: "Numéro"
-                    font.pixelSize: Units.dp(Margin_values.text_font)
+                    font.pixelSize: Units.dp(Defines_values.text_font)
                 }
             }
         }
@@ -82,27 +82,27 @@ TabbedPage {
 
             ColumnLayout {
                 id: columnLayout
-                spacing: Units.dp(Margin_values.textfield_margin)
+                spacing: Units.dp(Defines_values.textfield_margin)
                 anchors.horizontalCenter: parent.horizontalCenter
                 TextField {
                     id:adressePrincipale
                     text: "Adresse"
-                    font.pixelSize: Units.dp(Margin_values.text_font)
+                    font.pixelSize: Units.dp(Defines_values.text_font)
                 }
                 TextField {
                     id:adresseSecondaire
                     text: "complément Adresse"
-                    font.pixelSize: Units.dp(Margin_values.text_font)
+                    font.pixelSize: Units.dp(Defines_values.text_font)
                 }
                 TextField {
                     id:codePostal
                     text: "Code Postal"
-                    font.pixelSize: Units.dp(Margin_values.text_font)
+                    font.pixelSize: Units.dp(Defines_values.text_font)
                 }
                 TextField {
                     id:commune
                     text: "Commune"
-                    font.pixelSize: Units.dp(Margin_values.text_font)
+                    font.pixelSize: Units.dp(Defines_values.text_font)
                 }
             }
         }
@@ -118,11 +118,11 @@ TabbedPage {
                 topMargin: Units.dp(50)
             }
             ColumnLayout {
-                spacing: Units.dp(Margin_values.textfield_margin)
+                spacing: Units.dp(Defines_values.textfield_margin)
                 anchors.horizontalCenter: parent.horizontalCenter
                 TextField {
                     id: passwordField
-                    font.pixelSize: Units.dp(Margin_values.text_font)
+                    font.pixelSize: Units.dp(Defines_values.text_font)
                     placeholderText: "Mot de passe"
                     floatingLabel: true
                     echoMode: TextInput.Password
@@ -130,7 +130,7 @@ TabbedPage {
                 }
                 TextField {
                     id: passwordConfirm
-                    font.pixelSize: Units.dp(Margin_values.text_font)
+                    font.pixelSize: Units.dp(Defines_values.text_font)
                     placeholderText: "Confirmer le mot de passe"
                     floatingLabel: true
                     echoMode: TextInput.Password

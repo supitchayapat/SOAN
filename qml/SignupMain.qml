@@ -1,6 +1,6 @@
 import QtQuick 2.5
 import Material 0.2
-import "define_values.js" as Margin_values
+import "../js/define_values.js" as Defines_values
 
 Page {
 
@@ -16,7 +16,7 @@ Page {
             left: parent.left
             right: parent.right
             top: parent.top
-            topMargin: Units.dp(Margin_values.loaderMargin)
+            topMargin: Units.dp(Defines_values.loaderMargin)
         }
         asynchronous: true
         source: Qt.resolvedUrl("SignupProgressbySteps.qml")
@@ -25,7 +25,7 @@ Page {
     Loader {
         id: shiftLodaer
         anchors{
-            topMargin: Units.dp(Margin_values.loaderMargin)
+            topMargin: Units.dp(Defines_values.loaderMargin)
             bottom: parent.bottom
             left: parent.left
             right: parent.right
@@ -36,26 +36,28 @@ Page {
     }
 
     ActionButton {
-          x:40
-          anchors {
-              bottom: parent.bottom
-              bottomMargin: Units.dp(10)
-              horizontalCenter: parent.horizontalCenter
-          }
-          elevation: 1
-          iconName: "content/send"
-          action: Action {
-              id: addContent
-              onTriggered:
-              {
-                  checkIn = true
-                  shiftLodaer.source = Qt.resolvedUrl("Signupstep2.qml")
-              }
-          }
-     }
+        x:40
+        anchors {
+            bottom: parent.bottom
+            bottomMargin: Units.dp(10)
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        elevation: 1
+        iconName: "content/send"
+        action: Action {
+            id: addContent
+
+            onTriggered:
+            {
+                checkIn = true
+                shiftLodaer.source = Qt.resolvedUrl("Signupstep2.qml")
+            }
+        }
+    }
 
     Snackbar {
-          id: snackbar
-     }
+        id: snackbar
+    }
 }
 

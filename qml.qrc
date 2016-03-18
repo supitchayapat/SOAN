@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/define_values.js</file>
         <file>qml/Listambulances.qml</file>
         <file>qml/Navdrawer.qml</file>
         <file>qml/oldsignup.qml</file>
@@ -11,5 +10,6 @@
         <file>qml/Signupstep1.qml</file>
         <file>qml/Signupstep2.qml</file>
         <file>qml/main.qml</file>
+        <file>js/define_values.js</file>
     </qresource>
 </RCC>
