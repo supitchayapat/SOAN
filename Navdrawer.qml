@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Material.ListItems 0.1 as ListItem
 
+// TODO this Component sould be a singleton
 Rectangle{
     property string email
     property string accountName
