@@ -93,7 +93,7 @@ Page {
     }
 
     NavigationDrawer {
-        id:navDrawer;
+        id:navDrawer
 
         Navdrawer{
             anchors.fill: parent

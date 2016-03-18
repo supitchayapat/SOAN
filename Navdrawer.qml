@@ -1,7 +1,7 @@
-import QtQuick 2.4
+import QtQuick 2.5
 import Material 0.2
-import QtQuick.Layouts 1.1
-import "define_values.js" as Margin_values
+import QtQuick.Layouts 1.2
+import "define_values.js" as Defines_values
 import Material.ListItems 0.1 as ListItem
 
 Rectangle{
@@ -9,74 +9,86 @@ Rectangle{
     property string accountName
 
     Rectangle{
-        id: rect_sidebar
+        id: sidebar
+        height:  Units.dp(Defines_values.sidebar_height)
+        color: Theme.primaryColor
+
         anchors{
             top: parent.top
             left: parent.left
             right: parent.right
         }
-        height:  Units.dp(150)
-        color: "#2196F3"
+
         Label {
-            id: acc_name
-            anchors{
-                verticalCenter:  rect_sidebar.verticalCenter
-                verticalCenterOffset: -4
-                left: parent.left
-                leftMargin: Units.dp(10)
-            }
+            id: accountname
             text: accountName
             style: "title"
             color: "white"
+            anchors{
+                verticalCenter:  sidebar.verticalCenter
+                verticalCenterOffset: -4
+                left: parent.left
+                leftMargin: Units.dp(Defines_values.leftMargin)
+            }
         }
         Label {
-            id: acc_email
-            anchors{
-                bottom: rect_sidebar.bottom
-                bottomMargin: Units.dp(5)
-                left: parent.left
-                leftMargin: Units.dp(10)
-            }
+            id: accountemail
             text: email
             style: "body2"
             color: "white"
+            anchors{
+                bottom: sidebar.bottom
+                bottomMargin: Units.dp(Defines_values.bottomMargin)
+                left: parent.left
+                leftMargin: Units.dp(Defines_values.leftMargin)
+            }
         }
     }
+
     View {
         anchors{
-            top:rect_sidebar.bottom
-            topMargin: Units.dp(7)
+            top:sidebar.bottom
+            topMargin: Units.dp(Defines_values.view_topMargin)
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-        }        Column {
+        }
+
+        Column {
             anchors.fill: parent
+
             ListItem.Standard {
                 text: "Liste d'Ambulances"
+
                 action: Icon {
                     anchors.centerIn: parent
                     name: "action/account_box"
-                    size: Units.dp(32)
-                    color:"#2196F3"
+                    size: Units.dp(Defines_values.iconsize)
+                    color:Theme.primaryColor
                 }
+
                 onClicked:{
                     navDrawer.close()
                     pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
                 }
             }
+
             ListItem.Standard {
                 text: "Mon compte"
+
                 action: Icon {
                     anchors.centerIn: parent
                     name: "action/account_circle"
-                    size: Units.dp(32)
-                    color:"#2196F3"
+                    size: Units.dp(Defines_values.iconsize)
+                    color:Theme.primaryColor
                 }
+
                 onClicked:{
                     navDrawer.close()
                     pageStack.push(Qt.resolvedUrl("Account.qml"))
                 }
             }
+
         }
     }
 }

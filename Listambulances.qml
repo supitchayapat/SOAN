@@ -4,16 +4,13 @@ import Material.ListItems 0.1 as ListItem
 import "define_values.js" as Defines_values
 
 Page {
-
     id: page
     property var ambliste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]
     title: "Liste d'Ambulances"
 
+    backAction: navDrawer.action
     actionBar.backgroundColor: Palette.colors.grey['200']
     actionBar.decorationColor: Palette.colors.grey['300']
-
-    onGoBack: {
-    }
 
     ListView{
         anchors.fill: parent
@@ -52,5 +49,13 @@ Page {
         positiveButtonText: "Retour"
         negativeButtonText: "Annuler"
         onAccepted: page.forcePop()
+    }
+
+    NavigationDrawer {
+        id:navDrawer
+
+        Navdrawer{
+            anchors.fill: parent
+        }
     }
 }

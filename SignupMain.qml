@@ -59,5 +59,9 @@ Page {
     Snackbar {
         id: snackbar
     }
+
+    Navdrawer{
+        id : navDrawer
+    }
 }
 
