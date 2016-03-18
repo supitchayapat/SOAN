@@ -139,12 +139,15 @@ Item {
         }
 
         Label {
-
             text: "Utilisateur/mot de passe est invalide"
             anchors.horizontalCenter: parent.horizontalCenter
             color: Theme.tabHighlightColor
             fontStyles: "dialog"
             font.family: labelFont.name
+            visible: {
+            // TODO  insert server confirmation for the login
+                return false
+            }
         }
     }
 }
