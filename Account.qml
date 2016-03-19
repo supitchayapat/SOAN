@@ -127,7 +127,7 @@ Page {
                 id:nom_prenom
                 text:"Morgan Ponty"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
             }
         }
 
@@ -142,7 +142,7 @@ Page {
             Label{
                 id:nom_de_la_structure
                 text: "Accords Ambulances"
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
                 font.pixelSize: Units.dp(Defines_values.text_font)
 
             }
@@ -176,7 +176,7 @@ Page {
                 id:email
                 text: "Morganponty@email.com"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
             }
         }
         RowLayout{
@@ -190,7 +190,7 @@ Page {
             Label{
                 text: "tel: 0x xx xx xx xx"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
             }
         }
 
@@ -205,7 +205,7 @@ Page {
             Label {
                 text: "VST et Ambulance"
                 font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
             }
         }
         Button {
@@ -213,7 +213,7 @@ Page {
             elevation: 1
             backgroundColor: Theme.primaryColor
             onClicked: changepassword.show()
-            width:column.width
+            Layout.fillWidth:true
 
         }
     }
