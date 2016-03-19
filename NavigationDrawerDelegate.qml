@@ -4,13 +4,15 @@ import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Material.ListItems 0.1 as ListItem
 
-// TODO this Component sould be a singleton
+// TODO this Component should be a singleton
 Rectangle{
+
     property string email
     property string accountName
 
     Rectangle{
-        id: sidebar
+        id: sidebar_rct
+
         height:  Units.dp(Defines_values.sidebar_height)
         color: Theme.primaryColor
 
@@ -21,24 +23,27 @@ Rectangle{
         }
 
         Label {
-            id: accountname
+
             text: accountName
             style: "title"
             color: "white"
+
             anchors{
-                verticalCenter:  sidebar.verticalCenter
+                verticalCenter:  sidebar_rct.verticalCenter
                 verticalCenterOffset: -4
                 left: parent.left
                 leftMargin: Units.dp(Defines_values.leftMargin)
             }
         }
+
         Label {
-            id: accountemail
+
             text: email
             style: "body2"
             color: "white"
+
             anchors{
-                bottom: sidebar.bottom
+                bottom: sidebar_rct.bottom
                 bottomMargin: Units.dp(Defines_values.bottomMargin)
                 left: parent.left
                 leftMargin: Units.dp(Defines_values.leftMargin)
@@ -47,8 +52,9 @@ Rectangle{
     }
 
     View {
+
         anchors{
-            top:sidebar.bottom
+            top:sidebar_rct.bottom
             topMargin: Units.dp(Defines_values.view_topMargin)
             left: parent.left
             right: parent.right
@@ -56,9 +62,11 @@ Rectangle{
         }
 
         Column {
+
             anchors.fill: parent
 
             ListItem.Standard {
+
                 text: "Liste d'Ambulances"
 
                 action: Icon {
@@ -75,6 +83,7 @@ Rectangle{
             }
 
             ListItem.Standard {
+
                 text: "Mon compte"
 
                 action: Icon {
