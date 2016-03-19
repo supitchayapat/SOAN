@@ -11,7 +11,7 @@ Rectangle{
     property string accountName
 
     Rectangle{
-        id: sidebar
+        id: sidebar_rct
 
         height:  Units.dp(Defines_values.sidebar_height)
         color: Theme.primaryColor
@@ -23,7 +23,6 @@ Rectangle{
         }
 
         Label {
-            id: accountname
 
             text: accountName
             style: "title"
@@ -38,7 +37,6 @@ Rectangle{
         }
 
         Label {
-            id: accountemail
 
             text: email
             style: "body2"
