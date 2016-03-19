@@ -55,7 +55,7 @@ Rectangle{
 
         anchors{
             top:sidebar_rct.bottom
-            topMargin: Units.dp(Defines_values.view_topMargin)
+            topMargin: Units.dp(Defines_values.Sidebar_view_topMargin)
             left: parent.left
             right: parent.right
             bottom: parent.bottom
@@ -72,7 +72,7 @@ Rectangle{
                 action: Icon {
                     anchors.centerIn: parent
                     name: "action/account_box"
-                    size: Units.dp(Defines_values.iconsize)
+                    size: Units.dp(Defines_values.Default_iconsize)
                     color:Theme.primaryColor
                 }
 
@@ -89,7 +89,7 @@ Rectangle{
                 action: Icon {
                     anchors.centerIn: parent
                     name: "action/account_circle"
-                    size: Units.dp(Defines_values.iconsize)
+                    size: Units.dp(Defines_values.Default_iconsize)
                     color:Theme.primaryColor
                 }
 

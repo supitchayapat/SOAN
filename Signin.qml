@@ -26,7 +26,7 @@ Item {
             Icon{
                 name:"action/done"
                 size: Units.dp(100)
-                color: Theme.primaryColor
+                color: Defines_values.PrimaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
@@ -128,7 +128,7 @@ Item {
                 elevation: 1
                 width: parent.width
                 activeFocusOnPress: true
-                backgroundColor: Theme.primaryColor
+                backgroundColor: Defines_values.PrimaryColor
 
                 onClicked:{
                     // TODO : server connexion call here
@@ -143,7 +143,7 @@ Item {
                 elevation: 1
                 width: parent.width
                 activeFocusOnPress: true
-                backgroundColor: Theme.primaryColor
+                backgroundColor: Defines_values.PrimaryColor
 
                 onClicked:{
                     pageStack.push(Qt.resolvedUrl("SignupMain.qml"))

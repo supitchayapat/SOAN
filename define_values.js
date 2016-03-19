@@ -1,4 +1,4 @@
-var iconsize = 32;
+var Default_iconsize = 32;
 var verticalspacing = 15;
 var horizontalspacing = 30;
 
@@ -20,3 +20,5 @@ var bottomMargin = 5;
 var text_font = 14;
 var textFieldsFontFamily= "Roboto";
 var labelFieldsFontFamily = "Roboto";
+
+var PrimaryColor = "#2196F3"
