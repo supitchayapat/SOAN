@@ -29,7 +29,7 @@ Rectangle{
             color: "white"
 
             anchors{
-                verticalCenter:  sidebar.verticalCenter
+                verticalCenter:  sidebar_rct.verticalCenter
                 verticalCenterOffset: -4
                 left: parent.left
                 leftMargin: Units.dp(Defines_values.leftMargin)
@@ -43,7 +43,7 @@ Rectangle{
             color: "white"
 
             anchors{
-                bottom: sidebar.bottom
+                bottom: sidebar_rct.bottom
                 bottomMargin: Units.dp(Defines_values.bottomMargin)
                 left: parent.left
                 leftMargin: Units.dp(Defines_values.leftMargin)
@@ -54,7 +54,7 @@ Rectangle{
     View {
 
         anchors{
-            top:sidebar.bottom
+            top:sidebar_rct.bottom
             topMargin: Units.dp(Defines_values.view_topMargin)
             left: parent.left
             right: parent.right
