@@ -5,18 +5,23 @@ import "define_values.js" as Defines_values
 
 Page {
     id: page
-    property var ambliste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]
-    title: "Liste d'Ambulances"
 
+    property var ambliste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]
+
+    title: "Liste d'Ambulances"
     backAction: navDrawer.action
     actionBar.backgroundColor: Palette.colors.grey['200']
     actionBar.decorationColor: Palette.colors.grey['300']
 
     ListView{
+
         anchors.fill: parent
         model:ambliste
+
         delegate: ListItem.Standard{
+
             text:modelData
+
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
@@ -25,6 +30,7 @@ Page {
             }
 
             Button {
+
                 width: Units.dp(80)
 
                 anchors{
@@ -44,8 +50,6 @@ Page {
     }
 
     Dialog {
-
-        id: confirmationDialog
         title: "Voulez-vous revenir?"
         positiveButtonText: "Retour"
         negativeButtonText: "Annuler"
