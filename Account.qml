@@ -100,7 +100,7 @@ Page {
     NavigationDrawer {
         id:navDrawer
 
-        Navdrawer{
+        NavigationDrawerDelegate{
             anchors.fill: parent
             email: emailAdressString
             accountName:accountNameString
@@ -131,9 +131,9 @@ Page {
             }
 
             Label {
-                text:"Morgan Ponty"
+                text:"Morgan Ponty"       
                 font.pointSize: Units.dp(Defines_values.text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
             }
         }
 
@@ -147,7 +147,7 @@ Page {
 
             Label{
                 text: "Accords Ambulances"
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
                 font.pointSize: Units.dp(Defines_values.text_font)
             }
         }
@@ -180,7 +180,7 @@ Page {
             Label {
                 text: "Morganponty@email.com"
                 font.pointSize: Units.dp(Defines_values.text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
             }
         }
 
@@ -196,7 +196,7 @@ Page {
             Label{
                 text: "tel: 0x xx xx xx xx"
                 font.pointSize: Units.dp(Defines_values.text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
             }
         }
 
@@ -211,8 +211,9 @@ Page {
 
             Label {
                 text: "VST et Ambulance"
+
                 font.pointSize: Units.dp(Defines_values.text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                Layout.fillWidth:true
             }
         }
 
@@ -221,8 +222,7 @@ Page {
             elevation: 1
             backgroundColor: Theme.primaryColor
             onClicked: changepassword_dlg.show()
-            width:column.width
+            Layout.fillWidth:true
         }
     }
-
 }
