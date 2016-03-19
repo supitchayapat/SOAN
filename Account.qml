@@ -33,7 +33,6 @@ Page {
             Label {
                 text: "votre nouveau mot de passe a été enregistré avec succès"
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:confirmed_dlg.width - Units.dp(120)
                 color: Theme.primaryColor
                 wrapMode: Text.WordWrap
             }
