@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
+import QtQml.Models 2.2
 import "define_values.js" as Defines_values
 
 Page {
@@ -105,7 +106,7 @@ Page {
     ColumnLayout{
         id: column
         spacing: Units.dp(Defines_values.horizontalspacing)
-        width: parent.width - parent.width/5
+        width:Units.dp(350)
 
         anchors{
             top:parent.top
@@ -207,16 +208,13 @@ Page {
                 width: column.width - icon.width - Units.dp(Defines_values.border_margins)
             }
         }
-        RowLayout{
-            width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+        Button {
+            text:qsTr("Changer le mot de passe")
+            elevation: 1
+            backgroundColor: Theme.primaryColor
+            onClicked: changepassword.show()
+            width:column.width
 
-            Button {
-                text:"Changer le mot de passe"
-                elevation: 1
-                backgroundColor: Theme.primaryColor
-                onClicked: changepassword.show()
-
-            }
         }
     }
 
