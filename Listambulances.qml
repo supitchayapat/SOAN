@@ -59,7 +59,7 @@ Page {
     NavigationDrawer {
         id:navDrawer
 
-        Navdrawer{
+        NavigationDrawerDelegate{
             anchors.fill: parent
         }
     }
