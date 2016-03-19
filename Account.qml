@@ -132,7 +132,7 @@ Page {
 
             Label {
                 text:"Morgan Ponty"       
-                font.pointSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.text_font)
                 Layout.fillWidth:true
             }
         }
@@ -148,7 +148,7 @@ Page {
             Label{
                 text: "Accords Ambulances"
                 Layout.fillWidth:true
-                font.pointSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.text_font)
             }
         }
 
@@ -163,7 +163,7 @@ Page {
 
             Label{
                 text: "141 rue Merlot 340130 Mauguio"
-                font.pointSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.text_font)
                 width: column.width - icon.width - Units.dp(Defines_values.border_margins)
             }
         }
@@ -179,7 +179,7 @@ Page {
 
             Label {
                 text: "Morganponty@email.com"
-                font.pointSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.text_font)
                 Layout.fillWidth:true
             }
         }
@@ -195,7 +195,7 @@ Page {
 
             Label{
                 text: "tel: 0x xx xx xx xx"
-                font.pointSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.text_font)
                 Layout.fillWidth:true
             }
         }
@@ -212,7 +212,7 @@ Page {
             Label {
                 text: "VST et Ambulance"
 
-                font.pointSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.text_font)
                 Layout.fillWidth:true
             }
         }
