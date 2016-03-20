@@ -3,10 +3,12 @@ import Material 0.2
 import "define_values.js" as Defines_values
 
 Item{
+
     anchors.horizontalCenter: parent.horizontalCenter
 
     Rectangle {
         id:lineIn
+
         anchors.centerIn: parent
         width: Units.dp(150)
         height: 3
@@ -15,10 +17,12 @@ Item{
 
         Rectangle {
             id:lineIn2
+
             anchors.fill: parent
             color:"gray"
 
             OpacityAnimator {
+
                 target: lineIn2;
                 from: 1;
                 to: 0;
@@ -29,6 +33,7 @@ Item{
     }
 
     Rectangle {
+
         width: parent.width<parent.height?parent.width:parent.height
         height: width
         anchors.horizontalCenter: lineIn.left
@@ -36,6 +41,7 @@ Item{
         radius: width*0.5
 
         Text{
+
             visible: !checkIn
             anchors.centerIn: parent
             text: "1"
@@ -43,6 +49,7 @@ Item{
         }
 
         Icon{
+
             visible: checkIn
             anchors.centerIn: parent
             name: "action/done"
@@ -51,6 +58,7 @@ Item{
     }
 
     Rectangle {
+
         width: parent.width<parent.height?parent.width:parent.height
         height: width
         anchors.horizontalCenter: lineIn.right
@@ -58,6 +66,7 @@ Item{
         radius: width*0.5
 
         Text{
+
             anchors.centerIn: parent
             text: "2"
             color: "white"
