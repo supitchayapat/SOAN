@@ -13,7 +13,7 @@ Item {
     FontLoader {id : labelFont; name : Defines_values.textFieldsFontFamily}
 
     Dialog {    
-        id: confirmed
+        id: confirmed_dlg
 
         width: parent.width - parent.width/6
         hasActions: false
@@ -24,6 +24,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             Icon{
+
                 name:"action/done"
                 size: Units.dp(100)
                 color: Defines_values.PrimaryColor
@@ -31,9 +32,10 @@ Item {
             }
 
             Label {
-                anchors.horizontalCenter: parent.horizontalCenter
-                width:forgottenPasswordBar.width - Units.dp(120)
+
                 text: "Verifier votre boite email pour le changement de votre mot de passe"
+                anchors.horizontalCenter: parent.horizontalCenter
+                width:forgottenPassword_dlg.width - Units.dp(120)
                 color: Theme.accentColor
                 wrapMode: Text.WordWrap
                 font.family: labelFont.name
@@ -42,15 +44,17 @@ Item {
     }
 
     Dialog {
-        id: forgottenPasswordBar
+        id: forgottenPassword_dlg
+
         width: parent.width - parent.width/6
         text: "Mot de passe oublié"
         z:1
 
         TextField {
-            id: textEmail
-            inputMethodHints: Qt.ImhEmailCharactersOnly
+            id: textEmail_txtFld
+
             width: parent.width
+            inputMethodHints: Qt.ImhEmailCharactersOnly
             echoMode: TextInput.Normal
             placeholderText: qsTr( "Adresse email" )
             validator: RegExpValidator { regExp:/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/ }
@@ -59,7 +63,7 @@ Item {
 
         onAccepted: {
             //a signal with email name will be emited to a function,lets show confirmed dialog
-            confirmed.show()
+            confirmed_dlg.show()
         }
 
         positiveButtonText: "Valider"
@@ -67,9 +71,8 @@ Item {
     }
 
     ColumnLayout{
+
         z:-1
-
-
         anchors{
             centerIn: parent
             left: parent.left
@@ -77,7 +80,9 @@ Item {
             leftMargin: parent.width/12
             rightMargin: parent.width/12
         }
-        width: parent.width - parent.width/12
+
+        width:parent.width
+
         spacing:Units.dp(40)
 
         Column{
@@ -89,8 +94,6 @@ Item {
                 left  :parent.left
                 margins: Units.dp(10)
             }
-
-            width: parent.width
 
             TextField {
                 placeholderText: "Email"
@@ -119,8 +122,6 @@ Item {
                 margins: Units.dp(10)
             }
 
-            width: parent.width
-
             Button {
 
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -138,10 +139,10 @@ Item {
 
             Button {
 
+                width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Creer un compte"
                 elevation: 1
-                width: parent.width
                 activeFocusOnPress: true
                 backgroundColor: Defines_values.PrimaryColor
 
@@ -153,6 +154,7 @@ Item {
 
         Button {
             id : forgottenPassword_btn
+
             anchors {
                 horizontalCenter: parent.horizontalCenter
                 margins: Units.dp(10)
@@ -160,11 +162,12 @@ Item {
 
             text:"mot de passe oublié ?"
             width: parent.width < implicitWidth  ? parent.width : implicitWidth
-            onClicked: forgottenPasswordBar.show()
+            onClicked: forgottenPassword_dlg.show()
             textColor: Theme.accentColor
         }
 
         Label {
+
             text: "Utilisateur/mot de passe est invalide"
             anchors.horizontalCenter: parent.horizontalCenter
             color: Theme.tabHighlightColor

@@ -21,12 +21,14 @@ Item{
 
         CheckBox {
             id: vslcheckbox
+
             checked: true
             text: "Recevoir des demande en VSL"
         }
     }
 
     ColumnLayout {
+
         spacing: Units.dp(Defines_values.horizontalspacing )
         anchors{
             top:topColumn.bottom
@@ -35,22 +37,26 @@ Item{
         }
 
         TextField {
-            id: passwordField
+            id: passwordField_txtFld
+
             font.pixelSize: Units.dp(Defines_values.text_font)
             placeholderText: "Mot de passe"
             floatingLabel: true
             width: parent.width
             echoMode: TextInput.Password
             helperText: "Eviter les caractères spéciaux"
+            Layout.fillWidth:true
         }
 
         TextField {
-            id: passwordFieldconfirmation
+            id: passwordFieldconfirmation_txtFld
+
             font.pixelSize: Units.dp(Defines_values.text_font)
             placeholderText: "Confirmer le Mot de passe"
             floatingLabel: true
             echoMode: TextInput.Password
             helperText: "Eviter les caractères spéciaux"
+            Layout.fillWidth:true
         }
     }
 }
