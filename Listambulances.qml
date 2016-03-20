@@ -56,14 +56,4 @@ Page {
         negativeButtonText: "Annuler"
         onAccepted: page.forcePop()
     }
-
-    NavigationDrawer {
-        id:navDrawer
-
-        NavigationDrawerDelegate{
-            email: emailAdressString
-            accountName:accountNameString
-            anchors.fill: parent
-        }
-    }
 }

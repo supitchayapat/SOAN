@@ -12,6 +12,17 @@ ApplicationWindow {
 
     initialPage : Qt.resolvedUrl("Signin.qml")
 
+    NavigationDrawer {
+        id:navDrawer
+
+        NavigationDrawerDelegate{
+            anchors.fill: parent
+            objectName: "myNavBar"
+            email: "emailAdressString"
+            accountName:"accountNameString"
+        }
+    }
+
     theme {
         primaryColor: "blue"
         accentColor: "blue"

@@ -10,6 +10,9 @@ Rectangle{
     property string email
     property string accountName
 
+    signal goToAmbulanceListPage()
+    signal goToAccountPage()
+
     Rectangle{
         id: sidebar_rct
 
