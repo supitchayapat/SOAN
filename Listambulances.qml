@@ -7,9 +7,10 @@ Page {
     id: page
 
     property var ambliste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]
-
-    title: "Liste d'Ambulances"
+    property string emailAdressString: "Contact@ahmed-arif.com"
+    property string accountNameString: "Alliance"
     backAction: navDrawer.action
+
     actionBar.backgroundColor: Palette.colors.grey['200']
     actionBar.decorationColor: Palette.colors.grey['300']
 
@@ -60,6 +61,8 @@ Page {
         id:navDrawer
 
         NavigationDrawerDelegate{
+            email: emailAdressString
+            accountName:accountNameString
             anchors.fill: parent
         }
     }

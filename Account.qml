@@ -9,6 +9,7 @@ Page {
 
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
+    backAction: navDrawer.action
 
     anchors.fill: parent
 
@@ -225,4 +226,5 @@ Page {
             Layout.fillWidth:true
         }
     }
+
 }

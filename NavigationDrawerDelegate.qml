@@ -55,7 +55,7 @@ Rectangle{
 
         anchors{
             top:sidebar_rct.bottom
-            topMargin: Units.dp(Defines_values.Sidebar_view_topMargin)
+            topMargin: Units.dp(Defines_values.view_topMargin)
             left: parent.left
             right: parent.right
             bottom: parent.bottom
