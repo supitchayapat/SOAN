@@ -9,12 +9,14 @@ Item{
 
     ColumnLayout {
         id: topColumn
+
         spacing: Units.dp(Defines_values.Default_border_margins)
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width - Units.dp(70)
 
         CheckBox {
             id: demandecheckbox
+
             checked: true
             text: "Recevoir des demande en\n ambulances"
         }
@@ -39,6 +41,7 @@ Item{
         TextField {
 
             id: passwordField
+
             font.pixelSize: Units.dp(Defines_values.Base_text_font)
             placeholderText: "Mot de passe"
             floatingLabel: true
@@ -51,6 +54,7 @@ Item{
         TextField {
 
             id: passwordFieldconfirmation
+
             font.pixelSize: Units.dp(Defines_values.Base_text_font)
             placeholderText: "Confirmer le Mot de passe"
             floatingLabel: true
