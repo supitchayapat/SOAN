@@ -3,14 +3,15 @@ import Material 0.2
 import "define_values.js" as Defines_values
 
 Page {
-
     id:windows
-    visible: true
 
     property bool checkIn: false
 
+    visible: true
+
     Loader {
         id: fixedLoader
+
         height: Units.dp(50)
         anchors{
             left: parent.left
@@ -22,10 +23,9 @@ Page {
         source: Qt.resolvedUrl("SignupProgressbySteps.qml")
     }
 
-
-
     Loader {
         id: shiftLodaer
+
         anchors{
             topMargin: Units.dp(Defines_values.loaderMargin)
             bottom: parent.bottom
@@ -38,6 +38,7 @@ Page {
     }
 
     ActionButton {
+
         x:40
         anchors {
             bottom: parent.bottom
