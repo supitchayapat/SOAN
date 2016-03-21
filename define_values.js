@@ -3,7 +3,7 @@ var Default_verticalspacing = 15;
 var Default_horizontalspacing = 30;
 
 // Margins
-var top_account_textfield_margin = 8;
+var top_account_textfield_margin = 18;
 var Default_border_margins =  20;
 var SignupLoaderMargin = 20;
 //var topMargin = 7;
