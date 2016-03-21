@@ -16,7 +16,7 @@ Page {
             left: parent.left
             right: parent.right
             top: parent.top
-            topMargin: Units.dp(Defines_values.loaderMargin)
+            topMargin: Units.dp(Defines_values.SignupLoaderMargin)
         }
         asynchronous: true
         source: Qt.resolvedUrl("SignupProgressbySteps.qml")
@@ -27,7 +27,7 @@ Page {
     Loader {
         id: shiftLodaer
         anchors{
-            topMargin: Units.dp(Defines_values.loaderMargin)
+            topMargin: Units.dp(Defines_values.SignupLoaderMargin)
             bottom: parent.bottom
             left: parent.left
             right: parent.right

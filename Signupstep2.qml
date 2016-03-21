@@ -9,7 +9,7 @@ Item{
 
     ColumnLayout {
         id: topColumn
-        spacing: Units.dp(Defines_values.border_margins)
+        spacing: Units.dp(Defines_values.Default_border_margins)
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width - Units.dp(70)
 
@@ -36,7 +36,7 @@ Item{
 
         TextField {
             id: passwordField
-            font.pixelSize: Units.dp(Defines_values.text_font)
+            font.pixelSize: Units.dp(Defines_values.Base_text_font)
             placeholderText: "Mot de passe"
             floatingLabel: true
             width: parent.width
@@ -46,7 +46,7 @@ Item{
 
         TextField {
             id: passwordFieldconfirmation
-            font.pixelSize: Units.dp(Defines_values.text_font)
+            font.pixelSize: Units.dp(Defines_values.Base_text_font)
             placeholderText: "Confirmer le Mot de passe"
             floatingLabel: true
             echoMode: TextInput.Password

@@ -26,8 +26,8 @@ Item{
                 id:nomprenom
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:"Nom et Prénom"
-                font.pixelSize: Units.dp(Defines_values.text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.border_margins)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
         }
 
@@ -42,8 +42,8 @@ Item{
             TextField {
                 id:nomdelastructure
                 text: "Nom de la structure"
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.border_margins)
-                font.pixelSize: Units.dp(Defines_values.text_font)
+                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
             }
         }
 
@@ -59,27 +59,27 @@ Item{
             TextField {
                 id:rue
                 placeholderText: "N de rue"
-                font.pixelSize: Units.dp(Defines_values.text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.border_margins)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
         }
 
         RowLayout{
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.border_margins)
+            spacing : Units.dp(Defines_values.Default_border_margins)
             width: parent.width
 
             TextField {
                 id:commune
                 placeholderText: "Code Postal"
-                font.pixelSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 inputMethodHints: Qt.ImhDigitsOnly
             }
 
             TextField {
                 id:codepostal
                 placeholderText: "Commune"
-                font.pixelSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
             }
         }
 
@@ -96,8 +96,8 @@ Item{
                 id:email
                 placeholderText: "Email"
                 inputMethodHints: Qt.ImhEmailCharactersOnly
-                font.pixelSize: Units.dp(Defines_values.text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.border_margins)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
         }
 
@@ -114,8 +114,8 @@ Item{
                 id:tel
                 placeholderText: "tel: 0x xx xx xx xx"
                 inputMethodHints: Qt.ImhDialableCharactersOnly
-                font.pixelSize: Units.dp(Defines_values.text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.border_margins)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
         }
     }

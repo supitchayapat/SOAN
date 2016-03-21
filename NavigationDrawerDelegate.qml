@@ -44,9 +44,9 @@ Rectangle{
 
             anchors{
                 bottom: sidebar_rct.bottom
-                bottomMargin: Units.dp(Defines_values.bottomMargin)
+                bottomMargin: Units.dp(Defines_values.sidebarbottomMargin)
                 left: parent.left
-                leftMargin: Units.dp(Defines_values.leftMargin)
+                leftMargin: Units.dp(Defines_values.sidebarleftMargin)
             }
         }
     }
