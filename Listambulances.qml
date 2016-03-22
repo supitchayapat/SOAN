@@ -6,24 +6,24 @@ import "define_values.js" as Defines_values
 Page {
     id: page
 
-    ListModel {
-        id:ambliste
-        ListElement {availability: false; name:" Mohammed";  phoneNumber: '0512313'}
-        ListElement {availability: true; name:" Mohammed2"; phoneNumber: '0512313'}
-        ListElement {availability: false; name:" Mohammed3"; phoneNumber: '0512313'}
-        ListElement {availability: false; name:"Fabio";      phoneNumber: '0512313'}
-        ListElement {availability: true;  name:" Patrice";   phoneNumber: '0512313'}
-        ListElement {availability: false;  name:" Jean";      phoneNumber: '0512313'}
-        ListElement {availability: true;  name:"naome";      phoneNumber: '0512313'}
-        ListElement {availability: false;  name: "simo";      phoneNumber: "07123213213"}
-    }
-
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
     backAction: navDrawer.action
 
     actionBar.backgroundColor: Palette.colors.grey['200']
     actionBar.decorationColor: Palette.colors.grey['300']
+
+    ListModel {
+        id:ambliste
+        ListElement {availability: false; name:" Mohammed";  phoneNumber: '0512313'}
+        ListElement {availability: true; name:" Mohammed2";  phoneNumber: '0512313'}
+        ListElement {availability: false; name:" Mohammed3"; phoneNumber: '0512313'}
+        ListElement {availability: false; name:"Fabio";      phoneNumber: '0512313'}
+        ListElement {availability: true;  name:" Patrice";   phoneNumber: '0512313'}
+        ListElement {availability: false;  name:" Jean";     phoneNumber: '0512313'}
+        ListElement {availability: true;  name:"naome";      phoneNumber: '0512313'}
+        ListElement {availability: false;  name: "simo";     phoneNumber: '071232'}
+    }
 
     Component {
         id: listelements
