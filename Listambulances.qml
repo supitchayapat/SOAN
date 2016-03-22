@@ -6,7 +6,17 @@ import "define_values.js" as Defines_values
 Page {
     id: page
 
-    property var ambliste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]
+    ListModel {
+        id:ambliste
+        ListElement {availability: false; name:" Mohammed";  phoneNumber: '0512313'}
+        ListElement {availability: true; name:" Mohammed2"; phoneNumber: '0512313'}
+        ListElement {availability: false; name:" Mohammed3"; phoneNumber: '0512313'}
+        ListElement {availability: false; name:"Fabio";      phoneNumber: '0512313'}
+        ListElement {availability: true;  name:" Patrice";   phoneNumber: '0512313'}
+        ListElement {availability: false;  name:" Jean";      phoneNumber: '0512313'}
+        ListElement {availability: true;  name:"naome";      phoneNumber: '0512313'}
+        ListElement {availability: false;  name: "simo";      phoneNumber: "07123213213"}
+    }
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
     backAction: navDrawer.action
@@ -14,20 +24,18 @@ Page {
     actionBar.backgroundColor: Palette.colors.grey['200']
     actionBar.decorationColor: Palette.colors.grey['300']
 
-    ListView{
+    Component {
+        id: listelements
 
-        anchors.fill: parent
-        model:ambliste
+        ListItem.Standard{
 
-        delegate: ListItem.Standard{
-
-            text:modelData
+            text:name
 
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
                 size: Units.dp(32)
-                color:"#2196F3"
+                color: availability ? Theme.primaryColor : "gray"
             }
 
             Button {
@@ -40,6 +48,11 @@ Page {
                     rightMargin: Units.dp(17)
                 }
 
+                onClicked: {
+                    console.log(phoneNumber)
+                    //TODO : looking for a way to add here a method to call a phone number from qml
+                }
+
                 Icon {
                     name: "communication/call"
                     anchors.centerIn: parent
@@ -50,11 +63,10 @@ Page {
         }
     }
 
-    Dialog {
-        title: "Voulez-vous revenir?"
-        positiveButtonText: "Retour"
-        negativeButtonText: "Annuler"
-        onAccepted: page.forcePop()
+    ListView {
+        anchors.fill: parent
+        model: ambliste
+        delegate: listelements
     }
 
     NavigationDrawer {
