@@ -20,6 +20,12 @@ ApplicationWindow {
             objectName: "myNavBar"
             email: "emailAdressString"
             accountName:"accountNameString"
+            onGoToAccountPage: {
+                pageStack.push(Qt.resolvedUrl("Account.qml"))
+            }
+            onGoToAmbulanceListPage: {
+                pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+            }
         }
     }
 

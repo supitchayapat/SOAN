@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
          QQuickItem *item = o->findChild<QQuickItem*>("myNavBar");
         if(item){
 
-              qDebug()<<"Email"<<item->property("email").toString();
+              //qDebug()<<"Email"<<item->property("email").toString();
               engine.rootContext()->setContextProperty("navBar", item);
 
         }
