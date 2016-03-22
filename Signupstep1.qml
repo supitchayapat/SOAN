@@ -87,7 +87,6 @@ Item{
                 placeholderText: "Code Postal"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 inputMethodHints: Qt.ImhDigitsOnly
-                Layout.fillWidth:true
             }
 
             TextField {
