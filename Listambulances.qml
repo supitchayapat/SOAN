@@ -17,6 +17,7 @@ Page {
         ListElement {availability: true;  name:"naome";      phoneNumber: '0512313'}
         ListElement {availability: false;  name: "simo";      phoneNumber: "07123213213"}
     }
+
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
     backAction: navDrawer.action
@@ -48,10 +49,7 @@ Page {
                     rightMargin: Units.dp(17)
                 }
 
-                onClicked: {
-                    console.log(phoneNumber)
-                    //TODO : looking for a way to add here a method to call a phone number from qml
-                }
+                onClicked:  Qt.openUrlExternally('tel:+'+phoneNumber)
 
                 Icon {
                     name: "communication/call"
