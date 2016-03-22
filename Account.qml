@@ -34,7 +34,6 @@ Page {
             Label {
                 text: "votre nouveau mot de passe a été enregistré avec succès"
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:confirmed_dlg.width - Units.dp(120)
                 color: Theme.primaryColor
                 wrapMode: Text.WordWrap
             }
@@ -56,7 +55,7 @@ Page {
 
         ColumnLayout{
 
-            spacing: Units.dp(Defines_values.textfield_margin)
+            spacing: Units.dp(Defines_values.top_account_textfield_margin)
             anchors.horizontalCenter: parent.horizontalCenter
 
             TextField {
@@ -64,7 +63,7 @@ Page {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:parent.width - parent.width/3
-                font.pointSize: Units.dp( Defines_values.text_font)
+                font.pointSize: Units.dp( Defines_values.Base_text_font)
                 placeholderText: "Ancien mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
@@ -77,7 +76,7 @@ Page {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:parent.width - parent.width/3
-                font.pointSize: Units.dp( Defines_values.text_font)
+                font.pointSize: Units.dp( Defines_values.Base_text_font)
                 placeholderText: "Nouveau mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
@@ -89,7 +88,7 @@ Page {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:parent.width - parent.width/3
-                font.pointSize: Units.dp( Defines_values.text_font)
+                font.pointSize: Units.dp( Defines_values.Base_text_font)
                 placeholderText: "Confirmer le mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
@@ -103,18 +102,18 @@ Page {
     ColumnLayout{
         id: column
 
-        spacing: Units.dp(Defines_values.horizontalspacing)
+        spacing: Units.dp(Defines_values.Default_horizontalspacing )
         width:Units.dp(350)
 
         anchors{
             top:parent.top
-            topMargin: Units.dp(Defines_values.top_margin)
+            topMargin: Units.dp(Defines_values.Accounttop_margin)
             horizontalCenter: parent.horizontalCenter
         }
 
         RowLayout{
 
-            spacing : Units.dp(Defines_values.verticalspacing)
+            spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 id:icon
@@ -125,14 +124,14 @@ Page {
 
             Label {
                 text:"Morgan Ponty"
-                font.pixelSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }
 
         RowLayout{
 
-            spacing : Units.dp(Defines_values.verticalspacing)
+            spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 size: Units.dp(Defines_values.iconsize)
@@ -141,13 +140,13 @@ Page {
             Label{
                 text: "Accords Ambulances"
                 Layout.fillWidth:true
-                font.pixelSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
             }
         }
 
         RowLayout{
 
-            spacing : Units.dp(Defines_values.verticalspacing)
+            spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 name: "maps/place"
@@ -156,14 +155,14 @@ Page {
 
             Label{
                 text: "141 rue Merlot 340130 Mauguio"
-                font.pixelSize: Units.dp(Defines_values.text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.border_margins)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                width: column.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
         }
 
         RowLayout{
 
-            spacing : Units.dp(Defines_values.verticalspacing)
+            spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 name: "communication/email"
@@ -172,14 +171,14 @@ Page {
 
             Label {
                 text: "Morganponty@email.com"
-                font.pixelSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }
 
         RowLayout{
 
-            spacing : Units.dp(Defines_values.verticalspacing)
+            spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 name: "communication/call"
@@ -188,14 +187,14 @@ Page {
 
             Label{
                 text: "tel: 0x xx xx xx xx"
-                font.pixelSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }
 
         RowLayout{
 
-            spacing : Units.dp(Defines_values.verticalspacing)
+            spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 name: "maps/local_hospital"
@@ -205,7 +204,7 @@ Page {
             Label {
                 text: "VST et Ambulance"
 
-                font.pixelSize: Units.dp(Defines_values.text_font)
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }
