@@ -46,7 +46,6 @@ Page {
                 anchors{
                     right: parent.right
                     verticalCenter: parent.verticalCenter
-                    rightMargin: Units.dp(17)
                 }
 
                 onClicked:  Qt.openUrlExternally('tel:+'+phoneNumber)
