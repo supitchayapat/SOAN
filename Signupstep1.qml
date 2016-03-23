@@ -114,7 +114,7 @@ Item{
 
                 placeholderText: "Email"
                 inputMethodHints: Qt.ImhEmailCharactersOnly
-
+                validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
