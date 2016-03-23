@@ -1,7 +1,7 @@
 import QtQml 2.0
 import Qt.WebSockets 1.0
 
-import "qondorite/asteroid.qml.js" as Ast
+import "asteroid.qml.js" as Ast
 import "Log.js" as Log
 
 WebSocket {
@@ -18,7 +18,6 @@ WebSocket {
     onMeteor_urlChanged: _connect();
 
     function _connect() {
-
         console.log("CEres " + meteor_url + " is a go");
 
             console.log("X");

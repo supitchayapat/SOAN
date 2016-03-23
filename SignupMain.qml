@@ -5,7 +5,21 @@ import "define_values.js" as Defines_values
 Page {
     id:windows
 
+    Qondrite {
+            id: asteroid
+            meteor_url: "127.0.0.1:3000"
+            onOpen: statusText = "Connection to " + url + " established";
+            onClose: statusText = "Connection closed";
+            onError: statusText = "Error: " + errorString + " (" + url + ")";
+    }
+
     property bool checkIn: false
+    property var stepOne: {
+
+    }
+    property var stepTwo: {
+
+    }
 
     visible: true
 
@@ -37,30 +51,34 @@ Page {
         source: Qt.resolvedUrl("Signupstep1.qml")
     }
 
-    ActionButton {
-
-        x:40
-        anchors {
-            bottom: parent.bottom
-            bottomMargin: Units.dp(10)
-            horizontalCenter: parent.horizontalCenter
-        }
-
-        elevation: 1
-        iconName: "content/send"
-        action: Action {
-            id: addContent
-
-            onTriggered:
-            {
-                checkIn = true
-                shiftLodaer.source = Qt.resolvedUrl("Signupstep2.qml")
-            }
-        }
-    }
-
     Snackbar {
         id: snackbar
     }
+
+    function createAccount(){
+
+        var profile = {
+            name  : stepOne.name,
+            structureName : stepOne.structureName,
+            street  : stepOne.street,
+            city: stepOne.city,
+            postalCode : stepOne.postalCode,
+            email  : stepOne.email,
+            tel  : stepOne.tel,
+            ambulance  : stepTwo.ambulance,
+            vsl  : stepTwo.vsl
+        }
+
+        asteroid.createUser(stepOne.email,stepTwo.password,profile);
+    }
+
+    function saveStepOne(stepOneProperties){
+        stepOne = stepOneProperties;
+    }
+
+    function saveStepTwo(stepTwoProperties){
+       stepTwo = stepTwoProperties;
+    }
+
 }
 

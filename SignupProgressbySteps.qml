@@ -6,6 +6,8 @@ Item{
 
     anchors.horizontalCenter: parent.horizontalCenter
 
+
+
     Rectangle {
         id:lineIn
 

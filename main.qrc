@@ -10,6 +10,11 @@
         <file>Signupstep1.qml</file>
         <file>Signupstep2.qml</file>
         <file>NavigationDrawerDelegate.qml</file>
+        <file>asteroid.qml.js</file>
+        <file>ddp.js</file>
+        <file>Log.js</file>
+        <file>q.js</file>
+        <file>Qondrite.qml</file>
     </qresource>
     <qresource lang="data, images, icones.." prefix="/rsrc"/>
 </RCC>

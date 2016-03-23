@@ -62,5 +62,33 @@ Item{
             helperText: "Eviter les caractères spéciaux"
             Layout.fillWidth:true
         }
+
+        ActionButton {
+
+            x:40
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: Units.dp(10)
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            elevation: 1
+            iconName: "content/send"
+            action: Action {
+                id: addContent
+
+                onTriggered:
+                {
+                    checkIn = true;
+                    var stepTwo = {
+                        ambulance  : demandecheckbox.checked,
+                        vsl  : vslcheckbox.checked,
+                        password  : passwordField.text
+                    }
+                    saveStepTwo(stepTwo);
+                    createAccount();
+                }
+            }
+        }
     }
 }

@@ -141,5 +141,41 @@ Item{
                 width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
         }
+
+        RowLayout{
+            ActionButton {
+
+                x:40
+                anchors {
+                    bottom: parent.bottom
+                    bottomMargin: Units.dp(10)
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+                elevation: 1
+                iconName: "content/send"
+                action: Action {
+                    id: addContent
+
+                    onTriggered:
+                    {
+                        checkIn = true;
+                        console.log("name value step 1: "+nomprenom_txtFld.text);
+                        var step1 = {
+                            name  : nomprenom_txtFld.text,
+                            structureName : nomdelastructure_txtFld.text,
+                            street  : rue_txtFld.text,
+                            city  : commune_txtFld.text,
+                            postalCode : codepostal_txtFld.text,
+                            email  : email_txtFld.text,
+                            tel  : tel_txtFld.text,
+                        }
+
+                        saveStepOne(step1);
+                        shiftLodaer.source = Qt.resolvedUrl("Signupstep2.qml")
+                    }
+                }
+            }
+        }
     }
 }
