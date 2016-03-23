@@ -10,8 +10,8 @@ Page {
     property string accountNameString: "Alliance"
     backAction: navDrawer.action
 
-    actionBar.backgroundColor: Palette.colors.grey['200']
-    actionBar.decorationColor: Palette.colors.grey['300']
+    actionBar.backgroundColor: Palette.colors.grey[Defines_values.ListambulancesBackgroundlevel]
+    actionBar.decorationColor: Palette.colors.grey[Defines_values.ListambulancesDecorationlevel]
 
     ListModel {
         id:ambliste
@@ -35,13 +35,13 @@ Page {
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
-                size: Units.dp(32)
-                color: availability ? Theme.primaryColor : "gray"
+                size: Units.dp(Defines_values.Default_iconsize)
+                color: availability ? Theme.primaryColor : Defines_values.Materialgraycolor
             }
 
             Button {
 
-                width: Units.dp(80)
+                width: Units.dp(Defines_values.ListambulancesButtonwidth)
 
                 anchors{
                     right: parent.right
@@ -53,8 +53,8 @@ Page {
                 Icon {
                     name: "communication/call"
                     anchors.centerIn: parent
-                    size: Units.dp(32)
-                    color:"#2196F3"
+                    size: Units.dp(Defines_values.Default_iconsize)
+                    color: Defines_values.PrimaryColor
                 }
             }
         }
@@ -62,13 +62,13 @@ Page {
 
     ListView {
         anchors.fill: parent
+        anchors.topMargin: Units.dp(Defines_values.ListambulancesTopMargin)
         model: ambliste
         delegate: listelements
     }
 
     NavigationDrawer {
         id:navDrawer
-
         NavigationDrawerDelegate{
             email: emailAdressString
             accountName:accountNameString
