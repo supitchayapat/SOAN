@@ -19,6 +19,7 @@ var Asteroid;
     }
 }(this, function () {
 console.log("don't know why but this has to be here");
+    // single quoites ??
 "use strict";
 
 //////////////////////////
@@ -219,24 +220,24 @@ Asteroid.utils.getFilterFromSelector = function (selector) {
 		var subFilters;
 		if (key === "$and") {
 			subFilters = selector[key].map(Asteroid.utils.getFilterFromSelector);
-			return function (item) {
-				return subFilters.reduce(function (acc, subFilter) {
-					if (!acc) {
-						return acc;
-					}
-					return subFilter(item);
-				}, true);
-			};
-		}
+            return function (item) {
+                return subFilters.reduce(function (acc, subFilter) {
+                    if (!acc) {
+                        return acc;
+                    }
+                    return subFilter(item);
+                }, true);
+            };
+        }
 
-		if (key === "$or") {
-			subFilters = selector[key].map(Asteroid.utils.getFilterFromSelector);
-			return function (item) {
-				return subFilters.reduce(function (acc, subFilter) {
-					if (acc) {
-						return acc;
-					}
-					return subFilter(item);
+        if (key === "$or") {
+            subFilters = selector[key].map(Asteroid.utils.getFilterFromSelector);
+            return function (item) {
+                return subFilters.reduce(function (acc, subFilter) {
+                    if (acc) {
+                        return acc;
+                    }
+                    return subFilter(item);
 				}, false);
 			};
 		}
@@ -430,7 +431,7 @@ Asteroid.prototype._onAdded = function (data) {
 	var cName = data.collection;
 	// If the collection does not exist yet, create it
 	if (!this.collections[cName]) {
-		this.collections[cName] = new Asteroid._Collection(cName, this);
+        this.collections[cName] = new Asteroid._Collection(cName, this);
 	}
 	// data.fields can be undefined if the item added has only
 	// the _id field . To avoid errors down the line, ensure item
@@ -926,13 +927,13 @@ Asteroid.prototype.loginWithPassword = function (usernameOrEmail, password) {
 		if (err) {
 			delete self.userId;
 			delete self.loggedIn;
-			Asteroid.utils.multiStorage.del(self._host + "__" + self._instanceId + "__login_token__");
+            //Asteroid.utils.multiStorage.del(self._host + "__" + self._instanceId + "__login_token__");
 			deferred.reject(err);
 			self._emit("loginError", err);
 		} else {
 			self.userId = res.id;
 			self.loggedIn = true;
-			Asteroid.utils.multiStorage.set(self._host + "__" + self._instanceId + "__login_token__", res.token);
+            //Asteroid.utils.multiStorage.set(self._host + "__" + self._instanceId + "__login_token__", res.token);
 			self._emit("login", res.id);
 			deferred.resolve(res.id);
 		}
