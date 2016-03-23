@@ -62,7 +62,7 @@ Page {
             structureName : stepOne.structureName,
             street  : stepOne.street,
             city: stepOne.city,
-            postalCode : stepOne.postalCode,
+            zipCode : stepOne.postalCode,
             email  : stepOne.email,
             tel  : stepOne.tel,
             ambulance  : stepTwo.ambulance,
