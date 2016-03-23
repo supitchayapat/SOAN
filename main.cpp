@@ -1,10 +1,13 @@
 #include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
+#include <QDesktopWidget>
+#include <QQmlContext>
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/qml/Signin.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
     return app.exec();
 }
