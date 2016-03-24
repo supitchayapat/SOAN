@@ -10,6 +10,9 @@ Rectangle{
     property string email : "test"
     property string accountName : "test"
 
+    signal goToAmbulanceListPage()
+    signal goToAccountPage()
+
     Rectangle{
         id: sidebar_rct
 
@@ -78,7 +81,7 @@ Rectangle{
 
                 onClicked:{
                     navDrawer.close()
-                    pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+                    goToAmbulanceListPage()
                 }
             }
 
@@ -95,7 +98,7 @@ Rectangle{
 
                 onClicked:{
                     navDrawer.close()
-                    pageStack.push(Qt.resolvedUrl("Account.qml"))
+                    goToAccountPage();
                 }
             }
 

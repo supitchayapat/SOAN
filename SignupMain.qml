@@ -23,18 +23,21 @@ Page {
 
     visible: true
 
-    Loader {
-        id: fixedLoader
+    ProgressBySteps{
+        id : progressBySteps
 
-        height: Units.dp(50)
+        stepCount: 2
+        height: parent.height * 0.05
+        
         anchors{
             left: parent.left
+            leftMargin: parent.width * 0.1
             right: parent.right
+            rightMargin: parent.width * 0.1
             top: parent.top
             topMargin: Units.dp(Defines_values.SignupLoaderMargin)
         }
-        asynchronous: true
-        source: Qt.resolvedUrl("SignupProgressbySteps.qml")
+
     }
 
     Loader {
@@ -45,7 +48,7 @@ Page {
             bottom: parent.bottom
             left: parent.left
             right: parent.right
-            top: fixedLoader.bottom
+            top: progressBySteps.bottom
         }
         asynchronous: true
         source: Qt.resolvedUrl("Signupstep1.qml")
