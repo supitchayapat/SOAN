@@ -82,7 +82,6 @@ Rectangle{
                 onClicked:{
                     navDrawer.close()
                     goToAmbulanceListPage()
-                    //pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
                 }
             }
 
@@ -99,7 +98,6 @@ Rectangle{
 
                 onClicked:{
                     navDrawer.close()
-                    //pageStack.push(Qt.resolvedUrl("Account.qml"))
                     goToAccountPage();
                 }
             }

@@ -15,10 +15,7 @@ int main(int argc, char *argv[])
     for(auto o:engine.rootObjects()){
          QQuickItem *item = o->findChild<QQuickItem*>("myNavBar");
         if(item){
-
-              //qDebug()<<"Email"<<item->property("email").toString();
-              engine.rootContext()->setContextProperty("navBar", item);
-
+              engine.rootContext()->setContextProperty("sideNavigationPanel ", item);
         }
     }
 
