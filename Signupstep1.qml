@@ -109,28 +109,12 @@ Item{
                 size: Units.dp(Defines_values.iconsize)
             }
 
-            TextField {
+            EmailTextField {
                 id:email_txtFld
 
-                placeholderText: "Email"
-                inputMethodHints: Qt.ImhEmailCharactersOnly
-                validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
+                placeholderText: "Email"          
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
-
-                onFocusChanged: {
-                    if(focus == false){
-                        if(text.toString().match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/) == null){
-                            hasError = true
-                            helperText = qsTr("Invalide email address")
-                        }else{
-                            console.log("No Error")
-                        }
-                    }else{
-                        hasError = false
-                        helperText = ""
-                    }
-                }
             }
         }
 
