@@ -66,13 +66,4 @@ Page {
         model: ambliste
         delegate: listelements
     }
-
-    NavigationDrawer {
-        id:navDrawer
-        NavigationDrawerDelegate{
-            email: emailAdressString
-            accountName:accountNameString
-            anchors.fill: parent
-        }
-    }
 }
