@@ -133,10 +133,35 @@ Item{
 
             TextField {
                 id:tel_txtFld
+                property string lastString : ""
+                property bool insertSpace : true
+
+                function formatPhoneNumber(){
+                    var formatedText = []
+                    for(var i = 0; i < text.length; i++){
+                        if(text[i] !== " ") formatedText.push(text[i])
+                        if((formatedText.length  === 2 ||
+                            formatedText.length  === 5 ||
+                            formatedText.length  === 8 ||
+                            formatedText.length  === 11))
+                        {
+                            formatedText.push(" ")
+                        }
+                    }
+                }
+
+                onTextChanged: {
+                    tel_txtFld.text = formatPhoneNumber()
+                }
+
+                Keys.priority: Keys.BeforeItem
+                Keys.onPressed: { if (event.key == Qt.Key_Backspace) insertSpace = false; }
+                Keys.onReleased: { if (event.key == Qt.Key_Backspace) insertSpace = true; }
+
 
                 placeholderText: "tel: 0x xx xx xx xx"
                 inputMethodHints: Qt.ImhDialableCharactersOnly
-
+                validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ -]*\d+)*$/}
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
