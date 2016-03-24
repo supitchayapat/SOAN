@@ -14,9 +14,9 @@ Item{
         anchors.fill: parent
         Row{
             id:firstRow
-            spacing : Units.dp(20)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*2/3
+            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
 
             Icon {
                 id:icon
@@ -38,9 +38,9 @@ Item{
 
         Row{
 
-            spacing : Units.dp(20)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*2/3
+            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
 
             Icon {
                 name: "maps/place"
@@ -59,9 +59,9 @@ Item{
 
         Row{
 
-            spacing : Units.dp(20)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*2/3
+            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
 
             Icon {
                 name: "maps/place"
@@ -79,7 +79,7 @@ Item{
         }
 
         Row{
-            spacing : Units.dp(20)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
             anchors.horizontalCenter: parent.horizontalCenter
 
             TextField {
@@ -89,7 +89,7 @@ Item{
                 inputMethodHints: Qt.ImhDigitsOnly
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                width:  nomprenom_txtFld.width*2/5
+                width:  nomprenom_txtFld.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             }
 
             TextField {
@@ -98,14 +98,14 @@ Item{
                 placeholderText: "Commune"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                width:  nomprenom_txtFld.width*3/5
+                width:  nomprenom_txtFld.width*(Defines_values.SignupColumnpercent+1)/(Defines_values.SignupColumnpercent+3)
             }
         }
 
         Row{
-            spacing : Units.dp(20)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*2/3
+            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
 
             Icon {
 
@@ -125,9 +125,9 @@ Item{
         }
 
         Row{
-            spacing : Units.dp(20)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*2/3
+            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
 
             Icon {
 

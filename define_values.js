@@ -9,6 +9,7 @@ var Accounttop_margin = 40;
 var textfield_margin = 25;
 var sidebarbottomMargin = 5;
 var ListambulancesTopMargin = 7;
+var Signup2passwordTopmargin = 30;
 
 // fonts :
 var Base_text_font = 14;
@@ -26,3 +27,5 @@ var ListambulancesButtonwidth = 80;
 var Default_iconsize = 32;
 var Default_verticalspacing = 15;
 var Default_horizontalspacing = 30;
+var Signup1RowSpacing = 20;
+var SignupColumnpercent = 2;

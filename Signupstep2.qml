@@ -6,6 +6,7 @@ import "define_values.js" as Defines_values
 Item{
 
     anchors.fill: parent
+
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
     Column{
@@ -18,7 +19,7 @@ Item{
             id: demandecheckbox
 
             checked: true
-            text: "Recevoir des demande en\n ambulances"
+            text: "Recevoir des demande en ambulances"
         }
 
         CheckBox {
@@ -33,7 +34,7 @@ Item{
         spacing: Units.dp(Defines_values.Default_border_margins*2)
         width: parent.width
         anchors.top:topColumn.bottom
-        anchors.topMargin: 30
+        anchors.topMargin: Defines_values.Signup2passwordTopmargin
 
         TextField {
 
@@ -45,7 +46,7 @@ Item{
             echoMode: TextInput.Password
             helperText: "Eviter les caractères spéciaux"
             Layout.fillWidth:true
-            width: parent.width*2/5
+            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             anchors.horizontalCenter: parent.horizontalCenter
 
         }
@@ -60,7 +61,7 @@ Item{
             echoMode: TextInput.Password
             helperText: "Eviter les caractères spéciaux"
             Layout.fillWidth:true
-            width: parent.width*2/5
+            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             anchors.horizontalCenter: parent.horizontalCenter
 
         }
