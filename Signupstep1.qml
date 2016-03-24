@@ -49,7 +49,7 @@ Item{
             TextField {
                 id:nomdelastructure_txtFld
 
-                text: "Nom de la structure"
+                placeholderText: "Nom de la structure"
 
                 width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
