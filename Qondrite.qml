@@ -1,10 +1,14 @@
-import QtQml 2.0
-import Qt.WebSockets 1.0
+pragma singleton
+import QtQuick 2.5
+import QtWebSockets 1.0
+
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
 
-WebSocket {
+QtObject{
+    id:myRoot
+
     property var ceres
     property string meteor_url
 
@@ -12,10 +16,7 @@ WebSocket {
     signal error();
     signal open();
 
-    id: wsid
-    active: false
-
-    onMeteor_urlChanged: _connect();
+    Component.onCompleted: console.log("=============================Created");
 
     function _connect() {
         console.log("CEres " + meteor_url + " is a go");
@@ -102,16 +103,26 @@ WebSocket {
         clearTimeout(timer);
     }
 
-    onStatusChanged: {
-        if (status === WebSocket.Open) {
-            console.log("WebSocket Open")
-            wsid.open();
-        } else if (status === WebSocket.Error) {
-            console.log("WebSocket error! " + wsid.errorString);
-            wsid.error();
-        } else if (status === WebSocket.Closed) {
-            console.log("WebSocket Closed");
-            wsid.close();
+    WebSocket {
+        id: wsid
+
+        active: false
+
+        onMeteor_urlChanged: _connect();
+
+        onStatusChanged: {
+            if (status === WebSocket.Open) {
+                console.log("WebSocket Open")
+                wsid.open();
+            } else if (status === WebSocket.Error) {
+                console.log("WebSocket error! " + wsid.errorString);
+                wsid.error();
+            } else if (status === WebSocket.Closed) {
+                console.log("WebSocket Closed");
+                wsid.close();
+            }
         }
     }
+
 }
+
