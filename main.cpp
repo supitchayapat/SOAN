@@ -1,7 +1,5 @@
-#include <QGuiApplication>
 #include <QApplication>
 #include <QQmlApplicationEngine>
-#include <QDesktopWidget>
 #include <QQmlContext>
 
 int main(int argc, char *argv[])
