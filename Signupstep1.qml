@@ -6,23 +6,23 @@ import "define_values.js" as Defines_values
 Item{
 
     anchors.fill: parent
+    FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
-    ColumnLayout {
-        id: columnLayout
-
-        width: parent.width
-        spacing: Units.dp(Defines_values.horizontalspacing)
-
-        RowLayout{
-
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
+    Column {
+        id: column
+        spacing: Units.dp(Defines_values.Default_horizontalspacing)
+        anchors.fill: parent
+        Row{
+            id:firstRow
+            spacing : Units.dp(20)
             anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width*2/3
 
             Icon {
                 id:icon
 
                 name: "action/account_circle"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             TextField {
@@ -30,83 +30,87 @@ Item{
 
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:"Nom et Prénom"
-
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+                font.family: textFieldFont.name
+                width: parent.width - icon.width
             }
         }
 
-        RowLayout{
+        Row{
 
+            spacing : Units.dp(20)
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
+            width: parent.width*2/3
 
             Icon {
-
-                size: Units.dp(Defines_values.iconsize)
+                name: "maps/place"
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             TextField {
                 id:nomdelastructure_txtFld
 
                 placeholderText: "Nom de la structure"
-
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.family: textFieldFont.name
+                width: parent.width - icon.width
             }
         }
 
-        RowLayout{
+        Row{
 
+            spacing : Units.dp(20)
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
+            width: parent.width*2/3
 
             Icon {
                 name: "maps/place"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             TextField {
                 id:rue_txtFld
 
                 placeholderText: "N de rue"
-
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+                font.family: textFieldFont.name
+                width: parent.width - icon.width
             }
         }
 
-        RowLayout{
+        Row{
+            spacing : Units.dp(20)
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.Default_border_margins)
-            width: parent.width
 
             TextField {
                 id:commune_txtFld
 
                 placeholderText: "Code Postal"
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 inputMethodHints: Qt.ImhDigitsOnly
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.family: textFieldFont.name
+                width:  nomprenom_txtFld.width*2/5
             }
 
             TextField {
                 id:codepostal_txtFld
 
                 placeholderText: "Commune"
-
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.family: textFieldFont.name
+                width:  nomprenom_txtFld.width*3/5
             }
         }
 
-        RowLayout{
-
+        Row{
+            spacing : Units.dp(20)
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
+            width: parent.width*2/3
 
             Icon {
 
                 name: "communication/email"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             TextField {
@@ -114,21 +118,21 @@ Item{
 
                 placeholderText: "Email"
                 inputMethodHints: Qt.ImhEmailCharactersOnly
-
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+                font.family: textFieldFont.name
+                width: parent.width - icon.width
             }
         }
 
-        RowLayout{
-
+        Row{
+            spacing : Units.dp(20)
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
+            width: parent.width*2/3
 
             Icon {
 
                 name: "communication/call"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             TextField {
@@ -136,9 +140,9 @@ Item{
 
                 placeholderText: "tel: 0x xx xx xx xx"
                 inputMethodHints: Qt.ImhDialableCharactersOnly
-
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+                font.family: textFieldFont.name
+                width: parent.width - icon.width
             }
         }
     }
