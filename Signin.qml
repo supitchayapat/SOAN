@@ -19,7 +19,7 @@ Item {
         hasActions: false
         z:1
 
-        ColumnLayout{
+        Column{
 
             anchors.horizontalCenter: parent.horizontalCenter
 
