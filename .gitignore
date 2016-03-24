@@ -29,8 +29,8 @@ ui_*
 *.user
 #------- execs ignore
 #ingnore the final executable in the main project directory
-EqEQ
-EqEQ.exe
+Amb-app
+*.exe
 #-------- others
 # we ignore files with  ~ and .desktop
 *~
@@ -41,49 +41,3 @@ EqEQ.exe
 Makefile*
 # object_script files
 object_script*
-RAW Paste Data
-
-#-------C++ ignore
-*.o
-*.obj
- 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-#--------C ingnore
-*.obj
-*.elf
- 
-+# Precompiled Headers
-+*.gch
-+*.pch
-+
-# Libraries
-*.lib
-*.a
-#--------Qt ignore 
-#ignore moc generated files
-moc_*
-#ingnore ui generated files
-ui_*
-# we need to ignore file specific to each user configuration so we ignore .user files
-*.user
-#------- execs ignore
-#ingnore the final executable in the main project directory
-EqEQ
-EqEQ.exe
-#-------- others
-# we ignore files with  ~ and .desktop
-*~
-*.desktop
-# ignore .directory files
-.directory
-# Makefiles
-Makefile*
-# object_script files
-object_script*
-

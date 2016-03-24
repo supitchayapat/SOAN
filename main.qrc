@@ -6,7 +6,7 @@
         <file>main.qml</file>
         <file>Signin.qml</file>
         <file>SignupMain.qml</file>
-        <file>SignupProgressbySteps.qml</file>
+        <file>ProgressBySteps.qml</file>
         <file>Signupstep1.qml</file>
         <file>Signupstep2.qml</file>
         <file>NavigationDrawerDelegate.qml</file>
