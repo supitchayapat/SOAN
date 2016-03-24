@@ -54,16 +54,14 @@ Page {
         z:1
 
         ColumnLayout{
-
             spacing: Units.dp(Defines_values.top_account_textfield_margin)
             anchors.horizontalCenter: parent.horizontalCenter
 
             TextField {
                 id: oldPassword_txtFld
 
+                anchors.topMargin: Units.dp(20)
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:parent.width - parent.width/3
-                font.pointSize: Units.dp( Defines_values.Base_text_font)
                 placeholderText: "Ancien mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
@@ -75,8 +73,7 @@ Page {
                 id: newPassword_txtFld
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:parent.width - parent.width/3
-                font.pointSize: Units.dp( Defines_values.Base_text_font)
+                width:parent.width - parent.width/4
                 placeholderText: "Nouveau mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
@@ -87,8 +84,7 @@ Page {
                 id: newPasswordConfirmation_txtFld
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:parent.width - parent.width/3
-                font.pointSize: Units.dp( Defines_values.Base_text_font)
+                width:parent.width - parent.width/4
                 placeholderText: "Confirmer le mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
@@ -99,12 +95,10 @@ Page {
 
 
 
-    ColumnLayout{
+    Column{
         id: column
 
         spacing: Units.dp(Defines_values.Default_horizontalspacing )
-        width:Units.dp(350)
-
         anchors{
             top:parent.top
             topMargin: Units.dp(Defines_values.Accounttop_margin)

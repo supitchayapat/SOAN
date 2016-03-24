@@ -7,8 +7,8 @@ import Material.ListItems 0.1 as ListItem
 // TODO this Component should be a singleton
 Rectangle{
 
-    property string email
-    property string accountName
+    property string email : "test"
+    property string accountName : "test"
 
     signal goToAmbulanceListPage()
     signal goToAccountPage()
@@ -28,14 +28,14 @@ Rectangle{
         Label {
 
             text: accountName
-            style: "title"
+           style: "title"
             color: "white"
 
             anchors{
                 verticalCenter:  sidebar_rct.verticalCenter
                 verticalCenterOffset: -4
                 left: parent.left
-                leftMargin: Units.dp(Defines_values.leftMargin)
+                leftMargin: Units.dp(Defines_values.sidebarleftMargin)
             }
         }
 

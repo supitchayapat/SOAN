@@ -6,54 +6,64 @@ import "define_values.js" as Defines_values
 Page {
     id: page
 
-    property var ambliste: [ "Mohemad", "Driss", "Fabio","Patrice","valerio","Simo" ]
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
     backAction: navDrawer.action
 
-    actionBar.backgroundColor: Palette.colors.grey['200']
-    actionBar.decorationColor: Palette.colors.grey['300']
+    actionBar.backgroundColor: Palette.colors.grey[Defines_values.ListambulancesBackgroundlevel]
+    actionBar.decorationColor: Palette.colors.grey[Defines_values.ListambulancesDecorationlevel]
 
-    ListView{
+    ListModel {
+        id:ambliste
+        ListElement {availability: false; name:" Mohammed";  phoneNumber: '0512313'}
+        ListElement {availability: true; name:" Mohammed2";  phoneNumber: '0512313'}
+        ListElement {availability: false; name:" Mohammed3"; phoneNumber: '0512313'}
+        ListElement {availability: false; name:"Fabio";      phoneNumber: '0512313'}
+        ListElement {availability: true;  name:" Patrice";   phoneNumber: '0512313'}
+        ListElement {availability: false;  name:" Jean";     phoneNumber: '0512313'}
+        ListElement {availability: true;  name:"naome";      phoneNumber: '0512313'}
+        ListElement {availability: false;  name: "simo";     phoneNumber: '071232'}
+    }
 
-        anchors.fill: parent
-        model:ambliste
+    Component {
+        id: listelements
 
-        delegate: ListItem.Standard{
+        ListItem.Standard{
 
-            text:modelData
+            text:name
 
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
-                size: Units.dp(32)
-                color:"#2196F3"
+                size: Units.dp(Defines_values.Default_iconsize)
+                color: availability ? Theme.primaryColor : Defines_values.Materialgraycolor
             }
 
             Button {
 
-                width: Units.dp(80)
+                width: Units.dp(Defines_values.ListambulancesButtonwidth)
 
                 anchors{
                     right: parent.right
                     verticalCenter: parent.verticalCenter
-                    rightMargin: Units.dp(17)
                 }
+
+                onClicked:  Qt.openUrlExternally('tel:+'+phoneNumber)
 
                 Icon {
                     name: "communication/call"
                     anchors.centerIn: parent
-                    size: Units.dp(32)
-                    color:"#2196F3"
+                    size: Units.dp(Defines_values.Default_iconsize)
+                    color: Defines_values.PrimaryColor
                 }
             }
         }
     }
 
-    Dialog {
-        title: "Voulez-vous revenir?"
-        positiveButtonText: "Retour"
-        negativeButtonText: "Annuler"
-        onAccepted: page.forcePop()
+    ListView {
+        anchors.fill: parent
+        anchors.topMargin: Units.dp(Defines_values.ListambulancesTopMargin)
+        model: ambliste
+        delegate: listelements
     }
 }
