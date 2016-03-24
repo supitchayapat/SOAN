@@ -50,7 +50,6 @@ Page {
         text: "Mot de passe oublié"
         positiveButtonText: "Valider"
         negativeButtonText: "Annuler"
-        width: parent.width - parent.width/6
         z:1
 
         ColumnLayout{
@@ -73,7 +72,6 @@ Page {
                 id: newPassword_txtFld
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:parent.width - parent.width/4
                 placeholderText: "Nouveau mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
@@ -84,7 +82,6 @@ Page {
                 id: newPasswordConfirmation_txtFld
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:parent.width - parent.width/4
                 placeholderText: "Confirmer le mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
