@@ -21,7 +21,7 @@ Item{
             Icon {
                 id:icon
 
-                name: "action/account_circle"
+                source: "qrc:/rsrc/ambulance-siren"
                 size: Units.dp(Defines_values.Default_iconsize)
             }
 
