@@ -8,17 +8,35 @@ Item{
     property alias password: passwordField
     property alias passwordChekedIcon: passwordChekedIcon
     property alias passwordConfirmation: passwordConfirmation
-    property alias passwordConfirmationChekedIcon: confirmationChekedIcon
+    property alias passwordConfirmationCheckedIcon: confirmationCheckedIcon
 
 
     anchors.fill: parent
 
     Component.onCompleted: {
         passwordChekedIcon.visible = false
-        passwordConfirmationChekedIcon.visible = false
+        passwordConfirmationCheckedIcon.visible = false
     }
 
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
+
+    function onfocuschanged()
+    {
+        if(password.text && passwordConfirmation.text )
+        {
+            if(password.text == passwordConfirmation.text)
+            {
+                passwordChekedIcon.visible = passwordConfirmationCheckedIcon.visible = true
+                password.hasError = passwordConfirmation.hasError = false
+            }else{
+                passwordChekedIcon.visible = passwordConfirmationCheckedIcon.visible = false
+                password.hasError = passwordConfirmation.hasError = true
+            }
+        }else{
+            passwordChekedIcon.visible = passwordConfirmationCheckedIcon.visible = false
+            password.hasError = passwordConfirmation.hasError = false
+        }
+    }
 
     Column{
         id: topColumn
@@ -67,9 +85,8 @@ Item{
                 color: Theme.primaryColor
             }
 
-            onFocusChanged: {
-                // TODO checking if passwordConfirmation == password (by me)
-            }
+            onEditingFinished: onfocuschanged()
+
         }
 
         TextField {
@@ -85,15 +102,13 @@ Item{
             anchors.horizontalCenter: parent.horizontalCenter
 
             Icon{
-                id: confirmationChekedIcon
+                id: confirmationCheckedIcon
                 name:"action/done"
                 anchors.right: parent.right
                 color: Theme.primaryColor
             }
 
-            onFocusChanged: {
-                // TODO checking if password is not empty and passwordConfirmation == password  (by me)
-            }
+            onEditingFinished: onfocuschanged()
         }
     }
 }
