@@ -79,15 +79,8 @@ Item{
         }
 
         Row{
-
             spacing : Units.dp(Defines_values.Signup1RowSpacing)
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
-
-            Icon {
-                name: "maps/place"
-                size: Units.dp(Defines_values.Default_iconsize)
-            }
 
             TextField {
                 id:commune_txtFld
@@ -96,29 +89,16 @@ Item{
                 inputMethodHints: Qt.ImhDigitsOnly
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                width: parent.width - icon.width
-            }
-        }
-
-        Row{
-
-            spacing : Units.dp(Defines_values.Signup1RowSpacing)
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
-
-            Icon {
-                name: "maps/place"
-                size: Units.dp(Defines_values.Default_iconsize)
+                width:  nomprenom_txtFld.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             }
 
             TextField {
                 id:codepostal_txtFld
 
                 placeholderText: "Commune"
-                inputMethodHints: Qt.ImhDigitsOnly
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                width: parent.width - icon.width
+                width:  nomprenom_txtFld.width*(Defines_values.SignupColumnpercent+1)/(Defines_values.SignupColumnpercent+3)
             }
         }
 
