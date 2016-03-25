@@ -13,5 +13,7 @@
         <file>EmailTextField.qml</file>
         <file>utils.js</file>
     </qresource>
-    <qresource prefix="/rsrc" lang="data, images, icones.."/>
+    <qresource prefix="/rsrc" lang="data, images, icones..">
+        <file alias="ambulance-siren">ambulance-siren.png</file>
+    </qresource>
 </RCC>

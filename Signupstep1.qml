@@ -7,23 +7,37 @@ import "utils.js" as Utils
 Item{
 
     anchors.fill: parent
+    FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
-    ColumnLayout {
-        id: columnLayout
+    Column {
+        id: column
 
-        width: parent.width
-        spacing: Units.dp(Defines_values.horizontalspacing)
+        spacing: Units.dp(Defines_values.Default_horizontalspacing)
+
+        anchors{
+            right: parent.right
+            rightMargin: parent.width*0.1
+            left : parent.left
+            leftMargin: parent.width*0.1
+            top : parent.top
+            bottom :parent.bottom
+        }
 
         RowLayout{
+            id:firstRow
 
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
-            anchors.horizontalCenter: parent.horizontalCenter
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
                 id:icon
 
                 name: "action/account_circle"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             TextField {
@@ -31,103 +45,100 @@ Item{
 
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:"Nom et Prénom"
-
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+                font.family: textFieldFont.name
+                Layout.fillWidth: true
             }
         }
 
         RowLayout{
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
+
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
-
-                size: Units.dp(Defines_values.iconsize)
+                source: "qrc:/rsrc/ambulance-siren"
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             TextField {
                 id:nomdelastructure_txtFld
 
                 placeholderText: "Nom de la structure"
-
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.family: textFieldFont.name
+                Layout.fillWidth: true
             }
         }
 
         RowLayout{
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
                 name: "maps/place"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             TextField {
                 id:rue_txtFld
 
-                placeholderText: "N de rue"
-
+                placeholderText: "Adresse"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
-            }
-        }
-
-        RowLayout{
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.Default_border_margins)
-            width: parent.width
-
-            TextField {
-                id:commune_txtFld
-
-                placeholderText: "Code Postal"
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                inputMethodHints: Qt.ImhDigitsOnly
-            }
-
-            TextField {
-                id:codepostal_txtFld
-
-                placeholderText: "Commune"
-
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.family: textFieldFont.name
+                Layout.fillWidth: true
             }
         }
 
         RowLayout{
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
 
                 name: "communication/email"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             EmailTextField {
                 id:email_txtFld
 
                 placeholderText: "Email"          
+
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+                font.family: textFieldFont.name
+                Layout.fillWidth: true
             }
         }
 
         RowLayout{
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing : Units.dp(Defines_values.RowLayoutSpacing)
+            spacing : Units.dp(Defines_values.Signup1RowSpacing)
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
 
                 name: "communication/call"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             TextField {
@@ -143,7 +154,11 @@ Item{
 
                 placeholderText: "tel: 0x xx xx xx xx"
                 inputMethodHints: Qt.ImhDialableCharactersOnly
+
+                Layout.fillWidth: true
+
                 validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
+                font.family: textFieldFont.name
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
 
