@@ -10,13 +10,27 @@ Item{
 
     Column {
         id: column
+
         spacing: Units.dp(Defines_values.Default_horizontalspacing)
-        anchors.fill: parent
-        Row{
+
+        anchors{
+            right: parent.right
+            rightMargin: parent.width*0.1
+            left : parent.left
+            leftMargin: parent.width*0.1
+            top : parent.top
+            bottom :parent.bottom
+        }
+
+        RowLayout{
             id:firstRow
+
             spacing : Units.dp(Defines_values.Signup1RowSpacing)
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
                 id:icon
@@ -32,15 +46,19 @@ Item{
                 placeholderText:"Nom et Prénom"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                width: parent.width - icon.width
+                Layout.fillWidth: true
             }
         }
 
-        Row{
+        RowLayout{
 
             spacing : Units.dp(Defines_values.Signup1RowSpacing)
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
+
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
                 source: "qrc:/rsrc/ambulance-siren"
@@ -53,15 +71,18 @@ Item{
                 placeholderText: "Nom de la structure"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                width: parent.width - icon.width
+                Layout.fillWidth: true
             }
         }
 
-        Row{
+        RowLayout{
 
             spacing : Units.dp(Defines_values.Signup1RowSpacing)
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
                 name: "maps/place"
@@ -74,14 +95,18 @@ Item{
                 placeholderText: "Adresse"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                width: parent.width - icon.width
+                Layout.fillWidth: true
             }
         }
 
-        Row{
+        RowLayout{
+
             spacing : Units.dp(Defines_values.Signup1RowSpacing)
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
 
@@ -96,14 +121,18 @@ Item{
                 inputMethodHints: Qt.ImhEmailCharactersOnly
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                width: parent.width - icon.width
+                Layout.fillWidth: true
             }
         }
 
-        Row{
+        RowLayout{
+
             spacing : Units.dp(Defines_values.Signup1RowSpacing)
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
 
             Icon {
 
@@ -118,7 +147,7 @@ Item{
                 inputMethodHints: Qt.ImhDialableCharactersOnly
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                width: parent.width - icon.width
+                Layout.fillWidth: true
             }
         }
     }
