@@ -21,7 +21,7 @@ Item{
             Icon {
                 id:icon
 
-                source: "qrc:/rsrc/ambulance-siren"
+                name: "action/account_circle"
                 size: Units.dp(Defines_values.Default_iconsize)
             }
 
@@ -43,7 +43,7 @@ Item{
             width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+1)
 
             Icon {
-                name: "maps/place"
+                source: "qrc:/rsrc/ambulance-siren"
                 size: Units.dp(Defines_values.Default_iconsize)
             }
 
@@ -71,34 +71,10 @@ Item{
             TextField {
                 id:rue_txtFld
 
-                placeholderText: "N de rue"
+                placeholderText: "Adresse"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
                 width: parent.width - icon.width
-            }
-        }
-
-        Row{
-            spacing : Units.dp(Defines_values.Signup1RowSpacing)
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            TextField {
-                id:commune_txtFld
-
-                placeholderText: "Code Postal"
-                inputMethodHints: Qt.ImhDigitsOnly
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                font.family: textFieldFont.name
-                width:  nomprenom_txtFld.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
-            }
-
-            TextField {
-                id:codepostal_txtFld
-
-                placeholderText: "Commune"
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                font.family: textFieldFont.name
-                width:  nomprenom_txtFld.width*(Defines_values.SignupColumnpercent+1)/(Defines_values.SignupColumnpercent+3)
             }
         }
 

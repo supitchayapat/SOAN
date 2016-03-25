@@ -44,7 +44,6 @@ Item{
             placeholderText: "Mot de passe"
             floatingLabel: true
             echoMode: TextInput.Password
-            helperText: "Eviter les caractères spéciaux"
             Layout.fillWidth:true
             width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             anchors.horizontalCenter: parent.horizontalCenter
@@ -59,7 +58,6 @@ Item{
             placeholderText: "Confirmer le mot de passe"
             floatingLabel: true
             echoMode: TextInput.Password
-            helperText: "Eviter les caractères spéciaux"
             Layout.fillWidth:true
             width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             anchors.horizontalCenter: parent.horizontalCenter

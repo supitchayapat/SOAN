@@ -26,6 +26,6 @@ var ListambulancesDecorationlevel = '300';
 var ListambulancesButtonwidth = 80;
 var Default_iconsize = 32;
 var Default_verticalspacing = 15;
-var Default_horizontalspacing = 30;
+var Default_horizontalspacing = 40;
 var Signup1RowSpacing = 20;
 var SignupColumnpercent = 2;
