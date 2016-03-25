@@ -1,16 +1,24 @@
 import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Defines_values
+import "."
 
 Page {
     id:windows
 
-    Qondrite {
+    /*Qondrite {
             id: asteroid
             meteor_url: "127.0.0.1:3000"
             onOpen: statusText = "Connection to " + url + " established";
             onClose: statusText = "Connection closed";
             onError: statusText = "Error: " + errorString + " (" + url + ")";
+    }*/
+
+    Connections{
+        target:asteroid
+        onOpen: statusText = "Connection to " + url + " established";
+        onClose: statusText = "Connection closed";
+        onError: statusText = "Error: " + errorString + " (" + url + ")";
     }
 
     property bool checkIn: false
