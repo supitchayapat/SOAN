@@ -90,15 +90,7 @@ Page {
         }
     }
 
-    NavigationDrawer {
-        id:navDrawer
 
-        NavigationDrawerDelegate{
-            anchors.fill: parent
-            email: emailAdressString
-            accountName:accountNameString
-        }
-    }
 
     Column{
         id: column
