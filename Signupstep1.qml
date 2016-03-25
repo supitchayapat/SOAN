@@ -110,12 +110,10 @@ Item{
                 size: Units.dp(Defines_values.iconsize)
             }
 
-            TextField {
+            EmailTextField {
                 id:email_txtFld
 
-                placeholderText: "Email"
-                inputMethodHints: Qt.ImhEmailCharactersOnly
-
+                placeholderText: "Email"          
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
