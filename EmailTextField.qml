@@ -13,6 +13,7 @@ TextField {
                 helperText = qsTr("Adresse email invalide")
             }
         }else{
+            //Focus is true, the user start/restart editing email
             hasError = false
             helperText = ""
         }
