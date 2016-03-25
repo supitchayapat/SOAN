@@ -10,11 +10,8 @@
         <file>Signupstep1.qml</file>
         <file>Signupstep2.qml</file>
         <file>NavigationDrawerDelegate.qml</file>
-<<<<<<< HEAD
         <file>EmailTextField.qml</file>
-=======
         <file>utils.js</file>
->>>>>>> version1.0
     </qresource>
     <qresource prefix="/rsrc" lang="data, images, icones.."/>
 </RCC>
