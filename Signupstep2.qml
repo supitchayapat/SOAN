@@ -5,7 +5,18 @@ import "define_values.js" as Defines_values
 
 Item{
 
+    property alias password: passwordField
+    property alias passwordChekedIcon: passwordChekedIcon
+    property alias passwordConfirmation: passwordConfirmation
+    property alias passwordConfirmationChekedIcon: confirmationChekedIcon
+
+
     anchors.fill: parent
+
+    Component.onCompleted: {
+        passwordChekedIcon.visible = false
+        passwordConfirmationChekedIcon.visible = false
+    }
 
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
@@ -48,11 +59,22 @@ Item{
             width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             anchors.horizontalCenter: parent.horizontalCenter
 
+            Icon{
+                id:passwordChekedIcon
+
+                name:"action/done"
+                anchors.right: parent.right
+                color: Theme.primaryColor
+            }
+
+            onFocusChanged: {
+                // TODO checking if passwordConfirmation == password (by me)
+            }
         }
 
         TextField {
 
-            id: passwordFieldconfirmation
+            id: passwordConfirmation
 
             font.pixelSize: Units.dp(Defines_values.Base_text_font)
             placeholderText: "Confirmer le mot de passe"
@@ -62,6 +84,16 @@ Item{
             width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             anchors.horizontalCenter: parent.horizontalCenter
 
+            Icon{
+                id: confirmationChekedIcon
+                name:"action/done"
+                anchors.right: parent.right
+                color: Theme.primaryColor
+            }
+
+            onFocusChanged: {
+                // TODO checking if password is not empty and passwordConfirmation == password  (by me)
+            }
         }
     }
 }

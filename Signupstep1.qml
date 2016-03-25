@@ -6,8 +6,16 @@ import "utils.js" as Utils
 
 Item{
 
+    property alias telChecked: telCheckedIcon.visible
+    property alias mapChecked: mapCheckedIcon.visible
+
     anchors.fill: parent
+
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
+
+    Component.onCompleted: {
+        telChecked = mapChecked = false
+    }
 
     Column {
         id: column
@@ -97,6 +105,18 @@ Item{
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
                 Layout.fillWidth: true
+
+                Icon{
+                    id: mapCheckedIcon
+
+                    name:"action/done"
+                    anchors.right: parent.right
+                    color: Theme.primaryColor
+                }
+
+                onFocusChanged: {
+                    // TODO checking the adresse using google API
+                }
             }
         }
 
@@ -123,6 +143,7 @@ Item{
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
                 Layout.fillWidth: true
+
             }
         }
 
@@ -160,11 +181,22 @@ Item{
                 validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
                 font.family: textFieldFont.name
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
 
                 QtObject{
                     id: _priv_tel_txtFld
                     property bool  insertSpace: true
+                }
+
+                Icon{
+                    id:telCheckedIcon
+
+                    name:"action/done"
+                    anchors.right: parent.right
+                    color: Theme.primaryColor
+                }
+
+                onFocusChanged: {
+                    // TODO checking using the js function formatPhoneNumber10DigitWithSpageFR(txt, backSpacePressed)
                 }
             }
         }
