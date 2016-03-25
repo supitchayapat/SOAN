@@ -2,6 +2,7 @@ import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
+import "utils.js" as Utils
 
 Item{
 
@@ -109,12 +110,10 @@ Item{
                 size: Units.dp(Defines_values.iconsize)
             }
 
-            TextField {
+            EmailTextField {
                 id:email_txtFld
 
-                placeholderText: "Email"
-                inputMethodHints: Qt.ImhEmailCharactersOnly
-
+                placeholderText: "Email"          
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
@@ -134,11 +133,24 @@ Item{
             TextField {
                 id:tel_txtFld
 
+                onTextChanged: {
+                    tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
+                }
+
+                Keys.priority: Keys.BeforeItem
+                Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
+                Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
+
                 placeholderText: "tel: 0x xx xx xx xx"
                 inputMethodHints: Qt.ImhDialableCharactersOnly
-
+                validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+
+                QtObject{
+                    id: _priv_tel_txtFld
+                    property bool  insertSpace: true
+                }
             }
         }
 

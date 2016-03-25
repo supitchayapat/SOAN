@@ -29,6 +29,7 @@ ui_*
 *.user
 #------- execs ignore
 #ingnore the final executable in the main project directory
+Amb-app
 *.exe
 #-------- others
 # we ignore files with  ~ and .desktop

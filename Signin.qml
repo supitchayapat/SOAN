@@ -50,14 +50,12 @@ Item {
         text: "Mot de passe oublié"
         z:1
 
-        TextField {
+        EmailTextField {
             id: textEmail_txtFld
 
             width: parent.width
-            inputMethodHints: Qt.ImhEmailCharactersOnly
             echoMode: TextInput.Normal
             placeholderText: qsTr( "Adresse email" )
-            validator: RegExpValidator { regExp:/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/ }
             font.family: textFieldFont.name
         }
 
@@ -95,9 +93,8 @@ Item {
                 margins: Units.dp(10)
             }
 
-            TextField {
+            EmailTextField {
                 placeholderText: "Email"
-                inputMethodHints: Qt.ImhEmailCharactersOnly
                 font.pixelSize: Units.dp(20)
                 font.family: textFieldFont.name
                 width: parent.width
