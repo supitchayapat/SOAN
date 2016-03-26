@@ -13,10 +13,6 @@ Item{
 
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
-    Component.onCompleted: {
-        telChecked = mapChecked = false
-    }
-
     Column {
         id: column
 
