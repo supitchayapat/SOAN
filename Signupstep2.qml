@@ -23,19 +23,12 @@ Item{
     function onfocuschanged()
     {
         if(password.text && passwordConfirmation.text )
-        {
             if(password.text == passwordConfirmation.text)
-            {
                 passwordChekedIcon.visible = passwordConfirmationCheckedIcon.visible = true
-                password.hasError = passwordConfirmation.hasError = false
-            }else{
+            else
                 passwordChekedIcon.visible = passwordConfirmationCheckedIcon.visible = false
-                password.hasError = passwordConfirmation.hasError = true
-            }
-        }else{
+        else
             passwordChekedIcon.visible = passwordConfirmationCheckedIcon.visible = false
-            password.hasError = passwordConfirmation.hasError = false
-        }
     }
 
     Column{
@@ -85,7 +78,7 @@ Item{
                 color: Theme.primaryColor
             }
 
-            onEditingFinished: onfocuschanged()
+            onTextChanged: onfocuschanged()
 
         }
 
@@ -108,7 +101,7 @@ Item{
                 color: Theme.primaryColor
             }
 
-            onEditingFinished: onfocuschanged()
+            onTextChanged: onfocuschanged()
         }
     }
 }
