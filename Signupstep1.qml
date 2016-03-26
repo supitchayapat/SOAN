@@ -110,6 +110,7 @@ Item{
                     id: mapCheckedIcon
 
                     name:"action/done"
+                    visible: false
                     anchors.right: parent.right
                     color: Theme.primaryColor
                 }
@@ -138,7 +139,7 @@ Item{
             EmailTextField {
                 id:email_txtFld
 
-                placeholderText: "Email"          
+                placeholderText: "Email"
 
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
@@ -191,6 +192,7 @@ Item{
                     id:telCheckedIcon
 
                     name:"action/done"
+                    visible: false
                     anchors.right: parent.right
                     color: Theme.primaryColor
                 }
