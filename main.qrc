@@ -1,5 +1,5 @@
 <RCC>
-    <qresource lang="js, qml" prefix="/src">
+    <qresource prefix="/src" lang="js, qml">
         <file>Account.qml</file>
         <file>define_values.js</file>
         <file>Listambulances.qml</file>
@@ -10,11 +10,13 @@
         <file>Signupstep1.qml</file>
         <file>Signupstep2.qml</file>
         <file>NavigationDrawerDelegate.qml</file>
+    </qresource>
+    <qresource prefix="/rsrc" lang="data, images, icones.."/>
+    <qresource prefix="/Qondrite">
         <file>asteroid.qml.js</file>
         <file>ddp.js</file>
         <file>Log.js</file>
         <file>q.js</file>
         <file>Qondrite.qml</file>
     </qresource>
-    <qresource lang="data, images, icones.." prefix="/rsrc"/>
 </RCC>

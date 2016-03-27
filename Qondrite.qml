@@ -1,22 +1,26 @@
-pragma singleton
-import QtQuick 2.5
 import QtWebSockets 1.0
-
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
 
-QtObject{
-    id:myRoot
+WebSocket {
+    id: wsid
 
     property var ceres
     property string meteor_url
+
+    /* this function is used to trigger the instantiation of the component from QML, through the C++
+       thread that has the responsability to keep it as a singleton type*/
+    function init() {}
 
     signal close();
     signal error();
     signal open();
 
-    Component.onCompleted: console.log("=============================Created");
+    active: false
+
+
+    onMeteor_urlChanged: _connect();
 
     function _connect() {
         console.log("CEres " + meteor_url + " is a go");
@@ -103,26 +107,16 @@ QtObject{
         clearTimeout(timer);
     }
 
-    WebSocket {
-        id: wsid
-
-        active: false
-
-        onMeteor_urlChanged: _connect();
-
-        onStatusChanged: {
-            if (status === WebSocket.Open) {
-                console.log("WebSocket Open")
-                wsid.open();
-            } else if (status === WebSocket.Error) {
-                console.log("WebSocket error! " + wsid.errorString);
-                wsid.error();
-            } else if (status === WebSocket.Closed) {
-                console.log("WebSocket Closed");
-                wsid.close();
-            }
+    onStatusChanged: {
+        if (status === WebSocket.Open) {
+            console.log("WebSocket Open")
+            wsid.open();
+        } else if (status === WebSocket.Error) {
+            console.log("WebSocket error! " + wsid.errorString);
+            wsid.error();
+        } else if (status === WebSocket.Closed) {
+            console.log("WebSocket Closed");
+            wsid.close();
         }
     }
-
 }
-
