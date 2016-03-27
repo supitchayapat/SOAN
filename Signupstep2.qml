@@ -5,20 +5,21 @@ import "define_values.js" as Defines_values
 
 Item{
 
-    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.fill: parent
 
-    ColumnLayout {
+    FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
+
+    Column{
         id: topColumn
 
         spacing: Units.dp(Defines_values.Default_border_margins)
         anchors.horizontalCenter: parent.horizontalCenter
-        width: parent.width - Units.dp(70)
 
         CheckBox {
             id: demandecheckbox
 
             checked: true
-            text: "Recevoir des demande en\n ambulances"
+            text: "Recevoir des demande en ambulances"
         }
 
         CheckBox {
@@ -29,14 +30,11 @@ Item{
         }
     }
 
-    ColumnLayout {
-
-        spacing: Units.dp(Defines_values.horizontalspacing )
-        anchors{
-            top:topColumn.bottom
-            topMargin: Units.dp(0)
-            horizontalCenter: parent.horizontalCenter
-        }
+    Column{
+        spacing: Units.dp(Defines_values.Default_border_margins*2)
+        width: parent.width
+        anchors.top:topColumn.bottom
+        anchors.topMargin: Defines_values.Signup2passwordTopmargin
 
         TextField {
 
@@ -45,10 +43,11 @@ Item{
             font.pixelSize: Units.dp(Defines_values.Base_text_font)
             placeholderText: "Mot de passe"
             floatingLabel: true
-            width: parent.width
             echoMode: TextInput.Password
-            helperText: "Eviter les caractères spéciaux"
             Layout.fillWidth:true
+            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
+            anchors.horizontalCenter: parent.horizontalCenter
+
         }
 
         TextField {
@@ -56,11 +55,13 @@ Item{
             id: passwordFieldconfirmation
 
             font.pixelSize: Units.dp(Defines_values.Base_text_font)
-            placeholderText: "Confirmer le Mot de passe"
+            placeholderText: "Confirmer le mot de passe"
             floatingLabel: true
             echoMode: TextInput.Password
-            helperText: "Eviter les caractères spéciaux"
             Layout.fillWidth:true
+            width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
+            anchors.horizontalCenter: parent.horizontalCenter
+
         }
 
         ActionButton {
@@ -92,3 +93,4 @@ Item{
         }
     }
 }
+
