@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import Material 0.2
 import QtQuick.Window 2.0
+import Qondrite 0.1
 
 ApplicationWindow {
     id: ambulance
@@ -17,7 +18,7 @@ ApplicationWindow {
 
         NavigationDrawerDelegate{
             anchors.fill: parent
-            objectName: "myNavBar"
+            objectName: "sidePanel"
             email: "emailAdressString"
             accountName:"accountNameString"
             onGoToAccountPage: {
@@ -34,5 +35,9 @@ ApplicationWindow {
         accentColor: "blue"
         tabHighlightColor: "red"
         backgroundColor: "white"
+    }
+
+    Component.onCompleted: {
+        Qondrite.init();
     }
 }

@@ -160,7 +160,6 @@ Item{
                 validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
                 font.family: textFieldFont.name
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: columnLayout.width - icon.width - Units.dp(Defines_values.Default_border_margins)
 
                 QtObject{
                     id: _priv_tel_txtFld

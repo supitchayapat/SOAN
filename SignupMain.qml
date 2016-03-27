@@ -1,25 +1,10 @@
 import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Defines_values
-import "."
+
 
 Page {
     id:windows
-
-    /*Qondrite {
-            id: asteroid
-            meteor_url: "127.0.0.1:3000"
-            onOpen: statusText = "Connection to " + url + " established";
-            onClose: statusText = "Connection closed";
-            onError: statusText = "Error: " + errorString + " (" + url + ")";
-    }*/
-
-    Connections{
-        target:asteroid
-        onOpen: statusText = "Connection to " + url + " established";
-        onClose: statusText = "Connection closed";
-        onError: statusText = "Error: " + errorString + " (" + url + ")";
-    }
 
     property bool checkIn: false
     property var stepOne: {
@@ -80,7 +65,7 @@ Page {
             vsl  : stepTwo.vsl
         }
 
-        asteroid.createUser(stepOne.email,stepTwo.password,profile);
+        Qondrite.createUser(stepOne.email,stepTwo.password,profile);
     }
 
     function saveStepOne(stepOneProperties){
@@ -88,7 +73,7 @@ Page {
     }
 
     function saveStepTwo(stepTwoProperties){
-       stepTwo = stepTwoProperties;
+        stepTwo = stepTwoProperties;
     }
 
 }
