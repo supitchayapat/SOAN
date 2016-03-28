@@ -35,9 +35,7 @@ var Asteroid = function (ws, host, ssl, socketInterceptFunction, instanceId) {
 	// resuming login of multiple connections to the same host.
 	this._instanceId = instanceId || "0";
 	// Configure the instance
-    console.log("on set le host dans l'objet asteroid principale");
 	this._host = (ssl ? "https://" : "http://") + host;
-    console.log("after set  : "+this._host);
 	// Reference containers
 	this.collections = {};
 	this.subscriptions = {};
@@ -1224,8 +1222,7 @@ Asteroid.utils.multiStorage.del = function (key) {
 Asteroid.prototype._setDdpOptions = function (ws, host, ssl, socketInterceptFunction) {
 	// If SockJS is available, use it, otherwise, use WebSocket
 	// Note: SockJS is required for IE9 support
-    console.log(" on set les options ddp");
-    console.log(" ssl?"+ssl);
+
 	if (typeof SockJS === "function") {
 		this._ddpOptions = {
 			endpoint: (ssl ? "https://" : "http://") + host + "/sockjs",
