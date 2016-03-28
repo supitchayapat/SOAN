@@ -17,19 +17,18 @@ WebSocket {
     signal error();
     signal open();
 
-    active: false
+    active: true
 
 
     onMeteor_urlChanged: _connect();
 
     function _connect() {
-        console.log("CEres " + meteor_url + " is a go");
+        console.log("Connecting to " + meteor_url);
 
-            console.log("X");
-            ceres = new Ast.Asteroid(wsid, meteor_url.toString(), false, function(event) { console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message ); });
+        console.log("X");
+        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), false, function(event) { console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message ); });
 
         console.log("done");
-
     }
 
     function _on(signalMessage,callBack){
