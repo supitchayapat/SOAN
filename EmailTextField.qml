@@ -1,14 +1,9 @@
 import QtQuick 2.5
 import Material 0.2
 
-TextField {
-    id:myRoot
 
-    property alias emailChecked: emailChekedIcon.visible
-
+Basetextwithicon{
     inputMethodHints: Qt.ImhEmailCharactersOnly
-
-    Component.onCompleted: emailChecked = false
 
     onFocusChanged: {
         if(focus == false){
@@ -28,11 +23,4 @@ TextField {
 
     placeholderText: "Email"
     validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
-
-    Icon{
-        id:emailChekedIcon
-        name:"action/done"
-        anchors.right: parent.right
-        color: Theme.primaryColor
-    }
 }

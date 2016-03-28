@@ -2,12 +2,11 @@ import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
-import "utils.js" as Utils
 
 Item{
 
-    property alias telChecked: telCheckedIcon.visible
-    property alias mapChecked: mapCheckedIcon.visible
+    property alias telChecked: tel_txtFld.iconChecked
+    property alias mapChecked: email_txtFld.iconChecked
 
     anchors.fill: parent
 
@@ -94,22 +93,13 @@ Item{
                 size: Units.dp(Defines_values.Default_iconsize)
             }
 
-            TextField {
+            Basetextwithicon{
                 id:rue_txtFld
 
                 placeholderText: "Adresse"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
                 Layout.fillWidth: true
-
-                Icon{
-                    id: mapCheckedIcon
-
-                    name:"action/done"
-                    visible: false
-                    anchors.right: parent.right
-                    color: Theme.primaryColor
-                }
 
                 onFocusChanged: {
                     // TODO checking the adresse using google API
@@ -134,13 +124,10 @@ Item{
 
             EmailTextField {
                 id:email_txtFld
-
                 placeholderText: "Email"
-
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
                 Layout.fillWidth: true
-
             }
         }
 
@@ -159,7 +146,7 @@ Item{
                 size: Units.dp(Defines_values.Default_iconsize)
             }
 
-            TextField {
+            Basetextwithicon{
                 id:tel_txtFld
 
                 onTextChanged: {
@@ -184,19 +171,11 @@ Item{
                     property bool  insertSpace: true
                 }
 
-                Icon{
-                    id:telCheckedIcon
-
-                    name:"action/done"
-                    visible: false
-                    anchors.right: parent.right
-                    color: Theme.primaryColor
-                }
-
                 onFocusChanged: {
                     // TODO checking using the js function formatPhoneNumber10DigitWithSpageFR(txt, backSpacePressed)
                 }
             }
+
         }
     }
 }

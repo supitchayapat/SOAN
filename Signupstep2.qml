@@ -6,9 +6,9 @@ import "define_values.js" as Defines_values
 Item{
 
     property alias password: passwordField
-    property alias passwordChekedIcon: passwordChekedIcon
+    property alias passwordChekedIcon: passwordField.passwordChekedicon
     property alias passwordConfirmation: passwordConfirmation
-    property alias passwordConfirmationCheckedIcon: confirmationCheckedIcon
+    property alias passwordConfirmationCheckedIcon: passwordConfirmation.passwordChekedicon
 
 
     anchors.fill: parent
@@ -24,11 +24,11 @@ Item{
     {
         if(password.text && passwordConfirmation.text )
             if(password.text == passwordConfirmation.text)
-                passwordChekedIcon.visible = passwordConfirmationCheckedIcon.visible = true
+                passwordChekedIcon = passwordConfirmationCheckedIcon = true
             else
-                passwordChekedIcon.visible = passwordConfirmationCheckedIcon.visible = false
+                passwordChekedIcon = passwordConfirmationCheckedIcon = false
         else
-            passwordChekedIcon.visible = passwordConfirmationCheckedIcon.visible = false
+            passwordChekedIcon = passwordConfirmationCheckedIcon = false
     }
 
     Column{
@@ -58,48 +58,27 @@ Item{
         anchors.top:topColumn.bottom
         anchors.topMargin: Defines_values.Signup2passwordTopmargin
 
-        TextField {
+        PasswordTextField{
 
             id: passwordField
 
-            font.pixelSize: Units.dp(Defines_values.Base_text_font)
-            placeholderText: "Mot de passe"
-            floatingLabel: true
-            echoMode: TextInput.Password
             Layout.fillWidth:true
             width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             anchors.horizontalCenter: parent.horizontalCenter
-
-            Icon{
-                id:passwordChekedIcon
-
-                name:"action/done"
-                anchors.right: parent.right
-                color: Theme.primaryColor
-            }
 
             onTextChanged: onfocuschanged()
 
         }
 
-        TextField {
+        PasswordTextField{
 
             id: passwordConfirmation
 
-            font.pixelSize: Units.dp(Defines_values.Base_text_font)
             placeholderText: "Confirmer le mot de passe"
             floatingLabel: true
-            echoMode: TextInput.Password
             Layout.fillWidth:true
             width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
             anchors.horizontalCenter: parent.horizontalCenter
-
-            Icon{
-                id: confirmationCheckedIcon
-                name:"action/done"
-                anchors.right: parent.right
-                color: Theme.primaryColor
-            }
 
             onTextChanged: onfocuschanged()
         }
