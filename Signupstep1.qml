@@ -91,7 +91,7 @@ Item{
             }
 
             TextField {
-                id:rue_txtFld
+                id:address_txtField
 
                 placeholderText: "Adresse"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
@@ -186,18 +186,15 @@ Item{
                     onTriggered:
                     {
                         checkIn = true;
-                        console.log("name value step 1: "+nomprenom_txtFld.text);
-                        var step1 = {
+                        var stepOne = {
                             name  : nomprenom_txtFld.text,
                             structureName : nomdelastructure_txtFld.text,
-                            street  : rue_txtFld.text,
-                            city  : commune_txtFld.text,
-                            postalCode : codepostal_txtFld.text,
+                            address  : address_txtField.text,
                             email  : email_txtFld.text,
                             tel  : tel_txtFld.text,
                         }
 
-                        saveStepOne(step1);
+                        saveStepOne(stepOne);
                         shiftLodaer.source = Qt.resolvedUrl("Signupstep2.qml")
                     }
                 }

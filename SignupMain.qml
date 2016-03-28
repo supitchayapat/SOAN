@@ -1,6 +1,8 @@
 import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Defines_values
+import Qondrite 0.1
+
 
 
 Page {
@@ -56,9 +58,7 @@ Page {
         var profile = {
             name  : stepOne.name,
             structureName : stepOne.structureName,
-            street  : stepOne.street,
-            city: stepOne.city,
-            zipCode : stepOne.postalCode,
+            address  : stepOne.address,
             email  : stepOne.email,
             tel  : stepOne.tel,
             ambulance  : stepTwo.ambulance,
