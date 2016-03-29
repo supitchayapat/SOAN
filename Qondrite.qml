@@ -67,6 +67,10 @@ WebSocket {
         }
     }
 
+    function callAddressvalidation(address){
+        ceres.call("validateAddress",address);
+    }
+
     function getCollection(collection) {
         var coll;
         if (ceres !== undefined)

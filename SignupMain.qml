@@ -65,7 +65,10 @@ Page {
             vsl  : stepTwo.vsl
         }
 
+
         Qondrite.createUser(stepOne.email,stepTwo.password,profile);
+        Qondrite.callAddressvalidation(stepOne.address);
+
     }
 
     function saveStepOne(stepOneProperties){

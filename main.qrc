@@ -13,6 +13,7 @@
         <file>EmailTextField.qml</file>
         <file>utils.js</file>
         <file>AsteroidListeners.js</file>
+        <file>AddressValidator.js</file>
     </qresource>
     <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>
