@@ -2,11 +2,9 @@ import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
+import "utils.js" as Utils
 
 Item{
-
-    property alias telChecked: tel_txtFld.iconChecked
-    property alias mapChecked: email_txtFld.iconChecked
 
     anchors.fill: parent
 
@@ -93,7 +91,7 @@ Item{
                 size: Units.dp(Defines_values.Default_iconsize)
             }
 
-            Basetextwithicon{
+            TextFieldValidated{
                 id:rue_txtFld
 
                 placeholderText: "Adresse"
@@ -146,7 +144,7 @@ Item{
                 size: Units.dp(Defines_values.Default_iconsize)
             }
 
-            Basetextwithicon{
+            TextFieldValidated{
                 id:tel_txtFld
 
                 onTextChanged: {
@@ -169,10 +167,6 @@ Item{
                 QtObject{
                     id: _priv_tel_txtFld
                     property bool  insertSpace: true
-                }
-
-                onFocusChanged: {
-                    // TODO checking using the js function formatPhoneNumber10DigitWithSpageFR(txt, backSpacePressed)
                 }
             }
 

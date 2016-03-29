@@ -5,12 +5,6 @@ import "define_values.js" as Defines_values
 
 Item{
 
-    property alias password: passwordField
-    property alias passwordChekedIcon: passwordField.passwordChekedicon
-    property alias passwordConfirmation: passwordConfirmation
-    property alias passwordConfirmationCheckedIcon: passwordConfirmation.passwordChekedicon
-
-
     anchors.fill: parent
 
     Component.onCompleted: {
