@@ -8,6 +8,16 @@ Page {
 
     visible: true
 
+    function validatingthefirstPage()
+    {
+        return 0
+    }
+
+    function validatingthesecondPage()
+    {
+        return 1
+    }
+
     ProgressBySteps{
         id : progressBySteps
 
@@ -53,18 +63,24 @@ Page {
         action: Action {
             id: addContent
 
-            onTriggered:
-            {
+            onTriggered:{
                 if(shiftLodaer.sourceComponent == firstPage)
                 {
-                    // TODO first test process
-                    progressBySteps.nextStep()
-                    shiftLodaer.sourceComponent = secondPage
+                    if(validatingthefirstPage())
+                    {
+                        progressBySteps.nextStep()
+                        shiftLodaer.sourceComponent = secondPage
+                    }else
+                        snackbar.open("there is an error")
                 }else if(shiftLodaer.sourceComponent == secondPage)
                 {
-                    // TODO second test Process
-                    progressBySteps.nextStep()
-                    snackbar.open("finished")
+                    if(validatingthesecondPage())
+                    {
+                        progressBySteps.nextStep()
+                        //TODO Finishing Process
+                        snackbar.open("Loading ... ")
+                    }else
+                        snackbar.open("there is an error")
                 }
             }
         }

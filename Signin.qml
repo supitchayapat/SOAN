@@ -145,7 +145,7 @@ Item {
                 backgroundColor: Defines_values.PrimaryColor
 
                 onClicked:{
-                    pageStack.push(Qt.resolvedUrl("SignupMain.qml"))
+                    pageStack.push(Qt.resolvedUrl("Signup.qml"))
                 }
             }
         }
