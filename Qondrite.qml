@@ -37,6 +37,10 @@ WebSocket {
         ceres.createUser(email,password,profile);
     }
 
+    function loginWithPassword(email,password){
+        ceres.loginWithPassword(email,password);
+    }
+
     function lougout(){
         ceres.logout();
     }

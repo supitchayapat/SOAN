@@ -3,6 +3,7 @@ import Material 0.2
 import QtQuick.Window 2.0
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
+import Qondrite 0.1
 
 Item {
     id: ambulance
@@ -94,6 +95,7 @@ Item {
             }
 
             EmailTextField {
+                id : emailTxtField
                 placeholderText: "Email"
                 font.pixelSize: Units.dp(20)
                 font.family: textFieldFont.name
@@ -101,6 +103,7 @@ Item {
             }
 
             TextField {
+                id : pwdTxtField
                 placeholderText: "mot de passe"
                 font.pixelSize: Units.dp(20)
                 font.family: textFieldFont.name
@@ -129,7 +132,7 @@ Item {
                 backgroundColor: Defines_values.PrimaryColor
 
                 onClicked:{
-                    // TODO : server connexion call here
+                    Qondrite.loginWithPassword(emailTxtField.text,pwdTxtField.text);
                     pageStack.push(Qt.resolvedUrl("Listambulances.qml"));
                 }
             }
