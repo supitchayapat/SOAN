@@ -6,15 +6,15 @@ import "define_values.js" as Defines_values
 Page {
     id:windows
 
-    visible: true
-
     function validatingthefirstPage()
     {
-        return 0
+        console.log(firstPage.nomprenom)
+        return 1
     }
 
     function validatingthesecondPage()
     {
+        console.log(firstPage.nomprenom)
         return 1
     }
 
@@ -64,25 +64,21 @@ Page {
             id: addContent
 
             onTriggered:{
-                if(shiftLodaer.sourceComponent == firstPage)
+
+                if(shiftLodaer.sourceComponent == firstPage && validatingthefirstPage())
                 {
-                    if(validatingthefirstPage())
-                    {
-                        progressBySteps.nextStep()
-                        shiftLodaer.sourceComponent = secondPage
-                    }else
-                        snackbar.open("there is an error")
-                }else if(shiftLodaer.sourceComponent == secondPage)
-                {
-                    if(validatingthesecondPage())
-                    {
-                        progressBySteps.nextStep()
-                        //TODO Finishing Process
-                        snackbar.open("Loading ... ")
-                    }else
-                        snackbar.open("there is an error")
+                    progressBySteps.nextStep()
+                    shiftLodaer.sourceComponent = secondPage
                 }
+                else if(shiftLodaer.sourceComponent == secondPage && validatingthesecondPage())
+                {
+                    progressBySteps.nextStep()
+                    snackbar.open("Loading ... ")
+                    // TODO Finishing Process, maybe by calling a JS function ?
+                }else
+                    snackbar.open("Il y a un erreur")
             }
+
         }
     }
 
@@ -93,11 +89,9 @@ Page {
     Component{
         id:firstPage
 
-
         Item{
 
-            property alias telChecked: tel_txtFld.iconChecked
-            property alias mapChecked: email_txtFld.iconChecked
+            readonly property string  nomprenom: nomprenom_txtFld.text
 
             anchors.fill: parent
 
@@ -142,6 +136,7 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
+                        onTextChanged: windows.name = nomprenom_txtFld.text
                     }
                 }
 
@@ -167,6 +162,7 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
+
                     }
                 }
 
@@ -277,17 +273,7 @@ Page {
 
         Item{
 
-            property alias password: passwordField
-            property alias passwordChekedIcon: passwordField.passwordChekedicon
-            property alias passwordConfirmation: passwordConfirmation
-            property alias passwordConfirmationCheckedIcon: passwordConfirmation.passwordChekedicon
-
             anchors.fill: parent
-
-            Component.onCompleted: {
-                passwordChekedIcon.visible = false
-                passwordConfirmationCheckedIcon.visible = false
-            }
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
@@ -295,31 +281,35 @@ Page {
             {
                 if(password.text && passwordConfirmation.text )
                     if(password.text == passwordConfirmation.text)
-                        passwordChekedIcon = passwordConfirmationCheckedIcon = true
+                        passwordCheckedIcon = passwordConfirmationCheckedIcon = true
                     else
-                        passwordChekedIcon = passwordConfirmationCheckedIcon = false
+                        passwordCheckedIcon = passwordConfirmationCheckedIcon = false
                 else
-                    passwordChekedIcon = passwordConfirmationCheckedIcon = false
+                    passwordCheckedIcon = passwordConfirmationCheckedIcon = false
             }
 
             Column{
                 id: topColumn
-
                 spacing: Units.dp(Defines_values.Default_border_margins)
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 CheckBox {
                     id: demandecheckbox
 
-                    checked: true
+                    //checked: true
                     text: "Recevoir des demande en ambulances"
+                    onStateChanged: checkboxValidte = vslcheckbox.checked | checked
+
+
                 }
 
                 CheckBox {
                     id: vslcheckbox
 
-                    checked: true
+                    //checked: true
                     text: "Recevoir des demande en VSL"
+                    onStateChanged: checkboxValidte = demandecheckbox.checked | checked
+
                 }
             }
 
@@ -355,5 +345,5 @@ Page {
         }
 
     }
-
 }
+
