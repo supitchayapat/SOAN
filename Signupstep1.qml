@@ -90,13 +90,21 @@ Item{
                 size: Units.dp(Defines_values.Default_iconsize)
             }
 
-            TextField {
+            SuggestionTextField {
                 id:rue_txtFld
 
                 placeholderText: "Adresse"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
                 Layout.fillWidth: true
+                onTextChanged: {
+                    if(text.length>0){
+                        //We can use it like this
+                        suggestionModel.clear()
+                        addSuggestion(text)
+                        addSuggestion(text+" on Google")
+                    }
+                }
             }
         }
 
