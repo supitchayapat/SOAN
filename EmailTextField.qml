@@ -10,9 +10,9 @@ Basetextwithicon{
             if(text.toString().match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/) == null){
                 hasError = true
                 helperText = qsTr("Adresse email invalide")
-                emailChecked = false
+                iconChecked = false
             }else
-                emailChecked = true
+                iconChecked = true
 
         }else{
             //Focus is true, the user start/restart editing email

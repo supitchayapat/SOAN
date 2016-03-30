@@ -2,20 +2,46 @@ import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
-
+import "utils.js" as Utils
 Page {
-    id:windows
+    id:root
 
-    function validatingthefirstPage()
-    {
-        console.log(firstPage.nomprenom)
-        return 1
+    QtObject{
+        id:firstPageObject
+
+        property string  nomprenom
+        property string  nomdelastructure
+        property string  rue
+        property string  email
+        property string  tel
     }
 
-    function validatingthesecondPage()
+    QtObject{
+        id:secondPageObject
+
+        property bool    demande
+        property bool    vsl
+        property string  password
+        property bool    hasError
+    }
+
+    function validatingTheFirstPage()
     {
-        console.log(firstPage.nomprenom)
+        console.log(firstPageObject.nomprenom)
+        console.log(firstPageObject.nomdelastructure)
+        console.log(firstPageObject.email)
+        console.log(firstPageObject.rue)
+        console.log(firstPageObject.tel)
+        if(firstPageObject.nomprenom && firstPageObject.nomdelastructure && firstPageObject.email && firstPageObject.rue && firstPageObject.tel)
         return 1
+        return 0
+    }
+
+    function validatingTheSecondPage()
+    {
+        if (secondPageObject.password && (secondPageObject.vsl || secondPageObject.demande))
+        return 1
+        return 0
     }
 
     ProgressBySteps{
@@ -65,12 +91,12 @@ Page {
 
             onTriggered:{
 
-                if(shiftLodaer.sourceComponent == firstPage && validatingthefirstPage())
+                if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
                 {
                     progressBySteps.nextStep()
                     shiftLodaer.sourceComponent = secondPage
                 }
-                else if(shiftLodaer.sourceComponent == secondPage && validatingthesecondPage())
+                else if(shiftLodaer.sourceComponent == secondPage && validatingTheSecondPage())
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
@@ -91,7 +117,6 @@ Page {
 
         Item{
 
-            readonly property string  nomprenom: nomprenom_txtFld.text
 
             anchors.fill: parent
 
@@ -136,7 +161,7 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onTextChanged: windows.name = nomprenom_txtFld.text
+                        onTextChanged: firstPageObject.nomprenom = text
                     }
                 }
 
@@ -162,6 +187,7 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
+                        onTextChanged: firstPageObject.nomdelastructure = text
 
                     }
                 }
@@ -187,10 +213,11 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
+                        onHasErrorChanged: !hasError ? firstPageObject.rue = text
 
-                        onFocusChanged: {
+                        //onFocusChanged:
                             // TODO checking the adresse using google API
-                        }
+
                     }
                 }
 
@@ -215,6 +242,9 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
+                        //onTextChanged: firstPageObject.email = text
+                        onHasErrorChanged: !hasError ? firstPageObject.email = text
+
                     }
                 }
 
@@ -257,9 +287,9 @@ Page {
                             id: _priv_tel_txtFld
                             property bool  insertSpace: true
                         }
-
-                        onFocusChanged: {
-                            // TODO checking using the js function formatPhoneNumber10DigitWithSpageFR(txt, backSpacePressed)
+                        onValidatorChanged: {
+                            if(validator)
+                            firstPageObject.tel = text
                         }
                     }
 
@@ -280,12 +310,19 @@ Page {
             function onfocuschanged()
             {
                 if(password.text && passwordConfirmation.text )
-                    if(password.text == passwordConfirmation.text)
+                    if(password.text === passwordConfirmation.text)
+                    {
+                        secondPageObject.password = passwordField.text
                         passwordCheckedIcon = passwordConfirmationCheckedIcon = true
-                    else
+                    }
+                    else{
+                        secondPageObject.password = ""
                         passwordCheckedIcon = passwordConfirmationCheckedIcon = false
-                else
+                    }
+                else{
+                    secondPageObject.password = ""
                     passwordCheckedIcon = passwordConfirmationCheckedIcon = false
+                }
             }
 
             Column{
@@ -296,20 +333,15 @@ Page {
                 CheckBox {
                     id: demandecheckbox
 
-                    //checked: true
                     text: "Recevoir des demande en ambulances"
-                    onStateChanged: checkboxValidte = vslcheckbox.checked | checked
-
-
+                    onStateChanged: secondPageObject.demande = checked
                 }
 
                 CheckBox {
                     id: vslcheckbox
 
-                    //checked: true
                     text: "Recevoir des demande en VSL"
-                    onStateChanged: checkboxValidte = demandecheckbox.checked | checked
-
+                    onStateChanged: secondPageObject.vsl = checked
                 }
             }
 
@@ -323,11 +355,10 @@ Page {
                     id: passwordField
 
                     Layout.fillWidth:true
+                    hasError: secondPageObject.hasError == true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
-
-                    onTextChanged: onfocuschanged()
-
+                    onTextChanged: onFocusChanged()
                 }
 
                 PasswordTextField{
@@ -336,10 +367,10 @@ Page {
                     placeholderText: "Confirmer le mot de passe"
                     floatingLabel: true
                     Layout.fillWidth:true
+                    hasError: secondPageObject.hasError == true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
-
-                    onTextChanged: onfocuschanged()
+                    onTextChanged: onFocusChanged()
                 }
             }
         }
