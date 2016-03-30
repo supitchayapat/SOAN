@@ -66,6 +66,7 @@ Page {
         }
 
         Qondrite.createUser(stepOne.email,stepTwo.password,profile);
+
     }
 
     function saveStepOne(stepOneProperties){

@@ -82,7 +82,7 @@ var DDP;
 			id: id,
 			method: name,
 			params: params
-		});
+        });
 		return id;
 	};
 
@@ -168,7 +168,7 @@ var DDP;
 	DDP.prototype._on_result = function (data) {
 		if (this._onResultCallbacks[data.id]) {
 			this._onResultCallbacks[data.id](data.error, data.result);
-			delete this._onResultCallbacks[data.id];
+            delete this._onResultCallbacks[data.id];
 			if (data.error) {
 				delete this._onUpdatedCallbacks[data.id];
 			}
@@ -180,7 +180,8 @@ var DDP;
 		}
 	};
 	DDP.prototype._on_updated = function (data) {
-		var self = this;
+
+        var self = this;
 		data.methods.forEach(function (id) {
 			if (self._onUpdatedCallbacks[id]) {
 				self._onUpdatedCallbacks[id]();
