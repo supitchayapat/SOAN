@@ -1,9 +1,20 @@
 import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Defines_values
+import Qondrite 0.1
+
+
 
 Page {
     id:windows
+
+    property bool checkIn: false
+    property var stepOne: {
+
+    }
+    property var stepTwo: {
+
+    }
 
     visible: true
 
@@ -38,30 +49,33 @@ Page {
         source: Qt.resolvedUrl("Signupstep1.qml")
     }
 
-    ActionButton {
-
-        x:40
-        anchors {
-            bottom: parent.bottom
-            bottomMargin: Units.dp(10)
-            horizontalCenter: parent.horizontalCenter
-        }
-
-        elevation: 1
-        iconName: "content/send"
-        action: Action {
-            id: addContent
-
-            onTriggered:
-            {
-                progressBySteps.nextStep()
-                shiftLodaer.source = Qt.resolvedUrl("Signupstep2.qml")
-            }
-        }
-    }
-
     Snackbar {
         id: snackbar
     }
+
+    function createAccount(){
+
+        var profile = {
+            name  : stepOne.name,
+            structureName : stepOne.structureName,
+            address  : stepOne.address,
+            email  : stepOne.email,
+            tel  : stepOne.tel,
+            ambulance  : stepTwo.ambulance,
+            vsl  : stepTwo.vsl
+        }
+
+        Qondrite.createUser(stepOne.email,stepTwo.password,profile);
+
+    }
+
+    function saveStepOne(stepOneProperties){
+        stepOne = stepOneProperties;
+    }
+
+    function saveStepTwo(stepTwoProperties){
+        stepTwo = stepTwoProperties;
+    }
+
 }
 

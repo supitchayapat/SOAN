@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/define_values.js</file>
+        <file>qml/Listambulances.qml</file>
+        <file>qml/Navdrawer.qml</file>
+        <file>qml/oldsignup.qml</file>
+        <file>qml/Account.qml</file>
+        <file>qml/Signin.qml</file>
+        <file>qml/SignupMain.qml</file>
+        <file>qml/SignupProgressbySteps.qml</file>
+        <file>qml/SignupPage1.qml</file>
+        <file>qml/SignupPage2.qml</file>
+        <file>qondorite/asteroid.qml.js</file>
+        <file>qondorite/ddp.js</file>
+        <file>qondorite/Log.js</file>
+        <file>qondorite/q.js</file>
+        <file>qml/Qondrite.qml</file>
+        <file>qondorite/AsteroidListeners.js</file>
+    </qresource>
+</RCC>
