@@ -102,7 +102,7 @@ Item{
                         //We can use it like this
                         suggestionModel.clear()
                         addSuggestion(text)
-                        addSuggestion(text+" on Google")
+                        addSuggestion(text+" on Bing")
                     }
                 }
             }
