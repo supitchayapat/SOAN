@@ -57,9 +57,8 @@ Page {
 
         var profile = {
             name  : stepOne.name,
-            structureName : stepOne.structureName,
+            companyName : stepOne.structureName,
             address  : stepOne.address,
-            email  : stepOne.email,
             tel  : stepOne.tel,
             ambulance  : stepTwo.ambulance,
             vsl  : stepTwo.vsl
