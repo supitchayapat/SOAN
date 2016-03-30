@@ -479,9 +479,8 @@ Asteroid.prototype._onChanged = function (data) {
 ////////////////////////////
 // Call and apply methods //
 ////////////////////////////
-
 Asteroid.prototype.call = function (method /* , param1, param2, ... */) {
-	// Assert arguments type
+    // Assert arguments type
 	Asteroid.utils.must.beString(method);
 	// Get the parameters for apply
 	var params = Array.prototype.slice.call(arguments, 1);
