@@ -925,12 +925,11 @@ Asteroid.prototype.loginWithPassword = function (usernameOrEmail, password) {
 			delete self.loggedIn;
             //Asteroid.utils.multiStorage.del(self._host + "__" + self._instanceId + "__login_token__");
 			deferred.reject(err);
-			self._emit("loginError", err);
+
 		} else {
 			self.userId = res.id;
 			self.loggedIn = true;
             //Asteroid.utils.multiStorage.set(self._host + "__" + self._instanceId + "__login_token__", res.token);
-			self._emit("login", res.id);
 			deferred.resolve(res.id);
 		}
 	});

@@ -132,8 +132,13 @@ Item {
                 backgroundColor: Defines_values.PrimaryColor
 
                 onClicked:{
-                    Qondrite.loginWithPassword(emailTxtField.text,pwdTxtField.text);
-                    pageStack.push(Qt.resolvedUrl("Listambulances.qml"));
+                    Qondrite.loginWithPassword(emailTxtField.text,pwdTxtField.text)
+                    .then(function onSuccess(userId){
+                        Qondrite.emit("login",userId);
+                    })
+                    .catch(function onError(err){
+                        invalidCredentialsLabel.visible = true;
+                    });
                 }
             }
 
@@ -167,16 +172,14 @@ Item {
         }
 
         Label {
-
+            id : invalidCredentialsLabel
             text: "Utilisateur/mot de passe est invalide"
             anchors.horizontalCenter: parent.horizontalCenter
             color: Theme.tabHighlightColor
             fontStyles: "dialog"
             font.family: labelFont.name
-            visible: {
-            // TODO  insert server confirmation for the login
-                return false
-            }
+            visible: false
+
         }
     }
 }
