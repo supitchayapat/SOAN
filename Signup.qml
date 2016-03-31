@@ -3,6 +3,8 @@ import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import "utils.js" as Utils
+import Qondrite 0.1
+
 Page {
     id:root
 
@@ -11,7 +13,7 @@ Page {
 
         property string  nomprenom
         property string  nomdelastructure
-        property string  rue
+        property string  adress
         property string  email
         property string  tel
     }
@@ -24,10 +26,37 @@ Page {
         property string  password
     }
 
+    //added from SignupMain.qml
+
+    function createAccount(){
+
+        var profile = {
+            name  : firstPageObject.nomprenom,
+            structureName : firstPageObject.nomdelastructure,
+            address  : firstPageObject.adress,
+            email  : firstPageObject.email,
+            tel  : firstPageObject.tel,
+            ambulance  : secondPageObject.demande,
+            vsl  : secondPageObject.vsl
+        }
+
+        Qondrite.createUser(firstPageObject.email,secondPageObject.password,profile);
+
+    }
+
+
+    function saveStepOne(stepOneProperties){
+        stepOne = stepOneProperties;
+    }
+
+    function saveStepTwo(stepTwoProperties){
+        stepTwo = stepTwoProperties;
+    }
+
     function validatingTheFirstPage()
     {
-        console.log(firstPageObject.nomprenom + firstPageObject.nomdelastructure + firstPageObject.email + firstPageObject.rue + firstPageObject.tel)
-        if(firstPageObject.nomprenom && firstPageObject.nomdelastructure && firstPageObject.email && firstPageObject.rue && firstPageObject.tel)
+        console.log(firstPageObject.nomprenom + firstPageObject.nomdelastructure + firstPageObject.email + firstPageObject.adress + firstPageObject.tel)
+        if(firstPageObject.nomprenom && firstPageObject.nomdelastructure && firstPageObject.email && firstPageObject.adress && firstPageObject.tel)
             return 1
         return 0
     }
@@ -42,7 +71,7 @@ Page {
 
     function sendingData()
     {
-        //try to use this call function to make the sending process
+        //use this call function to make the user creating process
     }
 
     ProgressBySteps{
@@ -214,18 +243,52 @@ Page {
                     }
 
                     TextFieldValidated{
-                        id:rue_txtFld
+                        id:address_txtField
 
                         placeholderText: "Adresse"
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onFocusChanged:{
-                            if(useValidatingIcon)  firstPageObject.rue = text
-                        }
+                        onFocusChanged: {
+                            if(focus == false){
 
-                        // TODO checking the adresse using google API
-                        //use UseValidatingIcon = 1 if succeed
+                               Qondrite.callAddressvalidation(text)
+                                .result
+                                    .then(function(result){
+                                            console.log("resultat de la validation : ");
+                                            console.log(JSON.stringify(result));
+                                            if(result.status == "ERROR"){
+                                                hasError = true
+                                                helperText = qsTr("Adresse invalide")
+                                            }else{
+                                                console.log("l'adresse saisie est valide!");
+                                                console.log("longitude  : "+result.longitude);
+                                                console.log("latitude  : "+result.latitude)
+                                                hasError = false
+                                                helperText = ""
+                                                //ADDED BY Ahmed ARIF, adding adress value to the global object
+                                                //@TODO need to be tested using the google api to pass to the second component
+                                                firstPageObject.adress = text
+                                            }
+                                        })
+                                    .catch(function(error){
+                                        //This error is not related to maps validation of the address
+                                        // but is rather an error in the meteor server code
+                                        //it might also be triggerd if no internet connection is available
+                                        // on the server. What do we do in this case ?
+                                        //@TODO we should trigger an alert by mail here to tuckle
+                                        console.error("METEOR ERROR : "+JSON.stringify(error));
+                                        hasError = false
+                                        helperText = ""
+
+                                    });
+
+                            }else{
+                                //Focus is true, the user start/restart editing email
+                                hasError = false
+                                helperText = ""
+                            }
+                        }
                     }
                 }
 
