@@ -41,3 +41,7 @@ Amb-app
 Makefile*
 # object_script files
 object_script*
+.qmake.stash
+Amb-app.app/Contents/Info.plist
+Amb-app.app/Contents/PkgInfo
+Amb-app.app/Contents/Resources/empty.lproj
