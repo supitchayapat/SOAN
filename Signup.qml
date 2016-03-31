@@ -32,15 +32,24 @@ Page {
 
         var profile = {
             name  : firstPageObject.nomprenom,
-            structureName : firstPageObject.nomdelastructure,
+            companyName : firstPageObject.nomdelastructure,
             address  : firstPageObject.adress,
-            email  : firstPageObject.email,
             tel  : firstPageObject.tel,
             ambulance  : secondPageObject.demande,
             vsl  : secondPageObject.vsl
         }
 
-        Qondrite.createUser(firstPageObject.email,secondPageObject.password,profile);
+        Qondrite.createUser(firstPageObject.email,secondPageObject.password,profile)
+        .then(function onSuccess(userId){
+            Qondrite.emit("createUser", userId);
+            Qondrite.emit("login", userId);
+        })
+        .catch(function onError(error){
+            Qondrite.emit("createUserError", error);
+            //@TODO  : display a message to give the user information
+            //about the error
+            //many error can be catched here (existing email, existing address,existing phone...)
+        });
 
     }
 
@@ -252,36 +261,36 @@ Page {
                         onFocusChanged: {
                             if(focus == false){
 
-                               Qondrite.callAddressvalidation(text)
+                                Qondrite.callAddressvalidation(text)
                                 .result
-                                    .then(function(result){
-                                            console.log("resultat de la validation : ");
-                                            console.log(JSON.stringify(result));
-                                            if(result.status == "ERROR"){
-                                                hasError = true
-                                                helperText = qsTr("Adresse invalide")
-                                            }else{
-                                                console.log("l'adresse saisie est valide!");
-                                                console.log("longitude  : "+result.longitude);
-                                                console.log("latitude  : "+result.latitude)
-                                                hasError = false
-                                                helperText = ""
-                                                //ADDED BY Ahmed ARIF, adding adress value to the global object
-                                                //@TODO need to be tested using the google api to pass to the second component
-                                                firstPageObject.adress = text
-                                            }
-                                        })
-                                    .catch(function(error){
-                                        //This error is not related to maps validation of the address
-                                        // but is rather an error in the meteor server code
-                                        //it might also be triggerd if no internet connection is available
-                                        // on the server. What do we do in this case ?
-                                        //@TODO we should trigger an alert by mail here to tuckle
-                                        console.error("METEOR ERROR : "+JSON.stringify(error));
+                                .then(function(result){
+                                    console.log("resultat de la validation : ");
+                                    console.log(JSON.stringify(result));
+                                    if(result.status == "ERROR"){
+                                        hasError = true
+                                        helperText = qsTr("Adresse invalide")
+                                    }else{
+                                        console.log("l'adresse saisie est valide!");
+                                        console.log("longitude  : "+result.longitude);
+                                        console.log("latitude  : "+result.latitude)
                                         hasError = false
                                         helperText = ""
+                                        //ADDED BY Ahmed ARIF, adding adress value to the global object
+                                        //@TODO need to be tested using the google api to pass to the second component
+                                        firstPageObject.adress = text
+                                    }
+                                })
+                                .catch(function(error){
+                                    //This error is not related to maps validation of the address
+                                    // but is rather an error in the meteor server code
+                                    //it might also be triggerd if no internet connection is available
+                                    // on the server. What do we do in this case ?
+                                    //@TODO we should trigger an alert by mail here to tuckle
+                                    console.error("METEOR ERROR : "+JSON.stringify(error));
+                                    hasError = false
+                                    helperText = ""
 
-                                    });
+                                });
 
                             }else{
                                 //Focus is true, the user start/restart editing email
