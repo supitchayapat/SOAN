@@ -49,6 +49,8 @@ Meteor.methods({
 	}
 });
 if (Meteor.isClient) {
+	
+	//nothing to write here
   
 }
 
