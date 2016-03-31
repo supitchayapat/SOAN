@@ -3,6 +3,7 @@ import Material 0.2
 import QtQuick.Layouts 1.2
 import QtQml.Models 2.2
 import "define_values.js" as Defines_values
+import Qondrite 0.1
 
 Page {
     id: page
@@ -114,7 +115,7 @@ Page {
             }
 
             Label {
-                text:"Morgan Ponty"
+                id  : nameField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
@@ -129,7 +130,7 @@ Page {
             }
 
             Label{
-                text: "Accords Ambulances"
+                id : companyNameField
                 Layout.fillWidth:true
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
             }
@@ -145,7 +146,7 @@ Page {
             }
 
             Label{
-                text: "141 rue Merlot 340130 Mauguio"
+                id  : addressField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: column.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
@@ -161,7 +162,7 @@ Page {
             }
 
             Label {
-                text: "Morganponty@email.com"
+                id  : emailField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
@@ -177,7 +178,7 @@ Page {
             }
 
             Label{
-                text: "tel: 0x xx xx xx xx"
+                id : teLField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
@@ -193,8 +194,7 @@ Page {
             }
 
             Label {
-                text: "VST et Ambulance"
-
+                id : transportTypeField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
@@ -207,6 +207,36 @@ Page {
             onClicked: changepassword_dlg.show()
             Layout.fillWidth:true
         }
+    }
+    Component.onCompleted: loadUserInformation()
+
+    function loadUserInformation(){
+        //When a login signal is emmited, the users collection is sent
+        //from server to client with only the current user in it
+        //getting the first element of the collection is getting the logged in user
+        //information
+        var userCollection = Qondrite.getCollection("users");
+        var userInfo = userCollection._set.toArray()[0];
+        var userProfile = userInfo.profile;
+
+        emailField.text = userInfo.emails[0].address;
+        nameField.text = userProfile.name;
+        addressField.text = userProfile.address;
+        companyNameField.text = userProfile.companyName;
+        teLField.text = userProfile.tel;
+        transportTypeField.text = getTransportTypeLabel(userProfile);
+
+    }
+
+    function getTransportTypeLabel(userProfile){
+        if(userProfile.ambulance && userProfile.vsl){
+            return "VST et Ambulance";
+        }else if(userProfile.ambulance && !userProfile.vsl){
+            return "Ambulance uniquement"
+        }else if(!userProfile.ambulance && userProfile.vsl){
+            return "VST uniquement";
+        }
+
     }
 
 }

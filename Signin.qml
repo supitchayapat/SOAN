@@ -3,6 +3,7 @@ import Material 0.2
 import QtQuick.Window 2.0
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
+import Qondrite 0.1
 
 Item {
     id: ambulance
@@ -94,6 +95,7 @@ Item {
             }
 
             EmailTextField {
+                id : emailTxtField
                 placeholderText: "Email"
                 font.pixelSize: Units.dp(20)
                 font.family: textFieldFont.name
@@ -101,6 +103,7 @@ Item {
             }
 
             TextField {
+                id : pwdTxtField
                 placeholderText: "mot de passe"
                 font.pixelSize: Units.dp(20)
                 font.family: textFieldFont.name
@@ -129,8 +132,19 @@ Item {
                 backgroundColor: Defines_values.PrimaryColor
 
                 onClicked:{
-                    // TODO : server connexion call here
-                    pageStack.push(Qt.resolvedUrl("Listambulances.qml"));
+                    Qondrite.loginWithPassword(emailTxtField.text,pwdTxtField.text)
+                    .then(function onSuccess(userId){
+                        Qondrite.emit("login",userId);
+                    })
+                    .catch(function onError(err){
+                        //@TODO handle different types of errors
+                        //the credentials could be wrong be it could also
+                        //be just a missing internet connexion in the server
+                        //so the warning would be
+                        //"une erreur est survenue, veuillez réessayer"
+                        Qondrite.emit("loginError",err);
+                        invalidCredentialsLabel.visible = true;
+                    });
                 }
             }
 
@@ -164,16 +178,14 @@ Item {
         }
 
         Label {
-
+            id : invalidCredentialsLabel
             text: "Utilisateur/mot de passe est invalide"
             anchors.horizontalCenter: parent.horizontalCenter
             color: Theme.tabHighlightColor
             fontStyles: "dialog"
             font.family: labelFont.name
-            visible: {
-            // TODO  insert server confirmation for the login
-                return false
-            }
+            visible: false
+
         }
     }
 }

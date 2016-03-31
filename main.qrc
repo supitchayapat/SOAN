@@ -13,8 +13,16 @@
         <file>EmailTextField.qml</file>
         <file>utils.js</file>
         <file>SuggestionTextField.qml</file>
+        <file>AsteroidListeners.js</file>
     </qresource>
     <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>
+    </qresource>
+    <qresource prefix="/Qondrite">
+        <file>asteroid.qml.js</file>
+        <file>ddp.js</file>
+        <file>Log.js</file>
+        <file>q.js</file>
+        <file>Qondrite.qml</file>
     </qresource>
 </RCC>
