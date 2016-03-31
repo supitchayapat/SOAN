@@ -26,8 +26,6 @@ Page {
         property string  password
     }
 
-    //added from SignupMain.qml
-
     function createAccount(){
 
         var profile = {
@@ -53,7 +51,6 @@ Page {
 
     }
 
-
     function saveStepOne(stepOneProperties){
         stepOne = stepOneProperties;
     }
@@ -64,7 +61,11 @@ Page {
 
     function validatingTheFirstPage()
     {
-        console.log(firstPageObject.nomprenom + firstPageObject.nomdelastructure + firstPageObject.email + firstPageObject.adress + firstPageObject.tel)
+        console.log(firstPageObject.nomprenom)
+        console.log(firstPageObject.nomdelastructure)
+        console.log(firstPageObject.email)
+        console.log(firstPageObject.adress)
+        console.log(firstPageObject.tel)
         if(firstPageObject.nomprenom && firstPageObject.nomdelastructure && firstPageObject.email && firstPageObject.adress && firstPageObject.tel)
             return 1
         return 0
@@ -76,11 +77,6 @@ Page {
         if (secondPageObject.password.length && (secondPageObject.vsl || secondPageObject.demande))
             return 1
         return 0
-    }
-
-    function sendingData()
-    {
-        //use this call function to make the user creating process
     }
 
     ProgressBySteps{
@@ -129,7 +125,8 @@ Page {
             id: addContent
 
             onTriggered:{
-
+                console.log(shiftLodaer.sourceComponent == firstPage);
+                console.log(validatingTheFirstPage());
                 if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
                 {
                     progressBySteps.nextStep()
@@ -139,8 +136,8 @@ Page {
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
-                    // TODO Finishing Process, maybe by calling a JS function ?
-                    sendingData()
+
+                    createAccount()
                 }else
                     snackbar.open("Il y a un erreur")
             }
@@ -202,8 +199,8 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
-                        onFocusChanged:{
-                            if(useValidatingIcon)  firstPageObject.nomprenom = text
+                        onTextChanged: {
+                            firstPageObject.nomprenom = text
                         }
                     }
                 }
@@ -231,8 +228,10 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         onFocusChanged:{
-                            if(useValidatingIcon)  firstPageObject.nomdelastructure = text
                             useValidatingIcon = true
+                        }
+                        onTextChanged: {
+                            firstPageObject.nomdelastructure = text
                         }
                     }
                 }
@@ -264,8 +263,7 @@ Page {
                                 Qondrite.callAddressvalidation(text)
                                 .result
                                 .then(function(result){
-                                    console.log("resultat de la validation : ");
-                                    console.log(JSON.stringify(result));
+
                                     if(result.status == "ERROR"){
                                         hasError = true
                                         helperText = qsTr("Adresse invalide")
@@ -274,10 +272,7 @@ Page {
                                         console.log("longitude  : "+result.longitude);
                                         console.log("latitude  : "+result.latitude)
                                         hasError = false
-                                        helperText = ""
-                                        //ADDED BY Ahmed ARIF, adding adress value to the global object
-                                        //@TODO need to be tested using the google api to pass to the second component
-                                        firstPageObject.adress = text
+                                        helperText = ""  
                                     }
                                 })
                                 .catch(function(error){
@@ -286,7 +281,6 @@ Page {
                                     //it might also be triggerd if no internet connection is available
                                     // on the server. What do we do in this case ?
                                     //@TODO we should trigger an alert by mail here to tuckle
-                                    console.error("METEOR ERROR : "+JSON.stringify(error));
                                     hasError = false
                                     helperText = ""
 
@@ -297,6 +291,9 @@ Page {
                                 hasError = false
                                 helperText = ""
                             }
+                        }
+                        onTextChanged: {
+                            firstPageObject.adress = text
                         }
                     }
                 }
@@ -323,8 +320,8 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
-                        onFocusChanged:{
-                            if(useValidatingIcon)  firstPageObject.email = text
+                        onTextChanged: {
+                           firstPageObject.email = text
                         }
                     }
                 }
@@ -349,6 +346,7 @@ Page {
 
                         onTextChanged: {
                             tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
+                            firstPageObject.tel = text
                         }
 
                         Keys.priority: Keys.BeforeItem
@@ -367,9 +365,6 @@ Page {
                         QtObject{
                             id: _priv_tel_txtFld
                             property bool  insertSpace: true
-                        }
-                        onFocusChanged:{
-                            if(useValidatingIcon)  firstPageObject.tel = text
                         }
                     }
 
