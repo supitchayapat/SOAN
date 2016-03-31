@@ -213,11 +213,10 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onHasErrorChanged: !hasError ? firstPageObject.rue = text
+                        //onHasErrorChanged: !hasError ? firstPageObject.rue = text
 
                         //onFocusChanged:
                             // TODO checking the adresse using google API
-
                     }
                 }
 
@@ -243,7 +242,7 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         //onTextChanged: firstPageObject.email = text
-                        onHasErrorChanged: !hasError ? firstPageObject.email = text
+                        onHasErrorChanged: if(!hasError)  firstPageObject.email = text
 
                     }
                 }
