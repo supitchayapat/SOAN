@@ -49,6 +49,8 @@ Meteor.methods({
 	}
 });
 if (Meteor.isClient) {
+	
+	//nothing to write here
   
 }
 
@@ -62,4 +64,10 @@ if (Meteor.isServer) {
 
 	    return user;
 	});
+
+	// Meteor.publish('users', function tasksPublication() {
+	//     return Meteor.users.find(
+	//         { id: { $eq: this.userId } },
+	//     );
+	// });
 }
