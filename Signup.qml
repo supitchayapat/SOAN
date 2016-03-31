@@ -22,26 +22,27 @@ Page {
         property bool    demande
         property bool    vsl
         property string  password
-        property bool    hasError
     }
 
     function validatingTheFirstPage()
     {
-        console.log(firstPageObject.nomprenom)
-        console.log(firstPageObject.nomdelastructure)
-        console.log(firstPageObject.email)
-        console.log(firstPageObject.rue)
-        console.log(firstPageObject.tel)
+        console.log(firstPageObject.nomprenom + firstPageObject.nomdelastructure + firstPageObject.email + firstPageObject.rue + firstPageObject.tel)
         if(firstPageObject.nomprenom && firstPageObject.nomdelastructure && firstPageObject.email && firstPageObject.rue && firstPageObject.tel)
-        return 1
+            return 1
         return 0
     }
 
     function validatingTheSecondPage()
     {
-        if (secondPageObject.password && (secondPageObject.vsl || secondPageObject.demande))
-        return 1
+        console.log(secondPageObject.password + secondPageObject.vsl + secondPageObject.demande)
+        if (secondPageObject.password.length && (secondPageObject.vsl || secondPageObject.demande))
+            return 1
         return 0
+    }
+
+    function sendingData()
+    {
+        //try to use this call function to make the sending process
     }
 
     ProgressBySteps{
@@ -72,7 +73,7 @@ Page {
             top: progressBySteps.bottom
         }
         asynchronous: true
-        sourceComponent:  firstPage
+        sourceComponent: firstPage
     }
 
     ActionButton {
@@ -101,6 +102,7 @@ Page {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
                     // TODO Finishing Process, maybe by calling a JS function ?
+                    sendingData()
                 }else
                     snackbar.open("Il y a un erreur")
             }
@@ -153,7 +155,7 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    TextField {
+                    TextFieldValidated{
                         id:nomprenom_txtFld
 
                         inputMethodHints: Qt.ImhNoPredictiveText
@@ -161,7 +163,10 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onTextChanged: firstPageObject.nomprenom = text
+                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                        onFocusChanged:{
+                            if(useValidatingIcon)  firstPageObject.nomprenom = text
+                        }
                     }
                 }
 
@@ -180,15 +185,17 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    TextField {
+                    TextFieldValidated{
                         id:nomdelastructure_txtFld
 
                         placeholderText: "Nom de la structure"
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onTextChanged: firstPageObject.nomdelastructure = text
-
+                        onFocusChanged:{
+                            if(useValidatingIcon)  firstPageObject.nomdelastructure = text
+                            useValidatingIcon = true
+                        }
                     }
                 }
 
@@ -206,17 +213,19 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    Basetextwithicon{
+                    TextFieldValidated{
                         id:rue_txtFld
 
                         placeholderText: "Adresse"
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        //onHasErrorChanged: !hasError ? firstPageObject.rue = text
+                        onFocusChanged:{
+                            if(useValidatingIcon)  firstPageObject.rue = text
+                        }
 
-                        //onFocusChanged:
-                            // TODO checking the adresse using google API
+                        // TODO checking the adresse using google API
+                        //use UseValidatingIcon = 1 if succeed
                     }
                 }
 
@@ -235,15 +244,16 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    EmailTextField {
+                    TextFieldValidated {
                         id:email_txtFld
                         placeholderText: "Email"
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        //onTextChanged: firstPageObject.email = text
-                        onHasErrorChanged: if(!hasError)  firstPageObject.email = text
-
+                        validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
+                        onFocusChanged:{
+                            if(useValidatingIcon)  firstPageObject.email = text
+                        }
                     }
                 }
 
@@ -262,7 +272,7 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    Basetextwithicon{
+                    TextFieldValidated{
                         id:tel_txtFld
 
                         onTextChanged: {
@@ -286,9 +296,8 @@ Page {
                             id: _priv_tel_txtFld
                             property bool  insertSpace: true
                         }
-                        onValidatorChanged: {
-                            if(validator)
-                            firstPageObject.tel = text
+                        onFocusChanged:{
+                            if(useValidatingIcon)  firstPageObject.tel = text
                         }
                     }
 
@@ -306,21 +315,21 @@ Page {
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
-            function onfocuschanged()
+            function passwordvalidating()
             {
-                if(password.text && passwordConfirmation.text )
-                    if(password.text === passwordConfirmation.text)
+                if(passwordField.text && passwordConfirmation.text )
+                    if(passwordField.text === passwordConfirmation.text)
                     {
                         secondPageObject.password = passwordField.text
-                        passwordCheckedIcon = passwordConfirmationCheckedIcon = true
+                        passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = true
                     }
                     else{
                         secondPageObject.password = ""
-                        passwordCheckedIcon = passwordConfirmationCheckedIcon = false
+                        passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                     }
                 else{
                     secondPageObject.password = ""
-                    passwordCheckedIcon = passwordConfirmationCheckedIcon = false
+                    passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                 }
             }
 
@@ -333,14 +342,14 @@ Page {
                     id: demandecheckbox
 
                     text: "Recevoir des demande en ambulances"
-                    onStateChanged: secondPageObject.demande = checked
+                    onCheckedChanged: secondPageObject.demande = demandecheckbox.checked
                 }
 
                 CheckBox {
                     id: vslcheckbox
 
                     text: "Recevoir des demande en VSL"
-                    onStateChanged: secondPageObject.vsl = checked
+                    onCheckedChanged: secondPageObject.vsl = vslcheckbox.checked
                 }
             }
 
@@ -357,7 +366,7 @@ Page {
                     hasError: secondPageObject.hasError == true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onTextChanged: onFocusChanged()
+                    onTextChanged: passwordvalidating()
                 }
 
                 PasswordTextField{
@@ -369,7 +378,7 @@ Page {
                     hasError: secondPageObject.hasError == true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onTextChanged: onFocusChanged()
+                    onTextChanged: passwordvalidating()
                 }
             }
         }

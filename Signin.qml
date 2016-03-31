@@ -7,7 +7,6 @@ import "define_values.js" as Defines_values
 Item {
     id: ambulance
 
-    anchors.fill: parent
 
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
     FontLoader {id : labelFont; name : Defines_values.textFieldsFontFamily}
