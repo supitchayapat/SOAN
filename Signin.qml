@@ -8,7 +8,6 @@ import Qondrite 0.1
 Item {
     id: ambulance
 
-
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
     FontLoader {id : labelFont; name : Defines_values.textFieldsFontFamily}
 
@@ -20,11 +19,9 @@ Item {
         z:1
 
         Column{
-
             anchors.horizontalCenter: parent.horizontalCenter
 
             Icon{
-
                 name:"action/done"
                 size: Units.dp(100)
                 color: Defines_values.PrimaryColor
@@ -32,7 +29,6 @@ Item {
             }
 
             Label {
-
                 text: "Verifier votre boite email pour le changement de votre mot de passe"
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:forgottenPassword_dlg.width - Units.dp(120)
@@ -95,6 +91,7 @@ Item {
 
             EmailTextField {
                 id : emailTxtField
+
                 placeholderText: "Email"
                 font.pixelSize: Units.dp(20)
                 font.family: textFieldFont.name
@@ -102,8 +99,9 @@ Item {
             }
 
 
-            TextField {
+            PasswordTextField {
                 id : pwdTxtField
+
                 placeholderText: "mot de passe"
                 font.pixelSize: Units.dp(20)
                 font.family: textFieldFont.name
@@ -149,7 +147,6 @@ Item {
             }
 
             Button {
-
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Creer un compte"
@@ -179,6 +176,7 @@ Item {
 
         Label {
             id : invalidCredentialsLabel
+
             text: "Utilisateur/mot de passe est invalide"
             anchors.horizontalCenter: parent.horizontalCenter
             color: Theme.tabHighlightColor

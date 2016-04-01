@@ -9,35 +9,30 @@ Page {
     id:root
 
     QtObject{
-        id:firstPageObject
+        id:accountInformations
 
         property string  nomprenom
         property string  nomdelastructure
         property string  adress
-        property string  email
         property string  tel
-    }
-
-    QtObject{
-        id:secondPageObject
-
         property bool    demande
         property bool    vsl
+        property string  email
         property string  password
     }
 
     function createAccount(){
 
         var profile = {
-            name  : firstPageObject.nomprenom,
-            companyName : firstPageObject.nomdelastructure,
-            address  : firstPageObject.adress,
-            tel  : firstPageObject.tel,
-            ambulance  : secondPageObject.demande,
-            vsl  : secondPageObject.vsl
+            name  : accountInformations.nomprenom,
+            companyName : accountInformations.nomdelastructure,
+            address  : accountInformations.adress,
+            tel  : accountInformations.tel,
+            ambulance  : accountInformations.demande,
+            vsl  : accountInformations.vsl
         }
 
-        Qondrite.createUser(firstPageObject.email,secondPageObject.password,profile)
+        Qondrite.createUser(accountInformations.email,accountInformations.password,profile)
         .then(function onSuccess(userId){
             Qondrite.emit("createUser", userId);
             Qondrite.emit("login", userId);
@@ -51,30 +46,22 @@ Page {
 
     }
 
-    function saveStepOne(stepOneProperties){
-        stepOne = stepOneProperties;
-    }
-
-    function saveStepTwo(stepTwoProperties){
-        stepTwo = stepTwoProperties;
-    }
-
     function validatingTheFirstPage()
     {
-        console.log(firstPageObject.nomprenom)
-        console.log(firstPageObject.nomdelastructure)
-        console.log(firstPageObject.email)
-        console.log(firstPageObject.adress)
-        console.log(firstPageObject.tel)
-        if(firstPageObject.nomprenom && firstPageObject.nomdelastructure && firstPageObject.email && firstPageObject.adress && firstPageObject.tel)
+        console.log(accountInformations.nomprenom)
+        console.log(accountInformations.nomdelastructure)
+        console.log(accountInformations.email)
+        console.log(accountInformations.adress)
+        console.log(accountInformations.tel)
+        if(accountInformations.nomprenom && accountInformations.nomdelastructure && accountInformations.email && accountInformations.adress && accountInformations.tel)
             return 1
         return 0
     }
 
     function validatingTheSecondPage()
     {
-        console.log(secondPageObject.password + secondPageObject.vsl + secondPageObject.demande)
-        if (secondPageObject.password.length && (secondPageObject.vsl || secondPageObject.demande))
+        console.log(accountInformations.password + accountInformations.vsl + accountInformations.demande)
+        if (accountInformations.password.length && (accountInformations.vsl || accountInformations.demande))
             return 1
         return 0
     }
@@ -111,14 +98,12 @@ Page {
     }
 
     ActionButton {
-
         x:40
         anchors {
             bottom: parent.bottom
             bottomMargin: Units.dp(10)
             horizontalCenter: parent.horizontalCenter
         }
-
         elevation: 1
         iconName: "content/send"
         action: Action {
@@ -145,16 +130,10 @@ Page {
         }
     }
 
-    Snackbar {
-        id: snackbar
-    }
-
     Component{
         id:firstPage
 
         Item{
-
-
             anchors.fill: parent
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
@@ -200,15 +179,13 @@ Page {
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
                         onTextChanged: {
-                            firstPageObject.nomprenom = text
+                            accountInformations.nomprenom = text
                         }
                     }
                 }
 
                 RowLayout{
-
                     spacing : Units.dp(Defines_values.Signup1RowSpacing)
-
 
                     anchors{
                         left: parent.left
@@ -231,13 +208,12 @@ Page {
                             useValidatingIcon = true
                         }
                         onTextChanged: {
-                            firstPageObject.nomdelastructure = text
+                            accountInformations.nomdelastructure = text
                         }
                     }
                 }
 
                 RowLayout{
-
                     spacing : Units.dp(Defines_values.Signup1RowSpacing)
 
                     anchors{
@@ -272,7 +248,7 @@ Page {
                                         console.log("longitude  : "+result.longitude);
                                         console.log("latitude  : "+result.latitude)
                                         hasError = false
-                                        helperText = ""  
+                                        helperText = ""
                                     }
                                 })
                                 .catch(function(error){
@@ -283,9 +259,7 @@ Page {
                                     //@TODO we should trigger an alert by mail here to tuckle
                                     hasError = false
                                     helperText = ""
-
                                 });
-
                             }else{
                                 //Focus is true, the user start/restart editing email
                                 hasError = false
@@ -293,13 +267,12 @@ Page {
                             }
                         }
                         onTextChanged: {
-                            firstPageObject.adress = text
+                            accountInformations.adress = text
                         }
                     }
                 }
 
                 RowLayout{
-
                     spacing : Units.dp(Defines_values.Signup1RowSpacing)
 
                     anchors{
@@ -308,26 +281,25 @@ Page {
                     }
 
                     Icon {
-
                         name: "communication/email"
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
                     TextFieldValidated {
                         id:email_txtFld
+
                         placeholderText: "Email"
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
                         onTextChanged: {
-                           firstPageObject.email = text
+                            accountInformations.email = text
                         }
                     }
                 }
 
                 RowLayout{
-
                     spacing : Units.dp(Defines_values.Signup1RowSpacing)
 
                     anchors{
@@ -346,7 +318,7 @@ Page {
 
                         onTextChanged: {
                             tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
-                            firstPageObject.tel = text
+                            accountInformations.tel = text
                         }
 
                         Keys.priority: Keys.BeforeItem
@@ -377,7 +349,6 @@ Page {
         id:secondPage
 
         Item{
-
             anchors.fill: parent
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
@@ -387,21 +358,22 @@ Page {
                 if(passwordField.text && passwordConfirmation.text )
                     if(passwordField.text === passwordConfirmation.text)
                     {
-                        secondPageObject.password = passwordField.text
+                        accountInformations.password = passwordField.text
                         passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = true
                     }
                     else{
-                        secondPageObject.password = ""
+                        accountInformations.password = ""
                         passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                     }
                 else{
-                    secondPageObject.password = ""
+                    accountInformations.password = ""
                     passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                 }
             }
 
             Column{
                 id: topColumn
+
                 spacing: Units.dp(Defines_values.Default_border_margins)
                 anchors.horizontalCenter: parent.horizontalCenter
 
@@ -409,14 +381,14 @@ Page {
                     id: demandecheckbox
 
                     text: "Recevoir des demande en ambulances"
-                    onCheckedChanged: secondPageObject.demande = demandecheckbox.checked
+                    onCheckedChanged: accountInformations.demande = demandecheckbox.checked
                 }
 
                 CheckBox {
                     id: vslcheckbox
 
                     text: "Recevoir des demande en VSL"
-                    onCheckedChanged: secondPageObject.vsl = vslcheckbox.checked
+                    onCheckedChanged: accountInformations.vsl = vslcheckbox.checked
                 }
             }
 
@@ -430,7 +402,7 @@ Page {
                     id: passwordField
 
                     Layout.fillWidth:true
-                    hasError: secondPageObject.hasError == true
+                    hasError: accountInformations.hasError === true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
                     onTextChanged: passwordvalidating()
@@ -442,7 +414,7 @@ Page {
                     placeholderText: "Confirmer le mot de passe"
                     floatingLabel: true
                     Layout.fillWidth:true
-                    hasError: secondPageObject.hasError == true
+                    hasError: accountInformations.hasError === true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
                     onTextChanged: passwordvalidating()
@@ -451,5 +423,10 @@ Page {
         }
 
     }
+
+    Snackbar {
+        id: snackbar
+    }
+
 }
 
