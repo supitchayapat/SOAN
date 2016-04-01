@@ -43,7 +43,6 @@ Page {
             //about the error
             //many error can be catched here (existing email, existing address,existing phone...)
         });
-
     }
 
     function validatingTheFirstPage()
@@ -80,7 +79,6 @@ Page {
             top: parent.top
             topMargin: Units.dp(Defines_values.SignupLoaderMargin)
         }
-
     }
 
     Loader {
@@ -134,7 +132,6 @@ Page {
         id:firstPage
 
         Item{
-            anchors.fill: parent
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
@@ -285,14 +282,12 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    TextFieldValidated {
+                    EmailTextField {
                         id:email_txtFld
 
-                        placeholderText: "Email"
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
                         onTextChanged: {
                             accountInformations.email = text
                         }
@@ -349,7 +344,6 @@ Page {
         id:secondPage
 
         Item{
-            anchors.fill: parent
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
@@ -378,17 +372,17 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 CheckBox {
-                    id: demandecheckbox
+                    id: demandeCheckBox
 
                     text: "Recevoir des demande en ambulances"
-                    onCheckedChanged: accountInformations.demande = demandecheckbox.checked
+                    onCheckedChanged: accountInformations.demande = demandeCheckBox.checked
                 }
 
                 CheckBox {
-                    id: vslcheckbox
+                    id: vslCheckBox
 
                     text: "Recevoir des demande en VSL"
-                    onCheckedChanged: accountInformations.vsl = vslcheckbox.checked
+                    onCheckedChanged: accountInformations.vsl = vslCheckBox.checked
                 }
             }
 
