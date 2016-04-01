@@ -65,6 +65,28 @@ Page {
         return 0
     }
 
+    function nextsivible()
+    {
+        if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
+        {
+           console.log(" validatingTheFirstPage() Valide")
+            nextButton.visible = true
+        }
+        else if(shiftLodaer.sourceComponent == secondPage && validatingTheSecondPage())
+        {
+            console.log("validatingTheSecondPage() Valide")
+            nextButton.visible = true
+        }else
+            nextButton.visible = false
+
+    }
+
+    Timer {
+        interval: 500; running: true; repeat: true
+        onTriggered: nextsivible()
+    }
+
+
     ProgressBySteps{
         id : progressBySteps
 
@@ -110,6 +132,7 @@ Page {
         action: Action {
             id: addContent
 
+            visible:false
             onTriggered:{
                 console.log(shiftLodaer.sourceComponent == firstPage);
                 console.log(validatingTheFirstPage());
