@@ -24,8 +24,4 @@
         <file>q.js</file>
         <file>Qondrite.qml</file>
     </qresource>
-    <qresource prefix="/">
-        <file>test.qml</file>
-        <file>test2.qml</file>
-    </qresource>
 </RCC>

@@ -19,8 +19,6 @@ Page {
         property bool    vsl
         property string  email
         property string  password
-        property double longitude
-        property double latitude
     }
 
     function createAccount(){
@@ -31,9 +29,7 @@ Page {
             address  : accountInformations.adress,
             tel  : accountInformations.tel,
             ambulance  : accountInformations.demande,
-            vsl  : accountInformations.vsl,
-            longitude  : accountInformations.longitude,
-            latitude  : accountInformations.latitude
+            vsl  : accountInformations.vsl
         }
 
         Qondrite.createUser(accountInformations.email,accountInformations.password,profile)
@@ -51,6 +47,11 @@ Page {
 
     function validatingTheFirstPage()
     {
+        console.log(accountInformations.nomprenom)
+        console.log(accountInformations.nomdelastructure)
+        console.log(accountInformations.email)
+        console.log(accountInformations.adress)
+        console.log(accountInformations.tel)
         if(accountInformations.nomprenom && accountInformations.nomdelastructure && accountInformations.email && accountInformations.adress && accountInformations.tel)
             return 1
         return 0
@@ -95,6 +96,9 @@ Page {
     }
 
     ActionButton {
+        id: nextButton
+
+        visible: false
         x:40
         anchors {
             bottom: parent.bottom
@@ -107,6 +111,8 @@ Page {
             id: addContent
 
             onTriggered:{
+                console.log(shiftLodaer.sourceComponent == firstPage);
+                console.log(validatingTheFirstPage());
                 if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
                 {
                     progressBySteps.nextStep()
@@ -119,7 +125,7 @@ Page {
 
                     createAccount()
                 }else
-                    snackbar.open("Veuillez saisir les champs correctement")
+                    snackbar.open("Il y a un erreur")
             }
 
         }
@@ -238,8 +244,9 @@ Page {
                                         hasError = true
                                         helperText = qsTr("Adresse invalide")
                                     }else{
-                                        accountInformations.longitude = result.longitude;
-                                        accountInformations.latitude = result.latitude;
+                                        console.log("l'adresse saisie est valide!");
+                                        console.log("longitude  : "+result.longitude);
+                                        console.log("latitude  : "+result.latitude)
                                         hasError = false
                                         helperText = ""
                                     }
