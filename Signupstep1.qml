@@ -183,7 +183,7 @@ Item{
                 id:tel_txtFld
 
                 onTextChanged: {
-                    tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
+                    this.text = Utils.formatPhoneNumber(this.text)
                 }
 
                 Keys.priority: Keys.BeforeItem
