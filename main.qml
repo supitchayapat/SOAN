@@ -27,11 +27,15 @@ ApplicationWindow {
             objectName: "sidePanel"
             email: "emailAdressString"
             accountName:"accountNameString"
+
             onGoToAccountPage: {
                 pageStack.push(Qt.resolvedUrl("Account.qml"))
             }
             onGoToAmbulanceListPage: {
                 pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+            }
+            onDisconnectPressed: {
+                // TODO Run here the disconnect process
             }
         }
     }

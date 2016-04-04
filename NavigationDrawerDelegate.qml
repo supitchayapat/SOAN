@@ -12,6 +12,8 @@ Rectangle{
 
     signal goToAmbulanceListPage()
     signal goToAccountPage()
+    signal disconnectPressed()
+
 
     Rectangle{
         id: sidebar_rct
@@ -102,6 +104,16 @@ Rectangle{
                 }
             }
 
+            Button {
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "Déconnexion"
+                width: parent.width - parent.width/5
+                backgroundColor: Defines_values.PrimaryColor
+                onClicked: {
+                    disconnectPressed()
+                }
+            }
         }
     }
 }
