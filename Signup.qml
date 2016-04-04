@@ -47,11 +47,6 @@ Page {
 
     function validatingTheFirstPage()
     {
-        console.log(accountInformations.nomprenom)
-        console.log(accountInformations.nomdelastructure)
-        console.log(accountInformations.email)
-        console.log(accountInformations.adress)
-        console.log(accountInformations.tel)
         if(accountInformations.nomprenom && accountInformations.nomdelastructure && accountInformations.email && accountInformations.adress && accountInformations.tel)
             return 1
         return 0
@@ -59,7 +54,6 @@ Page {
 
     function validatingTheSecondPage()
     {
-        console.log(accountInformations.password + accountInformations.vsl + accountInformations.demande)
         if (accountInformations.password.length && (accountInformations.vsl || accountInformations.demande))
             return 1
         return 0
@@ -98,7 +92,6 @@ Page {
     ActionButton {
         id: nextButton
 
-        visible: false
         x:40
         anchors {
             bottom: parent.bottom
@@ -111,8 +104,6 @@ Page {
             id: addContent
 
             onTriggered:{
-                console.log(shiftLodaer.sourceComponent == firstPage);
-                console.log(validatingTheFirstPage());
                 if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
                 {
                     progressBySteps.nextStep()
