@@ -28,7 +28,7 @@ Rectangle{
         Label {
 
             text: accountName
-           style: "title"
+            style: "title"
             color: "white"
 
             anchors{

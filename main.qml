@@ -8,11 +8,16 @@ ApplicationWindow {
     id: ambulance
 
     visible: true
-
     width: Screen.width
     height: Screen.height
-
     initialPage : Qt.resolvedUrl("Signin.qml")
+
+    theme {
+        primaryColor: "blue"
+        accentColor: "blue"
+        tabHighlightColor: "red"
+        backgroundColor: "white"
+    }
 
     NavigationDrawer {
         id:navDrawer
@@ -29,13 +34,6 @@ ApplicationWindow {
                 pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
             }
         }
-    }
-
-    theme {
-        primaryColor: "blue"
-        accentColor: "blue"
-        tabHighlightColor: "red"
-        backgroundColor: "white"
     }
 
     Component.onCompleted: {

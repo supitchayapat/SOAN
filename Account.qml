@@ -104,7 +104,6 @@ Page {
         }
 
         RowLayout{
-
             spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
@@ -122,7 +121,6 @@ Page {
         }
 
         RowLayout{
-
             spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
@@ -137,7 +135,6 @@ Page {
         }
 
         RowLayout{
-
             spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
@@ -153,7 +150,6 @@ Page {
         }
 
         RowLayout{
-
             spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
@@ -163,13 +159,13 @@ Page {
 
             Label {
                 id  : emailField
+
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }
 
         RowLayout{
-
             spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
@@ -185,7 +181,6 @@ Page {
         }
 
         RowLayout{
-
             spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
@@ -208,6 +203,7 @@ Page {
             Layout.fillWidth:true
         }
     }
+
     Component.onCompleted: loadUserInformation()
 
     function loadUserInformation(){

@@ -9,7 +9,6 @@ Page {
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
     backAction: navDrawer.action
-
     actionBar.backgroundColor: Palette.colors.grey[Defines_values.ListambulancesBackgroundlevel]
     actionBar.decorationColor: Palette.colors.grey[Defines_values.ListambulancesDecorationlevel]
 
@@ -29,7 +28,6 @@ Page {
         id: listelements
 
         ListItem.Standard{
-
             text:name
 
             action: Icon {
@@ -40,7 +38,6 @@ Page {
             }
 
             Button {
-
                 width: Units.dp(Defines_values.ListambulancesButtonwidth)
 
                 anchors{
