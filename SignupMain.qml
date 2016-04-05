@@ -59,11 +59,13 @@ Page {
             name  : stepOne.name,
             companyName : stepOne.structureName,
             address  : stepOne.address,
+            latitude : stepOne.latitude,
+            longitude : stepOne.longitude,
             tel  : stepOne.tel,
             ambulance  : stepTwo.ambulance,
             vsl  : stepTwo.vsl
         }
-
+console.log('profile : ', JSON.stringify(profile));
         Qondrite.createUser(stepOne.email,stepTwo.password,profile)
             .then(function onSuccess(userId){
                 Qondrite.emit("createUser", userId);

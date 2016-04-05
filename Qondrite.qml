@@ -34,6 +34,7 @@ WebSocket {
     }
 
     function createUser(email,password,profile){
+        console.log('Qond:createUser :profile :', JSON.stringify(profile));
         return ceres.createUser(email,password,profile);
     }
 

@@ -10,6 +10,9 @@ Item{
     anchors.fill: parent
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
+    property double latitude
+    property double longitude
+
     Column {
         id: column
 
@@ -99,8 +102,9 @@ Item{
                 font.family: textFieldFont.name
                 Layout.fillWidth: true
                 onFocusChanged: {
-                    if(focus == false){
-
+                    //if(true ||focus == false){
+                    if (true)
+                    {
                        Qondrite.callAddressvalidation(text)
                         .result
                             .then(function(result){
@@ -113,6 +117,8 @@ Item{
                                         console.log("l'adresse saisie est valide!");
                                         console.log("longitude  : "+result.longitude);
                                         console.log("latitude  : "+result.latitude)
+                                        latitude = result.latitude
+                                        longitude = result.longitude
                                         hasError = false
                                         helperText = ""
                                     }
@@ -128,12 +134,12 @@ Item{
                                 helperText = ""
 
                             });
-
-                    }else{
+                      }
+                    //}else{
                         //Focus is true, the user start/restart editing email
-                        hasError = false
-                        helperText = ""
-                    }
+                      //  hasError = false
+                       // helperText = ""
+                    //}
                 }
             }
         }
@@ -230,6 +236,8 @@ Item{
                             address  : address_txtField.text,
                             email  : email_txtFld.text,
                             tel  : tel_txtFld.text,
+                            latitude : latitude,
+                            longitude : longitude
                         }
 
                         saveStepOne(stepOne);
