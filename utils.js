@@ -1,20 +1,28 @@
 
 .pragma library
 
-function formatPhoneNumber10DigitWithSpageFR(txt, backSpacePressed){
-    if (txt.length > 14 ) return txt.substring(0,14)
-    if(backSpacePressed){
-        var newString = ""
-        for(var i = 0; i < txt.length; i++){
-            if(txt[i] !== " ") newString = newString + txt[i]
-            /* TODO : replacing this condition with newString.length % 3 === 2 leads to a bug,
-            please retry later if the bug is still there investigate and declare it*/
-            if((newString.length  === 2 ||newString.length  === 5 ||
-                newString.length  === 8 ||newString.length  === 11)){
-                 newString = newString + " "
-            }
+function formatPhoneNumber(rawPhoneNumber)
+{
+    var _phoneNumber = "";
+    // define the phone number we work on
+    function setNumber(phoneNumber){
+        function _cleanUp(phone){
+            // removes disallowed chars
+            return phone.replace(/[^0-9+]/g, '');
         }
-        return newString
+        _phoneNumber = _cleanUp(phoneNumber);
     }
-    return txt
+    function handlePrefix(){
+        // remove any +33 (and likes) prefix
+        if (_phoneNumber.length %3 === 0 && _phoneNumber.match(/[\+{1}]+([0-9]{2})/g) !== null){
+            _phoneNumber = "0" + (_phoneNumber.length >=3 ? _phoneNumber.substr(3) : "");
+        }
+    }
+    function format(){
+        // remove spare chars and slice phone number by two-digit pairs
+        return _phoneNumber.substr(0,10).match(/.{1,2}/g).join(' ');
+    }
+    setNumber(rawPhoneNumber);
+    handlePrefix();
+    return format();
 }
