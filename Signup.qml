@@ -69,15 +69,15 @@ Page {
     {
         if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
         {
-           console.log(" validatingTheFirstPage() Valide")
-            nextButton.visible = true
+            console.log(" validatingTheFirstPage() Valide")
+            nextButton.backgroundColor = Theme.accentColor
         }
         else if(shiftLodaer.sourceComponent == secondPage && validatingTheSecondPage())
         {
             console.log("validatingTheSecondPage() Valide")
-            nextButton.visible = true
+            nextButton.backgroundColor = Theme.accentColor
         }else
-            nextButton.visible = false
+            nextButton.backgroundColor = "gray"
 
     }
 
@@ -120,7 +120,7 @@ Page {
     ActionButton {
         id: nextButton
 
-        visible: false
+        backgroundColor: Theme.accentColor
         x:40
         anchors {
             bottom: parent.bottom
@@ -131,11 +131,7 @@ Page {
         iconName: "content/send"
         action: Action {
             id: addContent
-
-            visible:false
             onTriggered:{
-                console.log(shiftLodaer.sourceComponent == firstPage);
-                console.log(validatingTheFirstPage());
                 if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
                 {
                     progressBySteps.nextStep()
