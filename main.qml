@@ -8,11 +8,16 @@ ApplicationWindow {
     id: ambulance
 
     visible: true
-
     width: Screen.width
     height: Screen.height
-
     initialPage : Qt.resolvedUrl("Signin.qml")
+
+    theme {
+        primaryColor: "blue"
+        accentColor: "blue"
+        tabHighlightColor: "red"
+        backgroundColor: "white"
+    }
 
     NavigationDrawer {
         id:navDrawer
@@ -31,16 +36,9 @@ ApplicationWindow {
         }
     }
 
-    theme {
-        primaryColor: "blue"
-        accentColor: "blue"
-        tabHighlightColor: "red"
-        backgroundColor: "white"
-    }
-
     Component.onCompleted: {
         Qondrite.init();
-        AsteroidListeners.load();
-
+        Qondrite.onLogin.connect(function(){pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
     }
+
 }
