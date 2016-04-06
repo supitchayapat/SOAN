@@ -107,15 +107,16 @@ Rectangle{
 
         Button {
 
+            text: qsTr("Déconnexion")
+            width: parent.width - parent.width/5
+            backgroundColor: Defines_values.PrimaryColor
+
             anchors{
                 horizontalCenter: parent.horizontalCenter
                 bottom: parent.bottom
                 bottomMargin: parent.height *0.05
             }
 
-            text: "Déconnexion"
-            width: parent.width - parent.width/5
-            backgroundColor: Defines_values.PrimaryColor
             onClicked: {
                 disconnectPressed()
             }
