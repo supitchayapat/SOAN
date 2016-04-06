@@ -71,6 +71,7 @@ Rectangle{
             anchors.fill: parent
 
             ListItem.Standard {
+                id: ambListItem
 
                 text: "Liste d'Ambulances"
 
@@ -82,12 +83,15 @@ Rectangle{
                 }
 
                 onClicked:{
+                    ambListItem.selected = true
+                    accountListItem.selected = false
                     navDrawer.close()
                     goToAmbulanceListPage()
                 }
             }
 
             ListItem.Standard {
+                id: accountListItem
 
                 text: "Mon compte"
 
@@ -99,6 +103,8 @@ Rectangle{
                 }
 
                 onClicked:{
+                    accountListItem.selected = true
+                    ambListItem.selected = false
                     navDrawer.close()
                     goToAccountPage();
                 }
