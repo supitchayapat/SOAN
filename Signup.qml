@@ -33,16 +33,6 @@ Page {
         }
 
         Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
-        .then(function onSuccess(userId){
-            Qondrite.emit("createUser", userId);
-            Qondrite.emit("login", userId);
-        })
-        .catch(function onError(error){
-            Qondrite.emit("createUserError", error);
-            //@TODO  : display a message to give the user information
-            //about the error
-            //many error can be catched here (existing email, existing address,existing phone...)
-        });
     }
 
     function validatingTheFirstPage()

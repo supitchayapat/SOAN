@@ -12,7 +12,6 @@
         <file>utils.js</file>
         <file>PasswordTextField.qml</file>
         <file>TextFieldValidated.qml</file>
-        <file>AsteroidListeners.js</file>
     </qresource>
     <qresource prefix="/rsrc" lang="data, images, icones..">
         <file alias="ambulance-siren">ambulance-siren.png</file>
