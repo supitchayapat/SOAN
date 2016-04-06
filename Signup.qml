@@ -9,7 +9,7 @@ Page {
     id:root
 
     QtObject{
-        id:accountInformations
+        id:accountInfo
 
         property string  nomprenom
         property string  nomdelastructure
@@ -24,43 +24,27 @@ Page {
     function createAccount(){
 
         var profile = {
-            name  : accountInformations.nomprenom,
-            companyName : accountInformations.nomdelastructure,
-            address  : accountInformations.adress,
-            tel  : accountInformations.tel,
-            ambulance  : accountInformations.demande,
-            vsl  : accountInformations.vsl
+            name  : accountInfo.nomprenom,
+            companyName : accountInfo.nomdelastructure,
+            address  : accountInfo.adress,
+            tel  : accountInfo.tel,
+            ambulance  : accountInfo.demande,
+            vsl  : accountInfo.vsl
         }
 
-        Qondrite.createUser(accountInformations.email,accountInformations.password,profile)
-        .then(function onSuccess(userId){
-            Qondrite.emit("createUser", userId);
-            Qondrite.emit("login", userId);
-        })
-        .catch(function onError(error){
-            Qondrite.emit("createUserError", error);
-            //@TODO  : display a message to give the user information
-            //about the error
-            //many error can be catched here (existing email, existing address,existing phone...)
-        });
+        Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
     }
 
     function validatingTheFirstPage()
     {
-        console.log(accountInformations.nomprenom)
-        console.log(accountInformations.nomdelastructure)
-        console.log(accountInformations.email)
-        console.log(accountInformations.adress)
-        console.log(accountInformations.tel)
-        if(accountInformations.nomprenom && accountInformations.nomdelastructure && accountInformations.email && accountInformations.adress && accountInformations.tel)
+        if(accountInfo.nomprenom && accountInfo.nomdelastructure && accountInfo.email && accountInfo.adress && accountInfo.tel)
             return 1
         return 0
     }
 
     function validatingTheSecondPage()
     {
-        console.log(accountInformations.password + accountInformations.vsl + accountInformations.demande)
-        if (accountInformations.password.length && (accountInformations.vsl || accountInformations.demande))
+        if (accountInfo.password.length && (accountInfo.vsl || accountInfo.demande))
             return 1
         return 0
     }
@@ -98,7 +82,6 @@ Page {
     ActionButton {
         id: nextButton
 
-        visible: false
         x:40
         anchors {
             bottom: parent.bottom
@@ -111,8 +94,6 @@ Page {
             id: addContent
 
             onTriggered:{
-                console.log(shiftLodaer.sourceComponent == firstPage);
-                console.log(validatingTheFirstPage());
                 if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
                 {
                     progressBySteps.nextStep()
@@ -179,7 +160,7 @@ Page {
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
                         onTextChanged: {
-                            accountInformations.nomprenom = text
+                            accountInfo.nomprenom = text
                         }
                     }
                 }
@@ -208,7 +189,7 @@ Page {
                             useValidatingIcon = true
                         }
                         onTextChanged: {
-                            accountInformations.nomdelastructure = text
+                            accountInfo.nomdelastructure = text
                         }
                     }
                 }
@@ -267,7 +248,7 @@ Page {
                             }
                         }
                         onTextChanged: {
-                            accountInformations.adress = text
+                            accountInfo.adress = text
                         }
                     }
                 }
@@ -292,7 +273,7 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         onTextChanged: {
-                            accountInformations.email = text
+                            accountInfo.email = text
                         }
                     }
                 }
@@ -316,7 +297,7 @@ Page {
 
                         onTextChanged: {
                             tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
-                            accountInformations.tel = text
+                            accountInfo.tel = text
                         }
 
                         Keys.priority: Keys.BeforeItem
@@ -355,15 +336,15 @@ Page {
                 if(passwordField.text && passwordConfirmation.text )
                     if(passwordField.text === passwordConfirmation.text)
                     {
-                        accountInformations.password = passwordField.text
+                        accountInfo.password = passwordField.text
                         passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = true
                     }
                     else{
-                        accountInformations.password = ""
+                        accountInfo.password = ""
                         passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                     }
                 else{
-                    accountInformations.password = ""
+                    accountInfo.password = ""
                     passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                 }
             }
@@ -378,14 +359,14 @@ Page {
                     id: demandeCheckBox
 
                     text: "Recevoir des demande en ambulances"
-                    onCheckedChanged: accountInformations.demande = demandeCheckBox.checked
+                    onCheckedChanged: accountInfo.demande = demandeCheckBox.checked
                 }
 
                 CheckBox {
                     id: vslCheckBox
 
                     text: "Recevoir des demande en VSL"
-                    onCheckedChanged: accountInformations.vsl = vslCheckBox.checked
+                    onCheckedChanged: accountInfo.vsl = vslCheckBox.checked
                 }
             }
 
@@ -399,7 +380,7 @@ Page {
                     id: passwordField
 
                     Layout.fillWidth:true
-                    hasError: accountInformations.hasError === true
+                    hasError: accountInfo.hasError === true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
                     onTextChanged: passwordvalidating()
@@ -411,7 +392,7 @@ Page {
                     placeholderText: "Confirmer le mot de passe"
                     floatingLabel: true
                     Layout.fillWidth:true
-                    hasError: accountInformations.hasError === true
+                    hasError: accountInfo.hasError === true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
                     onTextChanged: passwordvalidating()

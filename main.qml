@@ -42,7 +42,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         Qondrite.init();
-        AsteroidListeners.load();
-
+        Qondrite.onLogin.connect(function(){pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
     }
+
 }

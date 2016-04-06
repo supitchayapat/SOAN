@@ -131,18 +131,7 @@ Item {
 
                 onClicked:{
                     Qondrite.loginWithPassword(emailTxtField.text,pwdTxtField.text)
-                    .then(function onSuccess(userId){
-                        Qondrite.emit("login",userId);
-                    })
-                    .catch(function onError(err){
-                        //@TODO handle different types of errors
-                        //the credentials could be wrong be it could also
-                        //be just a missing internet connexion in the server
-                        //so the warning would be
-                        //"une erreur est survenue, veuillez réessayer"
-                        Qondrite.emit("loginError",err);
-                        invalidCredentialsLabel.visible = true;
-                    });
+                    invalidCredentialsLabel.visible = true;
                 }
             }
 
