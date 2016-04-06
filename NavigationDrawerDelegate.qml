@@ -103,16 +103,21 @@ Rectangle{
                     goToAccountPage();
                 }
             }
+        }
 
-            Button {
+        Button {
 
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Déconnexion"
-                width: parent.width - parent.width/5
-                backgroundColor: Defines_values.PrimaryColor
-                onClicked: {
-                    disconnectPressed()
-                }
+            anchors{
+                horizontalCenter: parent.horizontalCenter
+                bottom: parent.bottom
+                bottomMargin: parent.height *0.05
+            }
+
+            text: "Déconnexion"
+            width: parent.width - parent.width/5
+            backgroundColor: Defines_values.PrimaryColor
+            onClicked: {
+                disconnectPressed()
             }
         }
     }
