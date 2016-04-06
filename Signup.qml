@@ -14,8 +14,8 @@ Page {
         property string  nomprenom
         property string  nomdelastructure
         property string  adress
-        property double longitude : 0
-        property double latitude : 0
+        property double  longitude : 0
+        property double  latitude : 0
         property string  tel
         property bool    demande
         property bool    vsl
@@ -230,36 +230,28 @@ Page {
                         Layout.fillWidth: true
                         onFocusChanged: {
 
-
-                            if(false){
-
-                                Qondrite.callAddressvalidation(text)
+                            if(accountInfo.longitude == 0 && accountInfo.latitude ==0 && address_txtField.text.length > 3)
+                            {
+                                Qondrite.validateAddress(text)
                                 .result
                                 .then(function(result){
-
                                     if(result.status == "ERROR"){
                                         hasError = true
                                         helperText = qsTr("Adresse invalide")
-                                    }else{
-                                        console.log("l'adresse saisie est valide!");
-                                        console.log("longitude  : "+result.longitude);
-                                        console.log("latitude  : "+result.latitude)
+                                    }
+                                    else{
                                         accountInfo.latitude = result.latitude
                                         accountInfo.longitude = result.longitude
                                         hasError = false
                                         helperText = ""
                                     }
                                 })
-                                .catch(function(error){
-                                    //This error is not related to maps validation of the address
-                                    // but is rather an error in the meteor server code
-                                    //it might also be triggerd if no internet connection is available
-                                    // on the server. What do we do in this case ?
-                                    //@TODO we should trigger an alert by mail here to tuckle
+                                .catch(function(){
                                     hasError = false
                                     helperText = ""
                                 });
-                            }else{
+                            }
+                            else{
                                 //Focus is true, the user start/restart editing email
                                 hasError = false
                                 helperText = ""
