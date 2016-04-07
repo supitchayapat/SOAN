@@ -293,9 +293,8 @@ Page {
                     TextFieldValidated{
                         id:tel_txtFld
 
-                        onTextChanged: {
-                            tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
-                            accountInfo.tel = text
+                        liveFormatingCallBack: function() {
+                            return Utils.formatPhoneNumber10DigitWithSpageFR(tel_txtFld.text,_priv_tel_txtFld.insertSpace);
                         }
 
                         Keys.priority: Keys.BeforeItem
@@ -314,6 +313,10 @@ Page {
                         QtObject{
                             id: _priv_tel_txtFld
                             property bool  insertSpace: true
+                        }
+
+                        onEditingFinished: {
+                            accountInfo.tel = text
                         }
                     }
 

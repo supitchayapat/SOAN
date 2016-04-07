@@ -9,6 +9,13 @@ TextField{
     property bool useValidatingIcon : true
     property string warningText
     property alias validationDelay : timer.interval
+    /*!
+      this callback is called on TextChanged
+      to reformat the text while typing following specific
+      rules that it needs to implement, the formated text
+      should be returned as a string
+    */
+    property var liveFormatingCallBack
 
     function manageValidation(){
         if(validator != null){
@@ -58,6 +65,7 @@ TextField{
 
     onTextChanged: {
         timer.restart()
+        text = liveFormatingCallBack()
     }
 
     onFocusChanged: {
