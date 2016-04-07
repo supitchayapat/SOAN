@@ -309,7 +309,6 @@ Page {
 
                             else{
                                 accountInformations.email =  ""
-                                console.log("no c marche pas")
                             }
                         }
                     }
