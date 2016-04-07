@@ -47,11 +47,6 @@ Page {
 
     function validatingTheFirstPage()
     {
-        console.log(accountInformations.nomprenom)
-        console.log(accountInformations.nomdelastructure)
-        console.log(accountInformations.email)
-        console.log(accountInformations.adress)
-        console.log(accountInformations.tel)
         if(accountInformations.nomprenom && accountInformations.nomdelastructure && accountInformations.email && accountInformations.adress && accountInformations.tel)
             return 1
         return 0
@@ -65,16 +60,14 @@ Page {
         return 0
     }
 
-    function nextsivible()
+    function nextvisible()
     {
         if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
         {
-            console.log(" validatingTheFirstPage() Valide")
             nextButton.backgroundColor = Theme.accentColor
         }
         else if(shiftLodaer.sourceComponent == secondPage && validatingTheSecondPage())
         {
-            console.log("validatingTheSecondPage() Valide")
             nextButton.backgroundColor = Theme.accentColor
         }else
             nextButton.backgroundColor = "gray"
@@ -83,7 +76,7 @@ Page {
 
     Timer {
         interval: 500; running: true; repeat: true
-        onTriggered: nextsivible()
+        onTriggered: nextvisible()
     }
 
 
@@ -92,7 +85,7 @@ Page {
 
         stepCount: 2
         height: parent.height * 0.05
-        
+
         anchors{
             left: parent.left
             leftMargin: parent.width * 0.1
@@ -310,8 +303,14 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onTextChanged: {
-                            accountInformations.email = text
+                        onActiveFocusChanged: {
+                            if(!hasError)
+                                accountInformations.email = text
+
+                            else{
+                                accountInformations.email =  ""
+                                console.log("no c marche pas")
+                            }
                         }
                     }
                 }
@@ -333,11 +332,6 @@ Page {
                     TextFieldValidated{
                         id:tel_txtFld
 
-                        onTextChanged: {
-                            tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
-                            accountInformations.tel = text
-                        }
-
                         Keys.priority: Keys.BeforeItem
                         Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
                         Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
@@ -354,6 +348,11 @@ Page {
                         QtObject{
                             id: _priv_tel_txtFld
                             property bool  insertSpace: true
+                        }
+
+                        onTextChanged:{
+                            tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
+                            accountInformations.tel = text
                         }
                     }
 
