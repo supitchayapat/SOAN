@@ -892,6 +892,7 @@ Asteroid.prototype.createUser = function (usernameOrEmail, password, profile) {
 	} else if (typeof usernameOrEmail === "object") {
 		options = usernameOrEmail;
 	}
+    console.log('Ast:createUser :profile :', JSON.stringify(options));
 	self.ddp.method("createUser", [options], function (err, res) {
 		if (err) {
 			self._emit("createUserError", err);
