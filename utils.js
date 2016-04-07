@@ -20,6 +20,7 @@ function formatPhoneNumber(rawPhoneNumber)
     }
     function format(){
         // remove spare chars and slice phone number by two-digit pairs
+        // works also while deleting
         return _phoneNumber.substr(0,10).match(/.{1,2}/g).join(' ');
     }
     setNumber(rawPhoneNumber);
