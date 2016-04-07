@@ -8,6 +8,24 @@ TextField{
 
     property bool useValidatingIcon : true
     property string warningText
+    property alias validationDelay : timer.interval
+
+    function manageValidation(){
+        if(validator != null){
+            /* TODO : here we are only handling the case of RegExpValidator
+             * but the validator could be also an IntValidator or a DoubleValidator
+             * please manage the missing cases*/
+            if((text != "" && text.toString().match(validator.regExp) != null) ||text == "" )
+                hasError = false
+            else if(text != "" && text.toString().match(validator.regExp) === null ){
+                hasError = true
+            }
+        }
+        else{
+            throw "TextFiledValidated : this component needs a validator,
+                    you can set the validator using validator property"
+        }
+    }
 
     font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
@@ -20,31 +38,44 @@ TextField{
         color:Theme.primaryColor
     }
 
-    onEditingFinished: {
-        if(text != "")
-        {
-            checkedIcon.visible = useValidatingIcon
-            hasError = false
+    Timer{
+        id : timer
+
+        property bool timerDone : false
+
+        interval: 1500
+        triggeredOnStart: false
+
+        onTriggered: {
+            manageValidation()
+            timerDone = true
         }
     }
 
-    onActiveFocusChanged: {
-        if(activeFocus){
+    onEditingFinished: {
+        checkedIcon.visible = useValidatingIcon
+    }
+
+    onTextChanged: {
+        timer.restart()
+    }
+
+    onFocusChanged: {
+        if(focus){
             checkedIcon.visible = false
+            hasError = false
             helperText = ""
+            timer.restart()
         }
         else{
-            if(validator != null){
-                /* TODO : here we are only handling the case of RegExpValidator
-                 * but the validator could be also an IntValidator or a DoubleValidator
-                 * please manage the missing cases*/
-                if((text != "" && text.toString().match(validator.regExp) != null) ||text == "" )
-                    hasError = false
-                else if(text != "" && text.toString().match(validator.regExp) === null ){
-                    hasError = true
-                    helperText = warningText
-                }
-            }
+            manageValidation()
+        }
+    }
+
+    onHasErrorChanged: {
+        if(!focus || timer.timerDone){
+            checkedIcon.visible = useValidatingIcon && !hasError
+            hasError ?  helperText = warningText :  helperText = ""
         }
     }
 }

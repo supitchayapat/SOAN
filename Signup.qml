@@ -159,7 +159,8 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
-                        onTextChanged: {
+
+                        onEditingFinished: {
                             accountInfo.nomprenom = text
                         }
                     }
@@ -185,10 +186,10 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onFocusChanged:{
-                            useValidatingIcon = true
-                        }
-                        onTextChanged: {
+                        // @TODO this validator may need to be changed with a correct regExp for this case
+                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+
+                        onEditingFinished:{
                             accountInfo.nomdelastructure = text
                         }
                     }
@@ -214,40 +215,37 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onFocusChanged: {
-                            if(focus == false){
 
-                                Qondrite.callAddressvalidation(text)
-                                .result
-                                .then(function(result){
+                        // @TODO this validator may need to be changed with a correct regExp for this case
+                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
 
-                                    if(result.status == "ERROR"){
-                                        hasError = true
-                                        helperText = qsTr("Adresse invalide")
-                                    }else{
-                                        console.log("l'adresse saisie est valide!");
-                                        console.log("longitude  : "+result.longitude);
-                                        console.log("latitude  : "+result.latitude)
-                                        hasError = false
-                                        helperText = ""
-                                    }
-                                })
-                                .catch(function(error){
-                                    //This error is not related to maps validation of the address
-                                    // but is rather an error in the meteor server code
-                                    //it might also be triggerd if no internet connection is available
-                                    // on the server. What do we do in this case ?
-                                    //@TODO we should trigger an alert by mail here to tuckle
+                        onEditingFinished: {
+                            //@TODO : move all the error handling of this call to Qondrite
+                            Qondrite.callAddressvalidation(text)
+                            .result
+                            .then(function(result){
+
+                                if(result.status == "ERROR"){
+                                    hasError = true
+                                    helperText = qsTr("Adresse invalide")
+                                }else{
+                                    console.log("l'adresse saisie est valide!");
+                                    console.log("longitude  : "+result.longitude);
+                                    console.log("latitude  : "+result.latitude)
                                     hasError = false
                                     helperText = ""
-                                });
-                            }else{
-                                //Focus is true, the user start/restart editing email
+                                }
+                            })
+                            .catch(function(error){
+                                //This error is not related to maps validation of the address
+                                // but is rather an error in the meteor server code
+                                //it might also be triggerd if no internet connection is available
+                                // on the server. What do we do in this case ?
+                                //@TODO we should trigger an alert by mail here to tuckle
                                 hasError = false
                                 helperText = ""
-                            }
-                        }
-                        onTextChanged: {
+                            });
+
                             accountInfo.adress = text
                         }
                     }
