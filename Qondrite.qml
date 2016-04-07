@@ -9,7 +9,6 @@ WebSocket {
     property var ceres
     property string meteor_url
 
-
     /* this function is used to trigger the instantiation of the component from QML, through the C++
        thread that has the responsability to keep it as a singleton type*/
     function init() {}
@@ -17,11 +16,6 @@ WebSocket {
     signal close();
     signal error();
     signal open();
-
-    signal login()
-    signal loginFailed()
-    signal userCreated()
-    signal userCreationFailed()
 
     active: true
 
@@ -40,17 +34,8 @@ WebSocket {
     }
 
     function createUser(email,password,profile){
-        ceres.createUser(email,password,profile)
-        .then(function onSuccess(userId){
-            userCreated()
-            login()
-        })
-        .catch(function onError(error){
-            userCreationFailed()
-            //@TODO  : display a message to give the user information
-            //about the error
-            //many error can be catched here (existing email, existing address,existing phone...)
-        });
+        console.log('Qond:createUser :profile :', JSON.stringify(profile));
+        return ceres.createUser(email,password,profile);
     }
 
     function emit(signalName,param){
@@ -58,18 +43,7 @@ WebSocket {
     }
 
     function loginWithPassword(email,password){
-        return ceres.loginWithPassword(email,password)
-        .then(function onSuccess(userId){
-            login()
-        })
-        .catch(function onError(err){
-            loginFailed()
-            //@TODO handle different types of errors
-            //the credentials could be wrong be it could also
-            //be just a missing internet connexion in the server
-            //so the warning would be
-            //"une erreur est survenue, veuillez réessayer"
-        });
+        return ceres.loginWithPassword(email,password);
     }
 
     function lougout(){
@@ -98,7 +72,7 @@ WebSocket {
         }
     }
 
-    function callAddressvalidation(address){
+    function validateAddress(address){
          return ceres.call("validateAddress",address);
     }
 
