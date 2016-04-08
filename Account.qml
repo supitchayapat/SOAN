@@ -10,10 +10,46 @@ Page {
 
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
-    property bool isEditable: false
+    property bool isEditable: true
     backAction: navDrawer.action
 
     anchors.fill: parent
+
+    function loadUserInformation(){
+        //When a login signal is emmited, the users collection is sent
+        //from server to client with only the current user in it
+        //getting the first element of the collection is getting the logged in user
+        //information
+        var userCollection = Qondrite.getCollection("users");
+        var userInfo = userCollection._set.toArray()[0];
+        var userProfile = userInfo.profile;
+
+        emailField.text = userInfo.emails[0].address;
+        email_txtFld.text = userInfo.emails[0].address;
+        nameField.text = userProfile.name;
+        name_txtFld.text = userProfile.name;
+        addressField.text = userProfile.address;
+        address_txtField.text = userProfile.address;
+        companyNameField.text = userProfile.companyName;
+        companyName_txtFld.text = userProfile.companyName;
+        teLField.text = userProfile.tel;
+        tel_txtFld.text = userProfile.tel;
+        transportTypeField.text = getTransportTypeLabel(userProfile);
+        demandeCheckBox.checked = userProfile.ambulance
+        vslCheckBox.checked = userProfile.vsl
+
+    }
+
+    function getTransportTypeLabel(userProfile){
+        if(userProfile.ambulance && userProfile.vsl){
+            return "VST et Ambulance";
+        }else if(userProfile.ambulance && !userProfile.vsl){
+            return "Ambulance uniquement"
+        }else if(!userProfile.ambulance && userProfile.vsl){
+            return "VST uniquement";
+        }
+
+    }
 
     Dialog {
         id: confirmed_dlg
@@ -92,8 +128,6 @@ Page {
         }
     }
 
-
-
     Column{
         id: column
 
@@ -117,20 +151,22 @@ Page {
             Label {
                 id  : nameField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                Layout.fillWidth:true
+                Layout.fillWidth:!isEditable
                 visible: !isEditable
+
             }
 
             TextFieldValidated{
-                id:nomprenom_txtFld
+                id:name_txtFld
 
+                anchors.fill: parent
                 inputMethodHints: Qt.ImhNoPredictiveText
-                placeholderText:"Nom et Prénom"
+                placeholderText:qsTr("Nom et Prénom")
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: Defines_values.textFieldsFontFamily
-                Layout.fillWidth: true
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
                 visible: isEditable
+                Layout.fillWidth:isEditable
             }
         }
 
@@ -154,14 +190,14 @@ Page {
                 placeholderText: qsTr("Nom de la structure")
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                Layout.fillWidth: true
+                Layout.fillWidth:true
                 visible: isEditable
 
                 onFocusChanged:{
                     useValidatingIcon = true
                 }
                 onTextChanged: {
-                    accountInfo.nomdelastructure = text
+
                 }
             }
         }
@@ -184,7 +220,7 @@ Page {
             TextFieldValidated{
                 id:address_txtField
 
-                placeholderText: "Adresse"
+                placeholderText: qsTr("Adresse")
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
                 Layout.fillWidth: true
@@ -241,7 +277,7 @@ Page {
                 id  : emailField
 
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                Layout.fillWidth:true
+                Layout.fillWidth:!isEditable
                 visible: !isEditable
             }
 
@@ -250,7 +286,7 @@ Page {
 
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: textFieldFont.name
-                Layout.fillWidth: true
+                Layout.fillWidth: isEditable
                 visible: isEditable
 
                 onTextChanged: {
@@ -276,7 +312,6 @@ Page {
 
             TextFieldValidated{
                 id:tel_txtFld
-
 
                 Keys.priority: Keys.BeforeItem
                 Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
@@ -318,6 +353,30 @@ Page {
                 Layout.fillWidth:true
                 visible: !isEditable
             }
+
+            Column{
+                id: topColumn
+
+                spacing: Units.dp(Defines_values.Default_border_margins)
+                anchors.horizontalCenter: parent.horizontalCenter
+                Layout.fillWidth:true
+                visible: isEditable
+
+                CheckBox {
+                    id: demandeCheckBox
+
+                    text: "Recevoir des demande en ambulances"
+                    onCheckedChanged: accountInfo.demande = demandeCheckBox.checked
+                }
+
+                CheckBox {
+                    id: vslCheckBox
+
+                    text: "Recevoir des demande en VSL"
+                    onCheckedChanged: accountInfo.vsl = vslCheckBox.checked
+                }
+            }
+
         }
 
         Button {
@@ -331,33 +390,6 @@ Page {
 
     Component.onCompleted: loadUserInformation()
 
-    function loadUserInformation(){
-        //When a login signal is emmited, the users collection is sent
-        //from server to client with only the current user in it
-        //getting the first element of the collection is getting the logged in user
-        //information
-        var userCollection = Qondrite.getCollection("users");
-        var userInfo = userCollection._set.toArray()[0];
-        var userProfile = userInfo.profile;
 
-        emailField.text = userInfo.emails[0].address;
-        nameField.text = userProfile.name;
-        addressField.text = userProfile.address;
-        companyNameField.text = userProfile.companyName;
-        teLField.text = userProfile.tel;
-        transportTypeField.text = getTransportTypeLabel(userProfile);
-
-    }
-
-    function getTransportTypeLabel(userProfile){
-        if(userProfile.ambulance && userProfile.vsl){
-            return "VST et Ambulance";
-        }else if(userProfile.ambulance && !userProfile.vsl){
-            return "Ambulance uniquement"
-        }else if(!userProfile.ambulance && userProfile.vsl){
-            return "VST uniquement";
-        }
-
-    }
 
 }
