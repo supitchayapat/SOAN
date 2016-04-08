@@ -14,6 +14,8 @@ Page {
         property string  nomprenom
         property string  nomdelastructure
         property string  adress
+        property double  longitude : 0
+        property double  latitude : 0
         property string  tel
         property bool    demande
         property bool    vsl
@@ -27,12 +29,24 @@ Page {
             name  : accountInfo.nomprenom,
             companyName : accountInfo.nomdelastructure,
             address  : accountInfo.adress,
+            latitude : accountInfo.latitude,
+            longitude : accountInfo.longitude,
             tel  : accountInfo.tel,
             ambulance  : accountInfo.demande,
             vsl  : accountInfo.vsl
         }
 
         Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
+        .then(function onSuccess(userId){
+            Qondrite.emit("createUser", userId);
+            Qondrite.emit("login", userId);
+        })
+        .catch(function onError(error){
+            Qondrite.emit("createUserError", error);
+            //@TODO  : display a message to give the user information
+            //about the error
+            //many error can be catched here (existing email, existing address,existing phone...)
+        });
     }
 
     function validatingTheFirstPage()
@@ -215,37 +229,34 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         onFocusChanged: {
-                            if(focus == false){
 
-                                Qondrite.callAddressvalidation(text)
+                            if(accountInfo.longitude == 0 && accountInfo.latitude ==0 && address_txtField.text.length > 3)
+                            {
+                                Qondrite.validateAddress(text)
                                 .result
                                 .then(function(result){
-
                                     if(result.status == "ERROR"){
                                         hasError = true
                                         helperText = qsTr("Adresse invalide")
-                                    }else{
-                                        console.log("l'adresse saisie est valide!");
-                                        console.log("longitude  : "+result.longitude);
-                                        console.log("latitude  : "+result.latitude)
+                                    }
+                                    else{
+                                        accountInfo.latitude = result.latitude
+                                        accountInfo.longitude = result.longitude
                                         hasError = false
                                         helperText = ""
                                     }
                                 })
-                                .catch(function(error){
-                                    //This error is not related to maps validation of the address
-                                    // but is rather an error in the meteor server code
-                                    //it might also be triggerd if no internet connection is available
-                                    // on the server. What do we do in this case ?
-                                    //@TODO we should trigger an alert by mail here to tuckle
+                                .catch(function(){
                                     hasError = false
                                     helperText = ""
                                 });
-                            }else{
+                            }
+                            else{
                                 //Focus is true, the user start/restart editing email
                                 hasError = false
                                 helperText = ""
                             }
+
                         }
                         onTextChanged: {
                             accountInfo.adress = text
@@ -296,7 +307,7 @@ Page {
                         id:tel_txtFld
 
                         onTextChanged: {
-                            tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
+                            text = Utils.phone.format(text)
                             accountInfo.tel = text
                         }
 
@@ -309,7 +320,8 @@ Page {
 
                         Layout.fillWidth: true
 
-                        validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
+                        warningText : "Numero de téléphone incomplet"
+                        validator: RegExpValidator { regExp: Utils.phone.getValidationPattern() }
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
