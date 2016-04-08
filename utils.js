@@ -91,7 +91,7 @@ var phone = {};
             WORLD_PREFIX_PATTERN : /(\+[0-9]{2})/g,     //ex: +33
             NATIONAL_PREFIX : '0',
             CHUNKS_PATTERN : /.{1,2}/g,                 // 1or2-digit pairs
-            CLEANUP_PATTERN :  /[^0-9+]/g,               // disallowed chars
+            CLEANUP_PATTERN :  /[^0-9\+]/g,               // disallowed chars
             VALIDATION_PATTERN : /^0[1-9]([-\/. ]?[0-9]{2}){4}$/
         }
     };

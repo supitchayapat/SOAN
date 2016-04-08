@@ -311,10 +311,6 @@ Page {
                             accountInfo.tel = text
                         }
 
-                        onFocusChanged: {
-                            //hasError =  //Utils.phone.isValid(text);
-                        }
-
                         Keys.priority: Keys.BeforeItem
                         Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
                         Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
