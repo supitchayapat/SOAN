@@ -74,14 +74,15 @@ Page {
             nextButton.backgroundColor = Theme.accentColor
         }else
             nextButton.backgroundColor = "gray"
-
     }
 
     Timer {
-        interval: 500; running: true; repeat: true
+        interval: 500
+        running: true
+        repeat: true
+
         onTriggered: nextvisible()
     }
-
 
     ProgressBySteps{
         id : progressBySteps
@@ -109,6 +110,7 @@ Page {
             right: parent.right
             top: progressBySteps.bottom
         }
+
         asynchronous: true
         sourceComponent: firstPage
     }
@@ -126,6 +128,7 @@ Page {
         iconName: "content/send"
         action: Action {
             id: addContent
+
             onTriggered:{
                 if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
                 {
@@ -138,10 +141,8 @@ Page {
                     snackbar.open("Loading ... ")
 
                     createAccount()
-                }else
-                    snackbar.open("Il y a un erreur")
+                }
             }
-
         }
     }
 
@@ -305,10 +306,10 @@ Page {
 
                         onActiveFocusChanged: {
                             if(!hasError)
-                                accountInformations.email = text
+                                accountInfo.email = text
 
                             else{
-                                accountInformations.email =  ""
+                                accountInfo.email =  ""
                             }
                         }
                     }
@@ -343,8 +344,10 @@ Page {
 
                         onTextChanged: {
                             text = Utils.phone.format(text)
-                            accountInfo.tel = text
+                            if(text.length>13) accountInfo.tel = text
+                            else accountInfo.tel = ""
                         }
+
                     }
                 }
             }
@@ -426,12 +429,10 @@ Page {
                 }
             }
         }
-
     }
 
     Snackbar {
         id: snackbar
     }
-
 }
 
