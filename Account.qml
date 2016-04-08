@@ -10,6 +10,7 @@ Page {
 
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
+    property bool isEditable: false
     backAction: navDrawer.action
 
     anchors.fill: parent
@@ -117,6 +118,19 @@ Page {
                 id  : nameField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
+                visible: !isEditable
+            }
+
+            TextFieldValidated{
+                id:nomprenom_txtFld
+
+                inputMethodHints: Qt.ImhNoPredictiveText
+                placeholderText:"Nom et Prénom"
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.family: Defines_values.textFieldsFontFamily
+                Layout.fillWidth: true
+                validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                visible: isEditable
             }
         }
 
@@ -131,6 +145,24 @@ Page {
                 id : companyNameField
                 Layout.fillWidth:true
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                visible: !isEditable
+            }
+
+            TextFieldValidated{
+                id:companyName_txtFld
+
+                placeholderText: qsTr("Nom de la structure")
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.family: textFieldFont.name
+                Layout.fillWidth: true
+                visible: isEditable
+
+                onFocusChanged:{
+                    useValidatingIcon = true
+                }
+                onTextChanged: {
+                    accountInfo.nomdelastructure = text
+                }
             }
         }
 
@@ -146,6 +178,54 @@ Page {
                 id  : addressField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: column.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+                visible: !isEditable
+            }
+
+            TextFieldValidated{
+                id:address_txtField
+
+                placeholderText: "Adresse"
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.family: textFieldFont.name
+                Layout.fillWidth: true
+                visible: isEditable
+
+                onFocusChanged: {
+                    if(focus == false){
+
+                        Qondrite.callAddressvalidation(text)
+                        .result
+                        .then(function(result){
+
+                            if(result.status == "ERROR"){
+                                hasError = true
+                                helperText = qsTr("Adresse invalide")
+                            }else{
+                                console.log("l'adresse saisie est valide!");
+                                console.log("longitude  : "+result.longitude);
+                                console.log("latitude  : "+result.latitude)
+                                hasError = false
+                                helperText = ""
+                            }
+                        })
+                        .catch(function(error){
+                            //This error is not related to maps validation of the address
+                            // but is rather an error in the meteor server code
+                            //it might also be triggerd if no internet connection is available
+                            // on the server. What do we do in this case ?
+                            //@TODO we should trigger an alert by mail here to tuckle
+                            hasError = false
+                            helperText = ""
+                        });
+                    }else{
+                        //Focus is true, the user start/restart editing email
+                        hasError = false
+                        helperText = ""
+                    }
+                }
+                onTextChanged: {
+                    accountInfo.adress = text
+                }
             }
         }
 
@@ -162,6 +242,20 @@ Page {
 
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
+                visible: !isEditable
+            }
+
+            EmailTextField {
+                id:email_txtFld
+
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.family: textFieldFont.name
+                Layout.fillWidth: true
+                visible: isEditable
+
+                onTextChanged: {
+                    accountInfo.email = text
+                }
             }
         }
 
@@ -177,6 +271,36 @@ Page {
                 id : teLField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
+                visible: !isEditable
+            }
+
+            TextFieldValidated{
+                id:tel_txtFld
+
+
+                Keys.priority: Keys.BeforeItem
+                Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
+                Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
+
+                placeholderText: "tel: 0x xx xx xx xx"
+                inputMethodHints: Qt.ImhDialableCharactersOnly
+
+                Layout.fillWidth: true
+                visible: isEditable
+
+                validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
+                font.family: textFieldFont.name
+                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+
+                QtObject{
+                    id: _priv_tel_txtFld
+                    property bool  insertSpace: true
+                }
+
+                onTextChanged: {
+                    tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
+                    accountInfo.tel = text
+                }
             }
         }
 
@@ -192,6 +316,7 @@ Page {
                 id : transportTypeField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
+                visible: !isEditable
             }
         }
 
