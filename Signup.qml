@@ -311,10 +311,6 @@ Page {
                             accountInfo.tel = text
                         }
 
-                        Keys.priority: Keys.BeforeItem
-                        Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
-                        Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
-
                         placeholderText: "tel: 0x xx xx xx xx"
                         inputMethodHints: Qt.ImhDialableCharactersOnly
 
@@ -324,13 +320,7 @@ Page {
                         validator: RegExpValidator { regExp: Utils.phone.getValidationPattern() }
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
-
-                        QtObject{
-                            id: _priv_tel_txtFld
-                            property bool  insertSpace: true
-                        }
                     }
-
                 }
             }
         }
