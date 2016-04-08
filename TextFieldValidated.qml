@@ -15,7 +15,7 @@ TextField{
       rules that it needs to implement, the formated text
       should be returned as a string
     */
-    property var liveFormatingCallBack
+    property var liveFormatingCallBack : function(){return text}
 
     function manageValidation(){
         if(validator != null){
