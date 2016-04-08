@@ -307,8 +307,12 @@ Page {
                         id:tel_txtFld
 
                         onTextChanged: {
-                            text = Utils.formatPhoneNumber(text)
+                            text = Utils.phone.format(text)
                             accountInfo.tel = text
+                        }
+
+                        onFocusChanged: {
+                            //hasError =  //Utils.phone.isValid(text);
                         }
 
                         Keys.priority: Keys.BeforeItem
@@ -320,7 +324,9 @@ Page {
 
                         Layout.fillWidth: true
 
-                        validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
+                        warningText : "Numero de téléphone incomplet"
+                        //validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
+                        validator: RegExpValidator { regExp: Utils.phone.getValidationPattern() }
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
