@@ -10,6 +10,7 @@
         <file>NavigationDrawerDelegate.qml</file>
         <file>EmailTextField.qml</file>
         <file>utils.js</file>
+        <file>SuggestionTextField.qml</file>
         <file>PasswordTextField.qml</file>
         <file>TextFieldValidated.qml</file>
     </qresource>
