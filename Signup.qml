@@ -325,7 +325,6 @@ Page {
                         Layout.fillWidth: true
 
                         warningText : "Numero de téléphone incomplet"
-                        //validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
                         validator: RegExpValidator { regExp: Utils.phone.getValidationPattern() }
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
