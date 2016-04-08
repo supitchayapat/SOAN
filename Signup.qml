@@ -51,7 +51,6 @@ Page {
 
     function validatingTheFirstPage()
     {
-
         if(accountInfo.nomprenom && accountInfo.nomdelastructure && accountInfo.email && accountInfo.adress && accountInfo.tel)
             return 1
         return 0
@@ -331,10 +330,6 @@ Page {
 
                     TextFieldValidated{
                         id:tel_txtFld
-
-                        Keys.priority: Keys.BeforeItem
-                        Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
-                        Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
 
                         placeholderText: "tel: 0x xx xx xx xx"
                         inputMethodHints: Qt.ImhDialableCharactersOnly
