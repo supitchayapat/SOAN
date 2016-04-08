@@ -28,8 +28,10 @@ Page {
             companyName : accountInfo.nomdelastructure,
             address  : accountInfo.adress,
             tel  : accountInfo.tel,
-            ambulance  : accountInfo.demande,
-            vsl  : accountInfo.vsl
+
+            //to be verified == added by Ahmed see the line 28 in account.qml
+            ambulance  : accountInfo.demande? "1" : "0",
+            vsl  : accountInfo.vsl ? "1" : "0"
         }
 
         Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
