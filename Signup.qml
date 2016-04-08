@@ -9,11 +9,13 @@ Page {
     id:root
 
     QtObject{
-        id:accountInformations
+        id:accountInfo
 
         property string  nomprenom
         property string  nomdelastructure
         property string  adress
+        property double  longitude : 0
+        property double  latitude : 0
         property string  tel
         property bool    demande
         property bool    vsl
@@ -24,15 +26,17 @@ Page {
     function createAccount(){
 
         var profile = {
-            name  : accountInformations.nomprenom,
-            companyName : accountInformations.nomdelastructure,
-            address  : accountInformations.adress,
-            tel  : accountInformations.tel,
-            ambulance  : accountInformations.demande,
-            vsl  : accountInformations.vsl
+            name  : accountInfo.nomprenom,
+            companyName : accountInfo.nomdelastructure,
+            address  : accountInfo.adress,
+            latitude : accountInfo.latitude,
+            longitude : accountInfo.longitude,
+            tel  : accountInfo.tel,
+            ambulance  : accountInfo.demande,
+            vsl  : accountInfo.vsl
         }
 
-        Qondrite.createUser(accountInformations.email,accountInformations.password,profile)
+        Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
         .then(function onSuccess(userId){
             Qondrite.emit("createUser", userId);
             Qondrite.emit("login", userId);
@@ -47,15 +51,15 @@ Page {
 
     function validatingTheFirstPage()
     {
-        if(accountInformations.nomprenom && accountInformations.nomdelastructure && accountInformations.email && accountInformations.adress && accountInformations.tel)
+
+        if(accountInfo.nomprenom && accountInfo.nomdelastructure && accountInfo.email && accountInfo.adress && accountInfo.tel)
             return 1
         return 0
     }
 
     function validatingTheSecondPage()
     {
-        console.log(accountInformations.password + accountInformations.vsl + accountInformations.demande)
-        if (accountInformations.password.length && (accountInformations.vsl || accountInformations.demande))
+        if (accountInfo.password.length && (accountInfo.vsl || accountInfo.demande))
             return 1
         return 0
     }
@@ -113,7 +117,6 @@ Page {
     ActionButton {
         id: nextButton
 
-        backgroundColor: Theme.accentColor
         x:40
         anchors {
             bottom: parent.bottom
@@ -191,7 +194,7 @@ Page {
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
                         onTextChanged: {
-                            accountInformations.nomprenom = text
+                            accountInfo.nomprenom = text
                         }
                     }
                 }
@@ -220,7 +223,7 @@ Page {
                             useValidatingIcon = true
                         }
                         onTextChanged: {
-                            accountInformations.nomdelastructure = text
+                            accountInfo.nomdelastructure = text
                         }
                     }
                 }
@@ -246,40 +249,37 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         onFocusChanged: {
-                            if(focus == false){
 
-                                Qondrite.callAddressvalidation(text)
+                            if(accountInfo.longitude == 0 && accountInfo.latitude ==0 && address_txtField.text.length > 3)
+                            {
+                                Qondrite.validateAddress(text)
                                 .result
                                 .then(function(result){
-
                                     if(result.status == "ERROR"){
                                         hasError = true
                                         helperText = qsTr("Adresse invalide")
-                                    }else{
-                                        console.log("l'adresse saisie est valide!");
-                                        console.log("longitude  : "+result.longitude);
-                                        console.log("latitude  : "+result.latitude)
+                                    }
+                                    else{
+                                        accountInfo.latitude = result.latitude
+                                        accountInfo.longitude = result.longitude
                                         hasError = false
                                         helperText = ""
                                     }
                                 })
-                                .catch(function(error){
-                                    //This error is not related to maps validation of the address
-                                    // but is rather an error in the meteor server code
-                                    //it might also be triggerd if no internet connection is available
-                                    // on the server. What do we do in this case ?
-                                    //@TODO we should trigger an alert by mail here to tuckle
+                                .catch(function(){
                                     hasError = false
                                     helperText = ""
                                 });
-                            }else{
+                            }
+                            else{
                                 //Focus is true, the user start/restart editing email
                                 hasError = false
                                 helperText = ""
                             }
+
                         }
                         onTextChanged: {
-                            accountInformations.adress = text
+                            accountInfo.adress = text
                         }
                     }
                 }
@@ -303,6 +303,7 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
+
                         onActiveFocusChanged: {
                             if(!hasError)
                                 accountInformations.email = text
@@ -340,21 +341,16 @@ Page {
 
                         Layout.fillWidth: true
 
-                        validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
+                        warningText : "Numero de téléphone incomplet"
+                        validator: RegExpValidator { regExp: Utils.phone.getValidationPattern() }
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
-                        QtObject{
-                            id: _priv_tel_txtFld
-                            property bool  insertSpace: true
-                        }
-
-                        onTextChanged:{
-                            tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
-                            accountInformations.tel = text
+                        onTextChanged: {
+                            text = Utils.phone.format(text)
+                            accountInfo.tel = text
                         }
                     }
-
                 }
             }
         }
@@ -372,15 +368,15 @@ Page {
                 if(passwordField.text && passwordConfirmation.text )
                     if(passwordField.text === passwordConfirmation.text)
                     {
-                        accountInformations.password = passwordField.text
+                        accountInfo.password = passwordField.text
                         passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = true
                     }
                     else{
-                        accountInformations.password = ""
+                        accountInfo.password = ""
                         passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                     }
                 else{
-                    accountInformations.password = ""
+                    accountInfo.password = ""
                     passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                 }
             }
@@ -395,14 +391,14 @@ Page {
                     id: demandeCheckBox
 
                     text: "Recevoir des demande en ambulances"
-                    onCheckedChanged: accountInformations.demande = demandeCheckBox.checked
+                    onCheckedChanged: accountInfo.demande = demandeCheckBox.checked
                 }
 
                 CheckBox {
                     id: vslCheckBox
 
                     text: "Recevoir des demande en VSL"
-                    onCheckedChanged: accountInformations.vsl = vslCheckBox.checked
+                    onCheckedChanged: accountInfo.vsl = vslCheckBox.checked
                 }
             }
 
@@ -416,7 +412,7 @@ Page {
                     id: passwordField
 
                     Layout.fillWidth:true
-                    hasError: accountInformations.hasError === true
+                    hasError: accountInfo.hasError === true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
                     onTextChanged: passwordvalidating()
@@ -428,7 +424,7 @@ Page {
                     placeholderText: "Confirmer le mot de passe"
                     floatingLabel: true
                     Layout.fillWidth:true
-                    hasError: accountInformations.hasError === true
+                    hasError: accountInfo.hasError === true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
                     onTextChanged: passwordvalidating()
