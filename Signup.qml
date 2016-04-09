@@ -303,20 +303,10 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    TextFieldValidated{
+                    PhoneTextField{
                         id:tel_txtFld
 
-                        liveFormatingCallBack: function() {
-                            return Utils.phone.format(text)
-                        }
-
-                        placeholderText: "tel: 0x xx xx xx xx"
-                        inputMethodHints: Qt.ImhDialableCharactersOnly
-
                         Layout.fillWidth: true
-
-                        warningText : "Numero de téléphone incomplet"
-                        validator: RegExpValidator { regExp: Utils.phone.getValidationPattern() }
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
