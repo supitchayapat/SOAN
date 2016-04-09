@@ -207,7 +207,7 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    TextFieldValidated{
+                    SuggestionTextField{
                         id:address_txtField
 
                         placeholderText: "Adresse"
@@ -249,6 +249,10 @@ Page {
                         }
                         onTextChanged: {
                             accountInfo.adress = text
+                            //this is how to use SuggestionTextField
+                            suggestionModel.clear()
+                            addSuggestion(text)
+                            addSuggestion(text+" : search on google")
                         }
                     }
                 }
