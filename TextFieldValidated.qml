@@ -2,7 +2,6 @@ import QtQuick 2.5
 import Material 0.2
 import "define_values.js" as Defines_values
 
-
 TextField{
     id:myRoot
 
@@ -19,14 +18,24 @@ TextField{
 
     function manageValidation(){
         if(validator != null){
+            if ( text == ""){
+                hasError = false
+                checkedIcon.visible = false
+                return
+            }
             /* TODO : here we are only handling the case of RegExpValidator
              * but the validator could be also an IntValidator or a DoubleValidator
              * please manage the missing cases*/
-            if((text != "" && text.toString().match(validator.regExp) != null) ||text == "" )
+            if((text != "" && text.toString().match(validator.regExp) != null))
+            {
                 hasError = false
+                checkedIcon.visible = true
+            }
             else if(text != "" && text.toString().match(validator.regExp) === null ){
                 hasError = true
+                checkedIcon.visible = false
             }
+
         }
         else{
             throw "TextFiledValidated : this component needs a validator,
@@ -50,7 +59,7 @@ TextField{
 
         property bool timerDone : false
 
-        interval: 1500
+        interval: 1000
         triggeredOnStart: false
 
         onTriggered: {
@@ -64,6 +73,11 @@ TextField{
     }
 
     onTextChanged: {
+        if(text == ""){
+            checkedIcon.visible = false
+            hasError = false
+           return
+        }
         timer.restart()
         text = liveFormatingCallBack()
     }
@@ -71,19 +85,36 @@ TextField{
     onFocusChanged: {
         if(focus){
             checkedIcon.visible = false
-            hasError = false
             helperText = ""
             timer.restart()
         }
         else{
+            timer.stop()
+            if(text == ""){
+                checkedIcon.visible = false
+                return
+            }
             manageValidation()
+            if(hasError) helperText = warningText
         }
     }
 
     onHasErrorChanged: {
-        if(!focus || timer.timerDone){
+        if(focus)
+        {
+            if(timer.timerDone && !hasError){
+                checkedIcon.visible = useValidatingIcon && text != ""
+                helperText = ""
+                return
+            }
+
+            helperText = ""
+        }
+        else
+        {
             checkedIcon.visible = useValidatingIcon && !hasError
             hasError ?  helperText = warningText :  helperText = ""
         }
     }
+
 }
