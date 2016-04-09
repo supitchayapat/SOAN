@@ -14,6 +14,8 @@ Page {
         property string  nomprenom
         property string  nomdelastructure
         property string  adress
+        property double  longitude : 0
+        property double  latitude : 0
         property string  tel
         property bool    demande
         property bool    vsl
@@ -27,12 +29,24 @@ Page {
             name  : accountInfo.nomprenom,
             companyName : accountInfo.nomdelastructure,
             address  : accountInfo.adress,
+            latitude : accountInfo.latitude,
+            longitude : accountInfo.longitude,
             tel  : accountInfo.tel,
             ambulance  : accountInfo.demande,
             vsl  : accountInfo.vsl
         }
 
         Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
+        .then(function onSuccess(userId){
+            Qondrite.emit("createUser", userId);
+            Qondrite.emit("login", userId);
+        })
+        .catch(function onError(error){
+            Qondrite.emit("createUserError", error);
+            //@TODO  : display a message to give the user information
+            //about the error
+            //many error can be catched here (existing email, existing address,existing phone...)
+        });
     }
 
     function validatingTheFirstPage()
@@ -234,6 +248,7 @@ Page {
                                     console.log("latitude  : "+result.latitude)
                                     hasError = false
                                     helperText = ""
+                                    accountInfo.adress = text
                                 }
                             })
                             .catch(function(error){
@@ -245,8 +260,6 @@ Page {
                                 hasError = false
                                 helperText = ""
                             });
-
-                            accountInfo.adress = text
                         }
                     }
                 }
@@ -294,36 +307,28 @@ Page {
                         id:tel_txtFld
 
                         liveFormatingCallBack: function() {
-                            return Utils.formatPhoneNumber10DigitWithSpageFR(tel_txtFld.text,_priv_tel_txtFld.insertSpace);
+                            return Utils.phone.format(text)
                         }
-
-                        Keys.priority: Keys.BeforeItem
-                        Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
-                        Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
 
                         placeholderText: "tel: 0x xx xx xx xx"
                         inputMethodHints: Qt.ImhDialableCharactersOnly
 
                         Layout.fillWidth: true
 
-                        validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
+                        warningText : "Numero de téléphone incomplet"
+                        validator: RegExpValidator { regExp: Utils.phone.getValidationPattern() }
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
-
-                        QtObject{
-                            id: _priv_tel_txtFld
-                            property bool  insertSpace: true
-                        }
 
                         onEditingFinished: {
                             accountInfo.tel = text
                         }
                     }
-
                 }
             }
         }
     }
+
 
     Component{
         id:secondPage
@@ -400,7 +405,6 @@ Page {
                 }
             }
         }
-
     }
 
     Snackbar {
@@ -408,4 +412,5 @@ Page {
     }
 
 }
+
 
