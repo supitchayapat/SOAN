@@ -100,18 +100,15 @@ TextField{
     }
 
     onHasErrorChanged: {
-        if(focus)
-        {
+        if(focus){
             if(timer.timerDone && !hasError){
                 checkedIcon.visible = useValidatingIcon && text != ""
                 helperText = ""
                 return
             }
-
             helperText = ""
         }
-        else
-        {
+        else{
             checkedIcon.visible = useValidatingIcon && !hasError
             hasError ?  helperText = warningText :  helperText = ""
         }

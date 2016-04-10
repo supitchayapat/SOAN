@@ -2,7 +2,6 @@ import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
-import "utils.js" as Utils
 import Qondrite 0.1
 
 Page {
