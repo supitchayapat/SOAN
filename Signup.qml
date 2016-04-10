@@ -2,7 +2,6 @@ import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
-import "utils.js" as Utils
 import Qondrite 0.1
 
 Page {
@@ -193,7 +192,8 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
-                        onTextChanged: {
+
+                        onEditingFinished: {
                             accountInfo.nomprenom = text
                         }
                     }
@@ -219,10 +219,10 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onFocusChanged:{
-                            useValidatingIcon = true
-                        }
-                        onTextChanged: {
+                        // @TODO this validator may need to be changed with a correct regExp for this case
+                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+
+                        onEditingFinished:{
                             accountInfo.nomdelastructure = text
                         }
                     }
@@ -248,38 +248,37 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onFocusChanged: {
 
-                            if(accountInfo.longitude == 0 && accountInfo.latitude ==0 && address_txtField.text.length > 3)
-                            {
-                                Qondrite.validateAddress(text)
-                                .result
-                                .then(function(result){
-                                    if(result.status == "ERROR"){
-                                        hasError = true
-                                        helperText = qsTr("Adresse invalide")
-                                    }
-                                    else{
-                                        accountInfo.latitude = result.latitude
-                                        accountInfo.longitude = result.longitude
-                                        hasError = false
-                                        helperText = ""
-                                    }
-                                })
-                                .catch(function(){
+                        // @TODO this validator may need to be changed with a correct regExp for this case
+                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
+
+                        onEditingFinished: {
+                            //@TODO : move all the error handling of this call to Qondrite
+                            Qondrite.callAddressvalidation(text)
+                            .result
+                            .then(function(result){
+
+                                if(result.status == "ERROR"){
+                                    hasError = true
+                                    helperText = qsTr("Adresse invalide")
+                                }else{
+                                    console.log("l'adresse saisie est valide!");
+                                    console.log("longitude  : "+result.longitude);
+                                    console.log("latitude  : "+result.latitude)
                                     hasError = false
                                     helperText = ""
-                                });
-                            }
-                            else{
-                                //Focus is true, the user start/restart editing email
+                                    accountInfo.adress = text
+                                }
+                            })
+                            .catch(function(error){
+                                //This error is not related to maps validation of the address
+                                // but is rather an error in the meteor server code
+                                //it might also be triggerd if no internet connection is available
+                                // on the server. What do we do in this case ?
+                                //@TODO we should trigger an alert by mail here to tuckle
                                 hasError = false
                                 helperText = ""
-                            }
-
-                        }
-                        onTextChanged: {
-                            accountInfo.adress = text
+                            });
                         }
                     }
                 }
@@ -329,23 +328,15 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    TextFieldValidated{
+                    PhoneTextField{
                         id:tel_txtFld
 
-                        placeholderText: "tel: 0x xx xx xx xx"
-                        inputMethodHints: Qt.ImhDialableCharactersOnly
-
                         Layout.fillWidth: true
-
-                        warningText : "Numero de téléphone incomplet"
-                        validator: RegExpValidator { regExp: Utils.phone.getValidationPattern() }
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
-                        onTextChanged: {
-                            text = Utils.phone.format(text)
-                            if(text.length>13) accountInfo.tel = text
-                            else accountInfo.tel = ""
+                        onEditingFinished: {
+                            accountInfo.tel = text
                         }
 
                     }
@@ -353,6 +344,7 @@ Page {
             }
         }
     }
+
 
     Component{
         id:secondPage
@@ -435,4 +427,5 @@ Page {
         id: snackbar
     }
 }
+
 
