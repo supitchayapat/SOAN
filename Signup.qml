@@ -21,7 +21,10 @@ Page {
         property bool    vsl
         property string  email
         property string  password
+
     }
+
+
 
     function createAccount(){
 
@@ -214,40 +217,48 @@ Page {
                     TextFieldValidated{
                         id:address_txtField
 
+                        QtObject {
+                            id : previousAddress
+                            property string value : ""
+                        }
+
                         placeholderText: "Adresse"
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
+
+                        Keys.onPressed: {
+                            if (0 === (accountInfo.latitude + accountInfo.longitude)){
+                                return;
+                            }
+                            // address changed mean related gps coords are obsolete
+                            if (event.key == Qt.Key_Backspace || text !== previousAddress.value){
+                                accountInfo.latitude = 0;
+                                accountInfo.longitude = 0;
+                            }
+                            previousAddress.value = text;
+                        }
+
                         onFocusChanged: {
-                            // run validation only if undone for current address and address length is worth it
-                            if(accountInfo.longitude == 0 && accountInfo.latitude ==0 && address_txtField.text.length > 3)
+
+                            // run validation only if undone yet for current address and address length is worth it
+                            if(accountInfo.latitude === 0 && accountInfo.longitude === 0 && address_txtField.text.length > 3)
                             {
-                                Qondrite.validateAddress(text)
-                                .result
-                                .then(function(result){
-                                    if(result.status == "ERROR"){
-                                        hasError = true
-                                        helperText = qsTr("Adresse invalide")
+                                Qondrite.validateAddress(text).result
+                                .then(function(result)
+                                {
+                                    if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                                        warningText = qsTr("Adresse invalide")
                                     }
                                     else{
-                                        accountInfo.latitude = result.latitude
-                                        accountInfo.longitude = result.longitude
-                                        hasError = false
-                                        helperText = ""
+                                        accountInfo.latitude = result[0].latitude;
+                                        accountInfo.longitude = result[0].longitude;
                                     }
-                                })
-                                .catch(function(){
-                                    hasError = false
-                                    helperText = ""
                                 });
-                            }
-                            else{
-                                //Focus is true, the user start/restart editing email
-                                hasError = false
-                                helperText = ""
                             }
 
                         }
+
                         onTextChanged: {
                             accountInfo.adress = text
                         }

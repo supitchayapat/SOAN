@@ -8,8 +8,7 @@ Meteor.methods({
   			httpAdapter: "https",
   			apiKey: 'AIzaSyDMBt6F0W2WhX819O8DawgwDzxCLEz2TXc'
 		});
-		var result = geo.geocode(address);
-		return result;
+		return geo.geocode(address);		
 	}	
 });
 if (Meteor.isClient) {
