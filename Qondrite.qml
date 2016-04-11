@@ -98,8 +98,16 @@ WebSocket {
         }
     }
 
-    function callAddressvalidation(address){
-         return ceres.call("validateAddress",address);
+    function validateAddress(address){
+        return ceres.call("validateAddress",address);
+    }
+
+    function isUserExists(email)
+    {
+        if (! /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/.test(email)){
+            throw new Error('Adresse email invalide');
+        }
+        return ceres.call("isUserExists", email);
     }
 
     function getCollection(collection) {

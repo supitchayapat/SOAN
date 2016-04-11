@@ -1,6 +1,10 @@
 Availability = new Mongo.Collection('availability');
 Meteor.methods({
 
+	"isUserExists" : function(email)
+	{
+		return Meteor.users.find({email : email}).count();
+	},
 	"validateAddress" : function(address)
 	{
 		var geo = new GeoCoder({
