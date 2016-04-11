@@ -234,6 +234,9 @@ Page {
 
                         onEditingFinished: {
                             //@TODO : move all the error handling of this call to Qondrite
+                            accountInfo.adress = text
+
+                            accountInfo.adress = text
                             Qondrite.callAddressvalidation(text)
                             .result
                             .then(function(result){
@@ -258,6 +261,7 @@ Page {
                                 //@TODO we should trigger an alert by mail here to tuckle
                                 hasError = false
                                 helperText = ""
+
                             });
                         }
                     }

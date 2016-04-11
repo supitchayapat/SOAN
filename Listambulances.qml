@@ -6,8 +6,6 @@ import "define_values.js" as Defines_values
 Page {
     id: page
 
-    property string emailAdressString: "Contact@ahmed-arif.com"
-    property string accountNameString: "Alliance"
     backAction: navDrawer.action
     actionBar.backgroundColor: Palette.colors.grey[Defines_values.ListambulancesBackgroundlevel]
     actionBar.decorationColor: Palette.colors.grey[Defines_values.ListambulancesDecorationlevel]

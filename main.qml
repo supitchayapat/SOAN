@@ -7,6 +7,14 @@ import Qondrite 0.1
 ApplicationWindow {
     id: ambulance
 
+    function loadUserInformation(){
+        var userCollection = Qondrite.getCollection("users");
+        var userInfo = userCollection._set.toArray()[0];
+        var userProfile = userInfo.profile;
+
+        navDelegateDrawer.email = userInfo.emails[0].address;
+        navDelegateDrawer.accountName = userProfile.name;
+    }
     visible: true
     width: Screen.width
     height: Screen.height
@@ -23,6 +31,8 @@ ApplicationWindow {
         id:navDrawer
 
         NavigationDrawerDelegate{
+            id:navDelegateDrawer
+
             anchors.fill: parent
             objectName: "sidePanel"
             email: "emailAdressString"
@@ -42,7 +52,10 @@ ApplicationWindow {
 
     Component.onCompleted: {
         Qondrite.init();
-        Qondrite.onLogin.connect(function(){pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
+        Qondrite.onLogin.connect(function(){
+            pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+            loadUserInformation()
+        })
     }
 
 }

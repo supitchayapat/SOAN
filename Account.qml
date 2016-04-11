@@ -8,10 +8,34 @@ import Qondrite 0.1
 Page {
     id: page
 
-    property string emailAdressString: "Contact@ahmed-arif.com"
-    property string accountNameString: "Alliance"
-    backAction: navDrawer.action
+    function loadUserInformation(){
+        //When a login signal is emmited, the users collection is sent
+        //from server to client with only the current user in it
+        //getting the first element of the collection is getting the logged in user
+        //information
+        var userCollection = Qondrite.getCollection("users");
+        var userInfo = userCollection._set.toArray()[0];
+        var userProfile = userInfo.profile;
 
+        emailField.text = userInfo.emails[0].address;
+        nameField.text = userProfile.name;
+        addressField.text = userProfile.address;
+        companyNameField.text = userProfile.companyName;
+        teLField.text = userProfile.tel;
+        transportTypeField.text = getTransportTypeLabel(userProfile);
+    }
+
+    function getTransportTypeLabel(userProfile){
+        if(userProfile.ambulance && userProfile.vsl){
+            return "VST et Ambulance";
+        }else if(userProfile.ambulance && !userProfile.vsl){
+            return "Ambulance uniquement"
+        }else if(!userProfile.ambulance && userProfile.vsl){
+            return "VST uniquement";
+        }
+    }
+
+    backAction: navDrawer.action
     anchors.fill: parent
 
     Dialog {
@@ -90,8 +114,6 @@ Page {
             }
         }
     }
-
-
 
     Column{
         id: column
@@ -205,34 +227,4 @@ Page {
     }
 
     Component.onCompleted: loadUserInformation()
-
-    function loadUserInformation(){
-        //When a login signal is emmited, the users collection is sent
-        //from server to client with only the current user in it
-        //getting the first element of the collection is getting the logged in user
-        //information
-        var userCollection = Qondrite.getCollection("users");
-        var userInfo = userCollection._set.toArray()[0];
-        var userProfile = userInfo.profile;
-
-        emailField.text = userInfo.emails[0].address;
-        nameField.text = userProfile.name;
-        addressField.text = userProfile.address;
-        companyNameField.text = userProfile.companyName;
-        teLField.text = userProfile.tel;
-        transportTypeField.text = getTransportTypeLabel(userProfile);
-
-    }
-
-    function getTransportTypeLabel(userProfile){
-        if(userProfile.ambulance && userProfile.vsl){
-            return "VST et Ambulance";
-        }else if(userProfile.ambulance && !userProfile.vsl){
-            return "Ambulance uniquement"
-        }else if(!userProfile.ambulance && userProfile.vsl){
-            return "VST uniquement";
-        }
-
-    }
-
 }
