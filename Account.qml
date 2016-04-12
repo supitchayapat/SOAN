@@ -22,13 +22,11 @@ Page {
         addressField.text = userProfile.address;
         companyNameField.text = userProfile.companyName;
         teLField.text = userProfile.tel;
-        transportTypeField.text = getTransportTypeLabel(userProfile);
 
-        //to be verified == added by Ahmed see the line 33 in signup.qml
-        demandeCheckBox.checked  = userProfile.demande === "1" ? true : false;
-        vslCheckBox.checked = userProfile.vsl === "1" ? true : false;
+        demandeCheckBox.checked  = userProfile.demande ? true : false;
+        vslCheckBox.checked = userProfile.vsl ? true : false;
+
     }
-
 
     function getTransportTypeLabel(userProfile){
         if(userProfile.ambulance && userProfile.vsl){
@@ -124,7 +122,7 @@ Page {
     Column{
         id: column
 
-        spacing: Units.dp(Defines_values.Account_verticalspacing)
+        spacing: Units.dp(Defines_values.Default_verticalspacing)
         anchors{
             top:parent.top
             topMargin: Units.dp(Defines_values.Accounttop_margin)
@@ -144,7 +142,6 @@ Page {
             Label {
                 id  : nameField
 
-                text:" id  : nameField"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
@@ -160,7 +157,6 @@ Page {
             Label{
                 id : companyNameField
 
-                text:"id : companyNameField"
                 Layout.fillWidth:true
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
             }
@@ -177,7 +173,6 @@ Page {
             Label{
                 id  : addressField
 
-                text: "id  : addressField"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 width: column.width - icon.width - Units.dp(Defines_values.Default_border_margins)
             }
@@ -194,7 +189,6 @@ Page {
             Label {
                 id  : emailField
 
-                text:"id : teLField"
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
@@ -210,7 +204,7 @@ Page {
 
             Label{
                 id : teLField
-                text:"id : teLField"
+
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
@@ -226,7 +220,6 @@ Page {
 
             Label {
                 id : transportTypeField
-                text:"id : transportTypeField"
 
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
@@ -239,7 +232,7 @@ Page {
 
         anchors{
             top:column.bottom
-            topMargin: Units.dp(Defines_values.Account_verticalspacing)
+            topMargin: Units.dp(Defines_values.Default_verticalspacing)
             left: column.left
             leftMargin: -15
         }
@@ -247,7 +240,7 @@ Page {
         CheckBox {
             id: demandeCheckBox
 
-            checked: true
+            checked: false
             enabled: false
             text: "Recevoir des demande en ambulances"
         }
@@ -255,7 +248,7 @@ Page {
         CheckBox {
             id: vslCheckBox
 
-            checked: true
+            checked: false
             enabled: false
             text: "Recevoir des demande en VSL"
         }
@@ -265,7 +258,7 @@ Page {
 
         anchors{
             top:column.bottom
-            topMargin: Units.dp(Defines_values.Account_verticalspacing)*2 + checkboxColumn.height
+            topMargin: Units.dp(Defines_values.Default_verticalspacing)*2 + checkboxColumn.height
             left: column.left
         }
 

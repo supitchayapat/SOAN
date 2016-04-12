@@ -31,10 +31,8 @@ Page {
             latitude : accountInfo.latitude,
             longitude : accountInfo.longitude,
             tel  : accountInfo.tel,
-
-            //to be verified == added by Ahmed see the line 28 in account.qml
-            ambulance  : accountInfo.demande? "1" : "0",
-            vsl  : accountInfo.vsl ? "1" : "0"
+            vsl : accountInfo.vsl,
+            demande : accountInfo.demande
         }
 
         Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
@@ -236,6 +234,8 @@ Page {
 
                         onEditingFinished: {
                             //@TODO : move all the error handling of this call to Qondrite
+                            accountInfo.adress = text
+
                             Qondrite.callAddressvalidation(text)
                             .result
                             .then(function(result){
@@ -401,7 +401,6 @@ Page {
     Snackbar {
         id: snackbar
     }
-
 }
 
 
