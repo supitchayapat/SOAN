@@ -110,7 +110,7 @@ RowLayout{
         iconName: "action/input"
         Layout.alignment: Qt.AlignRight
         enabled: _myTxtField.text!=""
-
+        visible: _myTxtField.text!=""
         onClicked: {
             myRoot.searchForText(myRoot.text)
             suggestionlist.model.clear()
