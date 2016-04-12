@@ -210,9 +210,6 @@ Page {
                     SuggestionTextField{
                         id:address_txtField
 
-                        placeholderText: "Adresse"
-                        font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                        font.family: textFieldFont.name
                         Layout.fillWidth: true
                         onFocusChanged: {
                             if(focus == false){

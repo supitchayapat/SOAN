@@ -6,7 +6,10 @@ RowLayout{
     id:myRoot
 
     property alias suggestionModel:suggestionlist.model
+
     signal searchForText(string txt);
+    signal textChanged(string text);
+
     function closeSuggestionList(){
         suggestionModel.clear()
         suggestionlist.visible = false
@@ -17,9 +20,18 @@ RowLayout{
         suggestionModel.append(data1)
     }
 
+
+
+
+
     TextField{
         id:_myTxtField
 
+        Layout.fillWidth: true
+        Layout.alignment: Qt.AlignLeft
+        placeholderText: "Adresse"
+        font.pixelSize: Units.dp(Defines_values.Base_text_font)
+        font.family: textFieldFont.name
 
         ListView{
             id:suggestionlist
@@ -67,6 +79,7 @@ RowLayout{
                 closeSuggestionList()
                 search_btn.visible = false
             }
+            myRoot.textChanged(text)
         }
 
         onFocusChanged: {
@@ -78,8 +91,9 @@ RowLayout{
         }
     }
 
-    Button{
+    ActionButton{
         id:search_btn
+
         //backgroundColor: "white"
 
         height: parent.height*0.9
@@ -87,7 +101,7 @@ RowLayout{
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         iconName: "action/input"
-        visible: false
+        Layout.alignment: Qt.AlignRight
         onClicked: {
             myRoot.searchForText(myRoot.text)
             suggestionlist.model.clear()
