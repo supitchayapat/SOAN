@@ -235,8 +235,6 @@ Page {
                         onEditingFinished: {
                             //@TODO : move all the error handling of this call to Qondrite
                             accountInfo.adress = text
-
-                            accountInfo.adress = text
                             Qondrite.callAddressvalidation(text)
                             .result
                             .then(function(result){
