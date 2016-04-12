@@ -2,7 +2,6 @@ import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
-import "utils.js" as Utils
 import Qondrite 0.1
 
 Page {
@@ -14,6 +13,8 @@ Page {
         property string  nomprenom
         property string  nomdelastructure
         property string  adress
+        property double  longitude : 0
+        property double  latitude : 0
         property string  tel
         property bool    demande
         property bool    vsl
@@ -27,6 +28,8 @@ Page {
             name  : accountInfo.nomprenom,
             companyName : accountInfo.nomdelastructure,
             address  : accountInfo.adress,
+            latitude : accountInfo.latitude,
+            longitude : accountInfo.longitude,
             tel  : accountInfo.tel,
 
             //to be verified == added by Ahmed see the line 28 in account.qml
@@ -35,6 +38,16 @@ Page {
         }
 
         Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
+        .then(function onSuccess(userId){
+            Qondrite.emit("createUser", userId);
+            Qondrite.emit("login", userId);
+        })
+        .catch(function onError(error){
+            Qondrite.emit("createUserError", error);
+            //@TODO  : display a message to give the user information
+            //about the error
+            //many error can be catched here (existing email, existing address,existing phone...)
+        });
     }
 
     function validatingTheFirstPage()
@@ -161,7 +174,8 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
-                        onTextChanged: {
+
+                        onEditingFinished: {
                             accountInfo.nomprenom = text
                         }
                     }
@@ -187,10 +201,10 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onFocusChanged:{
-                            useValidatingIcon = true
-                        }
-                        onTextChanged: {
+                        // @TODO this validator may need to be changed with a correct regExp for this case
+                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+
+                        onEditingFinished:{
                             accountInfo.nomdelastructure = text
                         }
                     }
@@ -216,41 +230,37 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onFocusChanged: {
-                            if(focus == false){
 
-                                Qondrite.callAddressvalidation(text)
-                                .result
-                                .then(function(result){
+                        // @TODO this validator may need to be changed with a correct regExp for this case
+                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
 
-                                    if(result.status == "ERROR"){
-                                        hasError = true
-                                        helperText = qsTr("Adresse invalide")
-                                    }else{
-                                        console.log("l'adresse saisie est valide!");
-                                        console.log("longitude  : "+result.longitude);
-                                        console.log("latitude  : "+result.latitude)
-                                        hasError = false
-                                        helperText = ""
-                                    }
-                                })
-                                .catch(function(error){
-                                    //This error is not related to maps validation of the address
-                                    // but is rather an error in the meteor server code
-                                    //it might also be triggerd if no internet connection is available
-                                    // on the server. What do we do in this case ?
-                                    //@TODO we should trigger an alert by mail here to tuckle
+                        onEditingFinished: {
+                            //@TODO : move all the error handling of this call to Qondrite
+                            Qondrite.callAddressvalidation(text)
+                            .result
+                            .then(function(result){
+
+                                if(result.status == "ERROR"){
+                                    hasError = true
+                                    helperText = qsTr("Adresse invalide")
+                                }else{
+                                    console.log("l'adresse saisie est valide!");
+                                    console.log("longitude  : "+result.longitude);
+                                    console.log("latitude  : "+result.latitude)
                                     hasError = false
                                     helperText = ""
-                                });
-                            }else{
-                                //Focus is true, the user start/restart editing email
+                                    accountInfo.adress = text
+                                }
+                            })
+                            .catch(function(error){
+                                //This error is not related to maps validation of the address
+                                // but is rather an error in the meteor server code
+                                //it might also be triggerd if no internet connection is available
+                                // on the server. What do we do in this case ?
+                                //@TODO we should trigger an alert by mail here to tuckle
                                 hasError = false
                                 helperText = ""
-                            }
-                        }
-                        onTextChanged: {
-                            accountInfo.adress = text
+                            });
                         }
                     }
                 }
@@ -294,37 +304,22 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    TextFieldValidated{
+                    PhoneTextField{
                         id:tel_txtFld
 
-                        onTextChanged: {
-                            tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
-                            accountInfo.tel = text
-                        }
-
-                        Keys.priority: Keys.BeforeItem
-                        Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
-                        Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
-
-                        placeholderText: "tel: 0x xx xx xx xx"
-                        inputMethodHints: Qt.ImhDialableCharactersOnly
-
                         Layout.fillWidth: true
-
-                        validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
-                        QtObject{
-                            id: _priv_tel_txtFld
-                            property bool  insertSpace: true
+                        onEditingFinished: {
+                            accountInfo.tel = text
                         }
                     }
-
                 }
             }
         }
     }
+
 
     Component{
         id:secondPage
@@ -401,7 +396,6 @@ Page {
                 }
             }
         }
-
     }
 
     Snackbar {
@@ -409,4 +403,5 @@ Page {
     }
 
 }
+
 

@@ -1,6 +1,21 @@
 Availability = new Mongo.Collection('availability');
 Meteor.methods({
-	"validateAddress"  : function(addressTovalidate){
+
+	"validateAddress" : function(address)
+	{
+		var geo = new GeoCoder({
+			geocoderProvider: "google",
+  			httpAdapter: "https",
+  			apiKey: 'AIzaSyDMBt6F0W2WhX819O8DawgwDzxCLEz2TXc'
+		});
+		var result = geo.geocode(encodeURI(address));
+		console.log(result);
+		return result;
+		//return result;
+
+	},
+	"__validateAddress"  : function(addressTovalidate){
+
 
 		console.log("-----------VALIDATING ADDRESS  : ----------------");
 		console.log(addressTovalidate);
