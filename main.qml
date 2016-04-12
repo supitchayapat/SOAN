@@ -43,6 +43,7 @@ ApplicationWindow {
     Component.onCompleted: {
         Qondrite.init();
         Qondrite.onLogin.connect(function(){pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
+        Qondrite.onUserCreationFailed.connect(function(context, reason){ console.log('connect signal : ', context, reason); })
     }
 
 }

@@ -22,6 +22,11 @@ Page {
         property string  password
     }
 
+    /*Qondrite.onUserCreationFailed : {
+        //snackbar.open('Signup> Qondrite >onUserCreationFailed : ', errorMessage);
+        console.log("here in Signup : ", context, reason);
+    }*/
+
     function createAccount(){
 
         var profile = {
@@ -34,9 +39,14 @@ Page {
             ambulance  : accountInfo.demande,
             vsl  : accountInfo.vsl
         }
+        try{
+            Qondrite.createUser(accountInfo.email,accountInfo.password,profile);
+        }
+        catch (ex){
+            snackbar.open(ex.error.reason);
+        }
 
-        Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
-        .then(function onSuccess(userId){
+        /*.then(function onSuccess(userId){
             Qondrite.emit("createUser", userId);
             Qondrite.emit("login", userId);
         })
@@ -46,10 +56,14 @@ Page {
             //about the error
             //many error can be catched here (existing email, existing address,existing phone...)
         });
+        */
     }
+
+
 
     function validatingTheFirstPage()
     {
+        console.log('valid page 1 : ', JSON.stringify(accountInfo));
         if(accountInfo.nomprenom && accountInfo.nomdelastructure && accountInfo.email && accountInfo.adress && accountInfo.tel)
             return 1
         return 0
@@ -171,7 +185,7 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                        validator: RegExpValidator{regExp: /^[- 'a-z\u00E0-\u00FC]*$/gi }
 
                         onEditingFinished: {
                             accountInfo.nomprenom = text
@@ -245,11 +259,13 @@ Page {
                                         warningText = qsTr("Adresse invalide")
                                     }
                                     else{
+                                        accountInfo.adress = text;
                                         accountInfo.latitude = result[0].latitude;
                                         accountInfo.longitude = result[0].longitude;
                                     }
                                 })
                                 .catch(function(error){
+                                    console.log('AIE AIE AIE');
                                     //This error is not related to maps validation of the address
                                     // but is rather an error in the meteor server code
                                     //it might also be triggerd if no internet connection is available
@@ -289,10 +305,12 @@ Page {
                                 console.log("do really test email");
                                 Qondrite.isUserExists(text).result
                                 .then(function(result){
-                                    if (false === (!!result)){
+                                    if (!isNaN(result) && false === !!result){
                                         accountInfo.email = text;
-                                    }else {
-                                        text = accountInfo.email = "";
+                                    }
+                                    else {
+                                        accountInfo.email = "";
+                                        console.log('error detail : ', JSON.stringify(result));
                                         warningText = qsTr('Un compte existe déjà avec cet email');
                                     }
                                 });
@@ -322,7 +340,7 @@ Page {
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
-                        onEditingFinished: {
+                        onTextChanged: {
                             accountInfo.tel = text
                         }
                     }

@@ -1,3 +1,5 @@
+"use strict";
+
 var DDP;
 // hack... err... workaround around the lack of globals in QML JS
 (function (root, factory) {
@@ -12,8 +14,8 @@ var DDP;
 		root.DDP = factory();
 	}
 }(this, function () {
-    console.log("don't know why but this has to be here");
-	"use strict";
+    //console.log("don't know why but this has to be here");
+    //"use strict";
 
 	var uniqueId = (function () {
 		var i = 0;

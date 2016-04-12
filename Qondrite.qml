@@ -21,7 +21,7 @@ WebSocket {
     signal login()
     signal loginFailed()
     signal userCreated()
-    signal userCreationFailed()
+    signal userCreationFailed(string context, string reason)
 
     active: true
 
@@ -44,9 +44,13 @@ WebSocket {
         .then(function onSuccess(userId){
             userCreated()
             login()
+        }, function onerror(error){
+            console.log('error on SignupXX');
+            userCreationFailed(error.error, error.reason);
         })
         .catch(function onError(error){
-            userCreationFailed()
+            userCreationFailed(error.error.message);
+            console.log('catch on Signup : ', JSON.stringify(error));
             //@TODO  : display a message to give the user information
             //about the error
             //many error can be catched here (existing email, existing address,existing phone...)
