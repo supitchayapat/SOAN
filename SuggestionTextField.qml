@@ -6,9 +6,13 @@ RowLayout{
     id:myRoot
 
     property alias suggestionModel:suggestionlist.model
+    property alias hasError:_myTxtField.hasError
+    property alias helperText: _myTxtField.helperText
+    property alias text: _myTxtField.text
 
-    signal searchForText(string txt);
-    signal textChanged(string text);
+    signal searchForText(string text);
+    //signal textChanged(string text);
+    signal editingFinished();
 
     function closeSuggestionList(){
         suggestionModel.clear()
@@ -20,10 +24,6 @@ RowLayout{
         suggestionModel.append(data1)
     }
 
-
-
-
-
     TextField{
         id:_myTxtField
 
@@ -32,6 +32,8 @@ RowLayout{
         placeholderText: "Adresse"
         font.pixelSize: Units.dp(Defines_values.Base_text_font)
         font.family: textFieldFont.name
+        validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
+
 
         ListView{
             id:suggestionlist
@@ -89,6 +91,8 @@ RowLayout{
 
             }
         }
+
+        onEditingFinished: myRoot.editingFinished()
     }
 
     ActionButton{
@@ -102,6 +106,7 @@ RowLayout{
         anchors.verticalCenter: parent.verticalCenter
         iconName: "action/input"
         Layout.alignment: Qt.AlignRight
+        enabled: _myTxtField.text!=""
         onClicked: {
             myRoot.searchForText(myRoot.text)
             suggestionlist.model.clear()
