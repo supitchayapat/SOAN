@@ -32,7 +32,6 @@ RowLayout{
         font.family: textFieldFont.name
         validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
 
-
         ListView{
             id:suggestionlist
 
@@ -45,21 +44,26 @@ RowLayout{
             model:ListModel{}
             delegate: Rectangle{
                 id:myDelegate
+
                 width:_myTxtField.width
                 height: _myTxtField.height
                 color:"white"
+
                 Label {
                     id:choice_label
+
                     text: choice_name
                     verticalAlignment: Text.AlignVCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 MouseArea{
                     anchors.fill:parent
+
                     onClicked: {
                         myRoot.text = choice_name
                         closeSuggestionList()
                     }
+
                     onPressed: {
                         choice_label.font.pointSize = choice_label.font.pointSize*2
                         myDelegate.color = "cyan"
@@ -90,8 +94,6 @@ RowLayout{
         onFocusChanged: {
             if(focus == false){
                 closeSuggestionList()
-            }else{
-
             }
         }
 
@@ -101,8 +103,6 @@ RowLayout{
     ActionButton{
         id:search_btn
 
-        //backgroundColor: "white"
-
         height: parent.height*0.9
         width:height
         anchors.right: parent.right
@@ -110,6 +110,7 @@ RowLayout{
         iconName: "action/input"
         Layout.alignment: Qt.AlignRight
         enabled: _myTxtField.text!=""
+
         onClicked: {
             myRoot.searchForText(myRoot.text)
             suggestionlist.model.clear()
