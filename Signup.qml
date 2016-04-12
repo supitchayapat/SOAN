@@ -263,6 +263,8 @@ Page {
                             suggestionModel.clear()
                             addSuggestion(text)
                             addSuggestion(text+" : search on google")
+                            addSuggestion(text+" : search on bing")
+                            addSuggestion(text+" : search on google")
 
 
 

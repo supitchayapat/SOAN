@@ -11,7 +11,6 @@ RowLayout{
     property alias text: _myTxtField.text
 
     signal searchForText(string text);
-    //signal textChanged(string text);
     signal editingFinished();
 
     function closeSuggestionList(){
@@ -20,7 +19,7 @@ RowLayout{
     }
 
     function addSuggestion(sugg){
-        var data1 = {'name': sugg};
+        var data1 = {'choice_name': sugg};
         suggestionModel.append(data1)
     }
 
@@ -29,8 +28,7 @@ RowLayout{
 
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignLeft
-        placeholderText: "Adresse"
-        font.pixelSize: Units.dp(Defines_values.Base_text_font)
+        placeholderText: qsTr("Adresse")
         font.family: textFieldFont.name
         validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
 
@@ -46,10 +44,12 @@ RowLayout{
             z:1000
             model:ListModel{}
             delegate: Rectangle{
-                width:myRoot.width
-                height: myRoot.height
+                id:myDelegate
+                width:_myTxtField.width
+                height: _myTxtField.height
                 color:"white"
                 Label {
+                    id:choice_label
                     text: choice_name
                     verticalAlignment: Text.AlignVCenter
                     anchors.verticalCenter: parent.verticalCenter
@@ -57,15 +57,18 @@ RowLayout{
                 MouseArea{
                     anchors.fill:parent
                     onClicked: {
-                        myRoot.text = name
+                        myRoot.text = choice_name
                         closeSuggestionList()
                     }
                     onPressed: {
-                        choice_name.font.pointSize *= 1.2
+                        choice_label.font.pointSize = choice_label.font.pointSize*2
+                        myDelegate.color = "cyan"
+
                     }
 
                     onReleased: {
-                        choice_name.font.pointSize /= 1.2
+                        choice_label.font.pointSize = choice_label.font.pointSize/2
+                        myDelegate.color = "white"
                     }
                 }
             }
