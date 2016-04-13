@@ -2,7 +2,6 @@ import QtQuick 2.5
 import Material 0.2
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
-import "utils.js" as Utils
 import Qondrite 0.1
 
 Page {
@@ -37,9 +36,11 @@ Page {
             tel  : accountInfo.tel,
             ambulance  : accountInfo.demande,
             vsl  : accountInfo.vsl
-        }
+        }        
+    }
 
-        Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
+    Qondrite.onUserCreationFailed :{
+        console.log("Qondrite.onUserCreationFailed triggered");
     }
 
     function validatingTheFirstPage()
@@ -166,7 +167,8 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
-                        onTextChanged: {
+
+                        onEditingFinished: {
                             accountInfo.nomprenom = text
                         }
                     }
@@ -192,10 +194,10 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onFocusChanged:{
-                            useValidatingIcon = true
-                        }
-                        onTextChanged: {
+                        // @TODO this validator may need to be changed with a correct regExp for this case
+                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+
+                        onEditingFinished:{
                             accountInfo.nomdelastructure = text
                         }
                     }
@@ -226,20 +228,10 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
+                        // @TODO this validator may need to be changed with a correct regExp for this case
+                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
 
-                        Keys.onPressed: {
-                            if (0 === (accountInfo.latitude + accountInfo.longitude)){
-                                return;
-                            }
-                            // address changed mean related gps coords are obsolete
-                            if (event.key == Qt.Key_Backspace || text !== previousAddress.value){
-                                accountInfo.latitude = 0;
-                                accountInfo.longitude = 0;
-                            }
-                            previousAddress.value = text;
-                        }
-
-                        onFocusChanged: {
+                        onEditingFinished: {
 
                             // run validation only if undone yet for current address and address length is worth it
                             if(accountInfo.latitude === 0 && accountInfo.longitude === 0 && address_txtField.text.length > 3)
@@ -253,15 +245,14 @@ Page {
                                     else{
                                         accountInfo.latitude = result[0].latitude;
                                         accountInfo.longitude = result[0].longitude;
+                                        accountInfo.adress = text
                                     }
                                 });
                             }
 
                         }
 
-                        onTextChanged: {
-                            accountInfo.adress = text
-                        }
+
                     }
                 }
 
@@ -304,37 +295,22 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    TextFieldValidated{
+                    PhoneTextField{
                         id:tel_txtFld
 
-                        onTextChanged: {
-                            text = Utils.formatPhoneNumber(text)
-                            accountInfo.tel = text
-                        }
-
-                        Keys.priority: Keys.BeforeItem
-                        Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
-                        Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
-
-                        placeholderText: "tel: 0x xx xx xx xx"
-                        inputMethodHints: Qt.ImhDialableCharactersOnly
-
                         Layout.fillWidth: true
-
-                        validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
-                        QtObject{
-                            id: _priv_tel_txtFld
-                            property bool  insertSpace: true
+                        onEditingFinished: {
+                            accountInfo.tel = text
                         }
                     }
-
                 }
             }
         }
     }
+
 
     Component{
         id:secondPage
@@ -411,7 +387,6 @@ Page {
                 }
             }
         }
-
     }
 
     Snackbar {
@@ -419,4 +394,5 @@ Page {
     }
 
 }
+
 
