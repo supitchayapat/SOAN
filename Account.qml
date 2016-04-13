@@ -144,6 +144,7 @@ Page {
             spacing : Units.dp(Defines_values.Default_verticalspacing)
             width:parent.width
 
+
             Icon {
                 name: "action/account_circle"
                 size: Units.dp(Defines_values.Default_iconsize)
@@ -175,7 +176,6 @@ Page {
             width:parent.width
 
             Icon {
-                name: "action/account_circle"
                 size: Units.dp(Defines_values.Default_iconsize)
             }
 
@@ -351,7 +351,7 @@ Page {
 
             Icon {
                 name: "maps/local_hospital"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label {
