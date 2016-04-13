@@ -234,6 +234,7 @@ Page {
 
                         onEditingFinished: {
                             //@TODO : move all the error handling of this call to Qondrite
+                            //WARNING this line should be deleted after solving WIAMB-119 issue
                             accountInfo.adress = text
 
                             Qondrite.callAddressvalidation(text)

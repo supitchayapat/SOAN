@@ -28,16 +28,6 @@ Page {
 
     }
 
-    function getTransportTypeLabel(userProfile){
-        if(userProfile.ambulance && userProfile.vsl){
-            return "VST et Ambulance";
-        }else if(userProfile.ambulance && !userProfile.vsl){
-            return "Ambulance uniquement"
-        }else if(!userProfile.ambulance && userProfile.vsl){
-            return "VST uniquement";
-        }
-    }
-
     backAction: navDrawer.action
 
     anchors.fill: parent
