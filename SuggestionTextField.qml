@@ -47,11 +47,10 @@ RowLayout{
 
                 width:_myTxtField.width
                 height: _myTxtField.height
-                color:"white"
-
                 Label {
                     id:choice_label
 
+                    scale: suggestionlist.currentIndex == index?1.3:1
                     text: choice_name
                     verticalAlignment: Text.AlignVCenter
                     anchors.verticalCenter: parent.verticalCenter
@@ -60,19 +59,20 @@ RowLayout{
                     anchors.fill:parent
 
                     onClicked: {
-                        myRoot.text = choice_name
-                        closeSuggestionList()
+                        _myTxtField.text = choice_name
+                        suggestionlist.currentIndex = index;
+                        myRoot.closeSuggestionList()
                     }
 
                     onPressed: {
                         choice_label.font.pointSize = choice_label.font.pointSize*2
-                        myDelegate.color = "cyan"
+                        myDelegate.color = Theme.accentColor
 
                     }
 
                     onReleased: {
                         choice_label.font.pointSize = choice_label.font.pointSize/2
-                        myDelegate.color = "white"
+                        myDelegate.color = Theme.backgroundColor
                     }
                 }
             }
@@ -111,6 +111,7 @@ RowLayout{
         Layout.alignment: Qt.AlignRight
         enabled: _myTxtField.text!=""
         visible: _myTxtField.text!=""
+
         onClicked: {
             myRoot.searchForText(myRoot.text)
             suggestionlist.model.clear()
