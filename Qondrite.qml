@@ -39,22 +39,22 @@ WebSocket {
         ceres.on(signalMessage,callBack);
     }
 
-    function createUser(email,password,profile){
-        ceres.createUser(email,password,profile)
-        .then(function onSuccess(userId){
-            userCreated()
-            login()
-        }, function onerror(error){
-            console.log('error on SignupXX');
-            userCreationFailed(error.error, error.reason);
-        })
-        .catch(function onError(error){
-            userCreationFailed(error.error.message);
-            console.log('catch on Signup : ', JSON.stringify(error));
-            //@TODO  : display a message to give the user information
-            //about the error
-            //many error can be catched here (existing email, existing address,existing phone...)
-        });
+    function createUser(email,password,profile)
+    {
+        return ceres.createUser(email,password,profile)
+        .then(
+            function onSuccess(userId){
+                userCreated();
+                login();
+                var dfd = Q.defer();
+                dfd.resolve({});
+                return dfd.promise;
+            },
+            function onError(error){
+                var dfd = Q.defer();
+                dfd.reject(error);
+                return dfd.promise;
+            })
     }
 
     function emit(signalName,param){

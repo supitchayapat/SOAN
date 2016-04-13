@@ -22,11 +22,6 @@ Page {
         property string  password
     }
 
-    /*Qondrite.onUserCreationFailed : {
-        //snackbar.open('Signup> Qondrite >onUserCreationFailed : ', errorMessage);
-        console.log("here in Signup : ", context, reason);
-    }*/
-
     function createAccount(){
 
         var profile = {
@@ -38,28 +33,10 @@ Page {
             tel  : accountInfo.tel,
             ambulance  : accountInfo.demande,
             vsl  : accountInfo.vsl
-        }
-        try{
-            Qondrite.createUser(accountInfo.email,accountInfo.password,profile);
-        }
-        catch (ex){
-            snackbar.open(ex.error.reason);
-        }
 
-        /*.then(function onSuccess(userId){
-            Qondrite.emit("createUser", userId);
-            Qondrite.emit("login", userId);
-        })
-        .catch(function onError(error){
-            Qondrite.emit("createUserError", error);
-            //@TODO  : display a message to give the user information
-            //about the error
-            //many error can be catched here (existing email, existing address,existing phone...)
-        });
-        */
+        }
+        Qondrite.createUser(accountInfo.email,accountInfo.password,profile);
     }
-
-
 
     function validatingTheFirstPage()
     {
@@ -242,15 +219,13 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-
                         // @TODO this validator may need to be changed with a correct regExp for this case
-                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
+                        validator: RegExpValidator{ regExp: /([a-zA-Z]{3,200}\s*)+/ }
 
                         onEditingFinished: {
                             //@TODO : move all the error handling of this call to Qondrite
-
                             // run validation only if undone yet for current address and address length is worth it
-                            if(accountInfo.latitude === 0 && accountInfo.longitude === 0 && address_txtField.text.length > 3)
+                            if(address_txtField.text.length > 3)
                             {
                                 Qondrite.validateAddress(text).result
                                 .then(function(result)
@@ -266,53 +241,6 @@ Page {
                                 })
                                 .catch(function(error){
                                     console.log('AIE AIE AIE');
-                                    //This error is not related to maps validation of the address
-                                    // but is rather an error in the meteor server code
-                                    //it might also be triggerd if no internet connection is available
-                                    // on the server. What do we do in this case ?
-                                    //@TODO we should trigger an alert by mail here to tuckle
-                                    hasError = false
-                                    helperText = ""
-                                });
-                            }
-
-                        }
-                    }
-                }
-
-                RowLayout{
-                    spacing : Units.dp(Defines_values.Signup1RowSpacing)
-
-                    anchors{
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    Icon {
-                        name: "communication/email"
-                        size: Units.dp(Defines_values.Default_iconsize)
-                    }
-
-                    EmailTextField {
-                        id:email_txtFld
-
-                        font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                        font.family: textFieldFont.name
-                        Layout.fillWidth: true
-                        onFocusChanged: {
-                            console.log('test email');
-                            if (! focus && text.length > 0){
-                                console.log("do really test email");
-                                Qondrite.isUserExists(text).result
-                                .then(function(result){
-                                    if (!isNaN(result) && false === !!result){
-                                        accountInfo.email = text;
-                                    }
-                                    else {
-                                        accountInfo.email = "";
-                                        console.log('error detail : ', JSON.stringify(result));
-                                        warningText = qsTr('Un compte existe déjà avec cet email');
-                                    }
                                 });
                             }
                         }
@@ -340,7 +268,7 @@ Page {
                         font.family: textFieldFont.name
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
-                        onTextChanged: {
+                        onEditingFinished: {
                             accountInfo.tel = text
                         }
                     }
