@@ -10,10 +10,12 @@ Page {
 
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
-    property bool isEditable: true
+    property bool isEditable: false
+    property int fieldWidth: parent.width - Units.dp(Defines_values.Default_iconsize) - Units.dp(Defines_values.Default_verticalspacing)
+    property int textFieldWidth: isEditable?parent.width - Units.dp(Defines_values.Default_iconsize) - Units.dp(Defines_values.Default_verticalspacing):0
+    property int labelWidth: isEditable?0:parent.width - Units.dp(Defines_values.Default_iconsize) - Units.dp(Defines_values.Default_verticalspacing)
     backAction: navDrawer.action
 
-    anchors.fill: parent
 
     function loadUserInformation(){
         //When a login signal is emmited, the users collection is sent
@@ -138,20 +140,19 @@ Page {
             horizontalCenter: parent.horizontalCenter
         }
 
-        RowLayout{
+        Row{
             spacing : Units.dp(Defines_values.Default_verticalspacing)
+            width:parent.width
 
             Icon {
-                id:icon
-
                 name: "action/account_circle"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label {
                 id  : nameField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                Layout.fillWidth:!isEditable
+                width:labelWidth
                 visible: !isEditable
 
             }
@@ -159,28 +160,29 @@ Page {
             TextFieldValidated{
                 id:name_txtFld
 
-                anchors.fill: parent
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:qsTr("Nom et Prénom")
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
                 font.family: Defines_values.textFieldsFontFamily
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                width:textFieldWidth
                 visible: isEditable
-                Layout.fillWidth:isEditable
             }
         }
 
-        RowLayout{
+        Row{
             spacing : Units.dp(Defines_values.Default_verticalspacing)
+            width:parent.width
 
             Icon {
-                size: Units.dp(Defines_values.iconsize)
+                name: "action/account_circle"
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label{
                 id : companyNameField
-                Layout.fillWidth:true
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                width:labelWidth
                 visible: !isEditable
             }
 
@@ -189,8 +191,8 @@ Page {
 
                 placeholderText: qsTr("Nom de la structure")
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                font.family: textFieldFont.name
-                Layout.fillWidth:true
+                font.family: Defines_values.textFieldsFontFamily
+                width:textFieldWidth
                 visible: isEditable
 
                 onFocusChanged:{
@@ -202,19 +204,22 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : Units.dp(Defines_values.Default_verticalspacing)
+            width:parent.width
 
             Icon {
                 name: "maps/place"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label{
                 id  : addressField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+
+                width:labelWidth
                 visible: !isEditable
+
             }
 
             TextFieldValidated{
@@ -222,9 +227,9 @@ Page {
 
                 placeholderText: qsTr("Adresse")
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                font.family: textFieldFont.name
-                Layout.fillWidth: true
-                visible: isEditable
+                font.family: Defines_values.textFieldsFontFamily
+                visible:isEditable
+                width:textFieldWidth
 
                 onFocusChanged: {
                     if(focus == false){
@@ -265,19 +270,20 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : Units.dp(Defines_values.Default_verticalspacing)
+            width:parent.width
 
             Icon {
                 name: "communication/email"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label {
                 id  : emailField
 
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                Layout.fillWidth:!isEditable
+                width:labelWidth
                 visible: !isEditable
             }
 
@@ -285,8 +291,8 @@ Page {
                 id:email_txtFld
 
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                font.family: textFieldFont.name
-                Layout.fillWidth: isEditable
+                font.family: Defines_values.textFieldsFontFamily
+                width:textFieldWidth
                 visible: isEditable
 
                 onTextChanged: {
@@ -295,18 +301,19 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : Units.dp(Defines_values.Default_verticalspacing)
+            width:parent.width
 
             Icon {
                 name: "communication/call"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label{
                 id : teLField
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                Layout.fillWidth:true
+                width:labelWidth
                 visible: !isEditable
             }
 
@@ -320,11 +327,11 @@ Page {
                 placeholderText: "tel: 0x xx xx xx xx"
                 inputMethodHints: Qt.ImhDialableCharactersOnly
 
-                Layout.fillWidth: true
+                width:textFieldWidth
                 visible: isEditable
 
                 validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
-                font.family: textFieldFont.name
+                font.family: Defines_values.textFieldsFontFamily
                 font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
                 QtObject{
@@ -384,12 +391,9 @@ Page {
             elevation: 1
             backgroundColor: Theme.primaryColor
             onClicked: changepassword_dlg.show()
-            Layout.fillWidth:true
+            anchors.horizontalCenter: parent.horizontalCenter
         }
     }
 
     Component.onCompleted: loadUserInformation()
-
-
-
 }
