@@ -56,22 +56,23 @@ RowLayout{
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 MouseArea{
+                    property Item pageParent : myRoot
                     anchors.fill:parent
 
                     onClicked: {
                         _myTxtField.text = choice_name
                         suggestionlist.currentIndex = index;
-                        myRoot.closeSuggestionList()
+                        pageParent.closeSuggestionList()
                     }
 
                     onPressed: {
-                        choice_label.font.pointSize = choice_label.font.pointSize*2
+                        choice_label.scale = 1.5
                         myDelegate.color = Theme.accentColor
 
                     }
 
                     onReleased: {
-                        choice_label.font.pointSize = choice_label.font.pointSize/2
+                        choice_label.scale = 1
                         myDelegate.color = Theme.backgroundColor
                     }
                 }
