@@ -10,7 +10,7 @@ ApplicationWindow {
     visible: true
     width: Screen.width
     height: Screen.height
-    initialPage : Qt.resolvedUrl("Signin.qml")
+    initialPage : Qt.resolvedUrl("Account.qml")
 
     theme {
         primaryColor: "blue"

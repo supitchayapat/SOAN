@@ -9,10 +9,9 @@ Page {
     id: page
 
     function loadUserInformation(){
-        //When a login signal is emmited, the users collection is sent
+        //When a login signal is emited, the user collection is sent
         //from server to client with only the current user in it
-        //getting the first element of the collection is getting the logged in user
-        //information
+        //getting the first element in the collection is the logged in user information
         var userCollection = Qondrite.getCollection("users");
         var userInfo = userCollection._set.toArray()[0];
         var userProfile = userInfo.profile;
@@ -224,7 +223,7 @@ Page {
             top:column.bottom
             topMargin: Units.dp(Defines_values.Default_verticalspacing)
             left: column.left
-            leftMargin: -15
+            leftMargin: 0
         }
 
         CheckBox {
@@ -232,7 +231,7 @@ Page {
 
             checked: false
             enabled: false
-            text: "Recevoir des demande en ambulances"
+            text: "Recevoir des demandes d'ambulances"
         }
 
         CheckBox {
