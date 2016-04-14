@@ -111,11 +111,26 @@ RowLayout{
         iconName: "action/input"
         Layout.alignment: Qt.AlignRight
         enabled: _myTxtField.text!=""
-        visible: _myTxtField.text!=""
+        state:_myTxtField.text!=""?"btn_shown":"btn_hiden"
 
         onClicked: {
             myRoot.searchForText(myRoot.text)
             suggestionlist.model.clear()
+        }
+
+        states: [
+            State {
+                name: "btn_shown"
+                PropertyChanges { target: search_btn; visible: true; scale:1 }
+            },
+            State {
+                name: "btn_hiden"
+                PropertyChanges { target: search_btn; visible: false; scale:0.5  }
+            }
+        ]
+
+        transitions: Transition {
+            NumberAnimation { target:search_btn; properties: "scale"; easing.type: Easing.Linear; duration: 500}
         }
     }
 
