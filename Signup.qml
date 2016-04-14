@@ -23,8 +23,6 @@ Page {
 
     }
 
-
-
     function createAccount(){
 
         var profile = {
@@ -37,10 +35,6 @@ Page {
             ambulance  : accountInfo.demande,
             vsl  : accountInfo.vsl
         }        
-    }
-
-    Qondrite.onUserCreationFailed :{
-        console.log("Qondrite.onUserCreationFailed triggered");
     }
 
     function validatingTheFirstPage()
@@ -232,9 +226,8 @@ Page {
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
 
                         onEditingFinished: {
-
                             // run validation only if undone yet for current address and address length is worth it
-                            if(accountInfo.latitude === 0 && accountInfo.longitude === 0 && address_txtField.text.length > 3)
+                            if(address_txtField.text.length > 3)
                             {
                                 Qondrite.validateAddress(text).result
                                 .then(function(result)

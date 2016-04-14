@@ -108,7 +108,7 @@ WebSocket {
         }
     }
 
-    function callAddressvalidation(address){
+    function validateAddress(address){
          return ceres.call("validateAddress",address);
     }
 
