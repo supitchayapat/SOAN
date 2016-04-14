@@ -51,7 +51,7 @@ WebSocket {
                 return dfd.promise;
             },
             function onError(error){
-                var dfd = Q.defer();
+                var dfd = ceres.Q.defer();
                 dfd.reject(error);
                 return dfd.promise;
             })

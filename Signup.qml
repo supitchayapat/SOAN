@@ -35,7 +35,12 @@ Page {
             vsl  : accountInfo.vsl
 
         }
-        Qondrite.createUser(accountInfo.email,accountInfo.password,profile);
+        Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
+        .then(function onSuccess(){},
+            function onError(error){
+                snackbar.open(error.message);
+            });
+
     }
 
     function validatingTheFirstPage()
@@ -212,7 +217,8 @@ Page {
                         size: Units.dp(Defines_values.Default_iconsize)
                     }
 
-                    TextFieldValidated{
+                    TextFieldValidated
+                    {
                         id:address_txtField
 
                         placeholderText: "Adresse"
@@ -221,7 +227,9 @@ Page {
                         Layout.fillWidth: true
                         // @TODO this validator may need to be changed with a correct regExp for this case
                         validator: RegExpValidator{ regExp: /([a-zA-Z]{3,200}\s*)+/ }
-
+                        serverValidationCallback : function(){
+                            return (accountInfo.latitude + accountInfo.longitude) > 0;
+                        }
                         onEditingFinished: {
                             //@TODO : move all the error handling of this call to Qondrite
                             // run validation only if undone yet for current address and address length is worth it
@@ -238,11 +246,37 @@ Page {
                                         accountInfo.latitude = result[0].latitude;
                                         accountInfo.longitude = result[0].longitude;
                                     }
-                                })
-                                .catch(function(error){
-                                    console.log('AIE AIE AIE');
                                 });
                             }
+                        }
+                    }
+                }
+
+                RowLayout{
+                    spacing : Units.dp(Defines_values.Signup1RowSpacing)
+
+                    anchors{
+                        left: parent.left
+                        right: parent.right
+                    }
+
+                    Icon {
+                        name: "communication/email"
+                        size: Units.dp(Defines_values.Default_iconsize)
+                    }
+
+                    EmailTextField {
+                        id:email_txtFld
+
+                        font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                        font.family: textFieldFont.name
+                        Layout.fillWidth: true
+                        onEditingFinished: {
+                            Qondrite.isUserExists(text).result
+                            .then(function onsuccess(result){
+                                accountInfo.email = text;
+                                warningText = (!isNaN(result) && true === !!result) ? qsTr('Un compte existe déjà avec cet email') : "";
+                            });
                         }
                     }
                 }

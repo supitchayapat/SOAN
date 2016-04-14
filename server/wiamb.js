@@ -1,5 +1,6 @@
 Availability = new Mongo.Collection('availability');
-Meteor.methods({
+
+var wiambAPI = {
 
 	"isUserExists" : function(email)
 	{
@@ -18,7 +19,10 @@ Meteor.methods({
 		});
 		return geo.geocode(address);		
 	}	
-});
+};
+
+Meteor.methods(wiambAPI);
+
 if (Meteor.isClient) {
 	
 	//nothing to write here
@@ -26,23 +30,17 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-
-
+	
 	Accounts.validateNewUser(function (user) 
-	{
-		console.log('validateNewUser : ', JSON.stringify(user));
-		function isNameValid(name){
-			return /^[- 'a-z\u00E0-\u00FC]+$/gi.test(name);
-		}
-  		if (! isNameValid(user.profile.name+'__*') ){
-  			throw new Meteor.Error('signup', "Name field contains disallowed chars", "Name field contains disallowed chars");
-  		}
-	    return true;	
-	});
+    {
+    	if (Array.isArray(user.emails) && true == !!wiambAPI.isUserExists(user.emails[0].address)){
+    		throw new Meteor.Error("signup", "Un autre compte existe déjà avec cet email");
+    	}
+    	return true;
+    });
 
   	Accounts.onCreateUser(function(options, user) {  
 
-		console.log('onCreateUser');
 	    if (options.profile)
 	        user.profile = options.profile;
 
