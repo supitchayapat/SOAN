@@ -7,80 +7,24 @@ import Qondrite 0.1
 Page {
     id:root
 
+    property bool firstPageValid: false
+    property bool secondPageValid: false
+
     QtObject{
         id:accountInfo
 
-        property string  nomprenom
-        property string  nomdelastructure
-        property string  adress
-        property double  longitude : 0
-        property double  latitude : 0
-        property string  tel
-        property bool    demande
-        property bool    vsl
-        property string  email
-        property string  password
-    }
-
-    function createAccount(){
-
-        var profile = {
-            name  : accountInfo.nomprenom,
-            companyName : accountInfo.nomdelastructure,
-            address  : accountInfo.adress,
-            latitude : accountInfo.latitude,
-            longitude : accountInfo.longitude,
-            tel  : accountInfo.tel,
-            ambulance  : accountInfo.demande,
-            vsl  : accountInfo.vsl
-        }
-
-        Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
-        .then(function onSuccess(userId){
-            Qondrite.emit("createUser", userId);
-            Qondrite.emit("login", userId);
-        })
-        .catch(function onError(error){
-            Qondrite.emit("createUserError", error);
-            //@TODO  : display a message to give the user information
-            //about the error
-            //many error can be catched here (existing email, existing address,existing phone...)
-        });
-    }
-
-    function validatingTheFirstPage()
-    {
-        if(accountInfo.nomprenom && accountInfo.nomdelastructure && accountInfo.email && accountInfo.adress && accountInfo.tel)
-            return 1
-        return 0
-    }
-
-    function validatingTheSecondPage()
-    {
-        if (accountInfo.password.length && (accountInfo.vsl || accountInfo.demande))
-            return 1
-        return 0
-    }
-
-    function nextvisible()
-    {
-        if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
-        {
-            nextButton.backgroundColor = Theme.accentColor
-        }
-        else if(shiftLodaer.sourceComponent == secondPage && validatingTheSecondPage())
-        {
-            nextButton.backgroundColor = Theme.accentColor
-        }else
-            nextButton.backgroundColor = "gray"
-    }
-
-    Timer {
-        interval: 500
-        running: true
-        repeat: true
-
-        onTriggered: nextvisible()
+        property var infos : ({
+                                  name        : ""   ,
+                                  companyName : ""   ,
+                                  address     : ""   ,
+                                  latitude    : 0.0  ,
+                                  longitude   : 0.0  ,
+                                  tel         : ""   ,
+                                  ambulance   : ""   ,
+                                  vsl         : false,
+                                  email       : false,
+                                  password    : ""
+                              })
     }
 
     ProgressBySteps{
@@ -100,7 +44,7 @@ Page {
     }
 
     Loader {
-        id: shiftLodaer
+        id: pageStep_ldr
 
         anchors{
             topMargin: Units.dp(Defines_values.SignupLoaderMargin)
@@ -110,14 +54,29 @@ Page {
             top: progressBySteps.bottom
         }
 
-        asynchronous: true
         sourceComponent: firstPage
+        onSourceComponentChanged: nextButton.backgroundColor = "gray"
     }
 
     ActionButton {
         id: nextButton
 
+        function updateButtonState(){
+            if(pageStep_ldr.sourceComponent== firstPage)
+            {
+                if(firstPageValid)
+                    backgroundColor = Theme.primaryColor
+            }
+            else if(pageStep_ldr.sourceComponent == secondPage && accountInfo.isStep2Valid())
+            {
+                if(secondPageValid)
+                    backgroundColor = Theme.primaryColor
+            }else
+                backgroundColor = "gray"
+        }
+
         x:40
+        backgroundColor: "gray"
         anchors {
             bottom: parent.bottom
             bottomMargin: Units.dp(10)
@@ -129,17 +88,17 @@ Page {
             id: addContent
 
             onTriggered:{
-                if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
+                if(pageStep_ldr.sourceComponent == firstPage && firstPageValid)
                 {
-                    progressBySteps.nextStep()
-                    shiftLodaer.sourceComponent = secondPage
+                        progressBySteps.nextStep()
+                        pageStep_ldr.sourceComponent = secondPage
                 }
-                else if(shiftLodaer.sourceComponent == secondPage && validatingTheSecondPage())
+                else if(pageStep_ldr.sourceComponent == secondPage && secondPageValid)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
 
-                    createAccount()
+                    Qondrite.createUser(accountInfo.infos.email,accountInfo.infos.password,accountInfo.infos)
                 }
             }
         }
@@ -149,6 +108,31 @@ Page {
         id:firstPage
 
         Item{
+
+            function isStep1Valid(){
+                if(        nomprenom_txtFld.text               !== ""        && nomprenom_txtFld.isValid
+                        && nomdelastructure_txtFld.companyName !== ""        && nomdelastructure_txtFld.isValid
+                        && email_txtFld.email                  !== ""        && email_txtFld.isValid
+                        && address_txtField.address            !== ""        && address_txtField.isValid
+                        && tel_txtFld.tel                      !== ""        && tel_txtFld.isValid )
+                {
+                    firstPageValid = true
+                    return true
+                }
+                firstPageValid = false
+                return false
+            }
+
+            Connections{
+                target : accountInfo
+                onInfosChanged: {
+                    if (pageStep_ldr.sourceComponent == firstPage)
+                    {
+                        if(isStep1Valid())
+                            nextButton.updateButtonState()
+                    }
+                }
+            }
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
@@ -194,8 +178,12 @@ Page {
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
 
                         onEditingFinished: {
-                            accountInfo.nomprenom = text
+                            accountInfo.infos.name = text
+                            accountInfo.infosChanged()
                         }
+
+                        onIsValidChanged: accountInfo.infosChanged()
+
                     }
                 }
 
@@ -223,8 +211,11 @@ Page {
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
 
                         onEditingFinished:{
-                            accountInfo.nomdelastructure = text
+                            accountInfo.infos.companyName = text
+                            accountInfo.infosChanged()
                         }
+
+                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
 
@@ -253,6 +244,12 @@ Page {
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
 
                         onEditingFinished: {
+                            // WARNING : as there are some problems connecting
+                            // to the address validation service the two line
+                            // bellow are temporart there waiting to have a correct
+                            // validation of the address
+                            accountInfo.infosChanged()
+                            accountInfo.infos.address = text
                             //@TODO : move all the error handling of this call to Qondrite
                             Qondrite.callAddressvalidation(text)
                             .result
@@ -267,7 +264,8 @@ Page {
                                     console.log("latitude  : "+result.latitude)
                                     hasError = false
                                     helperText = ""
-                                    accountInfo.adress = text
+                                    accountInfo.infos.address = text
+                                    accountInfo.infosChanged()
                                 }
                             })
                             .catch(function(error){
@@ -280,6 +278,8 @@ Page {
                                 helperText = ""
                             });
                         }
+
+                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
 
@@ -303,14 +303,12 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
 
-                        onActiveFocusChanged: {
-                            if(!hasError)
-                                accountInfo.email = text
-
-                            else{
-                                accountInfo.email =  ""
-                            }
+                        onEditingFinished:{
+                            accountInfo.infos.email = text
+                            accountInfo.infosChanged()
                         }
+
+                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
 
@@ -336,15 +334,16 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
                         onEditingFinished: {
-                            accountInfo.tel = text
+                            accountInfo.infos.tel = text
+                            accountInfo.infosChanged()
                         }
 
+                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
             }
         }
     }
-
 
     Component{
         id:secondPage
@@ -353,21 +352,24 @@ Page {
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
-            function passwordvalidating()
-            {
-                if(passwordField.text && passwordConfirmation.text )
-                    if(passwordField.text === passwordConfirmation.text)
+            function isStep2Valid(){
+                if((demandeCheckBox.checked || vslCheckBox.checked)
+                        && password_txtfld.text == passwordConfirmation_txtfld.text){
+                    secondPageValid = true
+                    return true
+                }
+                secondPageValid = false
+                return false
+            }
+
+            Connections{
+                target : accountInfo
+                onInfosChanged: {
+                    if (pageStep_ldr.sourceComponent == secondPage)
                     {
-                        accountInfo.password = passwordField.text
-                        passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = true
+                        if(isStep2Valid())
+                            nextButton.updateButtonState()
                     }
-                    else{
-                        accountInfo.password = ""
-                        passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
-                    }
-                else{
-                    accountInfo.password = ""
-                    passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                 }
             }
 
@@ -381,14 +383,20 @@ Page {
                     id: demandeCheckBox
 
                     text: "Recevoir des demande en ambulances"
-                    onCheckedChanged: accountInfo.demande = demandeCheckBox.checked
+                    onCheckedChanged: {
+                        accountInfo.infos.ambulance = demandeCheckBox.checked
+                        accountInfo.infosChanged()
+                    }
                 }
 
                 CheckBox {
                     id: vslCheckBox
 
                     text: "Recevoir des demande en VSL"
-                    onCheckedChanged: accountInfo.vsl = vslCheckBox.checked
+                    onCheckedChanged: {
+                        accountInfo.infos.vsl = vslCheckBox.checked
+                        accountInfo.infosChanged()
+                    }
                 }
             }
 
@@ -399,25 +407,23 @@ Page {
                 anchors.topMargin: Defines_values.Signup2passwordTopmargin
 
                 PasswordTextField{
-                    id: passwordField
+                    id: password_txtfld
 
                     Layout.fillWidth:true
-                    hasError: accountInfo.hasError === true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onTextChanged: passwordvalidating()
+                    validator: RegExpValidator{regExp:/([a-zA-Z]{6,100}\s*)+/}
                 }
 
                 PasswordTextField{
-                    id: passwordConfirmation
+                    id: passwordConfirmation_txtfld
 
                     placeholderText: "Confirmer le mot de passe"
                     floatingLabel: true
                     Layout.fillWidth:true
-                    hasError: accountInfo.hasError === true
                     width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onTextChanged: passwordvalidating()
+                    validator: RegExpValidator{regExp:/([a-zA-Z]{6,100}\s*)+/}
                 }
             }
         }

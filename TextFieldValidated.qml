@@ -5,6 +5,7 @@ import "define_values.js" as Defines_values
 TextField{
     id:myRoot
 
+    readonly property alias isValid: checkedIcon.visible
     property bool useValidatingIcon : true
     property string warningText
     property alias validationDelay : timer.interval
@@ -38,8 +39,10 @@ TextField{
 
         }
         else{
-            throw "TextFiledValidated : this component needs a validator,
-                    you can set the validator using validator property"
+            console.log("TextFiledValidated : this component needs a validator,
+                        you can set the validator using validator property")
+            console.trace()
+            throw "property exception"
         }
     }
 
