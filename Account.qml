@@ -121,11 +121,11 @@ Page {
         RowLayout{
             spacing : Units.dp(Defines_values.Default_verticalspacing)
 
-            Icon {
+           Icon {
                 id:icon
 
                 name: "action/account_circle"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label {
@@ -140,7 +140,7 @@ Page {
             spacing : Units.dp(Defines_values.Default_verticalspacing)
 
             Icon {
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label{
@@ -156,7 +156,7 @@ Page {
 
             Icon {
                 name: "maps/place"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label{
@@ -172,7 +172,7 @@ Page {
 
             Icon {
                 name: "communication/email"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label {
@@ -188,7 +188,7 @@ Page {
 
             Icon {
                 name: "communication/call"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label{
@@ -204,7 +204,7 @@ Page {
 
             Icon {
                 name: "maps/local_hospital"
-                size: Units.dp(Defines_values.iconsize)
+                size: Units.dp(Defines_values.Default_iconsize)
             }
 
             Label {
