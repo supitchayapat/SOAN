@@ -20,6 +20,7 @@ Page {
         property bool    vsl
         property string  email
         property string  password
+
     }
 
     function createAccount(){
@@ -33,19 +34,7 @@ Page {
             tel  : accountInfo.tel,
             ambulance  : accountInfo.demande,
             vsl  : accountInfo.vsl
-        }
-
-        Qondrite.createUser(accountInfo.email,accountInfo.password,profile)
-        .then(function onSuccess(userId){
-            Qondrite.emit("createUser", userId);
-            Qondrite.emit("login", userId);
-        })
-        .catch(function onError(error){
-            Qondrite.emit("createUserError", error);
-            //@TODO  : display a message to give the user information
-            //about the error
-            //many error can be catched here (existing email, existing address,existing phone...)
-        });
+        }        
     }
 
     function validatingTheFirstPage()
@@ -224,42 +213,39 @@ Page {
                     TextFieldValidated{
                         id:address_txtField
 
+                        QtObject {
+                            id : previousAddress
+                            property string value : ""
+                        }
+
                         placeholderText: "Adresse"
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-
                         // @TODO this validator may need to be changed with a correct regExp for this case
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
 
                         onEditingFinished: {
-                            //@TODO : move all the error handling of this call to Qondrite
-                            Qondrite.callAddressvalidation(text)
-                            .result
-                            .then(function(result){
+                            // run validation only if undone yet for current address and address length is worth it
+                            if(address_txtField.text.length > 3)
+                            {
+                                Qondrite.validateAddress(text).result
+                                .then(function(result)
+                                {
+                                    if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                                        warningText = qsTr("Adresse invalide")
+                                    }
+                                    else{
+                                        accountInfo.latitude = result[0].latitude;
+                                        accountInfo.longitude = result[0].longitude;
+                                        accountInfo.adress = text
+                                    }
+                                });
+                            }
 
-                                if(result.status == "ERROR"){
-                                    hasError = true
-                                    helperText = qsTr("Adresse invalide")
-                                }else{
-                                    console.log("l'adresse saisie est valide!");
-                                    console.log("longitude  : "+result.longitude);
-                                    console.log("latitude  : "+result.latitude)
-                                    hasError = false
-                                    helperText = ""
-                                    accountInfo.adress = text
-                                }
-                            })
-                            .catch(function(error){
-                                //This error is not related to maps validation of the address
-                                // but is rather an error in the meteor server code
-                                //it might also be triggerd if no internet connection is available
-                                // on the server. What do we do in this case ?
-                                //@TODO we should trigger an alert by mail here to tuckle
-                                hasError = false
-                                helperText = ""
-                            });
                         }
+
+
                     }
                 }
 
