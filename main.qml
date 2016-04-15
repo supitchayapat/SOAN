@@ -42,7 +42,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         Qondrite.init();
-        Qondrite.onLogin.connect(function(){pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
+        Qondrite.onLogin.connect(function(){pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})       
     }
 
 }
