@@ -7,9 +7,6 @@ import Qondrite 0.1
 Page {
     id:root
 
-    property bool firstPageValid: false
-    property bool secondPageValid: false
-
     QtObject{
         id:accountInfo
 
@@ -61,18 +58,9 @@ Page {
     ActionButton {
         id: nextButton
 
-        function updateButtonState(){
-            if(pageStep_ldr.sourceComponent== firstPage)
-            {
-                if(firstPageValid)
-                    backgroundColor = Theme.primaryColor
-            }
-            else if(pageStep_ldr.sourceComponent == secondPage)
-            {
-                if(secondPageValid)
-                    backgroundColor = Theme.primaryColor
-            }else
-                backgroundColor = "gray"
+        function updateButtonState(validity){
+            if(validity) backgroundColor = Theme.primaryColor
+            else backgroundColor = "gray"
         }
 
         x:40
@@ -88,12 +76,12 @@ Page {
             id: addContent
 
             onTriggered:{
-                if(pageStep_ldr.sourceComponent == firstPage && firstPageValid)
+                if(pageStep_ldr.sourceComponent == firstPage)
                 {
-                        progressBySteps.nextStep()
-                        pageStep_ldr.sourceComponent = secondPage
+                    progressBySteps.nextStep()
+                    pageStep_ldr.sourceComponent = secondPage
                 }
-                else if(pageStep_ldr.sourceComponent == secondPage && secondPageValid)
+                else if(pageStep_ldr.sourceComponent == secondPage)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
@@ -110,17 +98,11 @@ Page {
         Item{
 
             function isStep1Valid(){
-                if(        nomprenom_txtFld.text               !== ""        && nomprenom_txtFld.isValid
+                return        nomprenom_txtFld.text               !== ""        && nomprenom_txtFld.isValid
                         && nomdelastructure_txtFld.companyName !== ""        && nomdelastructure_txtFld.isValid
                         && email_txtFld.email                  !== ""        && email_txtFld.isValid
                         && address_txtField.address            !== ""        && address_txtField.isValid
-                        && tel_txtFld.tel                      !== ""        && tel_txtFld.isValid )
-                {
-                    firstPageValid = true
-                    return true
-                }
-                firstPageValid = false
-                return false
+                        && tel_txtFld.tel                      !== ""        && tel_txtFld.isValid              ? true : false
             }
 
             Connections{
@@ -128,8 +110,7 @@ Page {
                 onInfosChanged: {
                     if (pageStep_ldr.sourceComponent == firstPage)
                     {
-                        if(isStep1Valid())
-                            nextButton.updateButtonState()
+                        nextButton.updateButtonState(isStep1Valid())
                     }
                 }
             }
@@ -353,21 +334,16 @@ Page {
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
             function isStep2Valid(){
-                if((demandeCheckBox.checked || vslCheckBox.checked) && newPassword.isValid && newPassword.password !== ""){
-                    secondPageValid = true
-                    return true
-                }
-                secondPageValid = false
-                return false
+                return (demandeCheckBox.checked || vslCheckBox.checked) && newPassword.isValid && newPassword.password !== "" ? true :false
             }
 
             Connections{
                 target : accountInfo
+
                 onInfosChanged: {
                     if (pageStep_ldr.sourceComponent == secondPage)
                     {
-                        if(isStep2Valid())
-                            nextButton.updateButtonState()
+                        nextButton.updateButtonState(isStep2Valid())
                     }
                 }
             }
@@ -382,6 +358,7 @@ Page {
                     id: demandeCheckBox
 
                     text: "Recevoir des demande en ambulances"
+
                     onCheckedChanged: {
                         accountInfo.infos.ambulance = demandeCheckBox.checked
                         accountInfo.infosChanged()
@@ -401,16 +378,16 @@ Page {
             }
 
             NewPassword{
-               id: newPassword
+                id: newPassword
 
-               Layout.fillWidth: true
-               anchors.top:topColumn.bottom
-               anchors.topMargin: Defines_values.Signup2passwordTopmargin
+                Layout.fillWidth: true
+                anchors.top:topColumn.bottom
+                anchors.topMargin: Defines_values.Signup2passwordTopmargin
 
-               onPasswordChanged: {
-                   accountInfo.infos.password = password
-                   accountInfo.infosChanged()
-               }
+                onIsValidChanged: {
+                    if(isValid) accountInfo.infos.password = password
+                    accountInfo.infosChanged()
+                }
             }
         }
     }

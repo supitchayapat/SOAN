@@ -5,9 +5,10 @@ import "define_values.js" as Defines_values
 Column{
 
     readonly property alias password : _priv.password
-    property bool isValid : password_txtfld.isValid && passwordConfirmation_txtfld.isValid
+    readonly property alias isValid : _priv.isValid
     property string typoWarning :  qsTr("le mot de passe doit contenir au moins 6 caractères")
     readonly property string passwordsDontMatch: qsTr("les mots de passe sont différents")
+    property alias validator: password_txtfld.validator
 
     width: parent.width
     spacing: Units.dp(Defines_values.Default_border_margins*2)
@@ -18,11 +19,14 @@ Column{
         placeholderText: qsTr("mot de passe")
         width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
         anchors.horizontalCenter: parent.horizontalCenter
-        warningText: _priv.selectWarningText(passwordConfirmation_txtfld.text,password_txtfld)
 
         customValidationCallback: function () { return _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld)}
 
         onIsValidChanged: if(isValid && !passwordConfirmation_txtfld.isValid) passwordConfirmation_txtfld.manageValidation()
+
+        onTextChanged: {
+            warningText = _priv.selectWarningText(passwordConfirmation_txtfld.text,password_txtfld)
+        }
     }
 
     PasswordTextField{
@@ -31,26 +35,33 @@ Column{
         placeholderText: qsTr("Confirmer le mot de passe")
         width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
         anchors.horizontalCenter: parent.horizontalCenter
-        warningText: _priv.selectWarningText(password_txtfld.text,passwordConfirmation_txtfld)
+        validator: password_txtfld.validator
 
         customValidationCallback: function() { return _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld)}
 
         onIsValidChanged: if(isValid && !password_txtfld.isValid) password_txtfld.manageValidation()
+
+        onTextChanged: {
+            warningText = _priv.selectWarningText(password_txtfld.text,passwordConfirmation_txtfld)
+        }
     }
 
     QtObject{
         id : _priv
         property string password: ""
+        property bool isValid : password_txtfld.isValid && passwordConfirmation_txtfld.isValid
 
         function customValidation(pairedPass,thisCtxt){
            return pairedPass !== "" && pairedPass !== thisCtxt.text ? false : true
         }
 
         function selectWarningText(pairedPass,thisCtxt) {
-            return pairedPass.text !== thisCtxt.text
-                    && pairedPass.text !== ""
-                    && thisCtxt.text.toString().match(thisCtxt.validator.regExp) !== null?
-                        passwordsDontMatch :typoWarning
+            if (thisCtxt.text.toString().match(thisCtxt.validator.regExp) === null)
+                return typoWarning
+            else if(pairedPass.text !== thisCtxt.text && pairedPass.text !== "" )
+                return passwordsDontMatch
+
+            console.log("something went wrong")
         }
     }
 

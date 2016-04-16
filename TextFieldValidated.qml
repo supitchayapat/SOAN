@@ -28,12 +28,12 @@ TextField{
             /* TODO : here we are only handling the case of RegExpValidator
              * but the validator could be also an IntValidator or a DoubleValidator
              * please manage the missing cases*/
-            if((text != "" && text.toString().match(validator.regExp) != null))
+            if(text != "" && text.toString().match(validator.regExp) != null && customValidationCallback())
             {
-                hasError = !customValidationCallback()
-                checkedIcon.visible = true && customValidationCallback()
+                hasError = false
+                checkedIcon.visible = true
             }
-            else if(text != "" && text.toString().match(validator.regExp) === null ){
+            else if((text != "" && text.toString().match(validator.regExp) === null) || !customValidationCallback()){
                 hasError = true
                 checkedIcon.visible = false
             }
@@ -86,8 +86,8 @@ TextField{
         text = liveFormatingCallBack()
     }
 
-    onActiveFocusChanged: {
-        if(activeFocus){
+    onFocusChanged: {
+        if(activeFocus || focus){
             checkedIcon.visible = false
             helperText = ""
             timer.restart()
@@ -100,12 +100,12 @@ TextField{
             }
             manageValidation()
             if(hasError)
-                helperText = warningText
+                helperText = Qt.binding(function() { return warningText})
         }
     }
 
     onHasErrorChanged: {
-        if(focus){
+        if(activeFocus || focus){
             if(timer.timerDone && !hasError){
                 checkedIcon.visible = useValidatingIcon && text != ""
                 helperText = ""
@@ -113,15 +113,46 @@ TextField{
             }
             else if (timer.timerDone && hasError){
                 checkedIcon.visible = false
-                helperText = warningText
+                helperText = Qt.binding(function() { return warningText})
                 return
             }
-            customValidationCallback() ? helperText = "" : helperText = warningText
+            else if (!timer.timerDone && hasError){
+                helperText = Qt.binding(function() { return warningText})
+            }
+
+            customValidationCallback() ? helperText = "" : helperText = Qt.binding(function() { return warningText})
         }
         else{
             checkedIcon.visible = useValidatingIcon && !hasError
-            hasError ?  helperText = warningText :  helperText = ""
+            hasError ?  helperText = Qt.binding(function() { return warningText}) :  helperText = ""
         }
     }
-
 }
+
+// TODO : We may improv this component by having to different colors for the warningText
+// red when not having active focus, and gray when having active focus and while typing
+
+// TODO : Support of multiple erros and helper text with priorities
+// The idea is to have a qml object called errors :
+//
+// Erros {
+//     id : erros
+//
+//     Error{
+//         id : error1
+//         text : "error 1"
+//     }
+
+//     Error{
+//         id : error2
+//         text : "error 1"
+//     }
+
+//     Error{
+//         id : error3
+//         text : "error 1"
+//     }
+// }
+// if multiple erros occurs, the one that has priority is displayed on the warningText
+// priority is defined in a declarative way from top to bottom, Error 1 has more priority than 2.
+// This pattern could be used in other component as well to manage other things than a warningText
