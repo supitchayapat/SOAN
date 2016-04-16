@@ -67,7 +67,7 @@ Page {
                 if(firstPageValid)
                     backgroundColor = Theme.primaryColor
             }
-            else if(pageStep_ldr.sourceComponent == secondPage && accountInfo.isStep2Valid())
+            else if(pageStep_ldr.sourceComponent == secondPage)
             {
                 if(secondPageValid)
                     backgroundColor = Theme.primaryColor
@@ -353,8 +353,7 @@ Page {
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
             function isStep2Valid(){
-                if((demandeCheckBox.checked || vslCheckBox.checked)
-                        && password_txtfld.text == passwordConfirmation_txtfld.text){
+                if((demandeCheckBox.checked || vslCheckBox.checked) && newPassword.isValid && newPassword.password !== ""){
                     secondPageValid = true
                     return true
                 }
@@ -393,6 +392,7 @@ Page {
                     id: vslCheckBox
 
                     text: "Recevoir des demande en VSL"
+
                     onCheckedChanged: {
                         accountInfo.infos.vsl = vslCheckBox.checked
                         accountInfo.infosChanged()
@@ -400,31 +400,17 @@ Page {
                 }
             }
 
-            Column{
-                spacing: Units.dp(Defines_values.Default_border_margins*2)
-                width: parent.width
-                anchors.top:topColumn.bottom
-                anchors.topMargin: Defines_values.Signup2passwordTopmargin
+            NewPassword{
+               id: newPassword
 
-                PasswordTextField{
-                    id: password_txtfld
+               Layout.fillWidth: true
+               anchors.top:topColumn.bottom
+               anchors.topMargin: Defines_values.Signup2passwordTopmargin
 
-                    Layout.fillWidth:true
-                    width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    validator: RegExpValidator{regExp:/([a-zA-Z]{6,100}\s*)+/}
-                }
-
-                PasswordTextField{
-                    id: passwordConfirmation_txtfld
-
-                    placeholderText: "Confirmer le mot de passe"
-                    floatingLabel: true
-                    Layout.fillWidth:true
-                    width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    validator: RegExpValidator{regExp:/([a-zA-Z]{6,100}\s*)+/}
-                }
+               onPasswordChanged: {
+                   accountInfo.infos.password = password
+                   accountInfo.infosChanged()
+               }
             }
         }
     }

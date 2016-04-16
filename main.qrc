@@ -13,7 +13,7 @@
         <file>TextFieldValidated.qml</file>
         <file>PhoneTextField.qml</file>
         <file>PhoneTextField.js</file>
-        <file>CreatePassword.qml</file>
+        <file>NewPassword.qml</file>
     </qresource>
     <qresource prefix="/rsrc" lang="data, images, icones..">
         <file alias="ambulance-siren">ambulance-siren.png</file>

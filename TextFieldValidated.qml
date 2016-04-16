@@ -5,7 +5,8 @@ import "define_values.js" as Defines_values
 TextField{
     id:myRoot
 
-    readonly property alias isValid: checkedIcon.visible
+    property bool isValid: checkedIcon.visible
+    property var customValidationCallback : function (){return true}
     property bool useValidatingIcon : true
     property string warningText
     property alias validationDelay : timer.interval
@@ -29,8 +30,8 @@ TextField{
              * please manage the missing cases*/
             if((text != "" && text.toString().match(validator.regExp) != null))
             {
-                hasError = false
-                checkedIcon.visible = true
+                hasError = !customValidationCallback()
+                checkedIcon.visible = true && customValidationCallback()
             }
             else if(text != "" && text.toString().match(validator.regExp) === null ){
                 hasError = true
@@ -72,7 +73,7 @@ TextField{
     }
 
     onEditingFinished: {
-        checkedIcon.visible = useValidatingIcon
+        checkedIcon.visible = useValidatingIcon && customValidationCallback()
     }
 
     onTextChanged: {
@@ -85,8 +86,8 @@ TextField{
         text = liveFormatingCallBack()
     }
 
-    onFocusChanged: {
-        if(focus){
+    onActiveFocusChanged: {
+        if(activeFocus){
             checkedIcon.visible = false
             helperText = ""
             timer.restart()
@@ -98,7 +99,8 @@ TextField{
                 return
             }
             manageValidation()
-            if(hasError) helperText = warningText
+            if(hasError)
+                helperText = warningText
         }
     }
 
@@ -109,7 +111,12 @@ TextField{
                 helperText = ""
                 return
             }
-            helperText = ""
+            else if (timer.timerDone && hasError){
+                checkedIcon.visible = false
+                helperText = warningText
+                return
+            }
+            customValidationCallback() ? helperText = "" : helperText = warningText
         }
         else{
             checkedIcon.visible = useValidatingIcon && !hasError
