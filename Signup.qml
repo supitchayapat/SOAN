@@ -216,48 +216,36 @@ Page {
                     TextFieldValidated{
                         id:address_txtField
 
+                        QtObject {
+                            id : previousAddress
+                            property string value : ""
+                        }
+
                         placeholderText: "Adresse"
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-
                         // @TODO this validator may need to be changed with a correct regExp for this case
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
 
                         onEditingFinished: {
-                            // WARNING : as there are some problems connecting
-                            // to the address validation service the two line
-                            // bellow are temporart there waiting to have a correct
-                            // validation of the address
-                            accountInfo.infosChanged()
-                            accountInfo.infos.address = text
-                            //@TODO : move all the error handling of this call to Qondrite
-                            Qondrite.callAddressvalidation(text)
-                            .result
-                            .then(function(result){
-
-                                if(result.status == "ERROR"){
-                                    hasError = true
-                                    helperText = qsTr("Adresse invalide")
-                                }else{
-                                    console.log("l'adresse saisie est valide!");
-                                    console.log("longitude  : "+result.longitude);
-                                    console.log("latitude  : "+result.latitude)
-                                    hasError = false
-                                    helperText = ""
-                                    accountInfo.infos.address = text
-                                    accountInfo.infosChanged()
-                                }
-                            })
-                            .catch(function(error){
-                                //This error is not related to maps validation of the address
-                                // but is rather an error in the meteor server code
-                                //it might also be triggerd if no internet connection is available
-                                // on the server. What do we do in this case ?
-                                //@TODO we should trigger an alert by mail here to tuckle
-                                hasError = false
-                                helperText = ""
-                            });
+                            // run validation only if undone yet for current address and address length is worth it
+                            if(address_txtField.text.length > 3)
+                            {
+                                Qondrite.validateAddress(text).result
+                                .then(function(result)
+                                {
+                                    if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                                        warningText = qsTr("Adresse invalide")
+                                    }
+                                    else{
+                                        accountInfo.latitude = result[0].latitude;
+                                        accountInfo.longitude = result[0].longitude;
+                                        accountInfo.infos.address = text
+                                        accountInfo.infosChanged()
+                                    }
+                                });
+                            }
                         }
 
                         onIsValidChanged: accountInfo.infosChanged()
