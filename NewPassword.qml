@@ -58,10 +58,10 @@ Column{
         function selectWarningText(pairedPass,thisCtxt) {
             if (thisCtxt.text.toString().match(thisCtxt.validator.regExp) === null)
                 return typoWarning
-            else if(pairedPass.text !== thisCtxt.text && pairedPass.text !== "" )
+            else if(pairedPass !== thisCtxt.text && pairedPass !== "" )
                 return passwordsDontMatch
 
-            console.log("something went wrong")
+            return ""
         }
     }
 

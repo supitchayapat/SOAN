@@ -52,36 +52,38 @@ Page {
         }
 
         sourceComponent: firstPage
-        onSourceComponentChanged: nextButton.backgroundColor = "gray"
+        onSourceComponentChanged: nextButton.active = false
     }
 
     ActionButton {
         id: nextButton
 
+        property bool active: false
+
         function updateButtonState(validity){
-            if(validity) backgroundColor = Theme.primaryColor
-            else backgroundColor = "gray"
+            if(validity) active = true
+            else active = false
         }
 
         x:40
         backgroundColor: "gray"
+
         anchors {
             bottom: parent.bottom
             bottomMargin: Units.dp(10)
             horizontalCenter: parent.horizontalCenter
         }
+
         elevation: 1
         iconName: "content/send"
         action: Action {
-            id: addContent
-
             onTriggered:{
-                if(pageStep_ldr.sourceComponent == firstPage)
+                if(pageStep_ldr.sourceComponent == firstPage && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     pageStep_ldr.sourceComponent = secondPage
                 }
-                else if(pageStep_ldr.sourceComponent == secondPage)
+                else if(pageStep_ldr.sourceComponent == secondPage && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
@@ -89,6 +91,11 @@ Page {
                     Qondrite.createUser(accountInfo.infos.email,accountInfo.infos.password,accountInfo.infos)
                 }
             }
+        }
+
+        onActiveChanged: {
+            if(active) backgroundColor = Theme.primaryColor
+            else backgroundColor = "gray"
         }
     }
 
