@@ -246,8 +246,8 @@ Page {
                                         warningText = qsTr("Adresse invalide")
                                     }
                                     else{
-                                        accountInfo.latitude = result[0].latitude;
-                                        accountInfo.longitude = result[0].longitude;
+                                        accountInfo.infos.latitude = result[0].latitude;
+                                        accountInfo.infos.longitude = result[0].longitude;
                                         accountInfo.infos.address = text
                                         accountInfo.infosChanged()
                                     }
