@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import Material 0.2
+import Material 0.3
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Material.ListItems 0.1 as ListItem
@@ -18,7 +18,7 @@ Rectangle{
     Rectangle{
         id: sidebar_rct
 
-        height:  Units.dp(Defines_values.sidebar_height)
+        height:  dp(Defines_values.sidebar_height)
         color: Theme.primaryColor
 
         anchors{
@@ -37,7 +37,7 @@ Rectangle{
                 verticalCenter:  sidebar_rct.verticalCenter
                 verticalCenterOffset: -4
                 left: parent.left
-                leftMargin: Units.dp(Defines_values.sidebarleftMargin)
+                leftMargin: dp(Defines_values.sidebarleftMargin)
             }
         }
 
@@ -49,9 +49,9 @@ Rectangle{
 
             anchors{
                 bottom: sidebar_rct.bottom
-                bottomMargin: Units.dp(Defines_values.sidebarbottomMargin)
+                bottomMargin: dp(Defines_values.sidebarbottomMargin)
                 left: parent.left
-                leftMargin: Units.dp(Defines_values.sidebarleftMargin)
+                leftMargin: dp(Defines_values.sidebarleftMargin)
             }
         }
     }
@@ -60,7 +60,7 @@ Rectangle{
 
         anchors{
             top:sidebar_rct.bottom
-            topMargin: Units.dp(Defines_values.view_topMargin)
+            topMargin: dp(Defines_values.view_topMargin)
             left: parent.left
             right: parent.right
             bottom: parent.bottom
@@ -78,7 +78,7 @@ Rectangle{
                 action: Icon {
                     anchors.centerIn: parent
                     name: "action/account_box"
-                    size: Units.dp(Defines_values.Default_iconsize)
+                    size: dp(Defines_values.Default_iconsize)
                     color:Theme.primaryColor
                 }
 
@@ -98,7 +98,7 @@ Rectangle{
                 action: Icon {
                     anchors.centerIn: parent
                     name: "action/account_circle"
-                    size: Units.dp(Defines_values.Default_iconsize)
+                    size: dp(Defines_values.Default_iconsize)
                     color:Theme.primaryColor
                 }
 
