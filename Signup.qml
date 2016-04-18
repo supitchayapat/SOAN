@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import Material 0.2
+import Material 0.3
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
@@ -36,7 +36,7 @@ Page {
             right: parent.right
             rightMargin: parent.width * 0.1
             top: parent.top
-            topMargin: Units.dp(Defines_values.SignupLoaderMargin)
+            topMargin: dp(Defines_values.SignupLoaderMargin)
         }
     }
 
@@ -44,7 +44,7 @@ Page {
         id: pageStep_ldr
 
         anchors{
-            topMargin: Units.dp(Defines_values.SignupLoaderMargin)
+            topMargin: dp(Defines_values.SignupLoaderMargin)
             bottom: parent.bottom
             left: parent.left
             right: parent.right
@@ -70,7 +70,7 @@ Page {
 
         anchors {
             bottom: parent.bottom
-            bottomMargin: Units.dp(10)
+            bottomMargin: dp(10)
             horizontalCenter: parent.horizontalCenter
         }
 
@@ -127,7 +127,7 @@ Page {
             Column {
                 id: column
 
-                spacing: Units.dp(Defines_values.Default_horizontalspacing)
+                spacing: dp(Defines_values.Default_horizontalspacing)
 
                 anchors{
                     right: parent.right
@@ -141,7 +141,7 @@ Page {
                 RowLayout{
                     id:firstRow
 
-                    spacing : Units.dp(Defines_values.Signup1RowSpacing)
+                    spacing : dp(Defines_values.Signup1RowSpacing)
 
                     anchors{
                         left: parent.left
@@ -152,7 +152,7 @@ Page {
                         id:icon
 
                         name: "action/account_circle"
-                        size: Units.dp(Defines_values.Default_iconsize)
+                        size: dp(Defines_values.Default_iconsize)
                     }
 
                     TextFieldValidated{
@@ -160,7 +160,7 @@ Page {
 
                         inputMethodHints: Qt.ImhNoPredictiveText
                         placeholderText:"Nom et Prénom"
-                        font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                        font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
@@ -176,7 +176,7 @@ Page {
                 }
 
                 RowLayout{
-                    spacing : Units.dp(Defines_values.Signup1RowSpacing)
+                    spacing : dp(Defines_values.Signup1RowSpacing)
 
                     anchors{
                         left: parent.left
@@ -185,14 +185,14 @@ Page {
 
                     Icon {
                         source: "qrc:/rsrc/ambulance-siren"
-                        size: Units.dp(Defines_values.Default_iconsize)
+                        size: dp(Defines_values.Default_iconsize)
                     }
 
                     TextFieldValidated{
                         id:nomdelastructure_txtFld
 
                         placeholderText: "Nom de la structure"
-                        font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                        font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         // @TODO this validator may need to be changed with a correct regExp for this case
@@ -208,7 +208,7 @@ Page {
                 }
 
                 RowLayout{
-                    spacing : Units.dp(Defines_values.Signup1RowSpacing)
+                    spacing : dp(Defines_values.Signup1RowSpacing)
 
                     anchors{
                         left: parent.left
@@ -217,7 +217,7 @@ Page {
 
                     Icon {
                         name: "maps/place"
-                        size: Units.dp(Defines_values.Default_iconsize)
+                        size: dp(Defines_values.Default_iconsize)
                     }
 
                     TextFieldValidated{
@@ -229,7 +229,7 @@ Page {
                         }
 
                         placeholderText: "Adresse"
-                        font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                        font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         // @TODO this validator may need to be changed with a correct regExp for this case
@@ -260,7 +260,7 @@ Page {
                 }
 
                 RowLayout{
-                    spacing : Units.dp(Defines_values.Signup1RowSpacing)
+                    spacing : dp(Defines_values.Signup1RowSpacing)
 
                     anchors{
                         left: parent.left
@@ -269,13 +269,13 @@ Page {
 
                     Icon {
                         name: "communication/email"
-                        size: Units.dp(Defines_values.Default_iconsize)
+                        size: dp(Defines_values.Default_iconsize)
                     }
 
                     EmailTextField {
                         id:email_txtFld
 
-                        font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                        font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
 
@@ -289,7 +289,7 @@ Page {
                 }
 
                 RowLayout{
-                    spacing : Units.dp(Defines_values.Signup1RowSpacing)
+                    spacing : dp(Defines_values.Signup1RowSpacing)
 
                     anchors{
                         left: parent.left
@@ -299,7 +299,7 @@ Page {
                     Icon {
 
                         name: "communication/call"
-                        size: Units.dp(Defines_values.Default_iconsize)
+                        size: dp(Defines_values.Default_iconsize)
                     }
 
                     PhoneTextField{
@@ -307,7 +307,7 @@ Page {
 
                         Layout.fillWidth: true
                         font.family: textFieldFont.name
-                        font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                        font.pixelSize: dp(Defines_values.Base_text_font)
 
                         onEditingFinished: {
                             accountInfo.infos.tel = text
@@ -346,7 +346,7 @@ Page {
             Column{
                 id: topColumn
 
-                spacing: Units.dp(Defines_values.Default_border_margins)
+                spacing: dp(Defines_values.Default_border_margins)
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 CheckBox {

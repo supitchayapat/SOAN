@@ -4,6 +4,7 @@
 #include <QQuickItem>
 #include <QObject>
 #include <QtQml>
+#include "qml-material/src/plugin.h"
 
 static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -17,8 +18,11 @@ static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *script
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
+    engine.addImportPath(":/.");
+    MaterialPlugin qmlMaterial;
+    qmlMaterial.registerTypes("Material");
     qmlRegisterSingletonType("Qondrite",0,1,"Qondrite",singletonQondrite_provider);
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
