@@ -9,10 +9,10 @@ Page {
     id: page
 
     function loadUserInformation(){
-        //When a login signal is emmited, the users collection is sent
+
+        //When a login signal is emited, the user collection is sent
         //from server to client with only the current user in it
-        //getting the first element of the collection is getting the logged in user
-        //information
+        //getting the first element in the collection is the logged in user information
         var userCollection = Qondrite.getCollection("users");
         var userInfo = userCollection._set.toArray()[0];
         var userProfile = userInfo.profile;
@@ -119,6 +119,7 @@ Page {
         id: column
 
         spacing: dp(Defines_values.Default_horizontalspacing )
+
         anchors{
             top:parent.top
             topMargin: dp(Defines_values.Accounttop_margin)
@@ -137,6 +138,7 @@ Page {
 
             Label {
                 id  : nameField
+
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
@@ -151,6 +153,7 @@ Page {
 
             Label{
                 id : companyNameField
+
                 Layout.fillWidth:true
                 font.pixelSize: dp(Defines_values.Base_text_font)
             }
@@ -166,6 +169,7 @@ Page {
 
             Label{
                 id  : addressField
+
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 width: column.width - icon.width - dp(Defines_values.Default_border_margins)
             }
@@ -197,6 +201,7 @@ Page {
 
             Label{
                 id : teLField
+
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
@@ -212,18 +217,53 @@ Page {
 
             Label {
                 id : transportTypeField
+
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }
+    }
 
-        Button {
-            text:qsTr("Changer le mot de passe")
-            elevation: 1
-            backgroundColor: Theme.primaryColor
-            onClicked: changepassword_dlg.show()
-            Layout.fillWidth:true
+    Column{
+        id: checkboxColumn
+
+        anchors{
+            top:column.bottom
+            topMargin: Units.dp(Defines_values.Default_verticalspacing)
+            left: column.left
+            leftMargin: 0
         }
+
+        CheckBox {
+            id: demandeCheckBox
+
+            checked: false
+            enabled: false
+            text: "Recevoir des demandes d'ambulances"
+        }
+
+        CheckBox {
+            id: vslCheckBox
+
+            checked: false
+            enabled: false
+            text: "Recevoir des demande en VSL"
+        }
+    }
+
+    Button {
+
+        anchors{
+            top:column.bottom
+            topMargin: Units.dp(Defines_values.Default_verticalspacing)*2 + checkboxColumn.height
+            left: column.left
+        }
+
+        text:qsTr("Changer le mot de passe")
+        elevation: 1
+        backgroundColor: Theme.primaryColor
+        onClicked: changepassword_dlg.show()
+        Layout.fillWidth:true
     }
 
     Component.onCompleted: loadUserInformation()
