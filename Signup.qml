@@ -45,7 +45,6 @@ Page {
 
     function validatingTheFirstPage()
     {
-        console.log('valid page 1 : ', JSON.stringify(accountInfo));
         if(accountInfo.nomprenom && accountInfo.nomdelastructure && accountInfo.email && accountInfo.adress && accountInfo.tel)
             return 1
         return 0
