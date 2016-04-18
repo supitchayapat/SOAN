@@ -10,45 +10,18 @@ Page {
     QtObject{
         id:accountInfo
 
-        property string  nomprenom
-        property string  nomdelastructure
-        property string  adress
-        property double  longitude : 0
-        property double  latitude : 0
-        property string  tel
-        property bool    demande
-        property bool    vsl
-        property string  email
-        property string  password
-
-    }
-
-    function createAccount(){
-
-        var profile = {
-            name  : accountInfo.nomprenom,
-            companyName : accountInfo.nomdelastructure,
-            address  : accountInfo.adress,
-            latitude : accountInfo.latitude,
-            longitude : accountInfo.longitude,
-            tel  : accountInfo.tel,
-            ambulance  : accountInfo.demande,
-            vsl  : accountInfo.vsl
-        }        
-    }
-
-    function validatingTheFirstPage()
-    {
-        if(accountInfo.nomprenom && accountInfo.nomdelastructure && accountInfo.email && accountInfo.adress && accountInfo.tel)
-            return 1
-        return 0
-    }
-
-    function validatingTheSecondPage()
-    {
-        if (accountInfo.password.length && (accountInfo.vsl || accountInfo.demande))
-            return 1
-        return 0
+        property var infos : ({
+                                  name        : ""   ,
+                                  companyName : ""   ,
+                                  address     : ""   ,
+                                  latitude    : 0.0  ,
+                                  longitude   : 0.0  ,
+                                  tel         : ""   ,
+                                  ambulance   : ""   ,
+                                  vsl         : false,
+                                  email       : false,
+                                  password    : ""
+                              })
     }
 
     ProgressBySteps{
@@ -56,7 +29,7 @@ Page {
 
         stepCount: 2
         height: parent.height * 0.05
-        
+
         anchors{
             left: parent.left
             leftMargin: parent.width * 0.1
@@ -68,7 +41,7 @@ Page {
     }
 
     Loader {
-        id: shiftLodaer
+        id: pageStep_ldr
 
         anchors{
             topMargin: Units.dp(Defines_values.SignupLoaderMargin)
@@ -77,40 +50,52 @@ Page {
             right: parent.right
             top: progressBySteps.bottom
         }
-        asynchronous: true
+
         sourceComponent: firstPage
+        onSourceComponentChanged: nextButton.active = false
     }
 
     ActionButton {
         id: nextButton
 
+        property bool active: false
+
+        function updateButtonState(validity){
+            if(validity) active = true
+            else active = false
+        }
+
         x:40
+        backgroundColor: "gray"
+
         anchors {
             bottom: parent.bottom
             bottomMargin: Units.dp(10)
             horizontalCenter: parent.horizontalCenter
         }
+
         elevation: 1
         iconName: "content/send"
         action: Action {
-            id: addContent
-
             onTriggered:{
-                if(shiftLodaer.sourceComponent == firstPage && validatingTheFirstPage())
+                if(pageStep_ldr.sourceComponent == firstPage && nextButton.active)
                 {
                     progressBySteps.nextStep()
-                    shiftLodaer.sourceComponent = secondPage
+                    pageStep_ldr.sourceComponent = secondPage
                 }
-                else if(shiftLodaer.sourceComponent == secondPage && validatingTheSecondPage())
+                else if(pageStep_ldr.sourceComponent == secondPage && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
 
-                    createAccount()
-                }else
-                    snackbar.open("Il y a un erreur")
+                    Qondrite.createUser(accountInfo.infos.email,accountInfo.infos.password,accountInfo.infos)
+                }
             }
+        }
 
+        onActiveChanged: {
+            if(active) backgroundColor = Theme.primaryColor
+            else backgroundColor = "gray"
         }
     }
 
@@ -118,6 +103,24 @@ Page {
         id:firstPage
 
         Item{
+
+            function isStep1Valid(){
+                return        nomprenom_txtFld.text               !== ""        && nomprenom_txtFld.isValid
+                        && nomdelastructure_txtFld.companyName !== ""        && nomdelastructure_txtFld.isValid
+                        && email_txtFld.email                  !== ""        && email_txtFld.isValid
+                        && address_txtField.address            !== ""        && address_txtField.isValid
+                        && tel_txtFld.tel                      !== ""        && tel_txtFld.isValid              ? true : false
+            }
+
+            Connections{
+                target : accountInfo
+                onInfosChanged: {
+                    if (pageStep_ldr.sourceComponent == firstPage)
+                    {
+                        nextButton.updateButtonState(isStep1Valid())
+                    }
+                }
+            }
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
@@ -163,8 +166,12 @@ Page {
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
 
                         onEditingFinished: {
-                            accountInfo.nomprenom = text
+                            accountInfo.infos.name = text
+                            accountInfo.infosChanged()
                         }
+
+                        onIsValidChanged: accountInfo.infosChanged()
+
                     }
                 }
 
@@ -192,8 +199,11 @@ Page {
                         validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
 
                         onEditingFinished:{
-                            accountInfo.nomdelastructure = text
+                            accountInfo.infos.companyName = text
+                            accountInfo.infosChanged()
                         }
+
+                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
 
@@ -236,16 +246,16 @@ Page {
                                         warningText = qsTr("Adresse invalide")
                                     }
                                     else{
-                                        accountInfo.latitude = result[0].latitude;
-                                        accountInfo.longitude = result[0].longitude;
-                                        accountInfo.adress = text
+                                        accountInfo.infos.latitude = result[0].latitude;
+                                        accountInfo.infos.longitude = result[0].longitude;
+                                        accountInfo.infos.address = text
+                                        accountInfo.infosChanged()
                                     }
                                 });
                             }
-
                         }
 
-
+                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
 
@@ -268,9 +278,13 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onTextChanged: {
-                            accountInfo.email = text
+
+                        onEditingFinished:{
+                            accountInfo.infos.email = text
+                            accountInfo.infosChanged()
                         }
+
+                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
 
@@ -296,14 +310,16 @@ Page {
                         font.pixelSize: Units.dp(Defines_values.Base_text_font)
 
                         onEditingFinished: {
-                            accountInfo.tel = text
+                            accountInfo.infos.tel = text
+                            accountInfo.infosChanged()
                         }
+
+                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
             }
         }
     }
-
 
     Component{
         id:secondPage
@@ -312,21 +328,18 @@ Page {
 
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
-            function passwordvalidating()
-            {
-                if(passwordField.text && passwordConfirmation.text )
-                    if(passwordField.text === passwordConfirmation.text)
+            function isStep2Valid(){
+                return (demandeCheckBox.checked || vslCheckBox.checked) && newPassword.isValid && newPassword.password !== "" ? true :false
+            }
+
+            Connections{
+                target : accountInfo
+
+                onInfosChanged: {
+                    if (pageStep_ldr.sourceComponent == secondPage)
                     {
-                        accountInfo.password = passwordField.text
-                        passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = true
+                        nextButton.updateButtonState(isStep2Valid())
                     }
-                    else{
-                        accountInfo.password = ""
-                        passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
-                    }
-                else{
-                    accountInfo.password = ""
-                    passwordField.useValidatingIcon = passwordConfirmation.useValidatingIcon = false
                 }
             }
 
@@ -340,43 +353,35 @@ Page {
                     id: demandeCheckBox
 
                     text: "Recevoir des demande en ambulances"
-                    onCheckedChanged: accountInfo.demande = demandeCheckBox.checked
+
+                    onCheckedChanged: {
+                        accountInfo.infos.ambulance = demandeCheckBox.checked
+                        accountInfo.infosChanged()
+                    }
                 }
 
                 CheckBox {
                     id: vslCheckBox
 
                     text: "Recevoir des demande en VSL"
-                    onCheckedChanged: accountInfo.vsl = vslCheckBox.checked
+
+                    onCheckedChanged: {
+                        accountInfo.infos.vsl = vslCheckBox.checked
+                        accountInfo.infosChanged()
+                    }
                 }
             }
 
-            Column{
-                spacing: Units.dp(Defines_values.Default_border_margins*2)
-                width: parent.width
+            NewPassword{
+                id: newPassword
+
+                Layout.fillWidth: true
                 anchors.top:topColumn.bottom
                 anchors.topMargin: Defines_values.Signup2passwordTopmargin
 
-                PasswordTextField{
-                    id: passwordField
-
-                    Layout.fillWidth:true
-                    hasError: accountInfo.hasError === true
-                    width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    onTextChanged: passwordvalidating()
-                }
-
-                PasswordTextField{
-                    id: passwordConfirmation
-
-                    placeholderText: "Confirmer le mot de passe"
-                    floatingLabel: true
-                    Layout.fillWidth:true
-                    hasError: accountInfo.hasError === true
-                    width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    onTextChanged: passwordvalidating()
+                onIsValidChanged: {
+                    if(isValid) accountInfo.infos.password = password
+                    accountInfo.infosChanged()
                 }
             }
         }
@@ -385,7 +390,6 @@ Page {
     Snackbar {
         id: snackbar
     }
-
 }
 
 
