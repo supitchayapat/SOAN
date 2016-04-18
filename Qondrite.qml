@@ -40,11 +40,21 @@ WebSocket {
     }
 
     function createUser(email,password,profile){
-        ceres.createUser(email,password,profile)
-        .then(function onSuccess(userId){
-            userCreated()
-            login()
-        })
+
+        return ceres.createUser(email,password,profile)
+        .then(
+            function onSuccess(userId){
+                userCreated();
+                login();
+                var dfd = Q.defer();
+                dfd.resolve({});
+                return dfd.promise;
+            },
+            function onError(error){
+                var dfd = Q.defer();
+                dfd.reject(error);
+                return dfd.promise;
+            })
         .catch(function onError(error){
             userCreationFailed()
             //@TODO  : display a message to give the user information
@@ -98,7 +108,7 @@ WebSocket {
         }
     }
 
-    function callAddressvalidation(address){
+    function validateAddress(address){
          return ceres.call("validateAddress",address);
     }
 

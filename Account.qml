@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import Material 0.2
+import Material 0.3
 import QtQuick.Layouts 1.2
 import QtQml.Models 2.2
 import "define_values.js" as Defines_values
@@ -11,9 +11,9 @@ Page {
     property string emailAdressString: "Contact@ahmed-arif.com"
     property string accountNameString: "Alliance"
     property bool isEditable: false
-    property int fieldWidth: parent.width - Units.dp(Defines_values.Default_iconsize) - Units.dp(Defines_values.Default_verticalspacing)
-    property int textFieldWidth: isEditable?parent.width - Units.dp(Defines_values.Default_iconsize) - Units.dp(Defines_values.Default_verticalspacing):0
-    property int labelWidth: isEditable?0:parent.width - Units.dp(Defines_values.Default_iconsize) - Units.dp(Defines_values.Default_verticalspacing)
+    property int fieldWidth: parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
+    property int textFieldWidth: isEditable?parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing):0
+    property int labelWidth: isEditable?0:parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
     backAction: navDrawer.action
 
 
@@ -53,6 +53,7 @@ Page {
 
     }
 
+
     Dialog {
         id: confirmed_dlg
 
@@ -66,7 +67,7 @@ Page {
 
             Icon{
                 name:"action/done"
-                size: Units.dp(100)
+                size: dp(100)
                 color: Theme.primaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -93,19 +94,19 @@ Page {
         z:1
 
         ColumnLayout{
-            spacing: Units.dp(Defines_values.top_account_textfield_margin)
+            spacing: dp(Defines_values.top_account_textfield_margin)
             anchors.horizontalCenter: parent.horizontalCenter
 
             TextField {
                 id: oldPassword_txtFld
 
-                anchors.topMargin: Units.dp(20)
+                anchors.topMargin: dp(20)
                 anchors.horizontalCenter: parent.horizontalCenter
                 placeholderText: "Ancien mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
                 helperText: ""
-                Layout.topMargin:Units.dp(Defines_values.top_account_textfield_margin)
+                Layout.topMargin:dp(Defines_values.top_account_textfield_margin)
             }
 
             TextField {
@@ -133,26 +134,29 @@ Page {
     Column{
         id: column
 
-        spacing: Units.dp(Defines_values.Default_horizontalspacing )
+        spacing: dp(Defines_values.Default_horizontalspacing )
+
         anchors{
             top:parent.top
-            topMargin: Units.dp(Defines_values.Accounttop_margin)
+            topMargin: dp(Defines_values.Accounttop_margin)
             horizontalCenter: parent.horizontalCenter
         }
 
+
         Row{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
             width:parent.width
+
 
 
             Icon {
                 name: "action/account_circle"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label {
                 id  : nameField
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
 
@@ -163,7 +167,7 @@ Page {
 
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:qsTr("Nom et Prénom")
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 font.family: Defines_values.textFieldsFontFamily
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
                 width:textFieldWidth
@@ -172,16 +176,17 @@ Page {
         }
 
         Row{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
             width:parent.width
 
             Icon {
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label{
                 id : companyNameField
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
             }
@@ -190,7 +195,7 @@ Page {
                 id:companyName_txtFld
 
                 placeholderText: qsTr("Nom de la structure")
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 font.family: Defines_values.textFieldsFontFamily
                 width:textFieldWidth
                 visible: isEditable
@@ -205,17 +210,18 @@ Page {
         }
 
         Row{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
             width:parent.width
+
 
             Icon {
                 name: "maps/place"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label{
                 id  : addressField
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
 
                 width:labelWidth
                 visible: !isEditable
@@ -226,7 +232,7 @@ Page {
                 id:address_txtField
 
                 placeholderText: qsTr("Adresse")
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 font.family: Defines_values.textFieldsFontFamily
                 visible:isEditable
                 width:textFieldWidth
@@ -271,18 +277,18 @@ Page {
         }
 
         Row{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
             width:parent.width
 
             Icon {
                 name: "communication/email"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label {
                 id  : emailField
 
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
             }
@@ -290,7 +296,7 @@ Page {
             EmailTextField {
                 id:email_txtFld
 
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 font.family: Defines_values.textFieldsFontFamily
                 width:textFieldWidth
                 visible: isEditable
@@ -302,17 +308,17 @@ Page {
         }
 
         Row{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
             width:parent.width
 
             Icon {
                 name: "communication/call"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label{
                 id : teLField
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
             }
@@ -332,7 +338,7 @@ Page {
 
                 validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
                 font.family: Defines_values.textFieldsFontFamily
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
 
                 QtObject{
                     id: _priv_tel_txtFld
@@ -347,16 +353,17 @@ Page {
         }
 
         RowLayout{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 name: "maps/local_hospital"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label {
                 id : transportTypeField
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
                 visible: !isEditable
             }
@@ -364,7 +371,7 @@ Page {
             Column{
                 id: topColumn
 
-                spacing: Units.dp(Defines_values.Default_border_margins)
+                spacing: dp(Defines_values.Default_border_margins)
                 anchors.horizontalCenter: parent.horizontalCenter
                 Layout.fillWidth:true
                 visible: isEditable
@@ -385,15 +392,23 @@ Page {
             }
 
         }
-
-        Button {
-            text:qsTr("Changer le mot de passe")
-            elevation: 1
-            backgroundColor: Theme.primaryColor
-            onClicked: changepassword_dlg.show()
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
     }
+
+    Button {
+
+        anchors{
+            top:column.bottom
+            topMargin: dp(Defines_values.Default_verticalspacing)*2 + checkboxColumn.height
+            left: column.left
+        }
+
+        text:qsTr("Changer le mot de passe")
+        elevation: 1
+        backgroundColor: Theme.primaryColor
+        onClicked: changepassword_dlg.show()
+        Layout.fillWidth:true
+    }
+
 
     Component.onCompleted: loadUserInformation()
 }
