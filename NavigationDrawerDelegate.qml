@@ -3,17 +3,14 @@ import Material 0.3
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Material.ListItems 0.1 as ListItem
+import Qondrite 0.1
 
 // TODO this Component should be a singleton
 Rectangle{
 
-    property string email : "test"
-    property string accountName : "test"
-
     signal goToAmbulanceListPage()
     signal goToAccountPage()
     signal disconnectPressed()
-
 
     Rectangle{
         id: sidebar_rct
@@ -28,8 +25,8 @@ Rectangle{
         }
 
         Label {
+            id: accountName
 
-            text: accountName
             style: "title"
             color: "white"
 
@@ -42,8 +39,8 @@ Rectangle{
         }
 
         Label {
+            id:email
 
-            text: email
             style: "body2"
             color: "white"
 
@@ -122,4 +119,11 @@ Rectangle{
             }
         }
     }
+
+    Component.onCompleted: Qondrite.onLogin.connect(function(){
+        var userCollection = Qondrite.getCollection("users");
+        var userInfo = userCollection._set.toArray()[0];
+        email.text = userInfo.emails[0].address;
+        accountName.text = userInfo.profile.name;
+    })
 }
