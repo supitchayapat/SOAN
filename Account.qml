@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import Material 0.2
+import Material 0.3
 import QtQuick.Layouts 1.2
 import QtQml.Models 2.2
 import "define_values.js" as Defines_values
@@ -51,7 +51,7 @@ Page {
 
             Icon{
                 name:"action/done"
-                size: Units.dp(100)
+                size: dp(100)
                 color: Theme.primaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -78,19 +78,19 @@ Page {
         z:1
 
         ColumnLayout{
-            spacing: Units.dp(Defines_values.top_account_textfield_margin)
+            spacing: dp(Defines_values.top_account_textfield_margin)
             anchors.horizontalCenter: parent.horizontalCenter
 
             TextField {
                 id: oldPassword_txtFld
 
-                anchors.topMargin: Units.dp(20)
+                anchors.topMargin: dp(20)
                 anchors.horizontalCenter: parent.horizontalCenter
                 placeholderText: "Ancien mot de passe"
                 floatingLabel: true
                 echoMode: TextInput.Password
                 helperText: ""
-                Layout.topMargin:Units.dp(Defines_values.top_account_textfield_margin)
+                Layout.topMargin:dp(Defines_values.top_account_textfield_margin)
             }
 
             TextField {
@@ -118,101 +118,101 @@ Page {
     Column{
         id: column
 
-        spacing: Units.dp(Defines_values.Default_horizontalspacing )
+        spacing: dp(Defines_values.Default_horizontalspacing )
         anchors{
             top:parent.top
-            topMargin: Units.dp(Defines_values.Accounttop_margin)
+            topMargin: dp(Defines_values.Accounttop_margin)
             horizontalCenter: parent.horizontalCenter
         }
 
         RowLayout{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
 
            Icon {
                 id:icon
 
                 name: "action/account_circle"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label {
                 id  : nameField
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }
 
         RowLayout{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
 
             Icon {
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label{
                 id : companyNameField
                 Layout.fillWidth:true
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
             }
         }
 
         RowLayout{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 name: "maps/place"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label{
                 id  : addressField
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
-                width: column.width - icon.width - Units.dp(Defines_values.Default_border_margins)
+                font.pixelSize: dp(Defines_values.Base_text_font)
+                width: column.width - icon.width - dp(Defines_values.Default_border_margins)
             }
         }
 
         RowLayout{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 name: "communication/email"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label {
                 id  : emailField
 
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }
 
         RowLayout{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 name: "communication/call"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label{
                 id : teLField
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }
 
         RowLayout{
-            spacing : Units.dp(Defines_values.Default_verticalspacing)
+            spacing : dp(Defines_values.Default_verticalspacing)
 
             Icon {
                 name: "maps/local_hospital"
-                size: Units.dp(Defines_values.Default_iconsize)
+                size: dp(Defines_values.Default_iconsize)
             }
 
             Label {
                 id : transportTypeField
-                font.pixelSize: Units.dp(Defines_values.Base_text_font)
+                font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
             }
         }

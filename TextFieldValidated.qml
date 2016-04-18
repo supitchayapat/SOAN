@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import Material 0.2
+import Material 0.3
 import "define_values.js" as Defines_values
 
 TextField{
@@ -47,7 +47,7 @@ TextField{
         }
     }
 
-    font.pixelSize: Units.dp(Defines_values.Base_text_font)
+    font.pixelSize: dp(Defines_values.Base_text_font)
 
     Icon{
         id:checkedIcon
