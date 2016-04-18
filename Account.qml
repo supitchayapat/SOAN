@@ -229,7 +229,7 @@ Page {
 
         anchors{
             top:column.bottom
-            topMargin: Units.dp(Defines_values.Default_verticalspacing)
+            topMargin: dp(Defines_values.Default_verticalspacing)
             left: column.left
             leftMargin: 0
         }
@@ -255,7 +255,7 @@ Page {
 
         anchors{
             top:column.bottom
-            topMargin: Units.dp(Defines_values.Default_verticalspacing)*2 + checkboxColumn.height
+            topMargin: dp(Defines_values.Default_verticalspacing)*2 + checkboxColumn.height
             left: column.left
         }
 
