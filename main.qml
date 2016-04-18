@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import Material 0.2
+import Material 0.3
 import QtQuick.Window 2.0
 import Qondrite 0.1
 
@@ -23,10 +23,10 @@ ApplicationWindow {
         id:navDrawer
 
         NavigationDrawerDelegate{
+            id:navDelegateDrawer
+
             anchors.fill: parent
             objectName: "sidePanel"
-            email: "emailAdressString"
-            accountName:"accountNameString"
 
             onGoToAccountPage: {
                 pageStack.push(Qt.resolvedUrl("Account.qml"))
