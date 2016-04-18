@@ -24,7 +24,6 @@
 <qresource prefix="/icons/communication">
 	<file alias="email.svg">communication_email.svg</file>
 	<file alias="call.svg">communication_call.svg</file>
-	<file alias="call.svg">communication_call.svg</file>
 </qresource>
 
 </RCC>
