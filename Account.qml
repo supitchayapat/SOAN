@@ -9,6 +9,7 @@ Page {
     id: page
 
     function loadUserInformation(){
+
         //When a login signal is emited, the user collection is sent
         //from server to client with only the current user in it
         //getting the first element in the collection is the logged in user information
@@ -21,14 +22,20 @@ Page {
         addressField.text = userProfile.address;
         companyNameField.text = userProfile.companyName;
         teLField.text = userProfile.tel;
+        transportTypeField.text = getTransportTypeLabel(userProfile);
+    }
 
-        demandeCheckBox.checked  = userProfile.demande ? true : false;
-        vslCheckBox.checked = userProfile.vsl ? true : false;
-
+    function getTransportTypeLabel(userProfile){
+        if(userProfile.ambulance && userProfile.vsl){
+            return "VST et Ambulance";
+        }else if(userProfile.ambulance && !userProfile.vsl){
+            return "Ambulance uniquement"
+        }else if(!userProfile.ambulance && userProfile.vsl){
+            return "VST uniquement";
+        }
     }
 
     backAction: navDrawer.action
-
     anchors.fill: parent
 
     Dialog {
@@ -260,7 +267,4 @@ Page {
     }
 
     Component.onCompleted: loadUserInformation()
-
-
-
 }

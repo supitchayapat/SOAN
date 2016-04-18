@@ -23,10 +23,10 @@ ApplicationWindow {
         id:navDrawer
 
         NavigationDrawerDelegate{
+            id:navDelegateDrawer
+
             anchors.fill: parent
             objectName: "sidePanel"
-            email: "emailAdressString"
-            accountName:"accountNameString"
 
             onGoToAccountPage: {
                 pageStack.push(Qt.resolvedUrl("Account.qml"))
