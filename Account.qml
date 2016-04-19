@@ -18,7 +18,6 @@ Page {
         Action{
             iconName: "editor/mode_edit"
             onTriggered: {
-                console.log("clicked")
                 isEditable = true
 
                 email_txtFld.text = emailField.text;
@@ -26,8 +25,8 @@ Page {
                 address_txtField.text = addressField.text;
                 companyName_txtFld.text = companyNameField.text;
                 tel_txtFld.text = teLField.text;
-                demandeCheckBox.checked = transportTypeField.text.indexOf("Ambulance")!=-1
-                vslCheckBox.checked = transportTypeField.text.indexOf("VST")!=-1
+                demandeCheckBox.checked = transportTypeField.text.indexOf("Ambulance")!==-1
+                vslCheckBox.checked = transportTypeField.text.indexOf("VST")!==-1
 
                 name_txtFld.focus = true;
                 companyName_txtFld.focus = true;
