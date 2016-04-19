@@ -11,7 +11,7 @@ Column{
     property alias validator: password_txtfld.validator
 
     width: parent.width
-    spacing: Units.dp(Defines_values.Default_border_margins*2)
+    spacing: dp(Defines_values.Default_border_margins*2)
 
     PasswordTextField{
         id: password_txtfld
