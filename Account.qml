@@ -137,6 +137,7 @@ Page {
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
+                anchors.verticalCenter : parent.verticalCenter
 
             }
 
@@ -169,6 +170,7 @@ Page {
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
+                anchors.verticalCenter : parent.verticalCenter
             }
 
             TextFieldValidated{
@@ -202,6 +204,7 @@ Page {
 
                 width:labelWidth
                 visible: !isEditable
+                anchors.verticalCenter : parent.verticalCenter
             }
 
             TextFieldValidated{
@@ -267,6 +270,7 @@ Page {
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
+                anchors.verticalCenter : parent.verticalCenter
             }
 
             EmailTextField {
@@ -297,6 +301,7 @@ Page {
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
+                anchors.verticalCenter : parent.verticalCenter
             }
 
             TextFieldValidated{
@@ -343,6 +348,7 @@ Page {
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
                 visible: !isEditable
+                anchors.verticalCenter : parent.verticalCenter
             }
 
             Column{
