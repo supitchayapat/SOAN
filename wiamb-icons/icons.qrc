@@ -7,6 +7,10 @@
 	<file alias="business.svg">communication_business.svg</file>
 </qresource>
 
+<qresource prefix="/icons/awesome">
+	<file alias="close.svg">awesome_close.svg</file>
+</qresource>
+
 <qresource prefix="/icons/content">
 	<file alias="send.svg">content_send.svg</file>
 </qresource>
@@ -14,6 +18,10 @@
 <qresource prefix="/icons/maps">
 	<file alias="place.svg">maps_place.svg</file>
 	<file alias="local_hospital.svg">maps_local_hospital.svg</file>
+</qresource>
+
+<qresource prefix="/icons/awesone">
+	<file alias="check.svg">awesone_check.svg</file>
 </qresource>
 
 <qresource prefix="/icons/editor">
