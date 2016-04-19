@@ -19,17 +19,21 @@ Page {
             iconName: "editor/mode_edit"
             onTriggered: {
                 console.log("clicked")
-                 isEditable = true
-                email_txtFld.focus = true;
+                isEditable = true
+
+                email_txtFld.text = emailField.text;
+                name_txtFld.text = nameField.text;
+                address_txtField.text = addressField.text;
+                companyName_txtFld.text = companyNameField.text;
+                tel_txtFld.text = teLField.text;
+                demandeCheckBox.checked = transportTypeField.text.indexOf("Ambulance")!=-1
+                vslCheckBox.checked = transportTypeField.text.indexOf("VST")!=-1
 
                 name_txtFld.focus = true;
-
-                address_txtField.focus = true;
-
                 companyName_txtFld.focus = true;
-
                 tel_txtFld.focus = true;
-
+                email_txtFld.focus = true;
+                address_txtField.focus = true;
                 demandeCheckBox.focus = true;
 
             }
@@ -39,15 +43,38 @@ Page {
             iconName: "awesome/check"
             visible: isEditable
             onTriggered: {
-                 isEditable = false
-
+                //check if text fields are valid
+                var isNotValid = name_txtFld.hasError||companyName_txtFld.hasError||tel_txtFld.hasError||email_txtFld.hasError||address_txtField.hasError
+                if(!isNotValid&&(demandeCheckBox.checked||vslCheckBox.checked)){
+                    emailField.text = email_txtFld.text;
+                    nameField.text = name_txtFld.text;
+                    addressField.text = address_txtField.text;
+                    companyNameField.text = companyName_txtFld.text;
+                    teLField.text = tel_txtFld.text;
+                    var transport =""
+                    if(demandeCheckBox.checked && vslCheckBox.checked){
+                        transport = "VST et Ambulance";
+                    }else if(demandeCheckBox.checked && !vslCheckBox.checked){
+                        transport = "Ambulance uniquement"
+                    }else if(!demandeCheckBox.checked && vslCheckBox.checked){
+                        transport = "VST uniquement";
+                    }
+                    transportTypeField.text = transport
+                    isEditable = false
+                }
             }
         },
         Action{//cancel btn
             iconName: "awesome/close"
             visible: isEditable
             onTriggered: {
-                 isEditable = false
+                email_txtFld.text = emailField.text;
+                name_txtFld.text = nameField.text;
+                address_txtField.text = addressField.text;
+                companyName_txtFld.text = companyNameField.text;
+                tel_txtFld.text = teLField.text;
+
+                isEditable = false
             }
         }
 
@@ -63,19 +90,11 @@ Page {
         var userProfile = userInfo.profile;
 
         emailField.text = userInfo.emails[0].address;
-        email_txtFld.text = userInfo.emails[0].address;
         nameField.text = userProfile.name;
-        name_txtFld.text = userProfile.name;
         addressField.text = userProfile.address;
-        address_txtField.text = userProfile.address;
         companyNameField.text = userProfile.companyName;
-        companyName_txtFld.text = userProfile.companyName;
         teLField.text = userProfile.tel;
-        tel_txtFld.text = userProfile.tel;
         transportTypeField.text = getTransportTypeLabel(userProfile);
-        demandeCheckBox.checked = userProfile.ambulance
-        vslCheckBox.checked = userProfile.vsl
-
     }
 
     function getTransportTypeLabel(userProfile){
