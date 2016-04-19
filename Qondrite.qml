@@ -41,19 +41,14 @@ WebSocket {
 
     function createUser(email,password,profile)
     {
-        return ceres.createUser(email,password,profile)
+        ceres.createUser(email,password,profile)
         .then(
             function onSuccess(userId){
                 userCreated();
                 login();
-                var dfd = Q.defer();
-                dfd.resolve({});
-                return dfd.promise;
             },
             function onError(error){
-                var dfd = ceres.Q.defer();
-                dfd.reject(error);
-                return dfd.promise;
+                userCreationFailed()
             })
     }
 
@@ -153,6 +148,11 @@ WebSocket {
 
     function clearInterval(timer) {
         clearTimeout(timer);
+    }
+
+    function q()
+    {
+        return Ast.Asteroid.Q;
     }
 
     onStatusChanged: {

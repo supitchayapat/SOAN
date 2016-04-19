@@ -1,10 +1,10 @@
 import QtQuick 2.5
 import Material 0.3
-import "PhoneTextField.js" as PhoneTextFiled
+import "PhoneTextField.js" as PhoneTextField
 
 TextFieldValidated{
 
-    liveFormattingCallBack: function() {
+    liveFormatingCallBack: function() {
         return PhoneTextField.phone.format(text)
     }
 

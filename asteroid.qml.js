@@ -388,7 +388,7 @@ Asteroid.prototype._init = function () {
     // connect to the DDP server.
 
     self.ddp = new DDP(this._ddpOptions);
-    console.log('ddp : ', JSON.stringify(this._ddpOptions));
+
     // Register handlers
     self.ddp.on("connected", function () {
         // Upon connection try resuming login
@@ -1238,7 +1238,7 @@ Asteroid.prototype._setDdpOptions = function (ws, host, ssl, socketInterceptFunc
     }
 };
 
-Asteroid.prototype.Q = Q;
+Asteroid.Q = Q;
 
 return Asteroid;
 

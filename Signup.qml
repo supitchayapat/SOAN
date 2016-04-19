@@ -163,7 +163,7 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        validator: RegExpValidator{regExp: /^[- 'a-z\u00E0-\u00FC]*$/gi }
+                        validator: RegExpValidator{regExp: /^[\-'a-z àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished: {
                             accountInfo.infos.name = text
@@ -196,7 +196,7 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         // @TODO this validator may need to be changed with a correct regExp for this case
-                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished:{
                             accountInfo.infos.companyName = text
@@ -229,28 +229,25 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         // @TODO this validator may need to be changed with a correct regExp for this case
-                        validator: RegExpValidator{ regExp: /([a-zA-Z]{3,200}\s*)+/ }
-                        serverValidationCallback : function(){
-                            return (accountInfo.latitude + accountInfo.longitude) > 0;
-                        }
-                        onEditingFinished: {
-                            // run validation only if undone yet for current address and address length is worth it
-                            if(address_txtField.text.length > 3)
-                            {
-                                Qondrite.validateAddress(text).result
+                        validator: RegExpValidator{ regExp: /([' a-z0-9]{3,200}\s*)+/i }
+                        customValidationCallback : function(){
+
+                            return Qondrite.validateAddress(text).result
                                 .then(function(result)
                                 {
+                                    var dfd = Qondrite.q().defer();
                                     if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
-                                        warningText = qsTr("Adresse invalide")
+                                        dfd.reject({ message : qsTr("Cette adresse est inconnue") });
                                     }
                                     else{
                                         accountInfo.infos.latitude = result[0].latitude;
                                         accountInfo.infos.longitude = result[0].longitude;
-                                        accountInfo.infos.address = text
-                                        accountInfo.infosChanged()
+                                        accountInfo.infos.address = text;
+                                        accountInfo.infosChanged();
+                                        dfd.resolve();
                                     }
+                                    return dfd.promise;
                                 });
-                            }
                         }
 
                         onIsValidChanged: accountInfo.infosChanged()
@@ -276,13 +273,20 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onEditingFinished:{
+                        customValidationCallback: function(){
                             accountInfo.infos.email = text
-                            accountInfo.infosChanged()
-                            Qondrite.isUserExists(text).result
+                            accountInfo.infosChanged();
+                            return Qondrite.isUserExists(text).result
                             .then(function onsuccess(result){
-                                accountInfo.email = text;
-                                warningText = (!isNaN(result) && true === !!result) ? qsTr('Un compte existe déjà avec cet email') : "";
+                                var dfd = Qondrite.q().defer();
+                                if (!isNaN(result) && true === !!result){
+                                    dfd.reject({ message : qsTr('Un compte existe déjà avec cet email') });
+                                }
+                                else {
+                                    accountInfo.infos.email = text;
+                                    dfd.resolve();
+                                }
+                                return dfd.promise;
                             });
                         }
 

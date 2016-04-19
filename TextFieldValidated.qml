@@ -6,7 +6,7 @@ TextField{
     id:myRoot
 
     property bool isValid: checkedIcon.visible
-    property var customValidationCallback : function (){return true}
+    property var customValidationCallback : undefined
     property bool useValidatingIcon : true
     property string warningText
     property alias validationDelay : timer.interval
@@ -28,14 +28,27 @@ TextField{
             /* TODO : here we are only handling the case of RegExpValidator
              * but the validator could be also an IntValidator or a DoubleValidator
              * please manage the missing cases*/
-            if(text != "" && text.toString().match(validator.regExp) != null && customValidationCallback())
+            if(text != "" && text.toString().match(validator.regExp) != null)
             {
                 hasError = false
                 checkedIcon.visible = true
             }
-            else if((text != "" && text.toString().match(validator.regExp) === null) || !customValidationCallback()){
+            else if((text != "" && text.toString().match(validator.regExp) === null) ){
                 hasError = true
                 checkedIcon.visible = false
+            }
+
+            if (hasError === false && typeof customValidationCallback === 'function')
+            {
+                customValidationCallback()
+                    .then(function onsuccess(result){
+                        hasError = false;
+                        warningText = "";
+                    })
+                    .catch(function onerror(error){
+                        hasError = true;
+                        warningText = error.message;
+                    });
             }
 
         }
