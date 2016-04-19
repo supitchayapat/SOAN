@@ -12,10 +12,34 @@ Page {
     property string accountNameString: "Alliance"
     property bool isEditable: false
     property int fieldWidth: parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
-    property int textFieldWidth: isEditable?parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing):0
-    property int labelWidth: isEditable?0:parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
+    property int textFieldWidth: isEditable?column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing):0
+    property int labelWidth: isEditable?0:column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
     backAction: navDrawer.action
+    actions: [
+        Action{
+            iconName: "editor/mode_edit"
+            onTriggered: {
+                console.log("clicked")
+                 isEditable = true
+            }
+            visible: !isEditable
+        },
+        Action{//ok btn
+            iconName: "action/done"
+            visible: isEditable
+            onTriggered: {
+                 isEditable = false
+            }
+        },
+        Action{//cancel btn
+            iconName: "action/done"
+            visible: isEditable
+            onTriggered: {
+                 isEditable = false
+            }
+        }
 
+    ]
 
     function loadUserInformation(){
         //When a login signal is emmited, the users collection is sent
@@ -54,82 +78,7 @@ Page {
     }
 
 
-    Dialog {
-        id: confirmed_dlg
 
-        width: parent.width - parent.width/6
-        hasActions: false
-        z:1
-
-        Column{
-
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            Icon{
-                name:"action/done"
-                size: dp(100)
-                color: Theme.primaryColor
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-
-            Label {
-                text: "votre nouveau mot de passe a été enregistré avec succès"
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: Theme.primaryColor
-                wrapMode: Text.WordWrap
-            }
-        }
-    }
-
-    Dialog {
-        id: changepassword_dlg
-
-        onAccepted: {
-            confirmed_dlg.show()
-        }
-
-        text: "Mot de passe oublié"
-        positiveButtonText: "Valider"
-        negativeButtonText: "Annuler"
-        z:1
-
-        ColumnLayout{
-            spacing: dp(Defines_values.top_account_textfield_margin)
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            TextField {
-                id: oldPassword_txtFld
-
-                anchors.topMargin: dp(20)
-                anchors.horizontalCenter: parent.horizontalCenter
-                placeholderText: "Ancien mot de passe"
-                floatingLabel: true
-                echoMode: TextInput.Password
-                helperText: ""
-                Layout.topMargin:dp(Defines_values.top_account_textfield_margin)
-            }
-
-            TextField {
-                id: newPassword_txtFld
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                placeholderText: "Nouveau mot de passe"
-                floatingLabel: true
-                echoMode: TextInput.Password
-                helperText: ""
-            }
-
-            TextField {
-                id: newPasswordConfirmation_txtFld
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                placeholderText: "Confirmer le mot de passe"
-                floatingLabel: true
-                echoMode: TextInput.Password
-                helperText: ""
-            }
-        }
-    }
 
     Column{
         id: column
@@ -358,6 +307,7 @@ Page {
             Icon {
                 name: "maps/local_hospital"
                 size: dp(Defines_values.Default_iconsize)
+                visible: !isEditable
             }
 
             Label {
@@ -411,4 +361,81 @@ Page {
 
 
     Component.onCompleted: loadUserInformation()
+
+    Dialog {
+        id: confirmed_dlg
+
+        width: parent.width - parent.width/6
+        hasActions: false
+        z:1
+
+        Column{
+
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Icon{
+                name:"action/done"
+                size: dp(100)
+                color: Theme.primaryColor
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            Label {
+                text: "votre nouveau mot de passe a été enregistré avec succès"
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: Theme.primaryColor
+                wrapMode: Text.WordWrap
+            }
+        }
+    }
+
+    Dialog {
+        id: changepassword_dlg
+
+        onAccepted: {
+            confirmed_dlg.show()
+        }
+
+        text: "Mot de passe oublié"
+        positiveButtonText: "Valider"
+        negativeButtonText: "Annuler"
+        z:1
+
+        ColumnLayout{
+            spacing: dp(Defines_values.top_account_textfield_margin)
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            TextField {
+                id: oldPassword_txtFld
+
+                anchors.topMargin: dp(20)
+                anchors.horizontalCenter: parent.horizontalCenter
+                placeholderText: "Ancien mot de passe"
+                floatingLabel: true
+                echoMode: TextInput.Password
+                helperText: ""
+                Layout.topMargin:dp(Defines_values.top_account_textfield_margin)
+            }
+
+            TextField {
+                id: newPassword_txtFld
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                placeholderText: "Nouveau mot de passe"
+                floatingLabel: true
+                echoMode: TextInput.Password
+                helperText: ""
+            }
+
+            TextField {
+                id: newPasswordConfirmation_txtFld
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                placeholderText: "Confirmer le mot de passe"
+                floatingLabel: true
+                echoMode: TextInput.Password
+                helperText: ""
+            }
+        }
+    }
 }
