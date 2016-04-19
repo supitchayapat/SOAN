@@ -233,7 +233,7 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         // @TODO this validator may need to be changed with a correct regExp for this case
-                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
+                        validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,200}\s*)+/}
 
                         onEditingFinished: {
                             // run validation only if undone yet for current address and address length is worth it
