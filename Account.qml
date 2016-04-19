@@ -159,9 +159,8 @@ Page {
             width:parent.width
 
             Icon {
-                name:"qrc:/rsrc/ambulance-siren"
+                name: "communication/business"
                 size: dp(Defines_values.Default_iconsize)
-
             }
 
             Label{
