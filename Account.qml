@@ -129,6 +129,7 @@ Page {
             width:parent.width
 
             Icon {
+                name: "communication/business"
                 size: dp(Defines_values.Default_iconsize)
             }
 
