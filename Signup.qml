@@ -184,7 +184,7 @@ Page {
                     }
 
                     Icon {
-                        source: "qrc:/rsrc/ambulance-siren"
+                        source: "communication/business"
                         size: dp(Defines_values.Default_iconsize)
                     }
 
