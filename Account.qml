@@ -8,12 +8,11 @@ import Qondrite 0.1
 Page {
     id: page
 
-    property string emailAdressString: "Contact@ahmed-arif.com"
-    property string accountNameString: "Alliance"
     property bool isEditable: false
     property int fieldWidth: parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
     property int textFieldWidth: isEditable?column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing):0
     property int labelWidth: isEditable?0:column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
+
     backAction: navDrawer.action
     actions: [
         Action{
@@ -21,18 +20,31 @@ Page {
             onTriggered: {
                 console.log("clicked")
                  isEditable = true
+                email_txtFld.focus = true;
+
+                name_txtFld.focus = true;
+
+                address_txtField.focus = true;
+
+                companyName_txtFld.focus = true;
+
+                tel_txtFld.focus = true;
+
+                demandeCheckBox.focus = true;
+
             }
             visible: !isEditable
         },
         Action{//ok btn
-            iconName: "action/done"
+            iconName: "awesome/check"
             visible: isEditable
             onTriggered: {
                  isEditable = false
+
             }
         },
         Action{//cancel btn
-            iconName: "action/done"
+            iconName: "awesome/close"
             visible: isEditable
             onTriggered: {
                  isEditable = false
@@ -96,8 +108,6 @@ Page {
             spacing : dp(Defines_values.Default_verticalspacing)
             width:parent.width
 
-
-
             Icon {
                 name: "action/account_circle"
                 size: dp(Defines_values.Default_iconsize)
@@ -125,11 +135,14 @@ Page {
         }
 
         Row{
+
             spacing : dp(Defines_values.Default_verticalspacing)
             width:parent.width
 
             Icon {
+                name:"qrc:/rsrc/ambulance-siren"
                 size: dp(Defines_values.Default_iconsize)
+
             }
 
             Label{
@@ -152,9 +165,6 @@ Page {
                 onFocusChanged:{
                     useValidatingIcon = true
                 }
-                onTextChanged: {
-
-                }
             }
         }
 
@@ -174,7 +184,6 @@ Page {
 
                 width:labelWidth
                 visible: !isEditable
-
             }
 
             TextFieldValidated{
@@ -348,7 +357,7 @@ Page {
 
         anchors{
             top:column.bottom
-            topMargin: dp(Defines_values.Default_verticalspacing)*2 + checkboxColumn.height
+            topMargin: dp(Defines_values.Default_verticalspacing)*2
             left: column.left
         }
 
