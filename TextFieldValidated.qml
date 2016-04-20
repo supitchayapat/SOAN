@@ -6,7 +6,7 @@ TextField{
     id:myRoot
 
     property bool isValid: checkedIcon.visible
-    property var customValidationCallback : undefined
+    property var customValidationCallback
     property bool useValidatingIcon : true
     property string warningText
     property alias validationDelay : timer.interval
@@ -41,13 +41,9 @@ TextField{
             if (hasError === false && typeof customValidationCallback === 'function')
             {
                 customValidationCallback()
-                    .then(function onsuccess(result){
-                        hasError = false;
-                        warningText = "";
-                    })
-                    .catch(function onerror(error){
-                        hasError = true;
-                        warningText = error.message;
+                  .then(function onsuccess(data){
+                        hasError = data.response;
+                        warningText = data.message;
                     });
             }
 
@@ -86,7 +82,24 @@ TextField{
     }
 
     onEditingFinished: {
-        checkedIcon.visible = useValidatingIcon && customValidationCallback()
+        if (customValidationCallback === undefined){
+            checkedIcon.visible = useValidatingIcon
+        }
+        else {
+            checkedIcon.visible = Qt.binding(function() {
+                return customValidationCallback()
+                    .then(function onsuccess(){
+                        console.lo('onEditingFinished : success');
+                        useValidatingIcon = true;
+                        return useValidatingIcon;
+                    })
+                    .catch(function onerror(error){
+                        console.lo('onEditingFinished : failed');
+                        useValidatingIcon = false;
+                        return useValidatingIcon;
+                    });
+            })
+        }
     }
 
     onTextChanged: {
@@ -134,7 +147,21 @@ TextField{
                 helperText = Qt.binding(function() { return warningText})
             }
 
-            customValidationCallback() ? helperText = "" : helperText = Qt.binding(function() { return warningText})
+            if (customValidationCallback === undefined){
+                helperText = ""
+            }
+            else {
+                helperText = Qt.binding(function() {
+                    return customValidationCallback()
+                        .then(function onsuccess(){
+                            return "".toString();
+                        })
+                        .catch(function onerror(error){
+                            return error.message.toString();
+                        });
+                })
+            }
+
         }
         else{
             checkedIcon.visible = useValidatingIcon && !hasError

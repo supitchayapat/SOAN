@@ -98,15 +98,31 @@ WebSocket {
     }
 
     function validateAddress(address){
-        return ceres.call("validateAddress",address);
+        return ceres.call("validateAddress",address).result
+            .then(function(result)
+            {
+                var dfd = q().defer();
+                if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                    dfd.reject(result);
+                }
+                else{
+                    dfd.resolve(result);
+                }
+                return dfd.promise;
+            });
     }
 
     function isUserExists(email)
     {
         if (! /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/.test(email)){
-            throw new Error('Adresse email invalide');
+            throw new Error(qsTr("Adresse email invalide"));
         }
-        return ceres.call("isUserExists", email);
+        return ceres.call("isUserExists", email).result
+            .then(function onsuccess(result){
+                var dfd = q().defer();
+                dfd.resolve(!isNaN(result) && true === !!result);
+                return dfd.promise;
+            });
     }
 
     function getCollection(collection) {

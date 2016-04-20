@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/src" lang="js, qml">
+    <qresource lang="js, qml" prefix="/src">
         <file>Account.qml</file>
         <file>define_values.js</file>
         <file>Listambulances.qml</file>
@@ -9,13 +9,14 @@
         <file>ProgressBySteps.qml</file>
         <file>NavigationDrawerDelegate.qml</file>
         <file>EmailTextField.qml</file>
+        <file>SuggestionTextField.qml</file>
         <file>PasswordTextField.qml</file>
         <file>TextFieldValidated.qml</file>
         <file>PhoneTextField.qml</file>
         <file>PhoneTextField.js</file>
         <file>NewPassword.qml</file>
     </qresource>
-    <qresource prefix="/rsrc" lang="data, images, icones..">
+    <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>
     </qresource>
     <qresource prefix="/Qondrite">
