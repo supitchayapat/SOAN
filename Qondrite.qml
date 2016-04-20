@@ -21,7 +21,7 @@ WebSocket {
     signal login()
     signal loginFailed()
     signal userCreated()
-    signal userCreationFailed(string context, string reason)
+    signal userCreationFailed()
 
     active: true
 
