@@ -81,25 +81,8 @@ TextField{
         }
     }
 
-    onEditingFinished: {
-        if (customValidationCallback === undefined){
-            checkedIcon.visible = useValidatingIcon
-        }
-        else {
-            checkedIcon.visible = Qt.binding(function() {
-                return customValidationCallback()
-                    .then(function onsuccess(){
-                        console.lo('onEditingFinished : success');
-                        useValidatingIcon = true;
-                        return useValidatingIcon;
-                    })
-                    .catch(function onerror(error){
-                        console.lo('onEditingFinished : failed');
-                        useValidatingIcon = false;
-                        return useValidatingIcon;
-                    });
-            })
-        }
+    onEditingFinished: {        
+        checkedIcon.visible = useValidatingIcon
     }
 
     onTextChanged: {
