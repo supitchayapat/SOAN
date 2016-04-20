@@ -1,0 +1,16 @@
+out: wiamb-icons
+icons:
+  - action/account_circle
+  - action/done
+  - action/account_box
+  - maps/place
+  - maps/local_hospital
+  - communication/email
+  - communication/call
+  - social/person
+  - social/mood
+  - content/send
+  - editor/mode_edit
+  - communication/business
+  - awesome/close
+  - awesone/check

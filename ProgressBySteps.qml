@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import Material 0.2
+import Material 0.3
 import "define_values.js" as Defines_values
 
 // TODO : Instead of using the list view, we may want to use the numeric value label slider from materials

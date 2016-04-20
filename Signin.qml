@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import Material 0.2
+import Material 0.3
 import QtQuick.Window 2.0
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
@@ -23,7 +23,7 @@ Item {
 
             Icon{
                 name:"action/done"
-                size: Units.dp(100)
+                size: dp(100)
                 color: Defines_values.PrimaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -31,7 +31,7 @@ Item {
             Label {
                 text: "Verifier votre boite email pour le changement de votre mot de passe"
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:forgottenPassword_dlg.width - Units.dp(120)
+                width:forgottenPassword_dlg.width - dp(120)
                 color: Theme.accentColor
                 wrapMode: Text.WordWrap
                 font.family: labelFont.name
@@ -77,23 +77,23 @@ Item {
 
         width:parent.width
 
-        spacing:Units.dp(40)
+        spacing:dp(40)
 
         Column{
 
-            spacing:Units.dp(20)
+            spacing:dp(20)
 
             anchors {
                 right :parent.right
                 left  :parent.left
-                margins: Units.dp(10)
+                margins: dp(10)
             }
 
             EmailTextField {
                 id : emailTxtField
 
                 placeholderText: "Email"
-                font.pixelSize: Units.dp(20)
+                font.pixelSize: dp(20)
                 font.family: textFieldFont.name
                 width: parent.width
             }
@@ -103,7 +103,7 @@ Item {
                 id : pwdTxtField
 
                 placeholderText: "mot de passe"
-                font.pixelSize: Units.dp(20)
+                font.pixelSize: dp(20)
                 font.family: textFieldFont.name
                 width: parent.width
                 echoMode: TextInput.Password
@@ -112,12 +112,12 @@ Item {
 
         Column{
 
-            spacing: Units.dp(10)
+            spacing: dp(10)
 
             anchors {
                 right :parent.right
                 left  :parent.left
-                margins: Units.dp(10)
+                margins: dp(10)
             }
 
             Button {
@@ -154,7 +154,7 @@ Item {
 
             anchors {
                 horizontalCenter: parent.horizontalCenter
-                margins: Units.dp(10)
+                margins: dp(10)
             }
 
             text:"mot de passe oublié ?"

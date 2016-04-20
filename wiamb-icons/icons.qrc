@@ -1,0 +1,42 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+
+<qresource prefix="/icons/communication">
+	<file alias="email.svg">communication_email.svg</file>
+	<file alias="call.svg">communication_call.svg</file>
+	<file alias="business.svg">communication_business.svg</file>
+</qresource>
+
+<qresource prefix="/icons/awesome">
+	<file alias="close.svg">awesome_close.svg</file>
+</qresource>
+
+<qresource prefix="/icons/content">
+	<file alias="send.svg">content_send.svg</file>
+</qresource>
+
+<qresource prefix="/icons/maps">
+	<file alias="place.svg">maps_place.svg</file>
+	<file alias="local_hospital.svg">maps_local_hospital.svg</file>
+</qresource>
+
+<qresource prefix="/icons/awesone">
+	<file alias="check.svg">awesone_check.svg</file>
+</qresource>
+
+<qresource prefix="/icons/editor">
+	<file alias="mode_edit.svg">editor_mode_edit.svg</file>
+</qresource>
+
+<qresource prefix="/icons/social">
+	<file alias="person.svg">social_person.svg</file>
+	<file alias="mood.svg">social_mood.svg</file>
+</qresource>
+
+<qresource prefix="/icons/action">
+	<file alias="account_circle.svg">action_account_circle.svg</file>
+	<file alias="done.svg">action_done.svg</file>
+	<file alias="account_box.svg">action_account_box.svg</file>
+</qresource>
+
+</RCC>
