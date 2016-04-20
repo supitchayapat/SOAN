@@ -229,9 +229,8 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         // @TODO this validator may need to be changed with a correct regExp for this case
-                        validator: RegExpValidator{ regExp: /([' a-z0-9]{3,200}\s*)+/i }
+                        validator: RegExpValidator{ regExp: /([' a-z0-9]{3,}\s*)+/i }
                         customValidationCallback : function(){
-
                             return Qondrite.validateAddress(text).result
                                 .then(function(result)
                                 {
