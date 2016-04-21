@@ -13,72 +13,6 @@ Page {
     property int textFieldWidth: isEditable?column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing):0
     property int labelWidth: isEditable?0:column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
 
-    backAction: navDrawer.action
-    actions: [
-        Action{
-            iconName: "editor/mode_edit"
-            onTriggered: {
-                isEditable = true
-
-                email_txtFld.text = emailField.text;
-                name_txtFld.text = nameField.text;
-                address_txtField.text = addressField.text;
-                companyName_txtFld.text = companyNameField.text;
-                tel_txtFld.text = teLField.text;
-                demandeCheckBox.checked = transportTypeField.text.indexOf("Ambulance")!==-1
-                vslCheckBox.checked = transportTypeField.text.indexOf("VST")!==-1
-
-                name_txtFld.focus = true;
-                companyName_txtFld.focus = true;
-                tel_txtFld.focus = true;
-                email_txtFld.focus = true;
-                address_txtField.focus = true;
-                demandeCheckBox.focus = true;
-
-            }
-            visible: !isEditable
-        },
-        Action{//ok btn
-            iconName: "awesome/check"
-            visible: isEditable
-            onTriggered: {
-                //check if text fields are valid
-                var isNotValid = name_txtFld.hasError||companyName_txtFld.hasError||tel_txtFld.hasError||email_txtFld.hasError||address_txtField.hasError
-                if(!isNotValid&&(demandeCheckBox.checked||vslCheckBox.checked)){
-                    emailField.text = email_txtFld.text;
-                    nameField.text = name_txtFld.text;
-                    addressField.text = address_txtField.text;
-                    companyNameField.text = companyName_txtFld.text;
-                    teLField.text = tel_txtFld.text;
-                    var transport =""
-                    if(demandeCheckBox.checked && vslCheckBox.checked){
-                        transport = "VST et Ambulance";
-                    }else if(demandeCheckBox.checked && !vslCheckBox.checked){
-                        transport = "Ambulance uniquement"
-                    }else if(!demandeCheckBox.checked && vslCheckBox.checked){
-                        transport = "VST uniquement";
-                    }
-                    transportTypeField.text = transport
-                    isEditable = false
-                }
-            }
-        },
-        Action{//cancel btn
-            iconName: "awesome/close"
-            visible: isEditable
-            onTriggered: {
-                email_txtFld.text = emailField.text;
-                name_txtFld.text = nameField.text;
-                address_txtField.text = addressField.text;
-                companyName_txtFld.text = companyNameField.text;
-                tel_txtFld.text = teLField.text;
-
-                isEditable = false
-            }
-        }
-
-    ]
-
     function loadUserInformation(){
         //When a login signal is emmited, the users collection is sent
         //from server to client with only the current user in it
@@ -88,12 +22,29 @@ Page {
         var userInfo = userCollection._set.toArray()[0];
         var userProfile = userInfo.profile;
 
-        emailField.text = userInfo.emails[0].address;
-        nameField.text = userProfile.name;
-        addressField.text = userProfile.address;
-        companyNameField.text = userProfile.companyName;
-        teLField.text = userProfile.tel;
-        transportTypeField.text = getTransportTypeLabel(userProfile);
+        email_lbl.text = userInfo.emails[0].address;
+        email_txtFld.text = userInfo.emails[0].address;
+        name_lbl.text = userProfile.name;
+        name_txtFld.text = userProfile.name;
+        address_lbl.text = userProfile.address;
+        address_txtField.text = userProfile.address;
+        companyname_lbl.text = userProfile.companyName;
+        companyName_txtFld.text = userProfile.companyName;
+        tel_lbl.text = userProfile.tel;
+        tel_txtFld.text = userProfile.tel;
+        transportType_lbl.text = getTransportTypeLabel(userProfile);
+        demandeCheckBox.checked = transportType_lbl.text.indexOf("Ambulance")!==-1
+        vslCheckBox.checked = transportType_lbl.text.indexOf("VST")!==-1
+    }
+
+    function isFormValid(){
+            return     name_txtFld.text        !== ""        && name_txtFld.isValid
+                    && companyName_txtFld.text !== ""        && companyName_txtFld.isValid
+                    && email_txtFld.text       !== ""        && email_txtFld.isValid
+                    && address_txtField.text   !== ""        && address_txtField.isValid
+                    && tel_txtFld.text         !== ""        && tel_txtFld.isValid
+                    && (demandeCheckBox.checked || vslCheckBox.checked)
+                    ? true :false
     }
 
     function getTransportTypeLabel(userProfile){
@@ -104,11 +55,87 @@ Page {
         }else if(!userProfile.ambulance && userProfile.vsl){
             return "VST uniquement";
         }
-
     }
 
+    backAction: navDrawer.action
+    actions: [
+        Action{
+            iconName: "editor/mode_edit"
+            visible: !isEditable
 
+            onTriggered: {
+                isEditable = true
 
+                email_txtFld.text = email_lbl.text;
+                name_txtFld.text = name_lbl.text;
+                address_txtField.text = address_lbl.text;
+                companyName_txtFld.text = companyname_lbl.text;
+                tel_txtFld.text = tel_lbl.text;
+
+                name_txtFld.focus = true;
+                companyName_txtFld.focus = true;
+                tel_txtFld.focus = true;
+                email_txtFld.focus = true;
+                address_txtField.focus = true;
+                demandeCheckBox.focus = true;
+            }
+        },
+        Action{//ok btn
+            id :validate_actBtn
+
+            function updateValidationButtonState(validity){
+                if(validity) enabled = true
+                else enabled = false
+            }
+
+            enabled : true
+            iconName: "awesome/check"
+            visible: isEditable
+
+            onTriggered: {
+              //TODO : add Qondrite call for updating user info just below
+              //TODO : add a loadingCircle in the page while waiting for server updating info
+                isEditable = false
+            }
+        },
+        Action{//cancel btn
+            iconName: "awesome/close"
+            visible: isEditable
+
+            onTriggered: {
+                email_txtFld.text = email_lbl.text;
+                name_txtFld.text = name_lbl.text;
+                address_txtField.text = address_lbl.text;
+                companyName_txtFld.text = companyname_lbl.text;
+                tel_txtFld.text = tel_lbl.text;
+
+                isEditable = false
+            }
+        }
+
+    ]
+
+    QtObject{
+        id:accountInfo
+
+        property var infos : ({
+                                  name        : ""   ,
+                                  companyName : ""   ,
+                                  address     : ""   ,
+                                  latitude    : 0.0  ,
+                                  longitude   : 0.0  ,
+                                  tel         : ""   ,
+                                  ambulance   : ""   ,
+                                  vsl         : false,
+                                  email       : false,
+                                  password    : ""
+                              })
+    }
+
+    Connections{
+        target: accountInfo
+        onInfosChanged : validate_actBtn.updateValidationButtonState(isFormValid())
+    }
 
     Column{
         id: column
@@ -121,7 +148,6 @@ Page {
             horizontalCenter: parent.horizontalCenter
         }
 
-
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
             width:parent.width
@@ -132,7 +158,7 @@ Page {
             }
 
             Label {
-                id  : nameField
+                id  : name_lbl
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
@@ -150,6 +176,13 @@ Page {
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
                 width:textFieldWidth
                 visible: isEditable
+
+                onEditingFinished: {
+                    accountInfo.infos.name = text
+                    accountInfo.infosChanged()
+                }
+
+                onIsValidChanged: accountInfo.infosChanged()
             }
         }
 
@@ -164,7 +197,7 @@ Page {
             }
 
             Label{
-                id : companyNameField
+                id : companyname_lbl
 
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
@@ -181,9 +214,15 @@ Page {
                 width:textFieldWidth
                 visible: isEditable
 
-                onFocusChanged:{
-                    useValidatingIcon = true
+                // @TODO this validator may need to be changed with a correct regExp for this case
+                validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+
+                onEditingFinished:{
+                    accountInfo.infos.companyName = text
+                    accountInfo.infosChanged()
                 }
+
+                onIsValidChanged: accountInfo.infosChanged()
             }
         }
 
@@ -198,7 +237,7 @@ Page {
             }
 
             Label{
-                id  : addressField
+                id  : address_lbl
                 font.pixelSize: dp(Defines_values.Base_text_font)
 
                 width:labelWidth
@@ -214,43 +253,30 @@ Page {
                 font.family: Defines_values.textFieldsFontFamily
                 visible:isEditable
                 width:textFieldWidth
+                // @TODO this validator may need to be changed with a correct regExp for this case
+                validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
 
-                onFocusChanged: {
-                    if(focus == false){
-
-                        Qondrite.callAddressvalidation(text)
-                        .result
-                        .then(function(result){
-
-                            if(result.status == "ERROR"){
-                                hasError = true
-                                helperText = qsTr("Adresse invalide")
-                            }else{
-                                console.log("l'adresse saisie est valide!");
-                                console.log("longitude  : "+result.longitude);
-                                console.log("latitude  : "+result.latitude)
-                                hasError = false
-                                helperText = ""
+                onEditingFinished: {
+                    // run validation only if undone yet for current address and address length is worth it
+                    if(address_txtField.text.length > 3)
+                    {
+                        Qondrite.validateAddress(text).result
+                        .then(function(result)
+                        {
+                            if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                                warningText = qsTr("Adresse invalide")
                             }
-                        })
-                        .catch(function(error){
-                            //This error is not related to maps validation of the address
-                            // but is rather an error in the meteor server code
-                            //it might also be triggerd if no internet connection is available
-                            // on the server. What do we do in this case ?
-                            //@TODO we should trigger an alert by mail here to tuckle
-                            hasError = false
-                            helperText = ""
+                            else{
+                                accountInfo.infos.latitude = result[0].latitude;
+                                accountInfo.infos.longitude = result[0].longitude;
+                                accountInfo.infos.address = text
+                                accountInfo.infosChanged()
+                            }
                         });
-                    }else{
-                        //Focus is true, the user start/restart editing email
-                        hasError = false
-                        helperText = ""
                     }
                 }
-                onTextChanged: {
-                    accountInfo.adress = text
-                }
+
+                onIsValidChanged: accountInfo.infosChanged()
             }
         }
 
@@ -264,7 +290,7 @@ Page {
             }
 
             Label {
-                id  : emailField
+                id  : email_lbl
 
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
@@ -280,9 +306,12 @@ Page {
                 width:textFieldWidth
                 visible: isEditable
 
-                onTextChanged: {
-                    accountInfo.email = text
+                onEditingFinished:{
+                    accountInfo.infos.email = text
+                    accountInfo.infosChanged()
                 }
+
+                onIsValidChanged: accountInfo.infosChanged()
             }
         }
 
@@ -296,39 +325,27 @@ Page {
             }
 
             Label{
-                id : teLField
+                id : tel_lbl
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 width:labelWidth
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
             }
 
-            TextFieldValidated{
+            PhoneTextField{
                 id:tel_txtFld
 
-                Keys.priority: Keys.BeforeItem
-                Keys.onPressed: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = false; }
-                Keys.onReleased: { if (event.key == Qt.Key_Backspace) _priv_tel_txtFld.insertSpace = true; }
-
-                placeholderText: "tel: 0x xx xx xx xx"
-                inputMethodHints: Qt.ImhDialableCharactersOnly
-
-                width:textFieldWidth
-                visible: isEditable
-
-                validator: RegExpValidator { regExp: /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ ]*\d+)*$/}
-                font.family: Defines_values.textFieldsFontFamily
+                Layout.fillWidth: true
+                font.family: "roboto"
                 font.pixelSize: dp(Defines_values.Base_text_font)
+                visible : isEditable
 
-                QtObject{
-                    id: _priv_tel_txtFld
-                    property bool  insertSpace: true
+                onEditingFinished: {
+                    accountInfo.infos.tel = text
+                    accountInfo.infosChanged()
                 }
 
-                onTextChanged: {
-                    tel_txtFld.text = Utils.formatPhoneNumber10DigitWithSpageFR(text, _priv_tel_txtFld.insertSpace)
-                    accountInfo.tel = text
-                }
+                onIsValidChanged: accountInfo.infosChanged()
             }
         }
 
@@ -342,7 +359,7 @@ Page {
             }
 
             Label {
-                id : transportTypeField
+                id : transportType_lbl
 
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 Layout.fillWidth:true
@@ -361,15 +378,22 @@ Page {
                 CheckBox {
                     id: demandeCheckBox
 
-                    text: "Recevoir des demande en ambulances"
-                    onCheckedChanged: accountInfo.demande = demandeCheckBox.checked
+                    text: qsTr("Recevoir des demande en ambulances")
+                    onCheckedChanged: {
+                        accountInfo.infos.ambulance = demandeCheckBox.checked
+                        accountInfo.infosChanged()
+                    }
                 }
 
                 CheckBox {
                     id: vslCheckBox
 
-                    text: "Recevoir des demande en VSL"
-                    onCheckedChanged: accountInfo.vsl = vslCheckBox.checked
+                    text: qsTr("Recevoir des demande en VSL")
+
+                    onCheckedChanged: {
+                        accountInfo.infos.vsl = vslCheckBox.checked
+                        accountInfo.infosChanged()
+                    }
                 }
             }
 
@@ -390,7 +414,6 @@ Page {
         onClicked: changepassword_dlg.show()
         Layout.fillWidth:true
     }
-
 
     Component.onCompleted: loadUserInformation()
 
@@ -434,7 +457,8 @@ Page {
         z:1
 
         ColumnLayout{
-            spacing: dp(Defines_values.top_account_textfield_margin)
+            //TODO wrap this ColumnLayout in a standalone component named ChangePassword
+            spacing: dp(Defines_values.TextFieldValidatedMaring)
             anchors.horizontalCenter: parent.horizontalCenter
 
             TextField {
@@ -442,31 +466,24 @@ Page {
 
                 anchors.topMargin: dp(20)
                 anchors.horizontalCenter: parent.horizontalCenter
-                placeholderText: "Ancien mot de passe"
+                placeholderText: qsTr("Ancien mot de passe")
                 floatingLabel: true
                 echoMode: TextInput.Password
                 helperText: ""
                 Layout.topMargin:dp(Defines_values.top_account_textfield_margin)
+                Layout.fillWidth: true
             }
 
-            TextField {
-                id: newPassword_txtFld
+            NewPassword{
+                id: newPassword
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                placeholderText: "Nouveau mot de passe"
-                floatingLabel: true
-                echoMode: TextInput.Password
-                helperText: ""
-            }
+                Layout.fillWidth: true
+                spacing: parent.spacing
 
-            TextField {
-                id: newPasswordConfirmation_txtFld
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                placeholderText: "Confirmer le mot de passe"
-                floatingLabel: true
-                echoMode: TextInput.Password
-                helperText: ""
+                onIsValidChanged: {
+                    if(isValid) accountInfo.infos.password = password
+                }
             }
         }
     }

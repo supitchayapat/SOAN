@@ -105,11 +105,12 @@ Page {
         Item{
 
             function isStep1Valid(){
-                return        nomprenom_txtFld.text               !== ""        && nomprenom_txtFld.isValid
-                        && nomdelastructure_txtFld.companyName !== ""        && nomdelastructure_txtFld.isValid
-                        && email_txtFld.email                  !== ""        && email_txtFld.isValid
-                        && address_txtField.address            !== ""        && address_txtField.isValid
-                        && tel_txtFld.tel                      !== ""        && tel_txtFld.isValid              ? true : false
+                return     nomprenom_txtFld.text        !== ""        && nomprenom_txtFld.isValid
+                        && nomdelastructure_txtFld.text !== ""        && nomdelastructure_txtFld.isValid
+                        && email_txtFld.text            !== ""        && email_txtFld.isValid
+                        && address_txtField.text        !== ""        && address_txtField.isValid
+                        && tel_txtFld.text              !== ""        && tel_txtFld.isValid
+                        ? true : false
             }
 
             Connections{
@@ -228,7 +229,7 @@ Page {
                             property string value : ""
                         }
 
-                        placeholderText: "Adresse"
+                        placeholderText: qsTr("Adresse")
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
@@ -375,9 +376,14 @@ Page {
             NewPassword{
                 id: newPassword
 
-                Layout.fillWidth: true
-                anchors.top:topColumn.bottom
-                anchors.topMargin: Defines_values.Signup2passwordTopmargin
+                anchors{
+                    top:topColumn.bottom
+                    topMargin: Defines_values.Signup2passwordTopmargin
+                    left :parent.left
+                    leftMargin:  dp(parent.width /8)
+                    rightMargin: dp(parent.width /8)
+                    right : parent.right
+                }
 
                 onIsValidChanged: {
                     if(isValid) accountInfo.infos.password = password
