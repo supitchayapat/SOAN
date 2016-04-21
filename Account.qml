@@ -415,7 +415,6 @@ Page {
         Layout.fillWidth:true
     }
 
-    Component.onCompleted: loadUserInformation()
 
     Dialog {
         id: confirmed_dlg
@@ -487,4 +486,6 @@ Page {
             }
         }
     }
+
+    Component.onCompleted: loadUserInformation()
 }
