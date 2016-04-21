@@ -9,11 +9,6 @@ WebSocket {
     property var ceres
     property string meteor_url
 
-
-    /* this function is used to trigger the instantiation of the component from QML, through the C++
-       thread that has the responsability to keep it as a singleton type*/
-    function init() {}
-
     signal close();
     signal error();
     signal open();
