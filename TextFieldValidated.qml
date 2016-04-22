@@ -126,22 +126,10 @@ TextField{
                 helperText = Qt.binding(function() { return warningText})
             }
 
-            /*if (customValidationCallback === undefined){
-                helperText = ""
+            if (typeof customValidationCallback === 'function')
+            {
+                customValidationCallback();
             }
-            else {
-                helperText = Qt.binding(function() {
-                    return customValidationCallback()
-                        .then(function onsuccess(){
-                            return "".toString();
-                        })
-                        .catch(function onerror(error){
-                            return error.message.toString();
-                        });
-                })
-            }
-            */
-
         }
         else{
             checkedIcon.visible = useValidatingIcon && !hasError
