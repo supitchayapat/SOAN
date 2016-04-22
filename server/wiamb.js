@@ -1,11 +1,11 @@
-"use strict";
+Availability = new Mongo.Collection('availability');
 
 var wiambAPI = {
 
 	"verifyUserAccountExistance" : function(email)
 	{
 		if (! /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/.test(email)){
-            throw new Meteor.Error("signup", "Email address is not valid");
+            throw new Meteor.Error("Email address is not valid");
         }
 		return Meteor.users.find({emails : { $elemMatch : { address : email}  }}).count();		
 	},
@@ -41,11 +41,11 @@ if (Meteor.isServer) {
 
   	Accounts.onCreateUser(function(options, user) {  
 
-	    if (options.profile){
+	    if (options.profile)
 	        user.profile = options.profile;
-	    }
-	    // The user is assigned another property : his availability
-	    user.availability = false;
+
+	    Availability.insert({user_id  : user._id, availability : 0});
+
 	    return user;
 	});
 
