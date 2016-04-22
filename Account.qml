@@ -75,6 +75,14 @@ Page {
 
                 isEditable = false
             }
+        },
+        Action{//availability switch
+            iconName: "awesome/close"
+            checkable: true
+
+            onTriggered: {
+                console.log("change availability")
+            }
         }
 
     ]

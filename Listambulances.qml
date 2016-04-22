@@ -10,6 +10,17 @@ Page {
     actionBar.backgroundColor: Palette.colors.grey[Defines_values.ListambulancesBackgroundlevel]
     actionBar.decorationColor: Palette.colors.grey[Defines_values.ListambulancesDecorationlevel]
 
+    actions:[
+        Action{//availability switch
+            iconName: "awesome/close"
+            checkable: true
+
+            onTriggered: {
+                console.log("change availability")
+            }
+        }
+    ]
+
     ListModel {
         id:ambliste
         ListElement {availability: false; name:" Mohammed";  phoneNumber: '0512313'}
