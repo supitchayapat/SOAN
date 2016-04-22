@@ -2,12 +2,12 @@ Availability = new Mongo.Collection('availability');
 
 var wiambAPI = {
 
-	"isUserExists" : function(email)
+	"verifyUserAccountExistance" : function(email)
 	{
-		console.log('Meteor:isUserExists : '+email);
-		var results = Meteor.users.find({emails : { $elemMatch : { address : email}  }}).count();
-		console.log('Meteor:isUserExists :'+ results);
-		return results;
+		if (! /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/.test(email)){
+            throw new Meteor.Error("Email address is not valid");
+        }
+		return Meteor.users.find({emails : { $elemMatch : { address : email}  }}).count();		
 	},
 	"validateAddress" : function(address)
 	{
@@ -33,8 +33,8 @@ if (Meteor.isServer) {
 	
 	Accounts.validateNewUser(function (user) 
     {
-    	if (Array.isArray(user.emails) && true == !!wiambAPI.isUserExists(user.emails[0].address)){
-    		throw new Meteor.Error("signup", "Un autre compte existe déjà avec cet email");
+    	if (Array.isArray(user.emails) && true === !!wiambAPI.verifyUserAccountExistance(user.emails[0].address)){
+    		throw new Meteor.Error("signup", "This email exists in user collection");
     	}
     	return true;
     });

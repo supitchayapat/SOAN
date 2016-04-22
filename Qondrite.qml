@@ -17,6 +17,7 @@ WebSocket {
     signal loginFailed()
     signal userCreated()
     signal userCreationFailed()
+    signal userAccountExistanceVerified(bool doExists)
 
     active: true
 
@@ -107,16 +108,11 @@ WebSocket {
             });
     }
 
-    function isUserExists(email)
+    function verifyUserAccountExistance(email)
     {
-        if (! /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/.test(email)){
-            throw new Error(qsTr("Adresse email invalide"));
-        }
-        return ceres.call("isUserExists", email).result
+        ceres.call("verifyUserAccountExistance", email).result
             .then(function onsuccess(result){
-                var dfd = q().defer();
-                dfd.resolve(!isNaN(result) && true === !!result);
-                return dfd.promise;
+                userAccountExistanceVerified(!isNaN(result) && true === !!result);
             });
     }
 

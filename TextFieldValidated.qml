@@ -40,11 +40,7 @@ TextField{
 
             if (hasError === false && typeof customValidationCallback === 'function')
             {
-                customValidationCallback()
-                  .then(function onsuccess(data){
-                        hasError = data.response;
-                        warningText = data.message;
-                    });
+                customValidationCallback();
             }
 
         }
@@ -130,7 +126,7 @@ TextField{
                 helperText = Qt.binding(function() { return warningText})
             }
 
-            if (customValidationCallback === undefined){
+            /*if (customValidationCallback === undefined){
                 helperText = ""
             }
             else {
@@ -144,6 +140,7 @@ TextField{
                         });
                 })
             }
+            */
 
         }
         else{
