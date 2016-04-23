@@ -54,6 +54,7 @@ RowLayout{
                     text: choice_name
                     verticalAlignment: Text.AlignVCenter
                     anchors.verticalCenter: parent.verticalCenter
+                    transformOrigin: Item.Left
                 }
                 MouseArea{
                     property Item pageParent : myRoot
