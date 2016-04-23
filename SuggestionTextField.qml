@@ -30,7 +30,7 @@ RowLayout{
         Layout.alignment: Qt.AlignLeft
         placeholderText: qsTr("Adresse")
         font.family: textFieldFont.name
-        validator: RegExpValidator{regExp:/([a-zA-Z]{3,200}\s*)+/}
+        validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
 
         ListView{
             id:suggestionlist
@@ -104,14 +104,14 @@ RowLayout{
     ActionButton{
         id:search_btn
 
-        height: parent.height*0.9
-        width:height
+        /*height: parent.height*0.6
+        width:height*/
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         iconName: "action/input"
         Layout.alignment: Qt.AlignRight
         enabled: _myTxtField.text!=""
-        state:_myTxtField.text!=""?"btn_shown":"btn_hiden"
+        //state:_myTxtField.text!=""?"btn_shown":"btn_hiden"
 
         onClicked: {
             myRoot.searchForText(myRoot.text)
@@ -121,7 +121,7 @@ RowLayout{
         states: [
             State {
                 name: "btn_shown"
-                PropertyChanges { target: search_btn; visible: true; scale:1 }
+                PropertyChanges { target: search_btn; visible: true; scale:0.8 }
             },
             State {
                 name: "btn_hiden"

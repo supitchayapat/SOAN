@@ -246,7 +246,7 @@ Page {
 
                         }
 
-                        validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
+
 
                         onEditingFinished: {
                             // run validation only if undone yet for current address and address length is worth it
@@ -268,7 +268,7 @@ Page {
                             }
                         }
 
-                        onIsValidChanged: accountInfo.infosChanged()
+                        //onIsValidChanged: accountInfo.infosChanged()
 
                     }
                 }
