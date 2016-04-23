@@ -1,4 +1,4 @@
-Availability = new Mongo.Collection('availability');
+
 Meteor.methods({
 
 	"validateAddress" : function(address)
@@ -20,17 +20,27 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
 
   	Accounts.onCreateUser(function(options, user) {  
-	    if (options.profile)
+	    if (options.profile){
+	    	options.profile["availability"] = 0;
 	        user.profile = options.profile;
-
-	    Availability.insert({user_id  : user._id, availability : 0});
+	    }
 
 	    return user;
 	});
 
-	// Meteor.publish('users', function tasksPublication() {
-	//     return Meteor.users.find(
-	//         { id: { $eq: this.userId } },
-	//     );
-	// });
+	Meteor.publish('ambulanceList', function tasksPublication() {
+	 	var ambulanceList = [];
+	 	var allUsersProfiles =  Meteor.users.find({}, {fields: {profile: 1}});
+
+	 	allUsersProfiles.forEach(function(profile,index,allProfiles){
+	 		ambulanceList.push({
+	 			companyName : profile.companyName,
+	 			tel : profile.tel,
+	 			availability : profile.availability
+
+	 		});
+	 	});
+
+	 	return ambulanceList;
+	});
 }

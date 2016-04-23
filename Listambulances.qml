@@ -2,6 +2,7 @@ import QtQuick 2.5
 import Material 0.3
 import Material.ListItems 0.1 as ListItem
 import "define_values.js" as Defines_values
+import Qondrite 0.1
 
 Page {
     id: page
@@ -12,14 +13,6 @@ Page {
 
     ListModel {
         id:ambliste
-        ListElement {availability: false; name:" Mohammed";  phoneNumber: '0512313'}
-        ListElement {availability: true; name:" Mohammed2";  phoneNumber: '0512313'}
-        ListElement {availability: false; name:" Mohammed3"; phoneNumber: '0512313'}
-        ListElement {availability: false; name:"Fabio";      phoneNumber: '0512313'}
-        ListElement {availability: true;  name:" Patrice";   phoneNumber: '0512313'}
-        ListElement {availability: false;  name:" Jean";     phoneNumber: '0512313'}
-        ListElement {availability: true;  name:"naome";      phoneNumber: '0512313'}
-        ListElement {availability: false;  name: "simo";     phoneNumber: '071232'}
     }
 
     Component {
@@ -61,4 +54,14 @@ Page {
         model: ambliste
         delegate: listelements
     }
+
+    Component.onCompleted: {
+        Qondrite.subscribe("ambulanceList",function(){
+            var collection = Qondrite.getCollection("ambulanceList");
+            console.log("SUBSCRIBED TO THE LIST");
+            console.log(JSON.stringify(collection._set));
+        });
+    }
+
+
 }
