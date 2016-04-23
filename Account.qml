@@ -94,6 +94,8 @@ Page {
 
             onTriggered: {
               //TODO : add Qondrite call for updating user info just below
+              //TODO : if the Qondrite call return is sucess, create and call function that updates
+              // the labels texts from textfields texts directly without calling the server.
               //TODO : add a loadingCircle in the page while waiting for server updating info
                 isEditable = false
             }
