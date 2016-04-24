@@ -6,14 +6,16 @@ import "define_values.js" as Defines_values
 import "Error.js" as Err
 
 TextField{
-    id:myRoot
+    id:root
 
+    //TODO : isValid is binded to checkedIcon.visible, but this depends on useValidatingIcon
+    // property. So isValid will reflect validity only if useValidatingIcon is true.
+    // => make isValid reflect validity state when useValidatingIcon is false.
     property bool isValid: checkedIcon.visible && text != ""
     property var customValidationCallbacks : []
 
     property bool useValidatingIcon : true
     property string warningText
-    property string errorTextToDisplay
     property alias validationDelay : timer.interval
     /*!
       this callback is called on TextChanged
@@ -33,14 +35,15 @@ TextField{
     }
 
     function updateErrorTextToDisplay() {
+        var errortodisplay = ""
         for (var i=0; i <customValidationCallbacks.length; i++){
             if(!customValidationCallbacks[i].call()) {
-                errorTextToDisplay = customValidationCallbacks[i].mess
-                return errorTextToDisplay
+                errortodisplay = customValidationCallbacks[i].mess
+                return errortodisplay
             }
-            else errorTextToDisplay = ""
+            else errortodisplay = ""
         }
-        return errorTextToDisplay
+        return errortodisplay
     }
 
     function manageValidation(){
@@ -121,7 +124,7 @@ TextField{
             }
             manageValidation()
             if(hasError)
-                helperText = updateErrorTextToDisplay()
+                helperText = Qt.binding(function(){return updateErrorTextToDisplay()})
         }
     }
 
@@ -134,16 +137,19 @@ TextField{
             }
             else if (timer.timerDone && hasError){
                 checkedIcon.visible = false
-                helperText = updateErrorTextToDisplay()
+                helperText = Qt.binding(function(){return updateErrorTextToDisplay()})
                 return
             }
             else if (!timer.timerDone && hasError){
-                helperText = updateErrorTextToDisplay()
+                helperText = Qt.binding(function(){return updateErrorTextToDisplay()})
+                return
+            }
+            else if (!timer.timerDone && !hasError){
+                helperText = Qt.binding(function(){return updateErrorTextToDisplay()})
                 return
             }
 
-            customValidationCallback() ? helperText = ""
-                                       : helperText = updateErrorTextToDisplay()
+            throw new Error("case not handled")
         }
         else{
             checkedIcon.visible = useValidatingIcon && !hasError
