@@ -28,7 +28,7 @@ ColumnLayout{
         warningText: typoWarning
 
         Component.onCompleted: {
-            customValidationCallbacks.unshift(new Err.Error(function() {
+            customValidationCallbacks.push(new Err.Error(function() {
                 return _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld)}
             ,passwordsDontMatchWarning))
         }
