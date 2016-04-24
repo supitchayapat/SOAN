@@ -78,12 +78,12 @@ Page {
         iconName: "content/send"
         action: Action {
             onTriggered:{
-                if(pageStep_ldr.sourceComponent == firstPage && nextButton.active)
+                if(pageStep_ldr.sourceComponent === firstPage && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     pageStep_ldr.sourceComponent = secondPage
                 }
-                else if(pageStep_ldr.sourceComponent == secondPage && nextButton.active)
+                else if(pageStep_ldr.sourceComponent === secondPage && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
@@ -105,18 +105,16 @@ Page {
         Item{
 
             function isStep1Valid(){
-                return     nomprenom_txtFld.text        !== ""        && nomprenom_txtFld.isValid
-                        && nomdelastructure_txtFld.text !== ""        && nomdelastructure_txtFld.isValid
-                        && email_txtFld.text            !== ""        && email_txtFld.isValid
-                        && address_txtField.text        !== ""        && address_txtField.isValid
-                        && tel_txtFld.text              !== ""        && tel_txtFld.isValid
+                return  nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
+                        && email_txtFld.isValid  && address_txtField.isValid
+                        && tel_txtFld.isValid
                         ? true : false
             }
 
             Connections{
                 target : accountInfo
                 onInfosChanged: {
-                    if (pageStep_ldr.sourceComponent == firstPage)
+                    if (pageStep_ldr.sourceComponent === firstPage)
                     {
                         nextButton.updateButtonState(isStep1Valid())
                     }
@@ -330,7 +328,7 @@ Page {
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
             function isStep2Valid(){
-                return (demandeCheckBox.checked || vslCheckBox.checked) && newPassword.isValid && newPassword.password !== "" ? true :false
+                return (demandeCheckBox.checked || vslCheckBox.checked) && newPassword.isValid ? true :false
             }
 
             Connections{

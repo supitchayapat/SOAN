@@ -8,8 +8,9 @@ import "Error.js" as Err
 TextField{
     id:myRoot
 
-    property bool isValid: checkedIcon.visible
+    property bool isValid: checkedIcon.visible && text != ""
     property var customValidationCallbacks : []
+
     property bool useValidatingIcon : true
     property string warningText
     property string errorTextToDisplay
@@ -164,7 +165,7 @@ TextField{
 // TODO : We may improve this component by having two differents colors for the warningText
 // red when not having active focus, and gray when having active focus and while typing
 //
-// The idea is to have differenciate between two concepts :
+// The idea is to differenciate between two concepts :
 //  Errors : should be displayed in red
 //  helperText : displayed only in gray
 //  the actuals behavior is that helper text becomes red if textfiled hasError, which can be improved

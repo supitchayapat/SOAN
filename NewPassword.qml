@@ -55,8 +55,6 @@ ColumnLayout{
         id : _priv
         property string password: ""
         property bool isValid : password_txtfld.isValid && passwordConfirmation_txtfld.isValid
-                                && passwordConfirmation_txtfld.text !== ""
-                                && password_txtfld.text !== ""
 
         function customValidation(pairedPass,thisCtxt){
             return pairedPass !== "" && pairedPass !== thisCtxt.text ? false : true

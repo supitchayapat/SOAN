@@ -39,11 +39,11 @@ Page {
     }
 
     function isFormValid(){
-            return     name_txtFld.text        !== ""        && name_txtFld.isValid
-                    && companyName_txtFld.text !== ""        && companyName_txtFld.isValid
-                    && email_txtFld.text       !== ""        && email_txtFld.isValid
-                    && address_txtField.text   !== ""        && address_txtField.isValid
-                    && tel_txtFld.text         !== ""        && tel_txtFld.isValid
+            return  name_txtFld.isValid
+                    && companyName_txtFld.isValid
+                    && email_txtFld.isValid
+                    && address_txtField.isValid
+                    && tel_txtFld.isValid
                     && (demandeCheckBox.checked || vslCheckBox.checked)
                     ? true :false
     }
@@ -95,6 +95,8 @@ Page {
 
             onTriggered: {
               //TODO : add Qondrite call for updating user info just below
+              //TODO : if the Qondrite call return is sucess, create and call function that updates
+              // the labels texts from textfields texts directly without calling the server.
               //TODO : add a loadingCircle in the page while waiting for server updating info
                 isEditable = false
             }
