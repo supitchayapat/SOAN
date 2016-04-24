@@ -13,6 +13,7 @@
 
 <qresource prefix="/icons/content">
 	<file alias="send.svg">content_send.svg</file>
+	<file alias="backspace.svg">content_backspace.svg</file>
 </qresource>
 
 <qresource prefix="/icons/maps">

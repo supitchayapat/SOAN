@@ -82,6 +82,8 @@ Page {
                 {
                     progressBySteps.nextStep()
                     pageStep_ldr.sourceComponent = secondPage
+                    backButton.visible = true;
+                    backButton.enabled = true;
                 }
                 else if(pageStep_ldr.sourceComponent == secondPage && nextButton.active)
                 {
@@ -92,10 +94,27 @@ Page {
                 }
             }
         }
+    }
 
-        onActiveChanged: {
-            if(active) backgroundColor = Theme.primaryColor
-            else backgroundColor = "gray"
+    ActionButton {
+        id: backButton
+
+        backgroundColor: "gray"
+        visible: false
+        enabled: false
+        anchors {
+            bottom: parent.bottom
+            bottomMargin: dp(10)
+            left:parent.left
+        }
+        elevation: 1
+        iconName: "content/backspace"
+        action: Action {
+            onTriggered:{
+                pageStep_ldr.sourceComponent = firstPage
+                visible = false;
+                enabled  = false;
+            }
         }
     }
 
