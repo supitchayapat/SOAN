@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     for(auto o:engine.rootObjects()){
          QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
         if(item){
-              engine.rootContext()->setContextProperty("sideNavigationPanel ", item);
+              engine.rootContext()->setContextProperty("sideNavigationPanel", item);
         }
     }
 
