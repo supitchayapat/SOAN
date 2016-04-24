@@ -2,14 +2,19 @@ import QtQuick 2.5
 import Material 0.3
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
-
+import "Error.js" as Err
 ColumnLayout{
 
     readonly property alias password : _priv.password
     readonly property alias isValid : _priv.isValid
     property string typoWarning :  qsTr("6 caractères au minimum")
-    readonly property string passwordsDontMatch: qsTr("les mots de passe sont différents")
+    property string passwordsDontMatchWarning: qsTr("les mots de passe sont différents")
+    property alias passwordPlaceHolderText : password_txtfld.placeholderText
+    property string passwordConfirmationPlaceHolderText : passwordConfirmation_txtfld.placeholderText
     property alias validator: password_txtfld.validator
+    property alias newPasswordCustomValidations : password_txtfld.customValidationCallbacks
+    readonly property alias passwordTypedText: password_txtfld.text
+    readonly property alias passwordConfimationTypedText: passwordConfirmation_txtfld.text
 
     width: parent.width
     spacing: dp(Defines_values.TextFieldValidatedMaring)
@@ -20,13 +25,12 @@ ColumnLayout{
         placeholderText: qsTr("mot de passe")
         Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
+        warningText: typoWarning
 
-        customValidationCallback: function () { return _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld)}
-
-        onIsValidChanged: if(isValid && !passwordConfirmation_txtfld.isValid) passwordConfirmation_txtfld.manageValidation()
-
-        onTextChanged: {
-            warningText = _priv.selectWarningText(passwordConfirmation_txtfld.text,password_txtfld)
+        Component.onCompleted: {
+            customValidationCallbacks.unshift(new Err.Error(function() {
+                return _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld)}
+            ,passwordsDontMatchWarning))
         }
     }
 
@@ -37,13 +41,13 @@ ColumnLayout{
         Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
+        warningText: typoWarning
 
-        customValidationCallback: function() { return _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld)}
 
         onIsValidChanged: if(isValid && !password_txtfld.isValid) password_txtfld.manageValidation()
 
-        onTextChanged: {
-            warningText = _priv.selectWarningText(password_txtfld.text,passwordConfirmation_txtfld)
+        Component.onCompleted: {
+            customValidationCallbacks.unshift(new Err.Error(function() { return _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld)},passwordsDontMatchWarning))
         }
     }
 
@@ -55,16 +59,7 @@ ColumnLayout{
                                 && password_txtfld.text !== ""
 
         function customValidation(pairedPass,thisCtxt){
-           return pairedPass !== "" && pairedPass !== thisCtxt.text ? false : true
-        }
-
-        function selectWarningText(pairedPass,thisCtxt) {
-            if (thisCtxt.text.toString().match(thisCtxt.validator.regExp) === null)
-                return typoWarning
-            else if(pairedPass !== thisCtxt.text && pairedPass !== "" )
-                return passwordsDontMatch
-
-            return ""
+            return pairedPass !== "" && pairedPass !== thisCtxt.text ? false : true
         }
     }
 

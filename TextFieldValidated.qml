@@ -1,14 +1,18 @@
 import QtQuick 2.5
 import Material 0.3
 import "define_values.js" as Defines_values
+/* TODO use directely the JS Error class instead of importing Error.js
+ see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error*/
+import "Error.js" as Err
 
 TextField{
     id:myRoot
 
     property bool isValid: checkedIcon.visible
-    property var customValidationCallback : function (){return true}
+    property var customValidationCallbacks : []
     property bool useValidatingIcon : true
     property string warningText
+    property string errorTextToDisplay
     property alias validationDelay : timer.interval
     /*!
       this callback is called on TextChanged
@@ -18,26 +22,42 @@ TextField{
     */
     property var liveFormatingCallBack : function(){return text}
 
+    function customValidationCallback(){
+        var isValid = true
+        for (var i= 0; i <customValidationCallbacks.length; i++){
+            isValid&= customValidationCallbacks[i].call()
+            if(!isValid) break
+        }
+        return isValid
+    }
+
+    function updateErrorTextToDisplay() {
+        for (var i=0; i <customValidationCallbacks.length; i++){
+            if(!customValidationCallbacks[i].call()) {
+                errorTextToDisplay = customValidationCallbacks[i].mess
+                return errorTextToDisplay
+            }
+            else errorTextToDisplay = ""
+        }
+        return errorTextToDisplay
+    }
+
     function manageValidation(){
-        if(validator != null){
+        if(validator !== null){
             if ( text == ""){
                 hasError = false
                 checkedIcon.visible = false
                 return
             }
-            /* TODO : here we are only handling the case of RegExpValidator
-             * but the validator could be also an IntValidator or a DoubleValidator
-             * please manage the missing cases*/
-            if(text != "" && text.toString().match(validator.regExp) != null && customValidationCallback())
+            if(customValidationCallback())
             {
                 hasError = false
                 checkedIcon.visible = true
             }
-            else if((text != "" && text.toString().match(validator.regExp) === null) || !customValidationCallback()){
+            else if(!customValidationCallback()){
                 hasError = true
                 checkedIcon.visible = false
             }
-
         }
         else{
             console.log("TextFiledValidated : this component needs a validator,
@@ -80,7 +100,7 @@ TextField{
         if(text == ""){
             checkedIcon.visible = false
             hasError = false
-           return
+            return
         }
         timer.restart()
         text = liveFormatingCallBack()
@@ -100,7 +120,7 @@ TextField{
             }
             manageValidation()
             if(hasError)
-                helperText = Qt.binding(function() { return warningText})
+                helperText = updateErrorTextToDisplay()
         }
     }
 
@@ -113,26 +133,44 @@ TextField{
             }
             else if (timer.timerDone && hasError){
                 checkedIcon.visible = false
-                helperText = Qt.binding(function() { return warningText})
+                helperText = updateErrorTextToDisplay()
                 return
             }
             else if (!timer.timerDone && hasError){
-                helperText = Qt.binding(function() { return warningText})
+                helperText = updateErrorTextToDisplay()
+                return
             }
 
-            customValidationCallback() ? helperText = "" : helperText = Qt.binding(function() { return warningText})
+            customValidationCallback() ? helperText = ""
+                                       : helperText = updateErrorTextToDisplay()
         }
         else{
             checkedIcon.visible = useValidatingIcon && !hasError
-            hasError ?  helperText = Qt.binding(function() { return warningText}) :  helperText = ""
+            hasError ?  helperText = updateErrorTextToDisplay()
+                     :  helperText = ""
         }
+    }
+
+    Component.onCompleted: {
+        /* TODO : here we are only handling the case of RegExpValidator
+         * but the validator could be also an IntValidator or a DoubleValidator
+         * please manage the missing cases*/
+         customValidationCallbacks.unshift(new Err.Error(function (){
+             return text !== "" && text.toString().match(validator.regExp) !== null
+         },warningText))
     }
 }
 
-// TODO : We may improv this component by having to different colors for the warningText
+// TODO : We may improve this component by having two differents colors for the warningText
 // red when not having active focus, and gray when having active focus and while typing
+//
+// The idea is to have differenciate between two concepts :
+//  Errors : should be displayed in red
+//  helperText : displayed only in gray
+//  the actuals behavior is that helper text becomes red if textfiled hasError, which can be improved
+//  in qml-materials
 
-// TODO : Support of multiple erros and helper text with priorities
+// TODO : Support of multiple errors and helper text with priorities
 // The idea is to have a qml object called errors :
 //
 // Erros {

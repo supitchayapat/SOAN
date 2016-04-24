@@ -35,6 +35,7 @@ Page {
         transportType_lbl.text = getTransportTypeLabel(userProfile);
         demandeCheckBox.checked = transportType_lbl.text.indexOf("Ambulance")!==-1
         vslCheckBox.checked = transportType_lbl.text.indexOf("VST")!==-1
+        changePassword.oldPassword = userProfile.password
     }
 
     function isFormValid(){
@@ -415,7 +416,6 @@ Page {
         Layout.fillWidth:true
     }
 
-
     Dialog {
         id: confirmed_dlg
 
@@ -455,34 +455,14 @@ Page {
         negativeButtonText: "Annuler"
         z:1
 
-        ColumnLayout{
-            //TODO wrap this ColumnLayout in a standalone component named ChangePassword
-            spacing: dp(Defines_values.TextFieldValidatedMaring)
-            anchors.horizontalCenter: parent.horizontalCenter
+        ChangePassword{
+            id :changePassword
 
-            TextField {
-                id: oldPassword_txtFld
-
-                anchors.topMargin: dp(20)
-                anchors.horizontalCenter: parent.horizontalCenter
-                placeholderText: qsTr("Ancien mot de passe")
-                floatingLabel: true
-                echoMode: TextInput.Password
-                helperText: ""
-                Layout.topMargin:dp(Defines_values.top_account_textfield_margin)
-                Layout.fillWidth: true
-            }
-
-            NewPassword{
-                id: newPassword
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                Layout.fillWidth: true
-                spacing: parent.spacing
-
-                onIsValidChanged: {
-                    if(isValid) accountInfo.infos.password = password
-                }
+            oldPassword: {
+                var userCollection = Qondrite.getCollection("users");
+                var userInfo = userCollection._set.toArray()[0];
+                var userProfile = userInfo.profile;
+                return userProfile.password
             }
         }
     }
