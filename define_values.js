@@ -10,6 +10,7 @@ var textfield_margin = 25;
 var sidebarbottomMargin = 5;
 var ListambulancesTopMargin = 7;
 var Signup2passwordTopmargin = 30;
+var TextFieldValidatedMaring = 33;
 
 // fonts :
 var Base_text_font = 14;
