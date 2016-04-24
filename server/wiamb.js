@@ -1,4 +1,5 @@
 
+Availability = new Mongo.Collection('availability');
 Meteor.methods({
 
 	"validateAddress" : function(address)
@@ -13,34 +14,44 @@ Meteor.methods({
 });
 if (Meteor.isClient) {
 	
-	//nothing to write here
-  
+	//nothing to write here 
 }
 
 if (Meteor.isServer) {
 
+	Meteor.startup(function () {  
+  		Availability._ensureIndex( { geoloc : "2dsphere" } )
+	});
+
   	Accounts.onCreateUser(function(options, user) {  
-	    if (options.profile){
-	    	options.profile["availability"] = 0;
+	    if (options.profile)
 	        user.profile = options.profile;
-	    }
+	    
+	    Availability.insert({
+	    	user_id  : user._id, 
+	    	availability : 0, 
+	    	geoloc : {type : "Point", coordinates  : [user.profile.longitude,user.profile.latitude]}, 
+	    	tel  : user.profile.tel,
+	    	companyName  : user.profile.companyName
+	    });
 
 	    return user;
 	});
 
-	Meteor.publish('ambulanceList', function tasksPublication() {
-	 	var ambulanceList = [];
-	 	var allUsersProfiles =  Meteor.users.find({}, {fields: {profile: 1}});
-
-	 	allUsersProfiles.forEach(function(profile,index,allProfiles){
-	 		ambulanceList.push({
-	 			companyName : profile.companyName,
-	 			tel : profile.tel,
-	 			availability : profile.availability
-
-	 		});
-	 	});
-
-	 	return ambulanceList;
-	});
+	Meteor.publish('availability', function tasksPublication() {
+		var currentUserGelocation = Availability.findOne({user_id : {$eq : this.userId}},{geoloc  : 1});
+		
+		 	return  Availability.find(
+		 		{
+			 		user_id : {$ne : this.userId}, 
+			 		geoloc : 
+			 		{
+						  $near: 
+						  {
+							  $geometry: currentUserGelocation.geoloc,
+							  $maxDistance: 50000
+						}
+					}
+			});
+	 });
 }

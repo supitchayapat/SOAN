@@ -19,7 +19,7 @@ Page {
         id: listelements
 
         ListItem.Standard{
-            text:name
+            text:companyName
 
             action: Icon {
                 anchors.centerIn: parent
@@ -56,10 +56,13 @@ Page {
     }
 
     Component.onCompleted: {
-        Qondrite.subscribe("ambulanceList",function(){
-            var collection = Qondrite.getCollection("ambulanceList");
-            console.log("SUBSCRIBED TO THE LIST");
-            console.log(JSON.stringify(collection._set));
+        Qondrite.subscribe("availability",function(){
+            var collection = Qondrite.getCollection("availability")._set._items;
+            for( var id in collection){
+                if( collection.hasOwnProperty(id) ) {
+                    ambliste.append(collection[id]);
+                }
+            }
         });
     }
 
