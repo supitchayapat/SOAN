@@ -38,11 +38,11 @@ Page {
     }
 
     function isFormValid(){
-            return     name_txtFld.text        !== ""        && name_txtFld.isValid
-                    && companyName_txtFld.text !== ""        && companyName_txtFld.isValid
-                    && email_txtFld.text       !== ""        && email_txtFld.isValid
-                    && address_txtField.text   !== ""        && address_txtField.isValid
-                    && tel_txtFld.text         !== ""        && tel_txtFld.isValid
+            return  name_txtFld.isValid
+                    && companyName_txtFld.isValid
+                    && email_txtFld.isValid
+                    && address_txtField.isValid
+                    && tel_txtFld.isValid
                     && (demandeCheckBox.checked || vslCheckBox.checked)
                     ? true :false
     }
