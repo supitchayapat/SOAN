@@ -263,11 +263,12 @@ Page {
                     // run validation only if undone yet for current address and address length is worth it
                     if(address_txtField.text.length > 3)
                     {
+                        //TODO handle this call with new callbacks list of TextFieldValidated
                         Qondrite.validateAddress(text).result
                         .then(function(result)
                         {
                             if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
-                                warningText = qsTr("Adresse invalide")
+                                validatorWarning = qsTr("Adresse invalide")
                             }
                             else{
                                 accountInfo.infos.latitude = result[0].latitude;

@@ -12,7 +12,7 @@ ColumnLayout{
     property alias passwordPlaceHolderText : password_txtfld.placeholderText
     property string passwordConfirmationPlaceHolderText : passwordConfirmation_txtfld.placeholderText
     property alias validator: password_txtfld.validator
-    property alias newPasswordCustomValidations : password_txtfld.customValidationCallbacks
+    property alias newPasswordCustomValidations : password_txtfld.onEditingValidations
     readonly property alias passwordTypedText: password_txtfld.text
     readonly property alias passwordConfimationTypedText: passwordConfirmation_txtfld.text
 
@@ -25,10 +25,10 @@ ColumnLayout{
         placeholderText: qsTr("mot de passe")
         Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
-        warningText: typoWarning
+        validatorWarning: typoWarning
 
         Component.onCompleted: {
-            customValidationCallbacks.push(new Err.Error(function() {
+            onEditingValidations.push(new Err.Error(function() {
                 return _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld)}
             ,passwordsDontMatchWarning))
         }
@@ -41,13 +41,13 @@ ColumnLayout{
         Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
-        warningText: typoWarning
+        validatorWarning: typoWarning
 
 
         onIsValidChanged: if(isValid && !password_txtfld.isValid) password_txtfld.manageValidation()
 
         Component.onCompleted: {
-            customValidationCallbacks.unshift(new Err.Error(function() { return _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld)},passwordsDontMatchWarning))
+            onEditingValidations.unshift(new Err.Error(function() { return _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld)},passwordsDontMatchWarning))
         }
     }
 

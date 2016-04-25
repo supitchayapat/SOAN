@@ -34,7 +34,7 @@ ColumnLayout{
         }
 
         Component.onCompleted: {
-            customValidationCallbacks.unshift(new Err.Error(function (){ return text === oldPassword },qsTr("mot de passe incorect")))
+            onEditingValidations.unshift(new Err.Error(function (){ return text === oldPassword },qsTr("mot de passe incorect")))
         }
     }
 

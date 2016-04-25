@@ -12,40 +12,45 @@ TextField{
     // property. So isValid will reflect validity only if useValidatingIcon is true.
     // => make isValid reflect validity state when useValidatingIcon is false.
     property bool isValid: checkedIcon.visible && text != ""
-    property var customValidationCallbacks : []
 
+    /*valiations are evaluated while editing the input
+      they should be provided as list of Error.js type with a message and a callback.
+      Callback should return true when no error. The error message is displayed
+      if the callback returns false.
+      Errors need to be appended to this property onComponent.Completed.
+      The priotity of displaying the errors decrease starting from the first index of the array.
+      if multiple errors occurs, the one that has priority is displayed
+      */
+    property var onEditingValidations : []
+
+    //TODO : feature started but not completed, manage the display of the related
+    // error text for the onEditingFinishedValidations
+    /*valiations are evaluated when editing is finished
+      they should be provided as list of Error.js type with a message and a callback.
+      Callback should return true when no error. The error message is displayed
+      if the callback returns false.
+      Errors need to be appended to this property onComponent.Completed.
+      The priotity of displaying the errors decrease starting from the first index of the array.
+      if multiple errors occurs, the one that has priority is displayed
+      */
+    property var onEditingFinishedValidations : []
+
+    /*warning that is displayed if the input doesn't match the validator*/
+    property string validatorWarning
+
+    /*use this property to set the validation visibility when valid,
+      if set the false, the icon will not be visibile, but you can still access the validity state
+      through the isValid property*/
     property bool useValidatingIcon : true
-    property string warningText
+
+    /*the delay in ms to evaluate validation and thus to display the validation icon*/
     property alias validationDelay : timer.interval
-    /*!
-      this callback is called on TextChanged
-      to reformat the text while typing following specific
-      rules that it needs to implement, the formated text
-      should be returned as a string
-    */
-    property var liveFormatingCallBack : function(){return text}
 
-    function customValidationCallback(){
-        var isValid = true
-        for (var i= 0; i <customValidationCallbacks.length; i++){
-            isValid&= customValidationCallbacks[i].call()
-            if(!isValid) break
-        }
-        return isValid
-    }
+    /*called while editing to reformat the text, the formated text should be returned as a string*/
+    property var onEditingFormating : function(){return text}
 
-    function updateErrorTextToDisplay() {
-        var errortodisplay = ""
-        for (var i=0; i <customValidationCallbacks.length; i++){
-            if(!customValidationCallbacks[i].call()) {
-                errortodisplay = customValidationCallbacks[i].mess
-                return errortodisplay
-            }
-            else errortodisplay = ""
-        }
-        return errortodisplay
-    }
-
+    /*manage the hasError property through the onEditingValidations calls.
+      update the checkedIcon visibility*/
     function manageValidation(){
         if(validator !== null){
             if ( text == ""){
@@ -53,12 +58,12 @@ TextField{
                 checkedIcon.visible = false
                 return
             }
-            if(customValidationCallback())
+            if(_p.onEditingCalls())
             {
                 hasError = false
                 checkedIcon.visible = true
             }
-            else if(!customValidationCallback()){
+            else if(!_p.onEditingCalls()){
                 hasError = true
                 checkedIcon.visible = false
             }
@@ -71,6 +76,8 @@ TextField{
         }
     }
 
+    //TODO : this is to specific to be here, should be set in child components
+    // and delted from here
     font.pixelSize: dp(Defines_values.Base_text_font)
 
     Icon{
@@ -96,8 +103,46 @@ TextField{
         }
     }
 
+    QtObject{
+        id:_p
+
+        function onEditingCalls(){
+            return evaluateCalls(onEditingValidations)
+        }
+        function onEditingErrorText(){
+            return updtErrorText(onEditingValidations)
+        }
+
+        function onEditingFinishedCalls(){
+            return evaluateCalls(onEditingFinishedValidations)
+        }
+        function onEditingFinishedErrorText(){
+            return updtErrorText(onEditingFinishedValidations)
+        }
+
+        function updtErrorText(calls) {
+            var errortodisplay = ""
+            for (var i=0; i <calls.length; i++){
+                if(!calls[i].call()) {
+                    errortodisplay = calls[i].mess
+                    return errortodisplay
+                }
+                else errortodisplay = ""
+            }
+            return errortodisplay
+        }
+        function evaluateCalls(calls){
+            var isValid = true
+            for (var i= 0; i <calls.length; i++){
+                isValid&= calls[i].call()
+                if(!isValid) break
+            }
+            return isValid
+        }
+    }
+
     onEditingFinished: {
-        checkedIcon.visible = useValidatingIcon && customValidationCallback()
+        checkedIcon.visible = useValidatingIcon && _p.onEditingCalls() && _p.onEditingFinishedCalls()
     }
 
     onTextChanged: {
@@ -107,7 +152,7 @@ TextField{
             return
         }
         timer.restart()
-        text = liveFormatingCallBack()
+        text = onEditingFormating()
     }
 
     onFocusChanged: {
@@ -124,7 +169,7 @@ TextField{
             }
             manageValidation()
             if(hasError)
-                helperText = Qt.binding(function(){return updateErrorTextToDisplay()})
+                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
         }
     }
 
@@ -137,15 +182,15 @@ TextField{
             }
             else if (timer.timerDone && hasError){
                 checkedIcon.visible = false
-                helperText = Qt.binding(function(){return updateErrorTextToDisplay()})
+                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }
             else if (!timer.timerDone && hasError){
-                helperText = Qt.binding(function(){return updateErrorTextToDisplay()})
+                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }
             else if (!timer.timerDone && !hasError){
-                helperText = Qt.binding(function(){return updateErrorTextToDisplay()})
+                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }
 
@@ -153,7 +198,7 @@ TextField{
         }
         else{
             checkedIcon.visible = useValidatingIcon && !hasError
-            hasError ?  helperText = updateErrorTextToDisplay()
+            hasError ?  helperText = _p.onEditingErrorText()
                      :  helperText = ""
         }
     }
@@ -162,22 +207,13 @@ TextField{
         /* TODO : here we are only handling the case of RegExpValidator
          * but the validator could be also an IntValidator or a DoubleValidator
          * please manage the missing cases*/
-         customValidationCallbacks.unshift(new Err.Error(function (){
+         onEditingValidations.unshift(new Err.Error(function (){
              return text !== "" && text.toString().match(validator.regExp) !== null
-         },warningText))
+         },validatorWarning))
     }
 }
 
-// TODO : We may improve this component by having two differents colors for the warningText
-// red when not having active focus, and gray when having active focus and while typing
-//
-// The idea is to differenciate between two concepts :
-//  Errors : should be displayed in red
-//  helperText : displayed only in gray
-//  the actuals behavior is that helper text becomes red if textfiled hasError, which can be improved
-//  in qml-materials
-
-// TODO : Support of multiple errors and helper text with priorities
+// TODO : Support of multiple errors and helper texts with priorities
 // The idea is to have a qml object called errors :
 //
 // Erros {
@@ -198,6 +234,6 @@ TextField{
 //         text : "error 1"
 //     }
 // }
-// if multiple erros occurs, the one that has priority is displayed on the warningText
+// if multiple errors occurs, the one that has priority is displayed on the helperText
 // priority is defined in a declarative way from top to bottom, Error 1 has more priority than 2.
-// This pattern could be used in other component as well to manage other things than a warningText
+// This pattern could be used in other components as well to manage other things than a helperText
