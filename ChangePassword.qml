@@ -7,25 +7,27 @@ import "Error.js" as Err
 ColumnLayout{
     id : root
 
-    property string oldPassword
     readonly property alias password : _priv.password
     readonly property alias isValid : _priv.isValid
-    property string sameAsOldPassWordWarning : qsTr("doit être différent de l'ancien")
-    property string typoWarning :  qsTr("6 caractères au minimum")
-    property alias passwordsDontMatchWarning: newPassword.passwordsDontMatchWarning
-    property alias validator: newPassword.validator
+    property string oldPassword
+    property bool askForOldPassword : true
+    property alias passwordPlaceHolderText : newPassword.passwordPlaceHolderText
     property alias oldPasswordPlaceHolderText : oldPassword_txtfld.placeholderText
-
-
-    spacing: dp(Defines_values.TextFieldValidatedMaring)
-    anchors.horizontalCenter: parent.horizontalCenter
+    property alias passwordConfirmationPlaceHolderText : newPassword.passwordConfirmationPlaceHolderText
+    property string sameAsOldPassWordWarning : qsTr("doit être différent de l'ancien")
+    property alias passwordsDontMatchWarning: newPassword.passwordsDontMatchWarning
+    property string validatorsWarning :  qsTr("6 caractères au minimum")
+    property alias validator: newPassword.validator
 
     PasswordTextField {
         id: oldPassword_txtfld
 
         placeholderText: qsTr("Ancien mot de passe")
-        validator :  RegExpValidator{regExp:/.{1,100}/}
+        visible : askForOldPassword
 
+        /* As we ignore what was the prior validation of the oldpassword
+          we accept everything under 100 chars*/
+        validator :  RegExpValidator{regExp:/.{1,100}/}
         Layout.fillWidth: true
 
         anchors {
@@ -41,13 +43,13 @@ ColumnLayout{
     NewPassword{
         id: newPassword
 
-        typoWarning : root.typoWarning
+        validatorWarning : root.validatorsWarning
         anchors.horizontalCenter: parent.horizontalCenter
         Layout.fillWidth: true
         spacing: parent.spacing
 
         Component.onCompleted: {
-            newPasswordCustomValidations.unshift(new Err.Error(function cutomvalid() {
+            newPasswordOnEditingValidations.unshift(new Err.Error(function cutomvalid() {
                 return passwordTypedText !== root.oldPassword
             },sameAsOldPassWordWarning))
         }
@@ -56,14 +58,13 @@ ColumnLayout{
     QtObject{
         id : _priv
         property string password: ""
-        property bool isValid : newPassword.isValid && oldPassword_txtfld.isValid
+        property bool isValid : newPassword.isValid && (oldPassword_txtfld.isValid ||!oldPassword_txtfld.visible)
                                 && newPassword.password !== oldPassword_txtfld.text
     }
 
     onIsValidChanged: {
         if(isValid) _priv.password = newPassword.password
         else _priv.password = ""
-
     }
 
     Component.onCompleted: {

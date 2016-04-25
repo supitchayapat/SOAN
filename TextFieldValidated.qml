@@ -5,6 +5,7 @@ import "define_values.js" as Defines_values
  see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error*/
 import "Error.js" as Err
 
+//TODO : for validations we need to support a promise as a return value
 TextField{
     id:root
 

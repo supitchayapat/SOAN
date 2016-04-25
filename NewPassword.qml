@@ -4,18 +4,21 @@ import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import "Error.js" as Err
 ColumnLayout{
+    id : root
 
     readonly property alias password : _priv.password
     readonly property alias isValid : _priv.isValid
-    property string typoWarning :  qsTr("6 caractères au minimum")
+    property string validatorWarning :  qsTr("6 caractères au minimum")
     property string passwordsDontMatchWarning: qsTr("les mots de passe sont différents")
     property alias passwordPlaceHolderText : password_txtfld.placeholderText
     property string passwordConfirmationPlaceHolderText : passwordConfirmation_txtfld.placeholderText
-    property alias validator: password_txtfld.validator
-    property alias newPasswordCustomValidations : password_txtfld.onEditingValidations
+    property alias newPasswordOnEditingValidations : password_txtfld.onEditingValidations
+    property alias passwordConfimationOnEditingValidations : passwordConfirmation_txtfld.onEditingValidations
     readonly property alias passwordTypedText: password_txtfld.text
     readonly property alias passwordConfimationTypedText: passwordConfirmation_txtfld.text
+    property alias validator: password_txtfld.validator
 
+    //TODO : size properties too specif to be here
     width: parent.width
     spacing: dp(Defines_values.TextFieldValidatedMaring)
 
@@ -25,7 +28,9 @@ ColumnLayout{
         placeholderText: qsTr("mot de passe")
         Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
-        validatorWarning: typoWarning
+        validatorWarning: root.validatorWarning
+
+        onIsValidChanged: if(isValid && !passwordConfirmation_txtfld.isValid) passwordConfirmation_txtfld.manageValidation()
 
         Component.onCompleted: {
             onEditingValidations.push(new Err.Error(function() {
@@ -41,8 +46,7 @@ ColumnLayout{
         Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
-        validatorWarning: typoWarning
-
+        validatorWarning: root.validatorWarning
 
         onIsValidChanged: if(isValid && !password_txtfld.isValid) password_txtfld.manageValidation()
 

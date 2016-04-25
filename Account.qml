@@ -461,6 +461,9 @@ Page {
         ChangePassword{
             id :changePassword
 
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: dp(Defines_values.TextFieldValidatedMaring)
+
             oldPassword: {
                 var userCollection = Qondrite.getCollection("users");
                 var userInfo = userCollection._set.toArray()[0];
