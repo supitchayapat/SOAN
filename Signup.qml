@@ -80,22 +80,14 @@ Page {
         iconName: "content/send"
         action: Action {
             onTriggered:{
-<<<<<<< HEAD
-                if(pageStep_ldr.currentItem == firstPage && nextButton.active)
-=======
-                if(pageStep_ldr.sourceComponent === firstPage && nextButton.active)
->>>>>>> 3f8d79a929bd650bfdac47f1051b674178340d41
+                if(pageStep_ldr.depth == 1 && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     pageStep_ldr.push(secondPage)
                     backButton.visible = true;
                     backButton.enabled = true;
                 }
-<<<<<<< HEAD
-                else if(pageStep_ldr.currentItem == secondPage && nextButton.active)
-=======
-                else if(pageStep_ldr.sourceComponent === secondPage && nextButton.active)
->>>>>>> 3f8d79a929bd650bfdac47f1051b674178340d41
+                else if(pageStep_ldr.depth == 2 && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
@@ -140,14 +132,14 @@ Page {
                         ? true : false
             }
 
+            function updateButtonState(){
+                nextButton.action = isStep1Valid()
+            }
+
             Connections{
                 target : accountInfo
                 onInfosChanged: {
-<<<<<<< HEAD
-                    if (pageStep_ldr.currentItem == firstPage)
-=======
-                    if (pageStep_ldr.sourceComponent === firstPage)
->>>>>>> 3f8d79a929bd650bfdac47f1051b674178340d41
+                    if (pageStep_ldr.depth == 1)
                     {
                         nextButton.updateButtonState(isStep1Valid())
                     }
@@ -368,7 +360,7 @@ Page {
                 target : accountInfo
 
                 onInfosChanged: {
-                    if (pageStep_ldr.currentItem == secondPage)
+                    if (pageStep_ldr.depth === 2)
                     {
                         nextButton.updateButtonState(isStep2Valid())
                     }
