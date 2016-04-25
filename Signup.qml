@@ -62,6 +62,11 @@ Page {
 
         property bool active: false
 
+        onActiveChanged: {
+            if(active) backgroundColor = Theme.primaryColor
+             else backgroundColor = "gray"
+        }
+
         function updateButtonState(validity){
             if(validity) active = true
             else active = false
@@ -101,7 +106,7 @@ Page {
     ActionButton {
         id: backButton
 
-        backgroundColor: "gray"
+        backgroundColor: Theme.primaryColor
         visible: false
         enabled: false
         anchors {
@@ -110,7 +115,8 @@ Page {
             left:parent.left
         }
         elevation: 1
-        iconName: "content/backspace"
+        iconName: "content/forward"
+        transform: Rotation { origin.x: backButton.width/2; origin.y: backButton.height/2; angle: 180}
         action: Action {
             onTriggered:{
                 pageStep_ldr.pop()
