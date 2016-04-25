@@ -1,23 +1,24 @@
 import QtQuick 2.5
-import Material 0.1
+import Material 0.3
+import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 
-Column{
+ColumnLayout{
 
     readonly property alias password : _priv.password
     readonly property alias isValid : _priv.isValid
-    property string typoWarning :  qsTr("le mot de passe doit contenir au moins 6 caractères")
+    property string typoWarning :  qsTr("6 caractères au minimum")
     readonly property string passwordsDontMatch: qsTr("les mots de passe sont différents")
     property alias validator: password_txtfld.validator
 
     width: parent.width
-    spacing: dp(Defines_values.Default_border_margins*2)
+    spacing: dp(Defines_values.TextFieldValidatedMaring)
 
     PasswordTextField{
         id: password_txtfld
 
         placeholderText: qsTr("mot de passe")
-        width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
+        Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
 
         customValidationCallback: function () { return _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld)}
@@ -33,7 +34,7 @@ Column{
         id: passwordConfirmation_txtfld
 
         placeholderText: qsTr("Confirmer le mot de passe")
-        width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
+        Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
 
