@@ -3,6 +3,7 @@ import Material 0.3
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
+import QtQuick.Controls 1.4 as Controls
 
 Page {
     id:root
@@ -40,7 +41,7 @@ Page {
         }
     }
 
-    Loader {
+    Controls.StackView {
         id: pageStep_ldr
 
         anchors{
@@ -51,8 +52,9 @@ Page {
             top: progressBySteps.bottom
         }
 
-        sourceComponent: firstPage
-        onSourceComponentChanged: nextButton.active = false
+        initialItem: firstPage
+        /*sourceComponent: firstPage
+        onSourceComponentChanged: nextButton.active = false*/
     }
 
     ActionButton {
@@ -78,14 +80,14 @@ Page {
         iconName: "content/send"
         action: Action {
             onTriggered:{
-                if(pageStep_ldr.sourceComponent == firstPage && nextButton.active)
+                if(pageStep_ldr.currentItem == firstPage && nextButton.active)
                 {
                     progressBySteps.nextStep()
-                    pageStep_ldr.sourceComponent = secondPage
+                    pageStep_ldr.push(secondPage)
                     backButton.visible = true;
                     backButton.enabled = true;
                 }
-                else if(pageStep_ldr.sourceComponent == secondPage && nextButton.active)
+                else if(pageStep_ldr.currentItem == secondPage && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
@@ -111,7 +113,7 @@ Page {
         iconName: "content/backspace"
         action: Action {
             onTriggered:{
-                pageStep_ldr.sourceComponent = firstPage
+                pageStep_ldr.pop()
                 visible = false;
                 enabled  = false;
             }
@@ -134,7 +136,7 @@ Page {
             Connections{
                 target : accountInfo
                 onInfosChanged: {
-                    if (pageStep_ldr.sourceComponent == firstPage)
+                    if (pageStep_ldr.currentItem == firstPage)
                     {
                         nextButton.updateButtonState(isStep1Valid())
                     }
@@ -355,7 +357,7 @@ Page {
                 target : accountInfo
 
                 onInfosChanged: {
-                    if (pageStep_ldr.sourceComponent == secondPage)
+                    if (pageStep_ldr.currentItem == secondPage)
                     {
                         nextButton.updateButtonState(isStep2Valid())
                     }
