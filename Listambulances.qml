@@ -13,10 +13,10 @@ Page {
     actions:[
         Action{//availability switch
             iconName: "awesome/close"
-            checkable: true
+            displayAsSwitch:true
 
             onTriggered: {
-                console.log("change availability")
+                //TODO send request to server
             }
         }
     ]
