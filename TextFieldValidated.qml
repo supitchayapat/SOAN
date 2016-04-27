@@ -5,7 +5,7 @@ import "define_values.js" as Defines_values
 TextField{
     id:myRoot
 
-    property bool isValid: checkedIcon.visible
+    property bool isValid: checkedIcon.visible && text !== ""
     property var customValidationCallback : function (){return true}
     property bool useValidatingIcon : true
     property string warningText
@@ -28,7 +28,7 @@ TextField{
             /* TODO : here we are only handling the case of RegExpValidator
              * but the validator could be also an IntValidator or a DoubleValidator
              * please manage the missing cases*/
-            if(text != "" && text.toString().match(validator.regExp) != null && customValidationCallback())
+            if(text != "" && text.toString().match(validator.regExp) !== null && customValidationCallback())
             {
                 hasError = false
                 checkedIcon.visible = true
