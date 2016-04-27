@@ -15,6 +15,14 @@ Page {
 
     backAction: navDrawer.action
     actions: [
+        Action{//availability switch
+            iconName: "awesome/close"
+            displayAsSwitch:true
+
+            onTriggered: {
+                //TODO send request to server
+            }
+        },
         Action{
             iconName: "editor/mode_edit"
             onTriggered: {
@@ -75,17 +83,7 @@ Page {
 
                 isEditable = false
             }
-        },
-        Action{//availability switch
-            iconName: "awesome/close"
-            displayAsSwitch:true
-
-
-            onTriggered: {
-                //TODO send request to server
-            }
         }
-
     ]
 
     function loadUserInformation(){
