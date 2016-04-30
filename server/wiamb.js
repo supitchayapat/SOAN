@@ -38,6 +38,7 @@ if (Meteor.isServer) {
 	    return user;
 	});
 
+
 	Meteor.publish('availability', function tasksPublication() {
 		var currentUserGelocation = Availability.findOne({user_id : {$eq : this.userId}},{geoloc  : 1});
 		
