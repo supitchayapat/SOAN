@@ -3,6 +3,7 @@ import Material 0.3
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
+import QtQuick.Controls 1.4 as Controls
 
 Page {
     id:root
@@ -40,7 +41,7 @@ Page {
         }
     }
 
-    Loader {
+    Controls.StackView {
         id: pageStep_ldr
 
         anchors{
@@ -51,14 +52,20 @@ Page {
             top: progressBySteps.bottom
         }
 
-        sourceComponent: firstPage
-        onSourceComponentChanged: nextButton.active = false
+        initialItem: firstPage
+        /*sourceComponent: firstPage
+        onSourceComponentChanged: nextButton.active = false*/
     }
 
     ActionButton {
         id: nextButton
 
         property bool active: false
+
+        onActiveChanged: {
+            if(active) backgroundColor = Theme.primaryColor
+             else backgroundColor = "gray"
+        }
 
         function updateButtonState(validity){
             if(validity) active = true
@@ -78,12 +85,14 @@ Page {
         iconName: "content/send"
         action: Action {
             onTriggered:{
-                if(pageStep_ldr.sourceComponent === firstPage && nextButton.active)
+                if(pageStep_ldr.depth == 1 && nextButton.active)
                 {
                     progressBySteps.nextStep()
-                    pageStep_ldr.sourceComponent = secondPage
+                    pageStep_ldr.push(secondPage)
+                    backButton.visible = true;
+                    backButton.enabled = true;
                 }
-                else if(pageStep_ldr.sourceComponent === secondPage && nextButton.active)
+                else if(pageStep_ldr.depth == 2 && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
@@ -92,10 +101,28 @@ Page {
                 }
             }
         }
+    }
 
-        onActiveChanged: {
-            if(active) backgroundColor = Theme.primaryColor
-            else backgroundColor = "gray"
+    ActionButton {
+        id: backButton
+
+        backgroundColor: Theme.primaryColor
+        visible: false
+        enabled: false
+        anchors {
+            bottom: parent.bottom
+            bottomMargin: dp(10)
+            left:parent.left
+        }
+        elevation: 1
+        iconName: "content/forward"
+        transform: Rotation { origin.x: backButton.width/2; origin.y: backButton.height/2; angle: 180}
+        action: Action {
+            onTriggered:{
+                pageStep_ldr.pop()
+                visible = false;
+                enabled  = false;
+            }
         }
     }
 
@@ -111,10 +138,14 @@ Page {
                         ? true : false
             }
 
+            function updateButtonState(){
+                nextButton.action = isStep1Valid()
+            }
+
             Connections{
                 target : accountInfo
                 onInfosChanged: {
-                    if (pageStep_ldr.sourceComponent === firstPage)
+                    if (pageStep_ldr.depth == 1)
                     {
                         nextButton.updateButtonState(isStep1Valid())
                     }
@@ -238,11 +269,12 @@ Page {
                             // run validation only if undone yet for current address and address length is worth it
                             if(address_txtField.text.length > 3)
                             {
+                                //TODO handle this call with new callbacks list of TextFieldValidated
                                 Qondrite.validateAddress(text).result
                                 .then(function(result)
                                 {
                                     if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
-                                        warningText = qsTr("Adresse invalide")
+                                        validatorWarning = qsTr("Adresse invalide")
                                     }
                                     else{
                                         accountInfo.infos.latitude = result[0].latitude;
@@ -335,7 +367,7 @@ Page {
                 target : accountInfo
 
                 onInfosChanged: {
-                    if (pageStep_ldr.sourceComponent == secondPage)
+                    if (pageStep_ldr.depth === 2)
                     {
                         nextButton.updateButtonState(isStep2Valid())
                     }
