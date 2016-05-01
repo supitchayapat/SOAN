@@ -18,11 +18,11 @@ Page {
                                   latitude    : 0.0  ,
                                   longitude   : 0.0  ,
                                   tel         : ""   ,
-                                  ambulance   : ""   ,
-                                  vsl         : false,
-                                  email       : false,
-                                  password    : ""
+                                  ambulance   : false,
+                                  vsl         : false
                               })
+        property var email: ""
+        property var password: ""
     }
 
     ProgressBySteps{
@@ -97,7 +97,7 @@ Page {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
 
-                    Qondrite.createUser(accountInfo.infos.email,accountInfo.infos.password,accountInfo.infos)
+                    Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
                 }
             }
         }
@@ -311,7 +311,7 @@ Page {
                         Layout.fillWidth: true
 
                         onEditingFinished:{
-                            accountInfo.infos.email = text
+                            accountInfo.email = text
                             accountInfo.infosChanged()
                         }
 
@@ -416,7 +416,7 @@ Page {
                 }
 
                 onIsValidChanged: {
-                    if(isValid) accountInfo.infos.password = password
+                    if(isValid) accountInfo.password = password
                     accountInfo.infosChanged()
                 }
             }
