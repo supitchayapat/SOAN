@@ -58,6 +58,9 @@ Page {
     }
 
     backAction: navDrawer.action
+
+    actionBar.switchDelegate :AvailabilitySwitch{}
+
     actions: [
         Action{//availability switch
             iconName: "awesome/close"
