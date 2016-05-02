@@ -18,11 +18,11 @@ Page {
                                   latitude    : 0.0  ,
                                   longitude   : 0.0  ,
                                   tel         : ""   ,
-                                  ambulance   : ""   ,
-                                  vsl         : false,
-                                  email       : false,
-                                  password    : ""
+                                  ambulance   : false,
+                                  vsl         : false
                               })
+        property var email: ""
+        property var password: ""
     }
 
     ProgressBySteps{
@@ -97,7 +97,7 @@ Page {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
 
-                    Qondrite.createUser(accountInfo.infos.email,accountInfo.infos.password,accountInfo.infos)
+                    Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
                 }
             }
         }
@@ -269,11 +269,12 @@ Page {
                             // run validation only if undone yet for current address and address length is worth it
                             if(address_txtField.text.length > 3)
                             {
+                                //TODO handle this call with new callbacks list of TextFieldValidated
                                 Qondrite.validateAddress(text).result
                                 .then(function(result)
                                 {
                                     if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
-                                        warningText = qsTr("Adresse invalide")
+                                        validatorWarning = qsTr("Adresse invalide")
                                     }
                                     else{
                                         accountInfo.infos.latitude = result[0].latitude;
@@ -310,7 +311,7 @@ Page {
                         Layout.fillWidth: true
 
                         onEditingFinished:{
-                            accountInfo.infos.email = text
+                            accountInfo.email = text
                             accountInfo.infosChanged()
                         }
 
@@ -415,7 +416,7 @@ Page {
                 }
 
                 onIsValidChanged: {
-                    if(isValid) accountInfo.infos.password = password
+                    if(isValid) accountInfo.password = password
                     accountInfo.infosChanged()
                 }
             }

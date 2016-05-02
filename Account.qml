@@ -35,6 +35,7 @@ Page {
         transportType_lbl.text = getTransportTypeLabel(userProfile);
         demandeCheckBox.checked = transportType_lbl.text.indexOf("Ambulance")!==-1
         vslCheckBox.checked = transportType_lbl.text.indexOf("VST")!==-1
+        changePassword.oldPassword = userProfile.password
     }
 
     function isFormValid(){
@@ -272,11 +273,12 @@ Page {
                     // run validation only if undone yet for current address and address length is worth it
                     if(address_txtField.text.length > 3)
                     {
+                        //TODO handle this call with new callbacks list of TextFieldValidated
                         Qondrite.validateAddress(text).result
                         .then(function(result)
                         {
                             if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
-                                warningText = qsTr("Adresse invalide")
+                                validatorWarning = qsTr("Adresse invalide")
                             }
                             else{
                                 accountInfo.infos.latitude = result[0].latitude;
@@ -427,7 +429,6 @@ Page {
         Layout.fillWidth:true
     }
 
-
     Dialog {
         id: confirmed_dlg
 
@@ -467,34 +468,17 @@ Page {
         negativeButtonText: "Annuler"
         z:1
 
-        ColumnLayout{
-            //TODO wrap this ColumnLayout in a standalone component named ChangePassword
-            spacing: dp(Defines_values.TextFieldValidatedMaring)
+        ChangePassword{
+            id :changePassword
+
             anchors.horizontalCenter: parent.horizontalCenter
+            spacing: dp(Defines_values.TextFieldValidatedMaring)
 
-            TextField {
-                id: oldPassword_txtFld
-
-                anchors.topMargin: dp(20)
-                anchors.horizontalCenter: parent.horizontalCenter
-                placeholderText: qsTr("Ancien mot de passe")
-                floatingLabel: true
-                echoMode: TextInput.Password
-                helperText: ""
-                Layout.topMargin:dp(Defines_values.top_account_textfield_margin)
-                Layout.fillWidth: true
-            }
-
-            NewPassword{
-                id: newPassword
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                Layout.fillWidth: true
-                spacing: parent.spacing
-
-                onIsValidChanged: {
-                    if(isValid) accountInfo.infos.password = password
-                }
+            oldPassword: {
+                var userCollection = Qondrite.getCollection("users");
+                var userInfo = userCollection._set.toArray()[0];
+                var userProfile = userInfo.profile;
+                return userProfile.password
             }
         }
     }
