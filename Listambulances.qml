@@ -7,8 +7,10 @@ Page {
     id: page
 
     backAction: navDrawer.action
-    actionBar.backgroundColor: Palette.colors.grey[Defines_values.ListambulancesBackgroundlevel]
+    actionBar.backgroundColor: Theme.primaryColor
     actionBar.decorationColor: Palette.colors.grey[Defines_values.ListambulancesDecorationlevel]
+
+    actionBar.switchDelegate : AvailabilitySwitch{}
 
     actions:[
         Action{//availability switch
