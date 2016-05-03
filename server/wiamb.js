@@ -10,7 +10,35 @@ Meteor.methods({
   			apiKey: 'AIzaSyDMBt6F0W2WhX819O8DawgwDzxCLEz2TXc'
 		});
 		return geo.geocode(address);		
-	}	
+	},
+	"updateUser" : function(user){
+			
+			Meteor.users.update({_id: Meteor.userId()}, 
+			{
+				$set:
+				{
+					'emails.0.address'  : user.email,
+					'profile'  : user.profile
+				}
+			},
+				
+			{ multi: false },
+				
+			function(error,result){
+
+				if(result){
+					
+					Availability.update({user_id  : Meteor.userId()}, {
+		    	
+				    	$set : {
+					    	geoloc : {type : "Point", coordinates  : [user.profile.longitude,user.profile.latitude]}, 
+					    	tel  : user.profile.tel,
+					    	companyName  : user.profile.companyName	
+				    	}
+			    	});
+				}
+			});		
+	}
 });
 if (Meteor.isClient) {
 	
@@ -25,7 +53,7 @@ if (Meteor.isServer) {
 
   	Accounts.onCreateUser(function(options, user) {  
 	    if (options.profile)
-	        user.profile = options.profile;
+	        user.profile = options.profile;+
 	    
 	    Availability.insert({
 	    	user_id  : user._id, 

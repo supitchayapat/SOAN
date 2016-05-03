@@ -107,6 +107,10 @@ WebSocket {
          return ceres.call("validateAddress",address);
     }
 
+    function updateUser(user){
+        return ceres.call("updateUser",user);
+    }
+
     function getCollection(collection) {
         var coll;
         if (ceres !== undefined)

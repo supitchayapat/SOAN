@@ -13,13 +13,16 @@ Page {
     property int textFieldWidth: isEditable?column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing):0
     property int labelWidth: isEditable?0:column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
 
+    property var userCollection;
+
     function loadUserInformation(){
         //When a login signal is emmited, the users collection is sent
         //from server to client with only the current user in it
         //getting the first element of the collection is getting the logged in user
         //information
-        var userCollection = Qondrite.getCollection("users");
-        var userInfo = userCollection._set.toArray()[0];
+        page.userCollection = Qondrite.getCollection("users");
+        console.log(JSON.stringify(page.userCollection._set.toArray()));
+        var userInfo = page.userCollection._set.toArray()[0];
         var userProfile = userInfo.profile;
 
         email_lbl.text = userInfo.emails[0].address;
@@ -94,11 +97,24 @@ Page {
             visible: isEditable
 
             onTriggered: {
-              //TODO : add Qondrite call for updating user info just below
-              //TODO : if the Qondrite call return is sucess, create and call function that updates
-              // the labels texts from textfields texts directly without calling the server.
+
               //TODO : add a loadingCircle in the page while waiting for server updating info
-                isEditable = false
+                Qondrite.updateUser(
+
+                            {
+                                "email" :email_txtFld.text,
+                                "profile"  : {
+                                        "address"  :address_txtField.text,
+                                        "companyName"  :companyName_txtFld.text,
+                                        "name" :name_txtFld.text,
+                                        "tel"  :tel_txtFld.text,
+                                        "latitude" : accountInfo.infos.latitude,
+                                        "longitude" : accountInfo.infos.longitude
+                                  }
+                            }).result.then(function success(){
+
+                                isEditable = false;
+                            });
             }
         },
         Action{//cancel btn
