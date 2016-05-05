@@ -8,5 +8,5 @@ TextFieldValidated{
     floatingLabel: true
     echoMode: TextInput.Password
     //TODO : it seems that we don't support special caracters in our password validation, we need to do so
-    validator: RegExpValidator{regExp:/([a-zA-Z0-9]{6,100}\s*)+/}
+    validator: RegExpValidator{regExp: /([\-_\*'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]{6,}\s*)+/gi}
 }
