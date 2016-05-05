@@ -17,6 +17,7 @@ WebSocket {
     signal loginFailed()
     signal userCreated()
     signal userCreationFailed()
+    signal connected()
 
     active: true
 
@@ -28,6 +29,7 @@ WebSocket {
 
         ceres = new Ast.Asteroid(wsid, meteor_url.toString(), false, function(event) { console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message ); });
         console.log("done");
+        connected();
     }
 
     function _on(signalMessage,callBack){
@@ -56,6 +58,11 @@ WebSocket {
             //about the error
             //many error can be catched here (existing email, existing address,existing phone...)
         });
+    }
+
+    function tryResumeLogin()
+    {
+        return ceres._tryResumeLogin();
     }
 
     function emit(signalName,param){
