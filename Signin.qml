@@ -181,6 +181,15 @@ Item {
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
+        Qondrite.onOpen.connect(function(){
+            Qondrite.tryResumeLogin().then(
+                function onSuccess(){
+                    pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+                },
+                function onFailed(){
+                    console.log('No session to resume');
+                });
+        });
         Qondrite.onLogin.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
     }
 }
