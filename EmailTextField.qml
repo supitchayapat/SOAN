@@ -6,7 +6,7 @@ import "define_values.js" as Defines_values
 import "Error.js" as Err
 
 //TODO : for validations we need to support a promise as a return value
-TextField{
+TextFieldValidated{
     id:root
 
     //TODO : isValid is binded to checkedIcon.visible, but this depends on useValidatingIcon
