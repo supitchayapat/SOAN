@@ -263,7 +263,7 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         // @TODO this validator may need to be changed with a correct regExp for this case
-                        validator: RegExpValidator{regExp: /^[\-'a-z àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
+                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished: {
                             // run validation only if undone yet for current address and address length is worth it
