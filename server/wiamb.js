@@ -39,6 +39,7 @@ Meteor.methods({
 				}
 			});		
 	}
+	
 });
 if (Meteor.isClient) {
 	

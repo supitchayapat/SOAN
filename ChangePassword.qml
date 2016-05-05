@@ -9,7 +9,7 @@ ColumnLayout{
 
     readonly property alias password : _priv.password
     readonly property alias isValid : _priv.isValid
-    property string oldPassword
+    readonly property alias oldPassword :oldPassword_txtfld.text
     property bool askForOldPassword : true
     property alias passwordPlaceHolderText : newPassword.passwordPlaceHolderText
     property alias oldPasswordPlaceHolderText : oldPassword_txtfld.placeholderText
@@ -25,18 +25,15 @@ ColumnLayout{
         placeholderText: qsTr("Ancien mot de passe")
         visible : askForOldPassword
 
-        /* As we ignore what was the prior validation of the oldpassword
-          we accept everything under 100 chars*/
-        validator :  RegExpValidator{regExp:/.{1,100}/}
+        /* The old password field has to have the same validator
+            as all password fields to reduce user mistake probability */
+        validatorWarning : root.validatorsWarning
+        validator :  oldPassword_txtfld.validator
         Layout.fillWidth: true
 
         anchors {
             topMargin: dp(20)
             horizontalCenter: parent.horizontalCenter
-        }
-
-        Component.onCompleted: {
-            onEditingValidations.unshift(new Err.Error(function (){ return text === oldPassword },qsTr("mot de passe incorect")))
         }
     }
 
@@ -48,30 +45,16 @@ ColumnLayout{
         Layout.fillWidth: true
         spacing: parent.spacing
 
-        Component.onCompleted: {
-            newPasswordOnEditingValidations.unshift(new Err.Error(function cutomvalid() {
-                return passwordTypedText !== root.oldPassword
-            },sameAsOldPassWordWarning))
-        }
     }
 
     QtObject{
         id : _priv
         property string password: ""
         property bool isValid : newPassword.isValid && (oldPassword_txtfld.isValid ||!oldPassword_txtfld.visible)
-                                && newPassword.password !== oldPassword_txtfld.text
     }
 
     onIsValidChanged: {
         if(isValid) _priv.password = newPassword.password
         else _priv.password = ""
-    }
-
-    Component.onCompleted: {
-        if(oldPassword == ""){
-            console.log('ChangePassword : oldPassword property should be
-                         set to the component to work properly')
-            throw "property exception"
-        }
     }
 }

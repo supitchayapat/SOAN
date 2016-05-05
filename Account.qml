@@ -21,7 +21,6 @@ Page {
         //getting the first element of the collection is getting the logged in user
         //information
         page.userCollection = Qondrite.getCollection("users");
-        console.log(JSON.stringify(page.userCollection._set.toArray()));
         var userInfo = page.userCollection._set.toArray()[0];
         var userProfile = userInfo.profile;
 
@@ -35,10 +34,9 @@ Page {
         companyName_txtFld.text = userProfile.companyName;
         tel_lbl.text = userProfile.tel;
         tel_txtFld.text = userProfile.tel;
-        transportType_lbl.text = getTransportTypeLabel(userProfile);
         demandeCheckBox.checked = transportType_lbl.text.indexOf("Ambulance")!==-1
         vslCheckBox.checked = transportType_lbl.text.indexOf("VST")!==-1
-        changePassword.oldPassword = userProfile.password
+
     }
 
     function isFormValid(){
@@ -49,16 +47,6 @@ Page {
                     && tel_txtFld.isValid
                     && (demandeCheckBox.checked || vslCheckBox.checked)
                     ? true :false
-    }
-
-    function getTransportTypeLabel(userProfile){
-        if(userProfile.ambulance && userProfile.vsl){
-            return "VST et Ambulance";
-        }else if(userProfile.ambulance && !userProfile.vsl){
-            return "Ambulance uniquement"
-        }else if(!userProfile.ambulance && userProfile.vsl){
-            return "VST uniquement";
-        }
     }
 
     backAction: navDrawer.action
@@ -289,7 +277,7 @@ Page {
                             else{
                                 accountInfo.infos.latitude = result[0].latitude;
                                 accountInfo.infos.longitude = result[0].longitude;
-                                accountInfo.infos.address = text
+                                accountInfoinfos.address = text
                                 accountInfo.infosChanged()
                             }
                         });
@@ -466,7 +454,23 @@ Page {
         id: changepassword_dlg
 
         onAccepted: {
-            confirmed_dlg.show()
+
+            Qondrite.changePassword(changePassword.oldPassword,changePassword.password)
+            .result.then(
+                function onSucess(result){
+                    console.log("resultat changement de mot de passe");
+                    console.log(JSON.stringify(result))
+                    if(result.passwordChanged){
+                        confirmed_dlg.show()
+                    }else{
+
+                    }
+                },
+                function onError(error){
+
+                }
+            );
+
         }
 
         text: "Mot de passe oublié"
@@ -479,13 +483,6 @@ Page {
 
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: dp(Defines_values.TextFieldValidatedMaring)
-
-            oldPassword: {
-                var userCollection = Qondrite.getCollection("users");
-                var userInfo = userCollection._set.toArray()[0];
-                var userProfile = userInfo.profile;
-                return userProfile.password
-            }
         }
     }
 

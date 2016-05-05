@@ -111,6 +111,10 @@ WebSocket {
         return ceres.call("updateUser",user);
     }
 
+    function changePassword(oldPassword,newPassword){
+        return ceres.call("changePassword",oldPassword, newPassword);
+    }
+
     function getCollection(collection) {
         var coll;
         if (ceres !== undefined)
