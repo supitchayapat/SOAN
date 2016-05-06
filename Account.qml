@@ -450,41 +450,59 @@ Page {
         }
     }
 
-    Dialog {
-        id: changepassword_dlg
+    AsynchronusDialog {
+            id: changepassword_dlg
 
-        onAccepted: {
+            text: "Mot de passe oublié"
+            positiveButtonText: "Valider"
+            negativeButtonText: "Annuler"
+            positiveButtonEnabled:changePassword.isValid
 
-            Qondrite.changePassword(changePassword.oldPassword,changePassword.password)
-            .result.then(
-                function onSucess(result){
-                    console.log("resultat changement de mot de passe");
-                    console.log(JSON.stringify(result))
-                    if(result.passwordChanged){
-                        confirmed_dlg.show()
-                    }else{
+            onValidated: {
+                close()
+                confirmed_dlg.show()
+            }
 
-                    }
-                },
-                function onError(error){
+            onAccepted: {
+                invalidOldPassword.visible = false
 
-                }
-            );
+                Qondrite.changePassword(changePassword.oldPassword,changePassword.password)
+                    .result.then(
+                        function onSucess(){
+                            validated()
+                        },
+                        function onError(error){
+                            changePassword.clearOldPassword()
+                            invalidOldPassword.visible = true
+                        }
+                    );
+           }
 
+            onClosed:{
+                changePassword.resetFields()
+                invalidOldPassword.visible = false
+            }
+
+
+
+            ChangePassword{
+                id :changePassword
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: dp(Defines_values.TextFieldValidatedMaring)
+            }
+
+            Label {
+                id : invalidOldPassword
+
+                text: "Ancien mot de passe invalide"
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: Theme.tabHighlightColor
+                fontStyles: "dialog"
+                font.family: labelFont.name
+                visible: false
+            }
         }
-
-        text: "Mot de passe oublié"
-        positiveButtonText: "Valider"
-        negativeButtonText: "Annuler"
-        z:1
-
-        ChangePassword{
-            id :changePassword
-
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: dp(Defines_values.TextFieldValidatedMaring)
-        }
-    }
 
     Component.onCompleted: loadUserInformation()
 }

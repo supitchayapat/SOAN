@@ -22,6 +22,10 @@ ColumnLayout{
     width: parent.width
     spacing: dp(Defines_values.TextFieldValidatedMaring)
 
+    function resetFields(){
+        password_txtfld.text = ""
+        passwordConfirmation_txtfld.text = ""
+    }
     PasswordTextField{
         id: password_txtfld
 

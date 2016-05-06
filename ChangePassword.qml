@@ -19,6 +19,15 @@ ColumnLayout{
     property string validatorsWarning :  qsTr("6 caractères au minimum")
     property alias validator: newPassword.validator
 
+    function resetFields(){
+        oldPassword_txtfld.text = ""
+        newPassword.resetFields()
+    }
+
+    function clearOldPassword(){
+        oldPassword_txtfld.text = ""
+    }
+
     PasswordTextField {
         id: oldPassword_txtfld
 
@@ -31,8 +40,9 @@ ColumnLayout{
         validator :  oldPassword_txtfld.validator
         Layout.fillWidth: true
 
+
         anchors {
-            topMargin: dp(20)
+            topMargin: dp(35)
             horizontalCenter: parent.horizontalCenter
         }
     }

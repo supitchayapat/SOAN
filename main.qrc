@@ -17,6 +17,7 @@
         <file>NewPassword.qml</file>
         <file>ChangePassword.qml</file>
         <file>Error.js</file>
+        <file>AsynchronusDialog.qml</file>
     </qresource>
     <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>
