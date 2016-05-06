@@ -16,6 +16,7 @@
         <file>PhoneTextField.js</file>
         <file>NewPassword.qml</file>
         <file>ChangePassword.qml</file>
+        <file>AvailabilitySwitch.qml</file>
         <file>Error.js</file>
         <file>AsynchronusDialog.qml</file>
     </qresource>

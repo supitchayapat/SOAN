@@ -193,7 +193,7 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                        validator: RegExpValidator{regExp: /^([\-'a-z àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*)+$/gi }
 
                         onEditingFinished: {
                             accountInfo.infos.name = text
@@ -253,17 +253,11 @@ Page {
                     TextFieldValidated{
                         id:address_txtField
 
-                        QtObject {
-                            id : previousAddress
-                            property string value : ""
-                        }
-
                         placeholderText: qsTr("Adresse")
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        // @TODO this validator may need to be changed with a correct regExp for this case
-                        validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
+                        validator: RegExpValidator{regExp: /^([\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]{3,})\s*)+$/gi }
 
                         onEditingFinished: {
                             // run validation only if undone yet for current address and address length is worth it
