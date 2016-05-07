@@ -3,6 +3,7 @@ import Material 0.3
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
+import QtQuick.Controls 1.4 as Controls
 
 Page {
     id:root
@@ -11,17 +12,17 @@ Page {
         id:accountInfo
 
         property var infos : ({
-              name        : ""   ,
-              companyName : ""   ,
-              address     : ""   ,
-              latitude    : 0.0  ,
-              longitude   : 0.0  ,
-              tel         : ""   ,
-              ambulance   : ""   ,
-              vsl         : false,
-              email       : false,
-              password    : ""
-          })
+          name        : ""   ,
+          companyName : ""   ,
+          address     : ""   ,
+          latitude    : 0.0  ,
+          longitude   : 0.0  ,
+          tel         : ""   ,
+          ambulance   : false,
+          vsl         : false
+        })
+        property var email: ""
+        property var password: ""
     }
 
     ProgressBySteps{
@@ -40,7 +41,7 @@ Page {
         }
     }
 
-    Loader {
+    Controls.StackView {
         id: pageStep_ldr
 
         anchors{
@@ -51,14 +52,20 @@ Page {
             top: progressBySteps.bottom
         }
 
-        sourceComponent: firstPage
-        onSourceComponentChanged: nextButton.active = false
+        initialItem: firstPage
+        /*sourceComponent: firstPage
+        onSourceComponentChanged: nextButton.active = false*/
     }
 
     ActionButton {
         id: nextButton
 
         property bool active: false
+
+        onActiveChanged: {
+            if(active) backgroundColor = Theme.primaryColor
+             else backgroundColor = "gray"
+        }
 
         function updateButtonState(validity){
             if(validity) active = true
@@ -78,24 +85,44 @@ Page {
         iconName: "content/send"
         action: Action {
             onTriggered:{
-                if(pageStep_ldr.sourceComponent == firstPage && nextButton.active)
+                if(pageStep_ldr.depth == 1 && nextButton.active)
                 {
                     progressBySteps.nextStep()
-                    pageStep_ldr.sourceComponent = secondPage
+                    pageStep_ldr.push(secondPage)
+                    backButton.visible = true;
+                    backButton.enabled = true;
                 }
-                else if(pageStep_ldr.sourceComponent == secondPage && nextButton.active)
+                else if(pageStep_ldr.depth == 2 && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
 
-                    Qondrite.createUser(accountInfo.infos.email,accountInfo.infos.password,accountInfo.infos)
+                    Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
                 }
             }
         }
+    }
 
-        onActiveChanged: {
-            if(active) backgroundColor = Theme.primaryColor
-            else backgroundColor = "gray"
+    ActionButton {
+        id: backButton
+
+        backgroundColor: Theme.primaryColor
+        visible: false
+        enabled: false
+        anchors {
+            bottom: parent.bottom
+            bottomMargin: dp(10)
+            left:parent.left
+        }
+        elevation: 1
+        iconName: "content/forward"
+        transform: Rotation { origin.x: backButton.width/2; origin.y: backButton.height/2; angle: 180}
+        action: Action {
+            onTriggered:{
+                pageStep_ldr.pop()
+                visible = false;
+                enabled  = false;
+            }
         }
     }
 
@@ -105,17 +132,20 @@ Page {
         Item{
 
             function isStep1Valid(){
-                return        nomprenom_txtFld.text               !== ""        && nomprenom_txtFld.isValid
-                        && nomdelastructure_txtFld.companyName !== ""        && nomdelastructure_txtFld.isValid
-                        && email_txtFld.email                  !== ""        && email_txtFld.isValid
-                        && address_txtField.address            !== ""        && address_txtField.isValid
-                        && tel_txtFld.tel                      !== ""        && tel_txtFld.isValid              ? true : false
+                return  nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
+                        && email_txtFld.isValid  && address_txtField.isValid
+                        && tel_txtFld.isValid
+                        ? true : false
+            }
+
+            function updateButtonState(){
+                nextButton.action = isStep1Valid()
             }
 
             Connections{
                 target : accountInfo
                 onInfosChanged: {
-                    if (pageStep_ldr.sourceComponent == firstPage)
+                    if (pageStep_ldr.depth == 1)
                     {
                         nextButton.updateButtonState(isStep1Valid())
                     }
@@ -223,34 +253,35 @@ Page {
                     TextFieldValidated
                     {
                         id:address_txtField
-
-                        placeholderText: "Adresse"
+                        placeholderText: qsTr("Adresse")
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
-                        Layout.fillWidth: true                       
-                        validator: RegExpValidator{regExp: /^([\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*)+$/gi }
-                        customValidationCallback : function(){
-                            var dfd = Qondrite.q();
-                            return Qondrite.validateAddress(text)
-                                .then(function(result){
-                                    accountInfo.infos.latitude = result[0].latitude;
-                                    accountInfo.infos.longitude = result[0].longitude;
-                                    accountInfo.infos.address = text;
-                                    accountInfo.infosChanged();
-                                    dfd.resolve();
-                                    return dfd.promise();
 
-                                })
-                                .catch(function onerror(error){
-                                    dfd.reject(error);
-                                    return dfd.promise();
+                        Layout.fillWidth: true
+                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
+
+                        onEditingFinished: {
+                            // run validation only if undone yet for current address and address length is worth it
+                            if(address_txtField.text.length > 3)
+                            {
+                                //TODO handle this call with new callbacks list of TextFieldValidated
+                                Qondrite.validateAddress(text).result
+                                .then(function(result)
+                                {
+                                    if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                                        validatorWarning = qsTr("Adresse invalide")
+                                    }
+                                    else{
+                                        accountInfo.infos.latitude = result[0].latitude;
+                                        accountInfo.infos.longitude = result[0].longitude;
+                                        accountInfo.infos.address = text
+                                        accountInfo.infosChanged()
+                                    }
+
                                 });
+                            }
+                            onIsValidChanged: accountInfo.infosChanged()
                         }
-                        onTextChanged: {
-
-                        }
-
-                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
 
@@ -273,9 +304,10 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        onEditingFinished: {
-                            accountInfo.infosChanged();
-                            accountInfo.infos.email = text;
+
+                        onEditingFinished:{
+                            accountInfo.email = text
+                            accountInfo.infosChanged()
                         }
 
                         onIsValidChanged: accountInfo.infosChanged()
@@ -312,6 +344,7 @@ Page {
                     }
                 }
             }
+
         }
     }
 
@@ -323,14 +356,14 @@ Page {
             FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
 
             function isStep2Valid(){
-                return (demandeCheckBox.checked || vslCheckBox.checked) && newPassword.isValid && newPassword.password !== "" ? true :false
+                return (demandeCheckBox.checked || vslCheckBox.checked) && newPassword.isValid ? true :false
             }
 
             Connections{
                 target : accountInfo
 
                 onInfosChanged: {
-                    if (pageStep_ldr.sourceComponent == secondPage)
+                    if (pageStep_ldr.depth === 2)
                     {
                         nextButton.updateButtonState(isStep2Valid())
                     }
@@ -369,12 +402,17 @@ Page {
             NewPassword{
                 id: newPassword
 
-                Layout.fillWidth: true
-                anchors.top:topColumn.bottom
-                anchors.topMargin: Defines_values.Signup2passwordTopmargin
+                anchors{
+                    top:topColumn.bottom
+                    topMargin: Defines_values.Signup2passwordTopmargin
+                    left :parent.left
+                    leftMargin:  dp(parent.width /8)
+                    rightMargin: dp(parent.width /8)
+                    right : parent.right
+                }
 
                 onIsValidChanged: {
-                    if(isValid) accountInfo.infos.password = password
+                    if(isValid) accountInfo.password = password
                     accountInfo.infosChanged()
                 }
             }
@@ -392,6 +430,6 @@ Page {
     Component.onCompleted: {
         Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
     }
+
+
 }
-
-

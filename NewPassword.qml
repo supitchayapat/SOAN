@@ -1,31 +1,41 @@
 import QtQuick 2.5
-import Material 0.1
+import Material 0.3
+import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
-
-Column{
+import "Error.js" as Err
+ColumnLayout{
+    id : root
 
     readonly property alias password : _priv.password
     readonly property alias isValid : _priv.isValid
-    property string typoWarning :  qsTr("le mot de passe doit contenir au moins 6 caractères")
-    readonly property string passwordsDontMatch: qsTr("les mots de passe sont différents")
+    property string validatorWarning :  qsTr("6 caractères au minimum")
+    property string passwordsDontMatchWarning: qsTr("les mots de passe sont différents")
+    property alias passwordPlaceHolderText : password_txtfld.placeholderText
+    property string passwordConfirmationPlaceHolderText : passwordConfirmation_txtfld.placeholderText
+    property alias newPasswordOnEditingValidations : password_txtfld.onEditingValidations
+    property alias passwordConfimationOnEditingValidations : passwordConfirmation_txtfld.onEditingValidations
+    readonly property alias passwordTypedText: password_txtfld.text
+    readonly property alias passwordConfimationTypedText: passwordConfirmation_txtfld.text
     property alias validator: password_txtfld.validator
 
+    //TODO : size properties too specif to be here
     width: parent.width
-    spacing: dp(Defines_values.Default_border_margins*2)
+    spacing: dp(Defines_values.TextFieldValidatedMaring)
 
     PasswordTextField{
         id: password_txtfld
 
         placeholderText: qsTr("mot de passe")
-        width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
+        Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
-
-        customValidationCallback: function () { return _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld)}
+        validatorWarning: root.validatorWarning
 
         onIsValidChanged: if(isValid && !passwordConfirmation_txtfld.isValid) passwordConfirmation_txtfld.manageValidation()
 
-        onTextChanged: {
-            warningText = _priv.selectWarningText(passwordConfirmation_txtfld.text,password_txtfld)
+        Component.onCompleted: {
+            onEditingValidations.push(new Err.Error(function() {
+                return _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld)}
+            ,passwordsDontMatchWarning))
         }
     }
 
@@ -33,16 +43,15 @@ Column{
         id: passwordConfirmation_txtfld
 
         placeholderText: qsTr("Confirmer le mot de passe")
-        width: parent.width*Defines_values.SignupColumnpercent/(Defines_values.SignupColumnpercent+3)
+        Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
-
-        customValidationCallback: function() { return _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld)}
+        validatorWarning: root.validatorWarning
 
         onIsValidChanged: if(isValid && !password_txtfld.isValid) password_txtfld.manageValidation()
 
-        onTextChanged: {
-            warningText = _priv.selectWarningText(password_txtfld.text,passwordConfirmation_txtfld)
+        Component.onCompleted: {
+            onEditingValidations.unshift(new Err.Error(function() { return _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld)},passwordsDontMatchWarning))
         }
     }
 
@@ -52,16 +61,7 @@ Column{
         property bool isValid : password_txtfld.isValid && passwordConfirmation_txtfld.isValid
 
         function customValidation(pairedPass,thisCtxt){
-           return pairedPass !== "" && pairedPass !== thisCtxt.text ? false : true
-        }
-
-        function selectWarningText(pairedPass,thisCtxt) {
-            if (thisCtxt.text.toString().match(thisCtxt.validator.regExp) === null)
-                return typoWarning
-            else if(pairedPass !== thisCtxt.text && pairedPass !== "" )
-                return passwordsDontMatch
-
-            return ""
+            return pairedPass !== "" && pairedPass !== thisCtxt.text ? false : true
         }
     }
 
