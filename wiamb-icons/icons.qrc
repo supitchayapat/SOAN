@@ -3,7 +3,6 @@
         <file alias="email.svg">communication_email.svg</file>
         <file alias="call.svg">communication_call.svg</file>
         <file alias="business.svg">communication_business.svg</file>
-        <file alias="company.cvg">location_city.svg</file>
     </qresource>
     <qresource prefix="/icons/awesome">
         <file alias="close.svg">awesome_close.svg</file>

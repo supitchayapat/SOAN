@@ -193,7 +193,7 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished: {
                             accountInfo.infos.name = text
@@ -214,7 +214,7 @@ Page {
                     }
 
                     Icon {
-                        source: "/icons/communication/company.cvg"
+                        source: "/icons/communication/business.svg"
                         size: dp(Defines_values.Default_iconsize)
                     }
 
