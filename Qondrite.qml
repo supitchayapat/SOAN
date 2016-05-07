@@ -111,9 +111,9 @@ WebSocket {
     function verifyUserAccountExistance(email)
     {
         ceres.call("verifyUserAccountExistance", email).result
-            .then(function onsuccess(result){
-                userAccountExistanceVerified(!isNaN(result) && true === !!result);
-            });
+                    .then(function onsuccess(result){
+                        userAccountExistanceVerified(!isNaN(result) && true === !!result);
+                    });
     }
 
     function getCollection(collection) {

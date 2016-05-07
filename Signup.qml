@@ -261,14 +261,14 @@ Page {
 
                         Layout.fillWidth: true
 
-                        validator: RegExpValidator{regExp: /^([\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]{3,})\s*)+$/gi }
+                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished: {
                             // run validation only if undone yet for current address and address length is worth it
                             if(address_txtField.text.length > 3)
                             {
                                 //TODO handle this call with new callbacks list of TextFieldValidated
-                                Qondrite.validateAddress(text).result
+                                Qondrite.validateAddress(text)
                                 .then(function(result)
                                 {
                                     if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
@@ -309,6 +309,7 @@ Page {
                         Layout.fillWidth: true
 
                         onEditingFinished:{
+                            Qondrite.verifyUserAccountExistance(text)
                             accountInfo.email = text
                             accountInfo.infosChanged()
                         }
