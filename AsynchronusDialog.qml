@@ -53,10 +53,6 @@ PopupBase {
 
     default property alias dialogContent: column.data
 
-    //@TODO : find a way to import Units object of material instead
-    property real pixelDensity: 4.46
-    property real multiplier: 1.4
-
     signal accepted()
     signal rejected()
     signal validated()
@@ -93,10 +89,6 @@ PopupBase {
             }
             event.accepted = true
         }
-    }
-
-    function dp(number) {
-        return Math.round(number*((pixelDensity*25.4)/160)*multiplier);
     }
 
     function show() {
