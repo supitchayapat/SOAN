@@ -228,7 +228,7 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true                       
-                        validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
+                        validator: RegExpValidator{regExp: /^([\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*)+$/gi }
                         customValidationCallback : function(){
                             var dfd = Qondrite.q();
                             return Qondrite.validateAddress(text)
