@@ -10,8 +10,6 @@ TextField{
 
     id:root
 
-    property string name: ""
-
     //TODO : isValid is binded to checkedIcon.visible, but this depends on useValidatingIcon
     // property. So isValid will reflect validity only if useValidatingIcon is true.
     // => make isValid reflect validity state when useValidatingIcon is false.
@@ -76,7 +74,7 @@ TextField{
             }
         }
         else{
-            console.log("TextFiledValidated '"+name+"': this component needs a validator,
+            console.log("TextFiledValidated :'"+ objectName +"': this component needs a validator,
                         you can set the validator using validator property")
             console.trace()
             throw "property exception"
