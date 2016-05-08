@@ -1,16 +1,16 @@
 import QtQuick 2.5
 import Material 0.3
-import "PhoneTextField.js" as PhoneTextFiled
+import "PhoneTextField.js" as PhoneTextField
 
 TextFieldValidated{
 
     onEditingFormating: function() {
-        return PhoneTextFiled.phone.format(text)
+        return PhoneTextField.phone.format(text)
     }
 
     placeholderText: "tel: 0x xx xx xx xx"
     inputMethodHints: Qt.ImhDialableCharactersOnly
 
     validatorWarning : "Numero de téléphone incomplet"
-    validator: RegExpValidator { regExp: PhoneTextFiled.phone.getValidationPattern() }
+    validator: RegExpValidator { regExp: PhoneTextField.phone.getValidationPattern() }
 }
