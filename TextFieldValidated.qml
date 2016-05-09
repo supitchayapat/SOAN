@@ -7,6 +7,7 @@ import "Error.js" as Err
 
 //TODO : for validations we need to support a promise as a return value
 TextField{
+
     id:root
 
     //TODO : isValid is binded to checkedIcon.visible, but this depends on useValidatingIcon
@@ -42,6 +43,7 @@ TextField{
     /*use this property to set the validation visibility when valid,
       if set the false, the icon will not be visibile, but you can still access the validity state
       through the isValid property*/
+
     property bool useValidatingIcon : true
 
     /*the delay in ms to evaluate validation and thus to display the validation icon*/
@@ -59,18 +61,20 @@ TextField{
                 checkedIcon.visible = false
                 return
             }
+
             if(_p.onEditingCalls())
             {
                 hasError = false
                 checkedIcon.visible = true
             }
+
             else if(!_p.onEditingCalls()){
                 hasError = true
                 checkedIcon.visible = false
             }
         }
         else{
-            console.log("TextFiledValidated : this component needs a validator,
+            console.log("TextFiledValidated :'"+ objectName +"': this component needs a validator,
                         you can set the validator using validator property")
             console.trace()
             throw "property exception"
@@ -158,9 +162,9 @@ TextField{
 
     onFocusChanged: {
         if(activeFocus || focus){
-            checkedIcon.visible = false
-            helperText = ""
-            timer.restart()
+           checkedIcon.visible = false
+           helperText = ""
+           timer.restart()
         }
         else{
             timer.stop()
@@ -173,6 +177,7 @@ TextField{
                 helperText = Qt.binding(function(){return _p.onEditingErrorText()})
         }
     }
+
 
     onHasErrorChanged: {
         if(activeFocus || focus){
@@ -194,7 +199,6 @@ TextField{
                 helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }
-
             throw new Error("case not handled")
         }
         else{
