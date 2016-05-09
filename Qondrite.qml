@@ -98,7 +98,7 @@ WebSocket {
             .then(function(result)
             {
                 var dfd = q().defer();
-                if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                     dfd.reject(result);
                 }
                 else{

@@ -21,8 +21,8 @@ Page {
           ambulance   : false,
           vsl         : false
         })
-        property var email: ""
-        property var password: ""
+        property string email: ""
+        property string password: ""
     }
 
     ProgressBySteps{
@@ -61,19 +61,19 @@ Page {
         id: nextButton
 
         property bool active: false
+        property color disabledColor : Palette.colors["grey"]["300"]
+
+        backgroundColor: disabledColor
 
         onActiveChanged: {
             if(active) backgroundColor = Theme.primaryColor
-             else backgroundColor = "gray"
+             else backgroundColor = disabledColor
         }
 
         function updateButtonState(validity){
             if(validity) active = true
             else active = false
         }
-
-        x:40
-        backgroundColor: "gray"
 
         anchors {
             bottom: parent.bottom
@@ -271,7 +271,7 @@ Page {
                                 Qondrite.validateAddress(text)
                                 .then(function(result)
                                 {
-                                    if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                                    if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                                         validatorWarning = qsTr("Adresse invalide")
                                     }
                                     else{
