@@ -214,7 +214,7 @@ Page {
                     }
 
                     Icon {
-                        source: "/icons/communication/business.svg"
+                        name: "/communication/business"
                         size: dp(Defines_values.Default_iconsize)
                     }
 
