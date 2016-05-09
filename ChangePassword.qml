@@ -3,6 +3,7 @@ import Material 0.3
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import "Error.js" as Err
+import Qondrite 0.1
 
 ColumnLayout{
     id : root
@@ -19,31 +20,43 @@ ColumnLayout{
     property string validatorsWarning :  qsTr("6 caractères au minimum")
     property alias validator: newPassword.validator
 
-    function resetFields(){
-        oldPassword_txtfld.text = ""
-        newPassword.resetFields()
-    }
-
-    function clearOldPassword(){
-        oldPassword_txtfld.text = ""
-    }
-
     PasswordTextField {
         id: oldPassword_txtfld
 
         placeholderText: qsTr("Ancien mot de passe")
         visible : askForOldPassword
 
-        /* The old password field has to have the same validator
-            as all password fields to reduce user mistake probability */
-        validatorWarning : root.validatorsWarning
-        validator :  oldPassword_txtfld.validator
         Layout.fillWidth: true
 
 
         anchors {
             topMargin: dp(35)
             horizontalCenter: parent.horizontalCenter
+        }
+
+        onEditingFinished: {
+            Qondrite.checkPassword(text)
+        }
+
+        Component.onCompleted: {
+            Qondrite.oldPasswordValid.connect(
+                            function(oldPasswordIsValid)
+                            {
+                                //TODO  : the server call to the the checkPassword service should be
+                                //added on the onEditingFinishedValidations array when it will be handling
+                                //validations with promises as well
+                                if(oldPasswordIsValid){
+                                    isValid = true
+                                    checkedIconVisibility = true
+                                    console.log("------MOT DE PASSE VALIDE-----")
+
+                                }else{
+                                    isValid = false
+                                    checkedIconVisibility = false
+                                    console.log("------MOT DE PASSE INVALIDE-----")
+                                }
+                            }
+                        )
         }
     }
 

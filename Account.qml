@@ -49,6 +49,14 @@ Page {
                     ? true :false
     }
 
+    function changePassword(oldPassword,newPassword){
+        Qondrite.changePassword(oldPassword,newPassword)
+            .result.then(
+                function onSucess(){
+                    confirmed_dlg.show()
+                }
+            );}
+
     backAction: navDrawer.action
 
     actionBar.switchDelegate :AvailabilitySwitch{}
@@ -429,7 +437,7 @@ Page {
         text:qsTr("Changer le mot de passe")
         elevation: 1
         backgroundColor: Theme.primaryColor
-        onClicked: changepassword_dlg.show()
+        onClicked: changepassword_dlg_cpnt.createObject(page).show();
         Layout.fillWidth:true
     }
 
@@ -460,59 +468,36 @@ Page {
         }
     }
 
-    AsynchronusDialog {
-            id: changepassword_dlg
+    Component{
+        id: changepassword_dlg_cpnt
 
-            text: "Mot de passe oublié"
-            positiveButtonText: "Valider"
-            negativeButtonText: "Annuler"
-            positiveButtonEnabled:changePassword.isValid
+        Dialog {
+                    id: changepassword_dlg
 
-            onValidated: {
-                close()
-                confirmed_dlg.show()
-            }
+                    z :1
 
-            onAccepted: {
-                invalidOldPassword.visible = false
+                    text: "Mot de passe oublié"
+                    positiveButtonText: "Valider"
+                    negativeButtonText: "Annuler"
+                    positiveButtonEnabled:changePassword.isValid
 
-                Qondrite.changePassword(changePassword.oldPassword,changePassword.password)
-                    .result.then(
-                        function onSucess(){
-                            validated()
-                        },
-                        function onError(error){
-                            changePassword.clearOldPassword()
-                            invalidOldPassword.visible = true
-                        }
-                    );
-           }
+                    onAccepted: {
+                       page.changePassword(changePassword.oldPassword,changePassword.password);
+                   }
 
-            onClosed:{
-                changePassword.resetFields()
-                invalidOldPassword.visible = false
-            }
+                    onClosed:{
+                        destroy()
+                    }
 
+                    ChangePassword{
+                        id :changePassword
 
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: dp(Defines_values.TextFieldValidatedMaring)
+                    }
 
-            ChangePassword{
-                id :changePassword
+                }
 
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: dp(Defines_values.TextFieldValidatedMaring)
-            }
-
-            Label {
-                id : invalidOldPassword
-
-                text: "Ancien mot de passe invalide"
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: Theme.tabHighlightColor
-                fontStyles: "dialog"
-                font.family: labelFont.name
-                visible: false
-            }
-        }
-
+    }
     Component.onCompleted: loadUserInformation()
 }
