@@ -308,7 +308,6 @@ Page {
                         Layout.fillWidth: true
 
                         onEditingFinished:{
-                            Qondrite.verifyUserAccountExistance(text)
                             accountInfo.email = text
                             accountInfo.infosChanged()
                         }
