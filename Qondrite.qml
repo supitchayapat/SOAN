@@ -18,6 +18,7 @@ WebSocket {
     signal userCreated()
     signal userCreationFailed()
     signal userAccountExistanceVerified(bool doExists)
+    signal phoneNumberExistanceVerified(bool doExists)
 
     active: true
 
@@ -114,6 +115,14 @@ WebSocket {
                     .then(function onsuccess(result){
                         userAccountExistanceVerified(!isNaN(result) && true === !!result);
                     });
+    }
+
+    function verifyPhoneNumberExistance(phoneNumber)
+    {
+        ceres.call("verifyPhoneNumberExistance", phoneNumber).result
+            .then(function onsuccess(result){
+                phoneNumberExistanceVerified(!!result);
+            });
     }
 
     function getCollection(collection) {
