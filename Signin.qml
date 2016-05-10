@@ -142,7 +142,6 @@ Item {
 
                 onClicked:{
                     Qondrite.loginWithPassword(emailTxtField.text,pwdTxtField.text)
-                    invalidCredentialsLabel.visible = true;
                 }
             }
 
@@ -197,6 +196,11 @@ Item {
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
-        Qondrite.onLogin.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
+        Qondrite.onLogin.connect(function() {
+            invalidCredentialsLabel.visible = false
+            pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+        })
+
+        Qondrite.onLoginFailed.connect(function() {invalidCredentialsLabel.visible = true})
     }
 }
