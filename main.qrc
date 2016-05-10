@@ -6,26 +6,9 @@
         <file>main.qml</file>
         <file>Signin.qml</file>
         <file>Signup.qml</file>
-        <file>ProgressBySteps.qml</file>
         <file>NavigationDrawerDelegate.qml</file>
-        <file>EmailTextField.qml</file>
-        <file>SuggestionTextField.qml</file>
-        <file>PasswordTextField.qml</file>
-        <file>TextFieldValidated.qml</file>
-        <file>PhoneTextField.qml</file>
-        <file>PhoneTextField.js</file>
-        <file>NewPassword.qml</file>
-        <file>ChangePassword.qml</file>
-        <file>Error.js</file>
     </qresource>
     <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>
-    </qresource>
-    <qresource prefix="/Qondrite">
-        <file>asteroid.qml.js</file>
-        <file>ddp.js</file>
-        <file>Log.js</file>
-        <file>q.js</file>
-        <file>Qondrite.qml</file>
     </qresource>
 </RCC>

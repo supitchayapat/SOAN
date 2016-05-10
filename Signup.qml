@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
 import QtQuick.Controls 1.4 as Controls
+import Qure 0.1
 
 Page {
     id:root

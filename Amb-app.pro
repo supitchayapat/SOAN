@@ -6,11 +6,14 @@ SOURCES += main.cpp
 
 RESOURCES += \
     main.qrc \
-    wiamb-icons/icons.qrc
+    wiamb-icons/icons.qrc \
+    Qondrite/qondrite.qrc \
+    Qure/qure.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 # use QML_IMPORT_TRACE environment variable to debug imports issues
 QML_IMPORT_PATH +=
+#QML2_IMPORT_PATH += Qure
 
 OPTIONS += roboto
 
