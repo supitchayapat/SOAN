@@ -43,12 +43,11 @@ Item {
         id: forgottenPassword_dlg
 
         width: parent.width - parent.width/6
-        text: "Mot de passe oublié"
+        text: qsTr("Mot de passe oublié")
         z:1
 
         EmailTextField {
             id: textEmail_txtFld
-
             width: parent.width
             echoMode: TextInput.Normal
             placeholderText: qsTr( "Adresse email" )
@@ -57,11 +56,23 @@ Item {
 
         onAccepted: {
             //a signal with email name will be emited to a function,lets show confirmed dialog
-            confirmed_dlg.show()
+            Qondrite.forgotPassword(textEmail_txtFld.text).result.then(
+                function onsuccess(){
+                    textEmail_txtFld.text = ""
+                    confirmed_dlg.show();
+                },
+                function onerror(error){
+                    textEmail_txtFld.text = ""
+                    if (error.error == 403){
+                        snackbar.open(qsTr("Cet email ne correspond à aucun utilisateur"));
+                    }
+                }
+            );
+
         }
 
-        positiveButtonText: "Valider"
-        negativeButtonText: "Annuler"
+        positiveButtonText: qsTr("Valider")
+        negativeButtonText: qsTr("Annuler")
     }
 
     ColumnLayout{
@@ -175,6 +186,11 @@ Item {
 
         }
     }
+
+    Snackbar {
+        id: snackbar
+    }
+
 
     // TODO : here we bind the signal to a specific function in the scope of Component.onCompleted.
     // It will be nice to have access to those signal handlers directly with signal handlers :
