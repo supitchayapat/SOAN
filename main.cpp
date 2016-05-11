@@ -9,7 +9,7 @@
 static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
     QQmlComponent qondrite(engine,QUrl("qrc:/Qondrite/Qondrite.qml"),QQmlComponent::PreferSynchronous);
-    if(!qondrite.isReady()) QThread::msleep(50);
+    while(!qondrite.isReady()) QThread::msleep(10000);
     QObject *qrondriteObject = qondrite.create();
     QJSValue result = scriptEngine->newQObject(qrondriteObject);
     result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
