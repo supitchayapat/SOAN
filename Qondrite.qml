@@ -49,6 +49,12 @@ WebSocket {
             })
     }
 
+    function forgotPassword(email)
+    {
+        console.log('forgotPassword : '+email );
+        return ceres.call("forgotPassword", { email : email });
+    }
+
     function emit(signalName,param){
         ceres._emit(signalName,param);
     }
@@ -99,7 +105,7 @@ WebSocket {
             .then(function(result)
             {
                 var dfd = q().defer();
-                if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                     dfd.reject(result);
                 }
                 else{
