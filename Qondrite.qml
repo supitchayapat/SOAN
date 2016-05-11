@@ -48,6 +48,12 @@ WebSocket {
             })
     }
 
+    function forgotPassword(email)
+    {
+        console.log('forgotPassword : '+email );
+        return ceres.call("forgotPassword", { email : email });
+    }
+
     function emit(signalName,param){
         ceres._emit(signalName,param);
     }

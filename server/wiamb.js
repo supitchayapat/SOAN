@@ -1,4 +1,6 @@
 
+import { Accounts } from 'meteor/accounts-base';
+
 Availability = new Mongo.Collection('availability');
 
 var wiambAPI = {
@@ -19,7 +21,15 @@ var wiambAPI = {
   			apiKey: 'AIzaSyDMBt6F0W2WhX819O8DawgwDzxCLEz2TXc'
 		});
 		return geo.geocode(address);		
-	}	
+	},
+	"resendPassword" : function(email, fct)
+	{
+		if (0 === wiambAPI.verifyUserAccountExistance(email))
+		{
+			throw new Meteor.Error("Then email provided is unknown");
+		}
+		return Accounts.sendResetPasswordEmail(Meteor.user()._id, email);
+	}
 };
 
 Meteor.methods(wiambAPI);
@@ -30,7 +40,7 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-	
+		
 	Accounts.validateNewUser(function (user) 
     {
     	if (Array.isArray(user.emails) && true === !!wiambAPI.verifyUserAccountExistance(user.emails[0].address)){
@@ -41,6 +51,7 @@ if (Meteor.isServer) {
 
 	Meteor.startup(function () {  
   		Availability._ensureIndex( { geoloc : "2dsphere" } )
+		process.env.MAIL_URL = 'smtp://6b16df8c3b52f4:b2b3ca8f044fff@mailtrap.io:2525';
 	});
 
   	Accounts.onCreateUser(function(options, user) {  
