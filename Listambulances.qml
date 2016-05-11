@@ -36,7 +36,7 @@ Page {
                 anchors.centerIn: parent
                 name: "social/person"
                 size: dp(Defines_values.Default_iconsize)
-                color: availability ? Theme.light.iconColor : Theme.light.hintColor
+                color: availability ? Theme.primaryColor : Theme.light.hintColor
             }
 
             Button {
@@ -53,6 +53,7 @@ Page {
                     name: "communication/call"
                     anchors.centerIn: parent
                     size: dp(Defines_values.Default_iconsize)
+                    color: availability ? Theme.primaryColor : Theme.light.hintColor
                 }
             }
         }
