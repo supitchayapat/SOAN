@@ -116,10 +116,23 @@ WebSocket {
 
     function verifyUserAccountExistance(email)
     {
-        ceres.call("verifyUserAccountExistance", email).result
+        /*ceres.call("verifyUserAccountExistance", email).result
                     .then(function onsuccess(result){
                         userAccountExistanceVerified(!isNaN(result) && true === !!result);
                     });
+                    */
+        /*return ceres.call("verifyUserAccountExistance", email).result
+            .then(function onsuccess(result){
+                console.log('verifyUserAccountExistance result : SUCCESS');
+                var q = q().defer();
+                q.resolve(!isNaN(result) && true === !!result)
+                return q.promise;
+                //userAccountExistanceVerified(!isNaN(result) && true === !!result);
+            }, function onerror(){
+                console.log('verifyUserAccountExistance result : FAILED');
+            });
+            */
+        return ceres.call("verifyUserAccountExistance", email);
     }
 
     function getCollection(collection) {

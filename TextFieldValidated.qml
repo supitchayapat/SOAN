@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import Material 0.3
 import "define_values.js" as Defines_values
+
 /* TODO use directely the JS Error class instead of importing Error.js
  see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error*/
 import "Error.js" as Err
@@ -35,7 +36,7 @@ TextField{
       The priotity of displaying the errors decrease starting from the first index of the array.
       if multiple errors occurs, the one that has priority is displayed
       */
-    property var onEditingFinishedValidations : []
+    readonly property var onEditingFinishedValidations : []
 
     /*warning that is displayed if the input doesn't match the validator*/
     property string validatorWarning
@@ -52,9 +53,15 @@ TextField{
     /*called while editing to reformat the text, the formated text should be returned as a string*/
     property var onEditingFormating : function(){return text}
 
+    readonly property var q : null
+
+    property var gateway : undefined
+
+
     /*manage the hasError property through the onEditingValidations calls.
       update the checkedIcon visibility*/
     function manageValidation(){
+
         if(validator !== null){
             if ( text == ""){
                 hasError = false
@@ -103,7 +110,8 @@ TextField{
         triggeredOnStart: false
 
         onTriggered: {
-            manageValidation()
+            //manageValidation()
+            _p.onEditingFinishedCalls(onEditingFinishedValidations);
             timerDone = true
         }
     }
@@ -114,16 +122,16 @@ TextField{
         function onEditingCalls(){
             return evaluateCalls(onEditingValidations)
         }
-        function onEditingErrorText(){
+        /*function onEditingErrorText(){
             return updtErrorText(onEditingValidations)
-        }
+        }*/
 
         function onEditingFinishedCalls(){
             return evaluateCalls(onEditingFinishedValidations)
         }
-        function onEditingFinishedErrorText(){
+        /*function onEditingFinishedErrorText(){
             return updtErrorText(onEditingFinishedValidations)
-        }
+        }*/
 
         function updtErrorText(calls) {
             var errortodisplay = ""
@@ -136,18 +144,53 @@ TextField{
             }
             return errortodisplay
         }
-        function evaluateCalls(calls){
-            var isValid = true
-            for (var i= 0; i <calls.length; i++){
-                isValid&= calls[i].call()
-                if(!isValid) break
+
+        function evaluateCalls(calls)
+        {
+            if (typeof gateway !== 'object')
+            {
+                throw "gateway must be supplied before running validations";
             }
-            return isValid
+            console.log('pile de validateurs : ', calls.length);
+
+            function getValidators(validators)
+            {
+                var retValidators = [];
+                for (var i=0; i< calls.length; i++){
+                    retValidators.push(validators[i].call().then(
+                        function onsuccess(resp){
+                            return resp; //console.log('then in callback : ', JSON.stringify(arguments));
+                        }, function onerror(resp){
+                            return resp;
+                        })
+                    );
+                }
+                return retValidators;
+            }
+
+            hasError = false;
+            helperText = "";
+
+            gateway.q().all(getValidators(calls)).then(function(responses){
+                for (var i = 0; i< responses.length; i++){
+                    if (typeof responses[i] !== 'object'){
+                        continue;
+                    }
+                    hasError = (responses[i].response === false);
+                    helperText = hasError ? responses[i].message : "";
+                    if (hasError){
+                        break;
+                    }
+                }
+
+            });
         }
     }
 
     onEditingFinished: {
-        checkedIcon.visible = useValidatingIcon && _p.onEditingCalls() && _p.onEditingFinishedCalls()
+        console.log('hey finished');
+        //checkedIcon.visible = useValidatingIcon && _p.onEditingCalls() && _p.onEditingFinishedCalls()
+        checkedIcon.visible = useValidatingIcon && _p.onEditingCalls()
     }
 
     onTextChanged: {
@@ -172,7 +215,8 @@ TextField{
                 checkedIcon.visible = false
                 return
             }
-            manageValidation()
+            //manageValidation();
+            manageOnEditingFinishedValidations()
             if(hasError)
                 helperText = Qt.binding(function(){return _p.onEditingErrorText()})
         }
@@ -180,22 +224,29 @@ TextField{
 
 
     onHasErrorChanged: {
+
         if(activeFocus || focus){
+            console.log('HERE');
             if(timer.timerDone && !hasError){
-                checkedIcon.visible = useValidatingIcon && text != ""
-                helperText = ""
+                console.log('onHAsErrorChanged : A');
+                checkedIcon.visible = true
+                //checkedIcon.visible = useValidatingIcon && text != ""
+                //helperText = ""
                 return
             }
             else if (timer.timerDone && hasError){
+                console.log('onHAsErrorChanged : B');
                 checkedIcon.visible = false
-                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
+                //helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }
             else if (!timer.timerDone && hasError){
+                console.log('onHAsErrorChanged : C');
                 helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }
             else if (!timer.timerDone && !hasError){
+                console.log('onHAsErrorChanged : A');
                 helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }
@@ -209,12 +260,14 @@ TextField{
     }
 
     Component.onCompleted: {
+
         /* TODO : here we are only handling the case of RegExpValidator
          * but the validator could be also an IntValidator or a DoubleValidator
          * please manage the missing cases*/
-         onEditingValidations.unshift(new Err.Error(function (){
-             return text !== "" && text.toString().match(validator.regExp) !== null
-         },validatorWarning))
+
+         //onEditingValidations.unshift(new Err.Error(function (){
+           //  return text !== "" && text.toString().match(validator.regExp) !== null
+         //},validatorWarning))
     }
 }
 

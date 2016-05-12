@@ -306,13 +306,7 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-
-                        onEditingFinished:{
-                            Qondrite.verifyUserAccountExistance(text)
-                            accountInfo.email = text
-                            accountInfo.infosChanged()
-                        }
-
+                        gateway: Qondrite
                         onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
@@ -432,6 +426,7 @@ Page {
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
         Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
+        //email_txtFld.gateway = Qondrite;
     }
 
 
