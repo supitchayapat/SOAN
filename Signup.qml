@@ -13,15 +13,15 @@ Page {
         id:accountInfo
 
         property var infos : ({
-                                  name        : ""   ,
-                                  companyName : ""   ,
-                                  address     : ""   ,
-                                  latitude    : 0.0  ,
-                                  longitude   : 0.0  ,
-                                  tel         : ""   ,
-                                  ambulance   : false,
-                                  vsl         : false
-                              })
+          name        : ""   ,
+          companyName : ""   ,
+          address     : ""   ,
+          latitude    : 0.0  ,
+          longitude   : 0.0  ,
+          tel         : ""   ,
+          ambulance   : false,
+          vsl         : false
+        })
         property var email: ""
         property var password: ""
     }
@@ -194,7 +194,7 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished: {
                             accountInfo.infos.name = text
@@ -215,7 +215,7 @@ Page {
                     }
 
                     Icon {
-                        source: "communication/business"
+                        name: "/communication/business"
                         size: dp(Defines_values.Default_iconsize)
                     }
 
@@ -227,7 +227,7 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         // @TODO this validator may need to be changed with a correct regExp for this case
-                        validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished:{
                             accountInfo.infos.companyName = text
@@ -251,27 +251,24 @@ Page {
                         size: dp(Defines_values.Default_iconsize)
                     }
 
-                    TextFieldValidated{
+                    TextFieldValidated
+                    {
                         id:address_txtField
-
-                        QtObject {
-                            id : previousAddress
-                            property string value : ""
-                        }
 
                         placeholderText: qsTr("Adresse")
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
+
                         Layout.fillWidth: true
-                        // @TODO this validator may need to be changed with a correct regExp for this case
-                        validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
+
+                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished: {
                             // run validation only if undone yet for current address and address length is worth it
                             if(address_txtField.text.length > 3)
                             {
                                 //TODO handle this call with new callbacks list of TextFieldValidated
-                                Qondrite.validateAddress(text).result
+                                Qondrite.validateAddress(text)
                                 .then(function(result)
                                 {
                                     if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
@@ -283,11 +280,11 @@ Page {
                                         accountInfo.infos.address = text
                                         accountInfo.infosChanged()
                                     }
+
                                 });
                             }
+                            onIsValidChanged: accountInfo.infosChanged()
                         }
-
-                        onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
 
@@ -312,6 +309,7 @@ Page {
                         Layout.fillWidth: true
 
                         onEditingFinished:{
+                            Qondrite.verifyUserAccountExistance(text)
                             accountInfo.email = text
                             accountInfo.infosChanged()
                         }
@@ -350,6 +348,7 @@ Page {
                     }
                 }
             }
+
         }
     }
 
@@ -435,6 +434,6 @@ Page {
     Component.onCompleted: {
         Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
     }
+
+
 }
-
-

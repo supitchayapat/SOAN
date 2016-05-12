@@ -12,7 +12,7 @@ static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *script
     if(!qondrite.isReady()) QThread::msleep(50);
     QObject *qrondriteObject = qondrite.create();
     QJSValue result = scriptEngine->newQObject(qrondriteObject);
-    result.setProperty("meteor_url",QString("localhost:3000"));
+    result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
     return result;
 }
 
