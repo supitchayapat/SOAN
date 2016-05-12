@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import Material 0.3
 import QtQuick.Window 2.0
+import Qt.labs.settings 1.0
 import Qondrite 0.1
 
 
@@ -10,13 +11,21 @@ ApplicationWindow {
     visible: true
     width: Screen.width
     height: Screen.height
-    initialPage : Qt.resolvedUrl("Signin.qml")
+    initialPage : appSettings.token == ""?Qt.resolvedUrl("Signin.qml"):Qt.resolvedUrl("Listambulances.qml")
 
     theme {
         primaryColor: "blue"
         accentColor: "blue"
         tabHighlightColor: "red"
         backgroundColor: "white"
+    }
+
+    Settings{
+        id:appSettings
+
+        category: "userInfos"
+        property string username: ""
+        property string token: ""
     }
 
     NavigationDrawer {
