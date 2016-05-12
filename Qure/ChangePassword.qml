@@ -1,7 +1,6 @@
 import QtQuick 2.6
 import Material 0.3
 import QtQuick.Layouts 1.2
-import "define_values.js" as Defines_values
 import "Error.js" as Err
 
 ColumnLayout{

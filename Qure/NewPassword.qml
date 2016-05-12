@@ -1,8 +1,8 @@
 import QtQuick 2.5
 import Material 0.3
 import QtQuick.Layouts 1.2
-import "define_values.js" as Defines_values
 import "Error.js" as Err
+
 ColumnLayout{
     id : root
 
@@ -20,7 +20,7 @@ ColumnLayout{
 
     //TODO : size properties too specif to be here
     width: parent.width
-    spacing: dp(Defines_values.TextFieldValidatedMaring)
+    spacing: dp(33)
 
     PasswordTextField{
         id: password_txtfld
