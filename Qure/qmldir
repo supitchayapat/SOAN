@@ -16,3 +16,4 @@ PhoneTextField 0.1 PhoneTextField.qml
 ProgressBySteps 0.1 ProgressBySteps.qml
 SuggestionTextField 0.1 SuggestionTextField.qml
 TextFieldValidated 0.1 TextFieldValidated.qml
+AvailabilitySwitch 0.1 AvailabilitySwitch.qml
