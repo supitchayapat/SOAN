@@ -12,8 +12,8 @@ RESOURCES += \
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 # use QML_IMPORT_TRACE environment variable to debug imports issues
-QML_IMPORT_PATH +=
-#QML2_IMPORT_PATH += Qure
+QML_IMPORT_PATH += Qure
+QML2_IMPORT_PATH += Qure
 
 OPTIONS += roboto
 
@@ -22,3 +22,6 @@ include(deployment.pri)
 include(qml-material/material.pri)
 
 CONFIG += c++11
+
+#to use when need to debug qml
+#CONFIG += qml_debug
