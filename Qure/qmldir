@@ -1,5 +1,12 @@
 module Qure
 
+# TODO uncoment when resolving parsing for qtCreator and use qmlplugindump to regenerate qure.qmltypes
+# for the moment qmlplugindump doesn't generate the .qmltypes file for this module
+# because it depends on materials that has
+# no material.qmltypes file, and it's the reason why it's underlined in red in QtCreator
+# typeinfo qure.qmltypes. When trying to generate materials .qmltypes file using qmldumpplugin there is some
+# erros that need to be resolved. To see the related error : Tools>qml/js>run checks
+
 # Components
 ChangePassword 0.1 ChangePassword.qml
 EmailTextField 0.1 EmailTextField.qml
