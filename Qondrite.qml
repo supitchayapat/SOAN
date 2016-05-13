@@ -1,4 +1,4 @@
-import Qt.WebSockets 1.0
+import QtWebSockets 1.0
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
