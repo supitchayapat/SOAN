@@ -1,4 +1,4 @@
-import Qt.WebSockets 1.0
+import QtWebSockets 1.0
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
@@ -48,6 +48,12 @@ WebSocket {
             function onError(error){
                 userCreationFailed()
             })
+    }
+
+    function forgotPassword(email)
+    {
+        console.log('forgotPassword : '+email );
+        return ceres.call("forgotPassword", { email : email });
     }
 
     function emit(signalName,param){
@@ -100,7 +106,7 @@ WebSocket {
             .then(function(result)
             {
                 var dfd = q().defer();
-                if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                     dfd.reject(result);
                 }
                 else{
