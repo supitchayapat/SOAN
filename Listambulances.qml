@@ -22,6 +22,18 @@ Page {
         }
     ]
 
+    function loadListAmbulances()
+    {
+        Qondrite.subscribe("availability",function(){
+            var collection = Qondrite.getCollection("availability")._set._items;
+            for( var id in collection){
+                if( collection.hasOwnProperty(id) ) {
+                    ambliste.append(collection[id]);
+                }
+            }
+        });
+    }
+
     ListModel {
         id:ambliste
     }
@@ -30,7 +42,7 @@ Page {
         id: listelements
 
         ListItem.Standard{
-            text:companyName
+            text: companyName
 
             action: Icon {
                 anchors.centerIn: parent
@@ -67,15 +79,6 @@ Page {
     }
 
     Component.onCompleted: {
-        Qondrite.subscribe("availability",function(){
-            var collection = Qondrite.getCollection("availability")._set._items;
-            for( var id in collection){
-                if( collection.hasOwnProperty(id) ) {
-                    ambliste.append(collection[id]);
-                }
-            }
-        });
+        loadListAmbulances();
     }
-
-
 }
