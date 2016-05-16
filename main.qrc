@@ -7,6 +7,7 @@
         <file>Signin.qml</file>
         <file>Signup.qml</file>
         <file>NavigationDrawerDelegate.qml</file>
+        <file>AvailabilitySwitch.qml</file>
     </qresource>
     <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>
