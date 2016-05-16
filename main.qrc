@@ -1,5 +1,5 @@
 <RCC>
-    <qresource lang="js, qml" prefix="/src">
+    <qresource prefix="/src" lang="js, qml">
         <file>Account.qml</file>
         <file>define_values.js</file>
         <file>Listambulances.qml</file>
@@ -19,7 +19,7 @@
         <file>AvailabilitySwitch.qml</file>
         <file>Error.js</file>
     </qresource>
-    <qresource lang="data, images, icones.." prefix="/rsrc">
+    <qresource prefix="/rsrc" lang="data, images, icones..">
         <file alias="ambulance-siren">ambulance-siren.png</file>
     </qresource>
     <qresource prefix="/Qondrite">
@@ -28,5 +28,6 @@
         <file>Log.js</file>
         <file>q.js</file>
         <file>Qondrite.qml</file>
+        <file>QtSettings.js</file>
     </qresource>
 </RCC>
