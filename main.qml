@@ -6,21 +6,20 @@ import Qondrite 0.1
 
 
 ApplicationWindow {
-    id: ambulance
+    id: app
 
     visible: true
     width: Screen.width
     height: Screen.height
 
     //initialPage : undefined //appSettings.token == ""?Qt.resolvedUrl("Signin.qml"):Qt.resolvedUrl("Listambulances.qml")
-    initialPage: {
-        return manageInitialPage();
-    }
+    initialPage: manageInitialPage();
 
     theme {
-        primaryColor: "blue"
-        accentColor: "blue"
-        tabHighlightColor: "red"
+        //WARNING: for the moment we support only light themes
+        primaryColor: "#2196F3"
+        primaryDarkColor :"#1976D2"
+        accentColor: "#03A9F4"
         backgroundColor: "white"
     }
 
@@ -34,7 +33,7 @@ ApplicationWindow {
     function manageInitialPage()
     {
         overrideQondrite();
-        return Qondrite.tryResumeLogin().then()
+        Qondrite.tryResumeLogin().then()
             .catch(function(e){
                 initialPage = Qt.resolvedUrl("Signin.qml");
             })
@@ -71,7 +70,6 @@ ApplicationWindow {
             }
         };
     }
-
 
 
     NavigationDrawer {
