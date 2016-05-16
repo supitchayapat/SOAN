@@ -2,14 +2,13 @@ import Qt.WebSockets 1.0
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
+import 'QtSettings.js' as QtSettings
 
 WebSocket {
     id: wsid
 
     property var ceres
     property string meteor_url
-
-    property var storage
 
     signal close();
     signal error();
@@ -23,6 +22,7 @@ WebSocket {
     signal connected()
     signal userAccountExistanceVerified(bool doExists)
 
+    signal joristest()
 
     active: true
 
@@ -55,25 +55,28 @@ WebSocket {
             })
     }
 
-    function getAsteroid()
+    function setStorage(storageEngine)
     {
-        return Ast.Asteroid;
+        // replace Asteroid's localSotage 'CRUD' API with one given from input storageEngine
+        Ast.Asteroid.utils.multiStorage = QtSettings.API(storageEngine, q);
     }
 
     function tryResumeLogin()
     {
-        return ceres._tryResumeLogin();
+        return ceres._tryResumeLogin()
+            .then()
+            .catch(function(e){
+                loginFailed();
+            })
+            .then(function(){
+                login();
+            });
     }
 
     function forgotPassword(email)
     {
         console.log('forgotPassword : '+email );
         return ceres.call("forgotPassword", { email : email });
-    }
-
-    function tryResumeLogin()
-    {
-        return ceres._tryResumeLogin();
     }
 
     function emit(signalName,param){
