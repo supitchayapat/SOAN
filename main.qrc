@@ -18,7 +18,6 @@
         <file>ChangePassword.qml</file>
         <file>AvailabilitySwitch.qml</file>
         <file>Error.js</file>
-        <file>AsynchronusDialog.qml</file>
     </qresource>
     <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>
@@ -29,5 +28,6 @@
         <file>Log.js</file>
         <file>q.js</file>
         <file>Qondrite.qml</file>
+        <file>sha256.js</file>
     </qresource>
 </RCC>

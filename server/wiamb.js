@@ -50,6 +50,17 @@ var wiambAPI = {
 				}
 			});		
 	},
+	"checkPassword" : function checkPassword(encodedPassword){
+
+		    if (Meteor.userId()) {
+		      var user = Meteor.user();
+		      var password = {digest: encodedPassword, algorithm: 'sha-256'};
+		      var result = Accounts._checkPassword(user, password);
+		      return result.error == null;
+		    } else {
+		      return false;
+		    }
+	},
 	"resendPassword" : function(email, fct)
 	{
 		if (0 === wiambAPI.verifyUserAccountExistance(email))
