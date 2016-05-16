@@ -279,7 +279,7 @@ Page {
                         Qondrite.validateAddress(text).result
                         .then(function(result)
                         {
-                            if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                            if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                                 validatorWarning = qsTr("Adresse invalide")
                             }
                             else{
@@ -426,7 +426,6 @@ Page {
 
         text:qsTr("Changer le mot de passe")
         elevation: 1
-        backgroundColor: Theme.primaryColor
         onClicked: changepassword_dlg_cpnt.createObject(page).show();
         Layout.fillWidth:true
     }
@@ -445,14 +444,12 @@ Page {
             Icon{
                 name:"action/done"
                 size: dp(100)
-                color: Theme.primaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Label {
                 text: "votre nouveau mot de passe a été enregistré avec succès"
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: Theme.primaryColor
                 wrapMode: Text.WordWrap
             }
         }
