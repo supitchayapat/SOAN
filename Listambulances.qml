@@ -11,13 +11,15 @@ Page {
 
     actionBar.switchDelegate : AvailabilitySwitch{}
 
+    property var collection : []
+
     actions:[
         Action{//availability switch
             iconName: "awesome/close"
             displayAsSwitch:true
 
             onTriggered: {
-                //TODO send request to server
+
             }
         }
     ]
@@ -67,8 +69,12 @@ Page {
     }
 
     Component.onCompleted: {
+        var userCollection = Qondrite.getCollection("users");
+        var userInfo = userCollection._set.toArray()[0];
+        console.log("user infooo");
+        console.log(JSON.stringify(userInfo));
         Qondrite.subscribe("availability",function(){
-            var collection = Qondrite.getCollection("availability")._set._items;
+            collection = Qondrite.getCollection("availability")._set._items;
             for( var id in collection){
                 if( collection.hasOwnProperty(id) ) {
                     ambliste.append(collection[id]);
