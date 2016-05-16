@@ -8,8 +8,19 @@ Page {
     id: page
 
     backAction: navDrawer.action
-    actionBar.backgroundColor: Palette.colors.grey[Defines_values.ListambulancesBackgroundlevel]
-    actionBar.decorationColor: Palette.colors.grey[Defines_values.ListambulancesDecorationlevel]
+
+    actionBar.switchDelegate : AvailabilitySwitch{}
+
+    actions:[
+        Action{//availability switch
+            iconName: "awesome/close"
+            displayAsSwitch:true
+
+            onTriggered: {
+                //TODO send request to server
+            }
+        }
+    ]
 
     ListModel {
         id:ambliste
@@ -25,7 +36,7 @@ Page {
                 anchors.centerIn: parent
                 name: "social/person"
                 size: dp(Defines_values.Default_iconsize)
-                color: availability ? Theme.primaryColor : Defines_values.Materialgraycolor
+                color: availability ? Theme.primaryColor : Theme.light.hintColor
             }
 
             Button {
@@ -42,7 +53,7 @@ Page {
                     name: "communication/call"
                     anchors.centerIn: parent
                     size: dp(Defines_values.Default_iconsize)
-                    color: Defines_values.PrimaryColor
+                    color: availability ? Theme.primaryColor : Theme.light.hintColor
                 }
             }
         }

@@ -9,6 +9,8 @@ WebSocket {
     property var ceres
     property string meteor_url
 
+    property var storage
+
     signal close();
     signal error();
     signal open();
@@ -17,7 +19,10 @@ WebSocket {
     signal loginFailed()
     signal userCreated()
     signal userCreationFailed()
+
     signal connected()
+    signal userAccountExistanceVerified(bool doExists)
+
 
     active: true
 
@@ -32,32 +37,38 @@ WebSocket {
         connected();
     }
 
+
     function _on(signalMessage,callBack){
         ceres.on(signalMessage,callBack);
     }
 
-    function createUser(email,password,profile){
-
-        return ceres.createUser(email,password,profile)
+    function createUser(email,password,profile)
+    {
+        ceres.createUser(email,password,profile)
         .then(
             function onSuccess(userId){
                 userCreated();
                 login();
-                var dfd = Q.defer();
-                dfd.resolve({});
-                return dfd.promise;
             },
             function onError(error){
-                var dfd = Q.defer();
-                dfd.reject(error);
-                return dfd.promise;
+                userCreationFailed()
             })
-        .catch(function onError(error){
-            userCreationFailed()
-            //@TODO  : display a message to give the user information
-            //about the error
-            //many error can be catched here (existing email, existing address,existing phone...)
-        });
+    }
+
+    function getAsteroid()
+    {
+        return Ast.Asteroid;
+    }
+
+    function tryResumeLogin()
+    {
+        return ceres._tryResumeLogin();
+    }
+
+    function forgotPassword(email)
+    {
+        console.log('forgotPassword : '+email );
+        return ceres.call("forgotPassword", { email : email });
     }
 
     function tryResumeLogin()
@@ -111,8 +122,28 @@ WebSocket {
     }
 
     function validateAddress(address){
-         return ceres.call("validateAddress",address);
+        return ceres.call("validateAddress",address).result
+            .then(function(result)
+            {
+                var dfd = q().defer();
+                if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
+                    dfd.reject(result);
+                }
+                else{
+                    dfd.resolve(result);
+                }
+                return dfd.promise;
+            });
     }
+
+    function verifyUserAccountExistance(email)
+    {
+        ceres.call("verifyUserAccountExistance", email).result
+                    .then(function onsuccess(result){
+                        userAccountExistanceVerified(!isNaN(result) && true === !!result);
+                    });
+    }
+
 
     function getCollection(collection) {
         var coll;
@@ -153,6 +184,11 @@ WebSocket {
 
     function clearInterval(timer) {
         clearTimeout(timer);
+    }
+
+    function q()
+    {
+        return Ast.Asteroid.Q;
     }
 
     onStatusChanged: {
