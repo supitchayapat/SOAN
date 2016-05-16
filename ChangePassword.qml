@@ -9,8 +9,8 @@ ColumnLayout{
     id : root
 
     readonly property alias password : _priv.password
-    readonly property alias isValid : _priv.isValid
-    readonly property alias oldPassword :oldPassword_txtfld.text
+    property alias isValid : _priv.isValid
+    property alias oldPassword :oldPassword_txtfld.text
     property bool askForOldPassword : true
     property alias passwordPlaceHolderText : newPassword.passwordPlaceHolderText
     property alias oldPasswordPlaceHolderText : oldPassword_txtfld.placeholderText
@@ -19,6 +19,8 @@ ColumnLayout{
     property alias passwordsDontMatchWarning: newPassword.passwordsDontMatchWarning
     property string validatorsWarning :  qsTr("6 caractères au minimum")
     property alias validator: newPassword.validator
+    property alias oldPasswordVisibilityIcon: oldPassword_txtfld.checkedIconVisibility
+
 
     PasswordTextField {
         id: oldPassword_txtfld
@@ -35,28 +37,11 @@ ColumnLayout{
         }
 
         onEditingFinished: {
+            //TODO  : the server call to the the checkPassword service should be
+            //added on the onEditingFinishedValidations array when it will be handling
+            //validations with promises as well, and the decalration
+            //should be in the instanciation of the component
             Qondrite.checkPassword(text)
-        }
-
-        Component.onCompleted: {
-            Qondrite.oldPasswordValid.connect(
-                            function(oldPasswordIsValid)
-                            {
-                                //TODO  : the server call to the the checkPassword service should be
-                                //added on the onEditingFinishedValidations array when it will be handling
-                                //validations with promises as well
-                                if(oldPasswordIsValid){
-                                    isValid = true
-                                    checkedIconVisibility = true
-                                    console.log("------MOT DE PASSE VALIDE-----")
-
-                                }else{
-                                    isValid = false
-                                    checkedIconVisibility = false
-                                    console.log("------MOT DE PASSE INVALIDE-----")
-                                }
-                            }
-                        )
         }
     }
 

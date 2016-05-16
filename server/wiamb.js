@@ -60,7 +60,7 @@ var wiambAPI = {
 		    } else {
 		      return false;
 		    }
-	}
+	},
 	
 	"resendPassword" : function(email, fct)
 	{

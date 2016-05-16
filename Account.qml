@@ -494,6 +494,26 @@ Page {
 
                         anchors.horizontalCenter: parent.horizontalCenter
                         spacing: dp(Defines_values.TextFieldValidatedMaring)
+
+                        Component.onCompleted: {
+                            Qondrite.oldPasswordValid.connect(
+                                            function(isEqualToRealPassword)
+                                            {
+
+                                                if(isEqualToRealPassword){
+                                                    isValid = true
+                                                    oldPasswordVisibilityIcon = true
+                                                    console.log("------MOT DE PASSE VALIDE-----")
+
+                                                }else{
+                                                    isValid = false
+                                                    oldPasswordVisibilityIcon = false
+                                                    console.log("------MOT DE PASSE INVALIDE-----")
+                                                }
+                                            }
+                                        )
+                        }
+
                     }
 
                 }
