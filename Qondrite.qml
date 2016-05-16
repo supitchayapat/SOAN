@@ -1,4 +1,4 @@
-import QtWebSockets 1.0
+import Qt.WebSockets 1.0
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
@@ -8,6 +8,8 @@ WebSocket {
 
     property var ceres
     property string meteor_url
+
+    property var storage
 
     signal close();
     signal error();
@@ -31,6 +33,7 @@ WebSocket {
         console.log("done");
     }
 
+
     function _on(signalMessage,callBack){
         ceres.on(signalMessage,callBack);
     }
@@ -46,6 +49,16 @@ WebSocket {
             function onError(error){
                 userCreationFailed()
             })
+    }
+
+    function getAsteroid()
+    {
+        return Ast.Asteroid;
+    }
+
+    function tryResumeLogin()
+    {
+        return ceres._tryResumeLogin();
     }
 
     function forgotPassword(email)
@@ -121,6 +134,7 @@ WebSocket {
                         userAccountExistanceVerified(!isNaN(result) && true === !!result);
                     });
     }
+
 
     function getCollection(collection) {
         var coll;

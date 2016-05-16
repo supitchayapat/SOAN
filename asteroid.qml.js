@@ -848,17 +848,22 @@ Asteroid.prototype._connectAfterCredentialSecretReceived = function (credentials
 
 Asteroid.prototype._tryResumeLogin = function () {
     var self = this;
+    console.log('GO THERE');
     return Q()
         .then(function () {
-            return Asteroid.utils.multiStorage.get(self._host + "__" + self._instanceId + "__login_token__");
+            console.log('TRY : 1');
+            return Asteroid.utils.multiStorage.get('token');
+            //return Asteroid.utils.multiStorage.get(self._host + "__" + self._instanceId + "__login_token__");
         })
         .then(function (token) {
+            console.log('TRY : 2', JSON.stringify(token));
             if (!token) {
                 throw new Error("No login token");
             }
             return token;
         })
         .then(function (token) {
+            console.log('TRY : 3');
             var deferred = Q.defer();
             var loginParameters = {
                 resume: token
@@ -867,13 +872,15 @@ Asteroid.prototype._tryResumeLogin = function () {
                 if (err) {
                     delete self.userId;
                     delete self.loggedIn;
-                    Asteroid.utils.multiStorage.del(self._host + "__" + self._instanceId + "__login_token__");
+                    //Asteroid.utils.multiStorage.del(self._host + "__" + self._instanceId + "__login_token__");
+                    Asteroid.utils.multiStorage.del("token");
                     self._emit("loginError", err);
                     deferred.reject(err);
                 } else {
                     self.userId = res.id;
                     self.loggedIn = true;
-                    Asteroid.utils.multiStorage.set(self._host + "__" + self._instanceId + "__login_token__", res.token);
+                    //Asteroid.utils.multiStorage.set(self._host + "__" + self._instanceId + "__login_token__", res.token);
+                    Asteroid.utils.multiStorage.set("token", res.token);
                     self._emit("login", res.id);
                     deferred.resolve(res.id);
                 }
@@ -925,12 +932,14 @@ Asteroid.prototype.loginWithPassword = function (usernameOrEmail, password) {
         if (err) {
             delete self.userId;
             delete self.loggedIn;
+            Asteroid.utils.multiStorage.del('token');
             //Asteroid.utils.multiStorage.del(self._host + "__" + self._instanceId + "__login_token__");
             deferred.reject(err);
 
         } else {
             self.userId = res.id;
             self.loggedIn = true;
+            Asteroid.utils.multiStorage.set('token', res.token);
             //Asteroid.utils.multiStorage.set(self._host + "__" + self._instanceId + "__login_token__", res.token);
             deferred.resolve(res.id);
         }
