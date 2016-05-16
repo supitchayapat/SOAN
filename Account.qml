@@ -59,17 +59,7 @@ Page {
 
     backAction: navDrawer.action
 
-    actionBar.switchDelegate :AvailabilitySwitch{}
-
     actions: [
-        Action{//availability switch
-            iconName: "awesome/close"
-            displayAsSwitch:true
-
-            onTriggered: {
-                //TODO send request to server
-            }
-        },
         Action{
             iconName: "editor/mode_edit"
             visible: !isEditable
