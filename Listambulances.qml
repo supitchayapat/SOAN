@@ -69,14 +69,24 @@ Page {
     }
 
     Component.onCompleted: {
-        Qondrite.subscribe("availability",function(){
-            var collection = Qondrite.getCollection("availability")._set._items;
-            for( var id in collection){
-                if( collection.hasOwnProperty(id) ) {
-                    ambliste.append(collection[id]);
-                }
-            }
-        });
+
+        var subscription  = Qondrite.subscribe("availability",function(){
+                                    var collection = Qondrite.getCollection("availability")._set._items;
+
+                                    for( var id in collection){
+                                        if( collection.hasOwnProperty(id) ) {
+                                            ambliste.append(collection[id]);
+                                        }
+                                    }
+
+                                });
+
+        Qondrite.loggingOut.connect(
+                        function()
+                        {
+                            subscription.stop();
+                        }
+                    )
     }
 
 

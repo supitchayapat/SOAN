@@ -49,9 +49,7 @@ var wiambAPI = {
 			    	});
 				}
 			});		
-	}
-	
-	});
+	},
 	"resendPassword" : function(email, fct)
 	{
 		if (0 === wiambAPI.verifyUserAccountExistance(email))

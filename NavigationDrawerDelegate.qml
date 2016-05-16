@@ -122,6 +122,7 @@ Rectangle{
 
             onClicked: {
                 disconnectPressed()
+                navDrawer.close()
             }
         }
     }

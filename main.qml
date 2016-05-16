@@ -35,7 +35,8 @@ ApplicationWindow {
                 pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
             }
             onDisconnectPressed: {
-                // TODO Run here the disconnect process
+                pageStack.push(Qt.resolvedUrl("Signin.qml"))
+                Qondrite.logout();
             }
         }
     }

@@ -1214,7 +1214,8 @@ Asteroid.utils.multiStorage.set = function (key, value) {
 
 Asteroid.utils.multiStorage.del = function (key) {
     var deferred = Q.defer();
-    delete localStorage[key];
+    //TODO see how are we going to replace this with a real localStorage
+    //delete localStorage[key];
     deferred.resolve();
     return deferred.promise;
 };
