@@ -36,7 +36,7 @@ TextField{
       The priotity of displaying the errors decrease starting from the first index of the array.
       if multiple errors occurs, the one that has priority is displayed
       */
-    readonly property var onEditingFinishedValidations : []
+    property var onEditingFinishedValidations : []
 
     /*warning that is displayed if the input doesn't match the validator*/
     property string validatorWarning
@@ -53,8 +53,6 @@ TextField{
     /*called while editing to reformat the text, the formated text should be returned as a string*/
     property var onEditingFormating : function(){return text}
 
-    readonly property var q : null
-
     property var gateway : undefined
 
 
@@ -69,6 +67,7 @@ TextField{
                 return
             }
 
+
             if(_p.onEditingCalls())
             {
                 hasError = false
@@ -79,6 +78,7 @@ TextField{
                 hasError = true
                 checkedIcon.visible = false
             }
+
         }
         else{
             console.log("TextFiledValidated :'"+ objectName +"': this component needs a validator,
@@ -110,7 +110,8 @@ TextField{
         triggeredOnStart: false
 
         onTriggered: {
-            //manageValidation()
+            _p.onEditingCalls(onEditingValidations);
+
             _p.onEditingFinishedCalls(onEditingFinishedValidations);
             timerDone = true
         }
@@ -147,19 +148,18 @@ TextField{
 
         function evaluateCalls(calls)
         {
+            console.log("GATE : ", typeof gateway);
             if (typeof gateway !== 'object')
             {
                 throw "gateway must be supplied before running validations";
             }
-            console.log('pile de validateurs : ', calls.length);
-
             function getValidators(validators)
             {
                 var retValidators = [];
                 for (var i=0; i< calls.length; i++){
                     retValidators.push(validators[i].call().then(
                         function onsuccess(resp){
-                            return resp; //console.log('then in callback : ', JSON.stringify(arguments));
+                            return resp;
                         }, function onerror(resp){
                             return resp;
                         })
@@ -178,6 +178,7 @@ TextField{
                     }
                     hasError = (responses[i].response === false);
                     helperText = hasError ? responses[i].message : "";
+                    checkedIcon.visible = ! hasError;
                     if (hasError){
                         break;
                     }
@@ -188,9 +189,8 @@ TextField{
     }
 
     onEditingFinished: {
-        console.log('hey finished');
         //checkedIcon.visible = useValidatingIcon && _p.onEditingCalls() && _p.onEditingFinishedCalls()
-        checkedIcon.visible = useValidatingIcon && _p.onEditingCalls()
+        //checkedIcon.visible = useValidatingIcon && _p.onEditingCalls()
     }
 
     onTextChanged: {
@@ -216,7 +216,7 @@ TextField{
                 return
             }
             //manageValidation();
-            manageOnEditingFinishedValidations()
+            //manageOnEditingFinishedValidations()
             if(hasError)
                 helperText = Qt.binding(function(){return _p.onEditingErrorText()})
         }
@@ -226,27 +226,22 @@ TextField{
     onHasErrorChanged: {
 
         if(activeFocus || focus){
-            console.log('HERE');
             if(timer.timerDone && !hasError){
-                console.log('onHAsErrorChanged : A');
                 checkedIcon.visible = true
                 //checkedIcon.visible = useValidatingIcon && text != ""
                 //helperText = ""
                 return
             }
             else if (timer.timerDone && hasError){
-                console.log('onHAsErrorChanged : B');
                 checkedIcon.visible = false
                 //helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }
             else if (!timer.timerDone && hasError){
-                console.log('onHAsErrorChanged : C');
                 helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }
             else if (!timer.timerDone && !hasError){
-                console.log('onHAsErrorChanged : A');
                 helperText = Qt.binding(function(){return _p.onEditingErrorText()})
                 return
             }

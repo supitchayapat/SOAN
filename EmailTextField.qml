@@ -37,14 +37,12 @@ TextFieldValidated{
         onEditingFinishedValidations.unshift(
              new Err.Error(function(){
                  var dfd = gateway.q().defer();
-                 var check = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/.test(text);
+                 var runTest = validator.regExp.test(text);
                  dfd.resolve( {
-                        response : (check === true),
-                        message : (check === true) ? "" : qsTr("Adresse email invalide")
+                        response : runTest,
+                        message : runTest ? "" : qsTr("Adresse email invalide")
                     });
                  return dfd.promise;
             }));
-        console.log('registered Validators');
-
     }
 }
