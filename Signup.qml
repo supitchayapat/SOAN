@@ -257,7 +257,7 @@ Page {
                         placeholderText: qsTr("Adresse")
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
-                        gateway: Qondrite
+                        serverGateway: Qondrite
                         Layout.fillWidth: true
 
                         validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
@@ -306,7 +306,7 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        gateway: Qondrite
+                        serverGateway: Qondrite
                         onIsValidChanged: accountInfo.infosChanged()
                     }
                 }
@@ -331,7 +331,7 @@ Page {
                         Layout.fillWidth: true
                         font.family: textFieldFont.name
                         font.pixelSize: dp(Defines_values.Base_text_font)
-
+                        serverGateway: Qondrite
                         onEditingFinished: {
                             accountInfo.infos.tel = text
                             accountInfo.infosChanged()
@@ -426,7 +426,7 @@ Page {
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
         Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
-        //email_txtFld.gateway = Qondrite;
+        //email_txtFld.serverGateway = Qondrite;
     }
 
 

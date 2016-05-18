@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import Material 0.3
 import "Error.js" as Err
+import "/Qondrite/q.js" as AsyncLib
 
 TextFieldValidated{
     inputMethodHints: Qt.ImhEmailCharactersOnly
@@ -11,17 +12,17 @@ TextFieldValidated{
 
     Component.onCompleted: {
 
-        if (typeof gateway !== 'object')
+        if (typeof serverGateway !== 'object')
         {
-            throw "gateway must be supplied before running validations";
+            throw "serverGateway must be supplied before running validations";
         }
         onEditingFinishedValidations.unshift(new Err.Error(function(){
-            var dfd = gateway.q().defer();
-            return gateway.verifyUserAccountExistance(text).result.then(
+            var dfd = AsyncLib.Q.defer();
+            return serverGateway.verifyUserAccountExistance(text).result.then(
                 function onsuccess(countUsers){
                     dfd.resolve( {
                         response : (countUsers === 0),
-                        message :  (countUsers === 0) ? "RIEN" : qsTr("Cette adresse email est déjà utilisée")
+                        message :  (countUsers === 0) ? "" : qsTr("Cette adresse email est déjà utilisée")
                     });
                     return dfd.promise;
                 },
@@ -36,7 +37,7 @@ TextFieldValidated{
 
         onEditingFinishedValidations.unshift(
              new Err.Error(function(){
-                 var dfd = gateway.q().defer();
+                 var dfd = AsyncLib.Q.defer();
                  var runTest = validator.regExp.test(text);
                  dfd.resolve( {
                         response : runTest,
@@ -44,5 +45,15 @@ TextFieldValidated{
                     });
                  return dfd.promise;
             }));
+
+        onEditingFinishedValidations.unshift(
+               new Err.Error(function(){
+                   var dfd = AsyncLib.Q.defer();
+                   dfd.resolve( {
+                       response :  (text !=""),
+                       message : "Adresse email doit être renseignée"
+                   });
+                   return dfd.promise;
+               }));
     }
 }
