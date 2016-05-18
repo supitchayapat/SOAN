@@ -16,6 +16,7 @@ WebSocket {
 
     signal login()
     signal loginFailed()
+    signal loggingOut()
     signal userCreated()
     signal userCreationFailed()
     signal userAccountExistanceVerified(bool doExists)
@@ -90,7 +91,8 @@ WebSocket {
         });
     }
 
-    function lougout(){
+    function logout(){
+        loggingOut()
         ceres.logout();
     }
 
