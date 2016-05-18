@@ -6,10 +6,16 @@ import "define_values.js" as Defines_values
 import Qondrite 0.1
 
 Item {
-    id: ambulance
 
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
     FontLoader {id : labelFont; name : Defines_values.textFieldsFontFamily}
+
+    Rectangle{
+        id : backgroud_rct
+        anchors.fill: parent
+        color: Theme.backgroundColor
+        z : -1
+    }
 
     Dialog {    
         id: confirmed_dlg
@@ -24,7 +30,6 @@ Item {
             Icon{
                 name:"action/done"
                 size: dp(100)
-                color: Defines_values.PrimaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
@@ -32,7 +37,6 @@ Item {
                 text: "Verifier votre boite email pour le changement de votre mot de passe"
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:forgottenPassword_dlg.width - dp(120)
-                color: Theme.accentColor
                 wrapMode: Text.WordWrap
                 font.family: labelFont.name
             }
@@ -138,7 +142,7 @@ Item {
                 elevation: 1
                 width: parent.width
                 activeFocusOnPress: true
-                backgroundColor: Defines_values.PrimaryColor
+                backgroundColor: Theme.primaryColor
 
                 onClicked:{
                     Qondrite.loginWithPassword(emailTxtField.text,pwdTxtField.text)
@@ -151,7 +155,7 @@ Item {
                 text: "Creer un compte"
                 elevation: 1
                 activeFocusOnPress: true
-                backgroundColor: Defines_values.PrimaryColor
+                backgroundColor: Theme.primaryColor
 
                 onClicked:{
                     pageStack.push(Qt.resolvedUrl("Signup.qml"))
@@ -170,7 +174,7 @@ Item {
             text:"mot de passe oublié ?"
             width: parent.width < implicitWidth  ? parent.width : implicitWidth
             onClicked: forgottenPassword_dlg.show()
-            textColor: Theme.accentColor
+            textColor: Theme.light.hintColor
         }
 
         Label {
@@ -178,11 +182,10 @@ Item {
 
             text: "Utilisateur/mot de passe est invalide"
             anchors.horizontalCenter: parent.horizontalCenter
-            color: Theme.tabHighlightColor
+            color: Palette.colors["red"]["500"]
             fontStyles: "dialog"
             font.family: labelFont.name
             visible: false
-
         }
     }
 
