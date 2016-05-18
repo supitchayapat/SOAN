@@ -29,6 +29,46 @@ var wiambAPI = {
 		});
 		return geo.geocode(address);		
 	},
+	"updateUser" : function(user){
+			
+			Meteor.users.update({_id: Meteor.userId()}, 
+			{
+				$set:
+				{
+					'emails.0.address'  : user.email,
+					'profile'  : user.profile
+				}
+			},
+				
+			{ multi: false },
+				
+			function(error,result){
+
+				if(result){
+					
+					Availability.update({user_id  : Meteor.userId()}, {
+		    	
+				    	$set : {
+					    	geoloc : {type : "Point", coordinates  : [user.profile.longitude,user.profile.latitude]}, 
+					    	tel  : user.profile.tel,
+					    	companyName  : user.profile.companyName	
+				    	}
+			    	});
+				}
+			});		
+	},
+	"checkPassword" : function checkPassword(encodedPassword){
+
+		    if (Meteor.userId()) {
+		      var user = Meteor.user();
+		      var password = {digest: encodedPassword, algorithm: 'sha-256'};
+		      var result = Accounts._checkPassword(user, password);
+		      return result.error == null;
+		    } else {
+		      return false;
+		    }
+	},
+	
 	"resendPassword" : function(email, fct)
 	{
 		if (0 === wiambAPI.verifyUserAccountExistance(email))
@@ -40,6 +80,7 @@ var wiambAPI = {
 };
 
 Meteor.methods(wiambAPI);
+
 
 if (Meteor.isClient) {
 	
