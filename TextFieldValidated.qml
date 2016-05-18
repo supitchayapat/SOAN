@@ -97,7 +97,9 @@ TextField{
 
         function evaluateCalls(calls)
         {
-            console.log("GATE : ", typeof serverGateway);
+            if (calls.length === 0){
+                return ;
+            }
             if (typeof serverGateway !== 'object')
             {
                 throw "serverGateway must be supplied before running validations";
