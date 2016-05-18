@@ -3,6 +3,7 @@ import Qt.WebSockets 1.0
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
 import 'QtSettings.js' as QtSettings
+import "sha256.js" as Sha256
 
 WebSocket {
     id: wsid
@@ -25,6 +26,7 @@ WebSocket {
 
     signal connected()
     signal userAccountExistanceVerified(bool doExists)
+    signal oldPasswordValid(bool valid)
 
     active: true
 
@@ -69,12 +71,29 @@ WebSocket {
             .then(function(){
                 console.log('tryResumeLogin : RESUME OK');
                 login();
+
             }, function(e){
                 console.log('tryResumeLogin : CATCH');
                 loginFailed();
             })
             //.catch()
             //.then();
+
+            //});
+    }
+    function updateUser(user){
+        return ceres.call("updateUser",user);
+    }
+
+    function changePassword(oldPassword,newPassword){
+        return ceres.call("changePassword",oldPassword, newPassword);
+    }
+
+    function checkPassword(password){
+        ceres.call("checkPassword", Sha256.sha256_digest(password)).result
+                    .then(function response(result){
+                        oldPasswordValid(result);
+                    });
     }
 
     function forgotPassword(email)
