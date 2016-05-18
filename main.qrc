@@ -28,5 +28,6 @@
         <file>Log.js</file>
         <file>q.js</file>
         <file>Qondrite.qml</file>
+        <file>sha256.js</file>
     </qresource>
 </RCC>
