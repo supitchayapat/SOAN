@@ -41,10 +41,10 @@ ApplicationWindow {
 
     Component.onCompleted: {
         manageInitialPage();
-        Qondrite.onLogin.connect(function() {
+        Qondrite.onResumeLogin.connect(function() {
             pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
         });
-        Qondrite.onLoginFailed.connect(function() {
+        Qondrite.onResumeLoginFailed.connect(function() {
             pageStack.push(Qt.resolvedUrl("Signin.qml"));
         });
     }
@@ -66,7 +66,8 @@ ApplicationWindow {
                 pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
             }
             onDisconnectPressed: {
-                // TODO Run here the disconnect process
+                pageStack.push(Qt.resolvedUrl("Signin.qml"))
+                Qondrite.logout();
             }
         }
     }    

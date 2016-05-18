@@ -61,7 +61,6 @@ var wiambAPI = {
 		      return false;
 		    }
 	},
-	
 	"resendPassword" : function(email, fct)
 	{
 		if (0 === wiambAPI.verifyUserAccountExistance(email))

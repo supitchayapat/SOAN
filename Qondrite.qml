@@ -17,10 +17,10 @@ WebSocket {
 
     signal login()
     signal loginFailed()
-
     signal resumeLogin()
     signal resumeLoginFailed()
 
+    signal loggingOut()
     signal userCreated()
     signal userCreationFailed()
 
@@ -70,11 +70,11 @@ WebSocket {
         ceres._tryResumeLogin()
             .then(function(){
                 console.log('tryResumeLogin : RESUME OK');
-                login();
+                resumeLogin();
 
             }, function(e){
                 console.log('tryResumeLogin : CATCH');
-                loginFailed();
+                resumeLoginFailed();
             })
             //.catch()
             //.then();
@@ -121,7 +121,8 @@ WebSocket {
         });
     }
 
-    function lougout(){
+    function logout(){
+        loggingOut()
         ceres.logout();
     }
 
