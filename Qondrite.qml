@@ -50,6 +50,21 @@ WebSocket {
             })
     }
 
+    function updateUser(user){
+        return ceres.call("updateUser",user);
+    }
+
+    function changePassword(oldPassword,newPassword){
+        return ceres.call("changePassword",oldPassword, newPassword);
+    }
+
+    function checkPassword(password){
+        ceres.call("checkPassword", Sha256.sha256_digest(password)).result
+                    .then(function response(result){
+                        oldPasswordValid(result);
+                    });
+    }
+
     function forgotPassword(email)
     {
         console.log('forgotPassword : '+email );
@@ -121,21 +136,6 @@ WebSocket {
         ceres.call("verifyUserAccountExistance", email).result
                     .then(function onsuccess(result){
                         userAccountExistanceVerified(!isNaN(result) && true === !!result);
-                    });
-    }
-
-    function updateUser(user){
-        return ceres.call("updateUser",user);
-    }
-
-    function changePassword(oldPassword,newPassword){
-        return ceres.call("changePassword",oldPassword, newPassword);
-    }
-
-    function checkPassword(password){
-        ceres.call("checkPassword", Sha256.sha256_digest(password)).result
-                    .then(function response(result){
-                        oldPasswordValid(result);
                     });
     }
 

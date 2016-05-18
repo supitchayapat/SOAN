@@ -20,6 +20,7 @@ ColumnLayout{
     property string validatorsWarning :  qsTr("6 caractères au minimum")
     property alias validator: newPassword.validator
     property alias oldPasswordVisibilityIcon: oldPassword_txtfld.checkedIconVisibility
+    property alias oldPasswordValidity : oldPassword_txtfld.isValid
 
 
     PasswordTextField {

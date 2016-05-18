@@ -14,6 +14,7 @@ Page {
     property int labelWidth: isEditable?0:column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
 
     property var userCollection;
+    property var user;
 
     function loadUserInformation(){
         //When a login signal is emmited, the users collection is sent
@@ -21,11 +22,19 @@ Page {
         //getting the first element of the collection is getting the logged in user
         //information
         page.userCollection = Qondrite.getCollection("users");
-        var userInfo = page.userCollection._set.toArray()[0];
-        var userProfile = userInfo.profile;
+        user = page.userCollection._set.toArray()[0];
 
-        email_lbl.text = userInfo.emails[0].address;
-        email_txtFld.text = userInfo.emails[0].address;
+        initializeFieldsAndLabelsWithUserInfo();
+
+
+        addListenerToUpdateLabelsWhenUserInfoChanged();
+    }
+
+    function initializeFieldsAndLabelsWithUserInfo(){
+
+        var userProfile = user.profile;
+        email_lbl.text = user.emails[0].address;
+        email_txtFld.text = user.emails[0].address;
         name_lbl.text = userProfile.name;
         name_txtFld.text = userProfile.name;
         address_lbl.text = userProfile.address;
@@ -36,7 +45,23 @@ Page {
         tel_txtFld.text = userProfile.tel;
         demandeCheckBox.checked = transportType_lbl.text.indexOf("Ambulance")!==-1
         vslCheckBox.checked = transportType_lbl.text.indexOf("VST")!==-1
+    }
 
+    function addListenerToUpdateLabelsWhenUserInfoChanged(){
+        var reactiveUserCollection = Qondrite.reactiveQuery(page.userCollection);
+
+        reactiveUserCollection.on("change", function(id){
+
+            if(user._id ==id){
+
+                user = page.userCollection._set.toArray()[0];
+                email_lbl.text = user.emails[0].address;
+                name_lbl.text = user.profile.name;
+                address_lbl.text = user.profile.address;
+                companyname_lbl.text = user.profile.companyName;
+                tel_lbl.text = user.profile.tel;
+            }
+        });
     }
 
     function isFormValid(){
@@ -95,7 +120,7 @@ Page {
 
             onTriggered: {
 
-              //TODO : add a loadingCircle in the page while waiting for server updating info
+                //TODO : add a loadingCircle in the page while waiting for server updating info
                 Qondrite.updateUser(
 
                             {
@@ -109,8 +134,9 @@ Page {
                                         "longitude" : accountInfo.infos.longitude
                                   }
                             }).result.then(function success(){
-
+                                //TODO here the loading circle has to be hidden
                                 isEditable = false;
+                                loadUserInformation();
                             });
             }
         },
@@ -228,9 +254,7 @@ Page {
                 font.family: Defines_values.textFieldsFontFamily
                 width:textFieldWidth
                 visible: isEditable
-
-                // @TODO this validator may need to be changed with a correct regExp for this case
-                validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                 onEditingFinished:{
                     accountInfo.infos.companyName = text
@@ -268,15 +292,15 @@ Page {
                 font.family: Defines_values.textFieldsFontFamily
                 visible:isEditable
                 width:textFieldWidth
-                // @TODO this validator may need to be changed with a correct regExp for this case
-                validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
+
+                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                 onEditingFinished: {
                     // run validation only if undone yet for current address and address length is worth it
                     if(address_txtField.text.length > 3)
                     {
                         //TODO handle this call with new callbacks list of TextFieldValidated
-                        Qondrite.validateAddress(text).result
+                        Qondrite.validateAddress(text)
                         .then(function(result)
                         {
                             if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
@@ -285,7 +309,7 @@ Page {
                             else{
                                 accountInfo.infos.latitude = result[0].latitude;
                                 accountInfo.infos.longitude = result[0].longitude;
-                                accountInfoinfos.address = text
+                                accountInfo.infos.address = text
                                 accountInfo.infosChanged()
                             }
                         });
@@ -488,12 +512,12 @@ Page {
                                             {
 
                                                 if(isEqualToRealPassword){
-                                                    isValid = true
+                                                    oldPasswordValidity = true
                                                     oldPasswordVisibilityIcon = true
                                                     console.log("------MOT DE PASSE VALIDE-----")
 
                                                 }else{
-                                                    isValid = false
+                                                    oldPasswordValidity = false
                                                     oldPasswordVisibilityIcon = false
                                                     console.log("------MOT DE PASSE INVALIDE-----")
                                                 }
