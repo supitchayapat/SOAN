@@ -16,13 +16,15 @@ WebSocket {
 
     signal login()
     signal loginFailed()
+
+    signal resumeLogin()
+    signal resumeLoginFailed()
+
     signal userCreated()
     signal userCreationFailed()
 
     signal connected()
     signal userAccountExistanceVerified(bool doExists)
-
-    signal joristest()
 
     active: true
 
@@ -63,14 +65,16 @@ WebSocket {
 
     function tryResumeLogin()
     {
-        return ceres._tryResumeLogin()
-            .then()
-            .catch(function(e){
+        ceres._tryResumeLogin()
+            .then(function(){
+                console.log('tryResumeLogin : RESUME OK');
+                login();
+            }, function(e){
+                console.log('tryResumeLogin : CATCH');
                 loginFailed();
             })
-            .then(function(){
-                login();
-            });
+            //.catch()
+            //.then();
     }
 
     function forgotPassword(email)

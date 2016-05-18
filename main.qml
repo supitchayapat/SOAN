@@ -36,7 +36,7 @@ ApplicationWindow {
     function manageInitialPage()
     {
         Qondrite.setStorage(appSettings);
-        return Qondrite.tryResumeLogin();
+        Qondrite.tryResumeLogin();
     }
 
     Component.onCompleted: {
