@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import Material 0.3
 import "define_values.js" as Defines_values
+import "/Qondrite/q.js" as AsyncLib
 
 /* TODO use directely the JS Error class instead of importing Error.js
  see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error*/
@@ -53,40 +54,7 @@ TextField{
     /*called while editing to reformat the text, the formated text should be returned as a string*/
     property var onEditingFormating : function(){return text}
 
-    property var gateway : undefined
-
-
-    /*manage the hasError property through the onEditingValidations calls.
-      update the checkedIcon visibility*/
-    function manageValidation(){
-
-        if(validator !== null){
-            if ( text == ""){
-                hasError = false
-                checkedIcon.visible = false
-                return
-            }
-
-
-            if(_p.onEditingCalls())
-            {
-                hasError = false
-                checkedIcon.visible = true
-            }
-
-            else if(!_p.onEditingCalls()){
-                hasError = true
-                checkedIcon.visible = false
-            }
-
-        }
-        else{
-            console.log("TextFiledValidated :'"+ objectName +"': this component needs a validator,
-                        you can set the validator using validator property")
-            console.trace()
-            throw "property exception"
-        }
-    }
+    property var serverGateway : undefined
 
     //TODO : this is to specific to be here, should be set in child components
     // and delted from here
@@ -110,48 +78,29 @@ TextField{
         triggeredOnStart: false
 
         onTriggered: {
-            _p.onEditingCalls(onEditingValidations);
-
-            _p.onEditingFinishedCalls(onEditingFinishedValidations);
+            _validateEngine.onEditingCalls();
+            _validateEngine.onEditingFinishedCalls();
             timerDone = true
         }
     }
 
     QtObject{
-        id:_p
+        id:_validateEngine
 
         function onEditingCalls(){
             return evaluateCalls(onEditingValidations)
         }
-        /*function onEditingErrorText(){
-            return updtErrorText(onEditingValidations)
-        }*/
 
         function onEditingFinishedCalls(){
             return evaluateCalls(onEditingFinishedValidations)
         }
-        /*function onEditingFinishedErrorText(){
-            return updtErrorText(onEditingFinishedValidations)
-        }*/
-
-        function updtErrorText(calls) {
-            var errortodisplay = ""
-            for (var i=0; i <calls.length; i++){
-                if(!calls[i].call()) {
-                    errortodisplay = calls[i].mess
-                    return errortodisplay
-                }
-                else errortodisplay = ""
-            }
-            return errortodisplay
-        }
 
         function evaluateCalls(calls)
         {
-            console.log("GATE : ", typeof gateway);
-            if (typeof gateway !== 'object')
+            console.log("GATE : ", typeof serverGateway);
+            if (typeof serverGateway !== 'object')
             {
-                throw "gateway must be supplied before running validations";
+                throw "serverGateway must be supplied before running validations";
             }
             function getValidators(validators)
             {
@@ -171,7 +120,7 @@ TextField{
             hasError = false;
             helperText = "";
 
-            gateway.q().all(getValidators(calls)).then(function(responses){
+            AsyncLib.Q.all(getValidators(calls)).then(function(responses){
                 for (var i = 0; i< responses.length; i++){
                     if (typeof responses[i] !== 'object'){
                         continue;
@@ -189,8 +138,6 @@ TextField{
     }
 
     onEditingFinished: {
-        //checkedIcon.visible = useValidatingIcon && _p.onEditingCalls() && _p.onEditingFinishedCalls()
-        //checkedIcon.visible = useValidatingIcon && _p.onEditingCalls()
     }
 
     onTextChanged: {
@@ -205,64 +152,12 @@ TextField{
 
     onFocusChanged: {
         if(activeFocus || focus){
-           checkedIcon.visible = false
-           helperText = ""
            timer.restart()
         }
         else{
-            timer.stop()
-            if(text == ""){
-                checkedIcon.visible = false
-                return
-            }
-            //manageValidation();
-            //manageOnEditingFinishedValidations()
-            if(hasError)
-                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
+            timer.stop();
+            _validateEngine.onEditingFinishedCalls();
         }
-    }
-
-
-    onHasErrorChanged: {
-
-        if(activeFocus || focus){
-            if(timer.timerDone && !hasError){
-                checkedIcon.visible = true
-                //checkedIcon.visible = useValidatingIcon && text != ""
-                //helperText = ""
-                return
-            }
-            else if (timer.timerDone && hasError){
-                checkedIcon.visible = false
-                //helperText = Qt.binding(function(){return _p.onEditingErrorText()})
-                return
-            }
-            else if (!timer.timerDone && hasError){
-                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
-                return
-            }
-            else if (!timer.timerDone && !hasError){
-                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
-                return
-            }
-            throw new Error("case not handled")
-        }
-        else{
-            checkedIcon.visible = useValidatingIcon && !hasError
-            hasError ?  helperText = _p.onEditingErrorText()
-                     :  helperText = ""
-        }
-    }
-
-    Component.onCompleted: {
-
-        /* TODO : here we are only handling the case of RegExpValidator
-         * but the validator could be also an IntValidator or a DoubleValidator
-         * please manage the missing cases*/
-
-         //onEditingValidations.unshift(new Err.Error(function (){
-           //  return text !== "" && text.toString().match(validator.regExp) !== null
-         //},validatorWarning))
     }
 }
 
