@@ -29,5 +29,6 @@
         <file>q.js</file>
         <file>Qondrite.qml</file>
         <file>QtSettings.js</file>
+        <file>sha256.js</file>
     </qresource>
 </RCC>

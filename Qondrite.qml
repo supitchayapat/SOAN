@@ -2,7 +2,11 @@ import Qt.WebSockets 1.0
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
+<<<<<<< HEAD
 import 'QtSettings.js' as QtSettings
+=======
+import "sha256.js" as Sha256
+>>>>>>> version1.0
 
 WebSocket {
     id: wsid
@@ -21,6 +25,7 @@ WebSocket {
 
     signal connected()
     signal userAccountExistanceVerified(bool doExists)
+    signal oldPasswordValid(bool valid)
 
     signal joristest()
 
@@ -55,6 +60,7 @@ WebSocket {
             })
     }
 
+<<<<<<< HEAD
     function setStorage(storageEngine)
     {
         // replace Asteroid's localSotage 'CRUD' API with one given from input storageEngine
@@ -71,6 +77,21 @@ WebSocket {
             .then(function(){
                 login();
             });
+=======
+    function updateUser(user){
+        return ceres.call("updateUser",user);
+    }
+
+    function changePassword(oldPassword,newPassword){
+        return ceres.call("changePassword",oldPassword, newPassword);
+    }
+
+    function checkPassword(password){
+        ceres.call("checkPassword", Sha256.sha256_digest(password)).result
+                    .then(function response(result){
+                        oldPasswordValid(result);
+                    });
+>>>>>>> version1.0
     }
 
     function forgotPassword(email)
