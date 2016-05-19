@@ -13,10 +13,6 @@ TextFieldValidated{
         Qondrite.verifyUserAccountExistance(text)
     }
 
-    onTextChanged: {
-        text = text.toLowerCase();
-    }
-
     Component.onCompleted: {
         Qondrite.userAccountExistanceVerified.connect(
             function(doUserAlreadyExists)
