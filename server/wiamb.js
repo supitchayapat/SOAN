@@ -12,6 +12,13 @@ var wiambAPI = {
         }
 		return Meteor.users.find({emails : { $elemMatch : { address : email}  }}).count();		
 	},
+    "verifyPhoneNumberExistance" : function(phoneNumber)
+    {
+        if (! /^0[1-9]([-\/. ]?[0-9]{2}){4}$/.test(phoneNumber)){
+            throw new Meteor.Error("Phone number is not valid");
+        }
+        return Meteor.users.find({ "profile.tel" : { $in : [phoneNumber] } }).count();      
+    },
 	"validateAddress" : function(address)
 	{
 		console.log('Meteor:validateAddress : '+address);
