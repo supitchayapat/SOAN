@@ -8,11 +8,16 @@
 
 static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
-    QQmlComponent qondrite(engine,QUrl("qrc:/Qondrite/Qondrite.qml"),QQmlComponent::PreferSynchronous);
-    if(!qondrite.isReady()) QThread::msleep(50);
+    QQmlComponent qondrite(engine,QUrl("qrc:/Qondrite/Qondrite.qml"));
+
+    while(!qondrite.isReady()) {
+        qWarning() << "error while loading qondrite"<< qondrite.errorString() ;
+        QThread::msleep(100);
+    }
+
     QObject *qrondriteObject = qondrite.create();
     QJSValue result = scriptEngine->newQObject(qrondriteObject);
-    result.setProperty("meteor_url",QString("localhost:3000"));
+    result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
     return result;
 }
 

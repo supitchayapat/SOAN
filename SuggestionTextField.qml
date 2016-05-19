@@ -80,8 +80,6 @@ RowLayout{
             }
         }
 
-
-
         onTextChanged: {
             if(text.length>0){
                 suggestionlist.visible = true

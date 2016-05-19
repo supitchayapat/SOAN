@@ -15,6 +15,9 @@
         <file>PhoneTextField.qml</file>
         <file>PhoneTextField.js</file>
         <file>NewPassword.qml</file>
+        <file>ChangePassword.qml</file>
+        <file>AvailabilitySwitch.qml</file>
+        <file>Error.js</file>
     </qresource>
     <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>

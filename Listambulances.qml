@@ -2,37 +2,41 @@ import QtQuick 2.5
 import Material 0.3
 import Material.ListItems 0.1 as ListItem
 import "define_values.js" as Defines_values
+import Qondrite 0.1
 
 Page {
     id: page
 
     backAction: navDrawer.action
-    actionBar.backgroundColor: Palette.colors.grey[Defines_values.ListambulancesBackgroundlevel]
-    actionBar.decorationColor: Palette.colors.grey[Defines_values.ListambulancesDecorationlevel]
+
+    actionBar.switchDelegate : AvailabilitySwitch{}
+
+    actions:[
+        Action{//availability switch
+            iconName: "awesome/close"
+            displayAsSwitch:true
+
+            onTriggered: {
+                //TODO send request to server
+            }
+        }
+    ]
 
     ListModel {
         id:ambliste
-        ListElement {availability: false; name:" Mohammed";  phoneNumber: '0512313'}
-        ListElement {availability: true; name:" Mohammed2";  phoneNumber: '0512313'}
-        ListElement {availability: false; name:" Mohammed3"; phoneNumber: '0512313'}
-        ListElement {availability: false; name:"Fabio";      phoneNumber: '0512313'}
-        ListElement {availability: true;  name:" Patrice";   phoneNumber: '0512313'}
-        ListElement {availability: false;  name:" Jean";     phoneNumber: '0512313'}
-        ListElement {availability: true;  name:"naome";      phoneNumber: '0512313'}
-        ListElement {availability: false;  name: "simo";     phoneNumber: '071232'}
     }
 
     Component {
         id: listelements
 
         ListItem.Standard{
-            text:name
+            text:companyName
 
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
                 size: dp(Defines_values.Default_iconsize)
-                color: availability ? Theme.primaryColor : Defines_values.Materialgraycolor
+                color: availability ? Theme.primaryColor : Theme.light.hintColor
             }
 
             Button {
@@ -49,7 +53,7 @@ Page {
                     name: "communication/call"
                     anchors.centerIn: parent
                     size: dp(Defines_values.Default_iconsize)
-                    color: Defines_values.PrimaryColor
+                    color: availability ? Theme.primaryColor : Theme.light.hintColor
                 }
             }
         }
@@ -61,4 +65,17 @@ Page {
         model: ambliste
         delegate: listelements
     }
+
+    Component.onCompleted: {
+        Qondrite.subscribe("availability",function(){
+            var collection = Qondrite.getCollection("availability")._set._items;
+            for( var id in collection){
+                if( collection.hasOwnProperty(id) ) {
+                    ambliste.append(collection[id]);
+                }
+            }
+        });
+    }
+
+
 }

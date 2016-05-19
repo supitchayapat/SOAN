@@ -6,10 +6,16 @@ import "define_values.js" as Defines_values
 import Qondrite 0.1
 
 Item {
-    id: ambulance
 
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
     FontLoader {id : labelFont; name : Defines_values.textFieldsFontFamily}
+
+    Rectangle{
+        id : backgroud_rct
+        anchors.fill: parent
+        color: Theme.backgroundColor
+        z : -1
+    }
 
     Dialog {    
         id: confirmed_dlg
@@ -24,7 +30,6 @@ Item {
             Icon{
                 name:"action/done"
                 size: dp(100)
-                color: Defines_values.PrimaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
@@ -32,7 +37,6 @@ Item {
                 text: "Verifier votre boite email pour le changement de votre mot de passe"
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:forgottenPassword_dlg.width - dp(120)
-                color: Theme.accentColor
                 wrapMode: Text.WordWrap
                 font.family: labelFont.name
             }
@@ -43,12 +47,11 @@ Item {
         id: forgottenPassword_dlg
 
         width: parent.width - parent.width/6
-        text: "Mot de passe oublié"
+        text: qsTr("Mot de passe oublié")
         z:1
 
         EmailTextField {
             id: textEmail_txtFld
-
             width: parent.width
             echoMode: TextInput.Normal
             placeholderText: qsTr( "Adresse email" )
@@ -57,11 +60,23 @@ Item {
 
         onAccepted: {
             //a signal with email name will be emited to a function,lets show confirmed dialog
-            confirmed_dlg.show()
+            Qondrite.forgotPassword(textEmail_txtFld.text).result.then(
+                function onsuccess(){
+                    textEmail_txtFld.text = ""
+                    confirmed_dlg.show();
+                },
+                function onerror(error){
+                    textEmail_txtFld.text = ""
+                    if (error.error == 403){
+                        snackbar.open(qsTr("Cet email ne correspond à aucun utilisateur"));
+                    }
+                }
+            );
+
         }
 
-        positiveButtonText: "Valider"
-        negativeButtonText: "Annuler"
+        positiveButtonText: qsTr("Valider")
+        negativeButtonText: qsTr("Annuler")
     }
 
     ColumnLayout{
@@ -127,11 +142,10 @@ Item {
                 elevation: 1
                 width: parent.width
                 activeFocusOnPress: true
-                backgroundColor: Defines_values.PrimaryColor
+                backgroundColor: Theme.primaryColor
 
                 onClicked:{
                     Qondrite.loginWithPassword(emailTxtField.text,pwdTxtField.text)
-                    invalidCredentialsLabel.visible = true;
                 }
             }
 
@@ -141,7 +155,7 @@ Item {
                 text: "Creer un compte"
                 elevation: 1
                 activeFocusOnPress: true
-                backgroundColor: Defines_values.PrimaryColor
+                backgroundColor: Theme.primaryColor
 
                 onClicked:{
                     pageStack.push(Qt.resolvedUrl("Signup.qml"))
@@ -160,7 +174,7 @@ Item {
             text:"mot de passe oublié ?"
             width: parent.width < implicitWidth  ? parent.width : implicitWidth
             onClicked: forgottenPassword_dlg.show()
-            textColor: Theme.accentColor
+            textColor: Theme.light.hintColor
         }
 
         Label {
@@ -168,19 +182,28 @@ Item {
 
             text: "Utilisateur/mot de passe est invalide"
             anchors.horizontalCenter: parent.horizontalCenter
-            color: Theme.tabHighlightColor
+            color: Palette.colors["red"]["500"]
             fontStyles: "dialog"
             font.family: labelFont.name
             visible: false
-
         }
     }
+
+    Snackbar {
+        id: snackbar
+    }
+
 
     // TODO : here we bind the signal to a specific function in the scope of Component.onCompleted.
     // It will be nice to have access to those signal handlers directly with signal handlers :
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
-        Qondrite.onLogin.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
+        Qondrite.onLogin.connect(function() {
+            invalidCredentialsLabel.visible = false
+            pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+        })
+
+        Qondrite.onLoginFailed.connect(function() {invalidCredentialsLabel.visible = true})
     }
 }
