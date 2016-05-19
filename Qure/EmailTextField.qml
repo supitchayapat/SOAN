@@ -6,7 +6,7 @@ TextFieldValidated{
     inputMethodHints: Qt.ImhEmailCharactersOnly
 
     placeholderText: qsTr("Email")
-    validator: RegExpValidator{regExp:/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/}
+    validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,4}/}
     validatorWarning: qsTr("Adresse email invalide")
 
     onEditingFinished:{
