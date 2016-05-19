@@ -9,8 +9,6 @@ Page {
     id: page
 
     backAction: navDrawer.action
-    actionBar.backgroundColor: Theme.primaryColor
-    actionBar.decorationColor: Palette.colors.grey[Defines_values.ListambulancesDecorationlevel]
 
     actionBar.switchDelegate : AvailabilitySwitch{}
 
@@ -39,7 +37,7 @@ Page {
                 anchors.centerIn: parent
                 name: "social/person"
                 size: dp(Defines_values.Default_iconsize)
-                color: availability ? Theme.primaryColor : Defines_values.Materialgraycolor
+                color: availability ? Theme.primaryColor : Theme.light.hintColor
             }
 
             Button {
@@ -56,7 +54,7 @@ Page {
                     name: "communication/call"
                     anchors.centerIn: parent
                     size: dp(Defines_values.Default_iconsize)
-                    color: Defines_values.PrimaryColor
+                    color: availability ? Theme.primaryColor : Theme.light.hintColor
                 }
             }
         }
@@ -70,14 +68,24 @@ Page {
     }
 
     Component.onCompleted: {
-        Qondrite.subscribe("availability",function(){
-            var collection = Qondrite.getCollection("availability")._set._items;
-            for( var id in collection){
-                if( collection.hasOwnProperty(id) ) {
-                    ambliste.append(collection[id]);
-                }
-            }
-        });
+
+        var subscription  = Qondrite.subscribe("availability",function(){
+                                    var collection = Qondrite.getCollection("availability")._set._items;
+
+                                    for( var id in collection){
+                                        if( collection.hasOwnProperty(id) ) {
+                                            ambliste.append(collection[id]);
+                                        }
+                                    }
+
+                                });
+
+        Qondrite.loggingOut.connect(
+                        function()
+                        {
+                            subscription.stop();
+                        }
+                    )
     }
 
 

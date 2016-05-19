@@ -6,5 +6,6 @@
         <file>Log.js</file>
         <file>q.js</file>
         <file>qmldir</file>
+        <file>sha256.js</file>
     </qresource>
 </RCC>

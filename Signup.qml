@@ -22,8 +22,8 @@ Page {
           ambulance   : false,
           vsl         : false
         })
-        property var email: ""
-        property var password: ""
+        property string email: ""
+        property string password: ""
     }
 
     ProgressBySteps{
@@ -62,19 +62,19 @@ Page {
         id: nextButton
 
         property bool active: false
+        property color disabledColor : Palette.colors["grey"]["300"]
+
+        backgroundColor: disabledColor
 
         onActiveChanged: {
             if(active) backgroundColor = Theme.primaryColor
-             else backgroundColor = "gray"
+             else backgroundColor = disabledColor
         }
 
         function updateButtonState(validity){
             if(validity) active = true
             else active = false
         }
-
-        x:40
-        backgroundColor: "gray"
 
         anchors {
             bottom: parent.bottom
@@ -226,7 +226,6 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        // @TODO this validator may need to be changed with a correct regExp for this case
                         validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished:{
@@ -260,7 +259,6 @@ Page {
                         font.family: textFieldFont.name
 
                         Layout.fillWidth: true
-
                         validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished: {
@@ -271,7 +269,7 @@ Page {
                                 Qondrite.validateAddress(text)
                                 .then(function(result)
                                 {
-                                    if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                                    if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                                         validatorWarning = qsTr("Adresse invalide")
                                     }
                                     else{
@@ -309,7 +307,6 @@ Page {
                         Layout.fillWidth: true
 
                         onEditingFinished:{
-                            Qondrite.verifyUserAccountExistance(text)
                             accountInfo.email = text
                             accountInfo.infosChanged()
                         }

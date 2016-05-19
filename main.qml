@@ -5,7 +5,7 @@ import Qondrite 0.1
 
 
 ApplicationWindow {
-    id: ambulance
+    id: app
 
     visible: true
     width: Screen.width
@@ -13,11 +13,13 @@ ApplicationWindow {
     initialPage : Qt.resolvedUrl("Signin.qml")
 
     theme {
-        primaryColor: "blue"
-        accentColor: "blue"
-        tabHighlightColor: "red"
+        //WARNING: for the moment we support only light themes
+        primaryColor: "#2196F3"
+        primaryDarkColor :"#1976D2"
+        accentColor: "#03A9F4"
         backgroundColor: "white"
     }
+
 
     NavigationDrawer {
         id:navDrawer
@@ -35,7 +37,8 @@ ApplicationWindow {
                 pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
             }
             onDisconnectPressed: {
-                // TODO Run here the disconnect process
+                pageStack.push(Qt.resolvedUrl("Signin.qml"))
+                Qondrite.logout();
             }
         }
     }

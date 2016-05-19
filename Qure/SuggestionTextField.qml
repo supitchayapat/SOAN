@@ -46,7 +46,7 @@ TextField{
         delegate: Rectangle{
             width:myRoot.width
             height: myRoot.height
-            color:"white"
+            color: Theme.brackgroudColor
             Label {
                 text: name
                 verticalAlignment: Text.AlignVCenter

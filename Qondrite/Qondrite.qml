@@ -2,6 +2,7 @@ import QtWebSockets 1.0
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
+import "sha256.js" as Sha256
 
 WebSocket {
     id: wsid
@@ -15,9 +16,12 @@ WebSocket {
 
     signal login()
     signal loginFailed()
+    signal loggingOut()
     signal userCreated()
     signal userCreationFailed()
     signal userAccountExistanceVerified(bool doExists)
+    signal phoneNumberExistanceVerified(bool doExists)
+    signal oldPasswordValid(bool valid)
 
     active: true
 
@@ -48,6 +52,21 @@ WebSocket {
             })
     }
 
+    function updateUser(user){
+        return ceres.call("updateUser",user);
+    }
+
+    function changePassword(oldPassword,newPassword){
+        return ceres.call("changePassword",oldPassword, newPassword);
+    }
+
+    function checkPassword(password){
+        ceres.call("checkPassword", Sha256.sha256_digest(password)).result
+                    .then(function response(result){
+                        oldPasswordValid(result);
+                    });
+    }
+
     function forgotPassword(email)
     {
         console.log('forgotPassword : '+email );
@@ -73,7 +92,8 @@ WebSocket {
         });
     }
 
-    function lougout(){
+    function logout(){
+        loggingOut()
         ceres.logout();
     }
 
@@ -120,6 +140,14 @@ WebSocket {
                     .then(function onsuccess(result){
                         userAccountExistanceVerified(!isNaN(result) && true === !!result);
                     });
+    }
+
+    function verifyPhoneNumberExistance(phoneNumber)
+    {
+        ceres.call("verifyPhoneNumberExistance", phoneNumber).result
+            .then(function onsuccess(result){
+                phoneNumberExistanceVerified(!!result);
+            });
     }
 
     function getCollection(collection) {

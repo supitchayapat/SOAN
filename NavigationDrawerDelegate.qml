@@ -28,7 +28,7 @@ Rectangle{
             id: accountName
 
             style: "title"
-            color: "white"
+            color : "white"
 
             anchors{
                 verticalCenter:  sidebar_rct.verticalCenter
@@ -42,7 +42,7 @@ Rectangle{
             id:email
 
             style: "body2"
-            color: "white"
+            color : "white"
 
             anchors{
                 bottom: sidebar_rct.bottom
@@ -76,7 +76,6 @@ Rectangle{
                     anchors.centerIn: parent
                     name: "action/account_box"
                     size: dp(Defines_values.Default_iconsize)
-                    color:Theme.primaryColor
                 }
 
                 onClicked:{
@@ -96,7 +95,6 @@ Rectangle{
                     anchors.centerIn: parent
                     name: "action/account_circle"
                     size: dp(Defines_values.Default_iconsize)
-                    color:Theme.primaryColor
                 }
 
                 onClicked:{
@@ -112,7 +110,7 @@ Rectangle{
 
             text: qsTr("Déconnexion")
             width: parent.width - parent.width/5
-            backgroundColor: Defines_values.PrimaryColor
+            backgroundColor: Theme.primaryColor
 
             anchors{
                 horizontalCenter: parent.horizontalCenter
@@ -122,6 +120,7 @@ Rectangle{
 
             onClicked: {
                 disconnectPressed()
+                navDrawer.close()
             }
         }
     }

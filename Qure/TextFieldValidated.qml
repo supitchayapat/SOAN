@@ -10,6 +10,12 @@ TextField{
 
     id:root
 
+    //TODO : this is a temporary alias to be able to change
+    //the checked icon visibility without passing the the validators (editingFinishedValidations...)
+    //When these validators will manage the asynchronus validation this property should be deleted
+    // Now its used in changePassword.qml for the old password validation
+    property alias checkedIconVisibility: checkedIcon.visible
+
     //TODO : isValid is binded to checkedIcon.visible, but this depends on useValidatingIcon
     // property. So isValid will reflect validity only if useValidatingIcon is true.
     // => make isValid reflect validity state when useValidatingIcon is false.

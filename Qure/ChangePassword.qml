@@ -2,13 +2,14 @@ import QtQuick 2.6
 import Material 0.3
 import QtQuick.Layouts 1.2
 import "Error.js" as Err
+import Qondrite 0.1
 
 ColumnLayout{
     id : root
 
     readonly property alias password : _priv.password
-    readonly property alias isValid : _priv.isValid
-    property string oldPassword
+    property alias isValid : _priv.isValid
+    property alias oldPassword :oldPassword_txtfld.text
     property bool askForOldPassword : true
     property alias passwordPlaceHolderText : newPassword.passwordPlaceHolderText
     property alias oldPasswordPlaceHolderText : oldPassword_txtfld.placeholderText
@@ -17,6 +18,9 @@ ColumnLayout{
     property alias passwordsDontMatchWarning: newPassword.passwordsDontMatchWarning
     property string validatorsWarning :  qsTr("6 caractères au minimum")
     property alias validator: newPassword.validator
+    property alias oldPasswordVisibilityIcon: oldPassword_txtfld.checkedIconVisibility
+    property alias oldPasswordValidity : oldPassword_txtfld.isValid
+
 
     PasswordTextField {
         id: oldPassword_txtfld
@@ -24,18 +28,20 @@ ColumnLayout{
         placeholderText: qsTr("Ancien mot de passe")
         visible : askForOldPassword
 
-        /* As we ignore what was the prior validation of the oldpassword
-          we accept everything under 100 chars*/
-        validator :  RegExpValidator{regExp:/.{1,100}/}
         Layout.fillWidth: true
 
+
         anchors {
-            topMargin: dp(20)
+            topMargin: dp(35)
             horizontalCenter: parent.horizontalCenter
         }
 
-        Component.onCompleted: {
-            onEditingValidations.unshift(new Err.Error(function (){ return text === oldPassword },qsTr("mot de passe incorect")))
+        onEditingFinished: {
+            //TODO  : the server call to the the checkPassword service should be
+            //added on the onEditingFinishedValidations array when it will be handling
+            //validations with promises as well, and the decalration
+            //should be in the instanciation of the component
+            Qondrite.checkPassword(text)
         }
     }
 
@@ -47,30 +53,16 @@ ColumnLayout{
         Layout.fillWidth: true
         spacing: parent.spacing
 
-        Component.onCompleted: {
-            newPasswordOnEditingValidations.unshift(new Err.Error(function cutomvalid() {
-                return passwordTypedText !== root.oldPassword
-            },sameAsOldPassWordWarning))
-        }
     }
 
     QtObject{
         id : _priv
         property string password: ""
         property bool isValid : newPassword.isValid && (oldPassword_txtfld.isValid ||!oldPassword_txtfld.visible)
-                                && newPassword.password !== oldPassword_txtfld.text
     }
 
     onIsValidChanged: {
         if(isValid) _priv.password = newPassword.password
         else _priv.password = ""
-    }
-
-    Component.onCompleted: {
-        if(oldPassword == ""){
-            console.log('ChangePassword : oldPassword property should be
-                         set to the component to work properly')
-            throw "property exception"
-        }
     }
 }

@@ -12,6 +12,13 @@ var wiambAPI = {
         }
 		return Meteor.users.find({emails : { $elemMatch : { address : email}  }}).count();		
 	},
+    "verifyPhoneNumberExistance" : function(phoneNumber)
+    {
+        if (! /^0[1-9]([-\/. ]?[0-9]{2}){4}$/.test(phoneNumber)){
+            throw new Meteor.Error("Phone number is not valid");
+        }
+        return Meteor.users.find({ "profile.tel" : { $in : [phoneNumber] } }).count();      
+    },
 	"validateAddress" : function(address)
 	{
 		console.log('Meteor:validateAddress : '+address);
@@ -21,6 +28,45 @@ var wiambAPI = {
   			apiKey: 'AIzaSyDMBt6F0W2WhX819O8DawgwDzxCLEz2TXc'
 		});
 		return geo.geocode(address);		
+	},
+	"updateUser" : function(user){
+			
+			Meteor.users.update({_id: Meteor.userId()}, 
+			{
+				$set:
+				{
+					'emails.0.address'  : user.email,
+					'profile'  : user.profile
+				}
+			},
+				
+			{ multi: false },
+				
+			function(error,result){
+
+				if(result){
+					
+					Availability.update({user_id  : Meteor.userId()}, {
+		    	
+				    	$set : {
+					    	geoloc : {type : "Point", coordinates  : [user.profile.longitude,user.profile.latitude]}, 
+					    	tel  : user.profile.tel,
+					    	companyName  : user.profile.companyName	
+				    	}
+			    	});
+				}
+			});		
+	},
+	"checkPassword" : function checkPassword(encodedPassword){
+
+		    if (Meteor.userId()) {
+		      var user = Meteor.user();
+		      var password = {digest: encodedPassword, algorithm: 'sha-256'};
+		      var result = Accounts._checkPassword(user, password);
+		      return result.error == null;
+		    } else {
+		      return false;
+		    }
 	},
 	"resendPassword" : function(email, fct)
 	{
@@ -33,6 +79,7 @@ var wiambAPI = {
 };
 
 Meteor.methods(wiambAPI);
+
 
 if (Meteor.isClient) {
 	
