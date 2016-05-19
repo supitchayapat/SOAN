@@ -60,7 +60,6 @@ TextField{
 
     /*manage the hasError property through the onEditingValidations calls.
       update the checkedIcon visibility*/
-    floatingLabel: true
     function manageValidation(){
         if(validator !== null){
             if ( text == ""){
