@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
 
-Item {
+Page {
 
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
     FontLoader {id : labelFont; name : Defines_values.textFieldsFontFamily}
