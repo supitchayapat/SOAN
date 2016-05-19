@@ -41,7 +41,7 @@ WebSocket {
 
     function createUser(email,password,profile)
     {
-        ceres.createUser(email,password,profile)
+        ceres.createUser(email.toLowerCase(),password,profile)
         .then(
             function onSuccess(userId){
                 userCreated();
@@ -78,7 +78,7 @@ WebSocket {
     }
 
     function loginWithPassword(email,password){
-        return ceres.loginWithPassword(email,password)
+        return ceres.loginWithPassword(email.toLowerCase(),password)
         .then(function onSuccess(userId){
             login()
         })
