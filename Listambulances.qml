@@ -59,12 +59,32 @@ Page {
         }
     }
 
+
     ListView {
         anchors.fill: parent
         anchors.topMargin: dp(Defines_values.ListambulancesTopMargin)
         model: ambliste
         delegate: listelements
+
     }
+
+    Card {
+        id: ambliste_empty
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top : parent.top
+        anchors.topMargin: Defines_values.view_topMargin
+        height : dp(Defines_values.CardMessageHeight)
+        visible: (ambliste.count ==0)
+        width : page.width - Defines_values.Default_border_margins
+        Text {
+            id: ambliste_empty_text
+            anchors.centerIn: parent
+            text: qsTr("Aucun élément actuellement");
+            anchors.horizontalCenter: ambliste_empty.horizontalCenter
+            font.italic: true
+        }
+    }
+
 
     Component.onCompleted: {
 
