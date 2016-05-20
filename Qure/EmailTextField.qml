@@ -3,14 +3,14 @@ import Material 0.3
 import Qondrite 0.1
 
 TextFieldValidated{
-    property bool emailExistanceValidator: false
+    property bool emailExistanceValidation: false
 
     inputMethodHints: Qt.ImhEmailCharactersOnly
     placeholderText: qsTr("Email")
     validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
     validatorWarning: qsTr("Adresse email invalide")
 
-    onEditingFinished: emailExistanceValidator ? Qondrite.verifyUserAccountExistance(text) : null
+    onEditingFinished: emailExistanceValidation ? Qondrite.verifyUserAccountExistance(text) : null
 
     Component.onCompleted: {
         Qondrite.userAccountExistanceVerified.connect(

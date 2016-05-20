@@ -304,7 +304,7 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        emailExistanceValidator : true
+                        emailExistanceValidation : true
 
                         onEditingFinished:{
                             accountInfo.email = text
