@@ -10,7 +10,7 @@ TextFieldValidated{
     validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
     validatorWarning: qsTr("Adresse email invalide")
 
-    onEditingFinished: emailExistanceValidation ? Qondrite.verifyUserAccountExistance(text) : null
+    onEditingFinished: if(emailExistanceValidation) Qondrite.verifyUserAccountExistance(text)
 
     Component.onCompleted: {
         Qondrite.userAccountExistanceVerified.connect(
