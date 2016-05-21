@@ -3,6 +3,7 @@ import Material 0.3
 import Material.ListItems 0.1 as ListItem
 import "define_values.js" as Defines_values
 import Qondrite 0.1
+import Qure 0.1
 
 Page {
     id: page
@@ -47,7 +48,7 @@ Page {
                     verticalCenter: parent.verticalCenter
                 }
 
-                onClicked:  Qt.openUrlExternally('tel:+'+phoneNumber)
+                onClicked:  Qt.openUrlExternally('tel:'+tel)
 
                 Icon {
                     name: "communication/call"
@@ -59,22 +60,52 @@ Page {
         }
     }
 
+
     ListView {
         anchors.fill: parent
         anchors.topMargin: dp(Defines_values.ListambulancesTopMargin)
         model: ambliste
         delegate: listelements
+
     }
 
+    Card {
+        id: ambliste_empty
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top : parent.top
+        anchors.topMargin: Defines_values.view_topMargin
+        height : dp(Defines_values.CardMessageHeight)
+        visible: (ambliste.count ==0)
+        width : page.width - Defines_values.Default_border_margins
+        Text {
+            id: ambliste_empty_text
+            anchors.centerIn: parent
+            text: qsTr("Aucun élément actuellement");
+            anchors.horizontalCenter: ambliste_empty.horizontalCenter
+            font.italic: true
+        }
+    }
+
+
     Component.onCompleted: {
-        Qondrite.subscribe("availability",function(){
-            var collection = Qondrite.getCollection("availability")._set._items;
-            for( var id in collection){
-                if( collection.hasOwnProperty(id) ) {
-                    ambliste.append(collection[id]);
-                }
-            }
-        });
+
+        var subscription  = Qondrite.subscribe("availability",function(){
+                                    var collection = Qondrite.getCollection("availability")._set._items;
+
+                                    for( var id in collection){
+                                        if( collection.hasOwnProperty(id) ) {
+                                            ambliste.append(collection[id]);
+                                        }
+                                    }
+
+                                });
+
+        Qondrite.loggingOut.connect(
+                        function()
+                        {
+                            subscription.stop();
+                        }
+                    )
     }
 
 

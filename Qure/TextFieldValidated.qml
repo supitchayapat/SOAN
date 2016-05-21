@@ -1,7 +1,5 @@
 import QtQuick 2.5
 import Material 0.3
-import "define_values.js" as Defines_values
-import "/Qondrite/q.js" as AsyncLib
 
 /* TODO use directely the JS Error class instead of importing Error.js
  see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error*/
@@ -64,7 +62,8 @@ TextField{
 
     //TODO : this is to specific to be here, should be set in child components
     // and delted from here
-    font.pixelSize: dp(Defines_values.Base_text_font)
+    font.pointSize: 16
+    floatingLabel: true
 
     Icon{
         id:checkedIcon

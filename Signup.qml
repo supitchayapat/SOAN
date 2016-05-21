@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
 import QtQuick.Controls 1.4 as Controls
+import Qure 0.1
 
 Page {
     id:root
@@ -225,7 +226,6 @@ Page {
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
-                        // @TODO this validator may need to be changed with a correct regExp for this case
                         validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished:{
@@ -259,7 +259,6 @@ Page {
                         font.family: textFieldFont.name
                         serverGateway: Qondrite
                         Layout.fillWidth: true
-
                         validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                         onEditingFinished: {
@@ -307,6 +306,12 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         serverGateway: Qondrite
+
+                        onEditingFinished:{
+                            accountInfo.email = text
+                            accountInfo.infosChanged()
+                        }
+
                         onIsValidChanged: accountInfo.infosChanged()
                     }
                 }

@@ -16,9 +16,11 @@ WebSocket {
 
     signal login()
     signal loginFailed()
+    signal loggingOut()
     signal userCreated()
     signal userCreationFailed()
     signal userAccountExistanceVerified(bool doExists)
+    signal phoneNumberExistanceVerified(bool doExists)
     signal oldPasswordValid(bool valid)
 
     active: true
@@ -39,7 +41,7 @@ WebSocket {
 
     function createUser(email,password,profile)
     {
-        ceres.createUser(email,password,profile)
+        ceres.createUser(email.toLowerCase(),password,profile)
         .then(
             function onSuccess(userId){
                 userCreated();
@@ -76,7 +78,7 @@ WebSocket {
     }
 
     function loginWithPassword(email,password){
-        return ceres.loginWithPassword(email,password)
+        return ceres.loginWithPassword(email.toLowerCase(),password)
         .then(function onSuccess(userId){
             login()
         })
@@ -90,7 +92,8 @@ WebSocket {
         });
     }
 
-    function lougout(){
+    function logout(){
+        loggingOut()
         ceres.logout();
     }
 
@@ -150,6 +153,14 @@ WebSocket {
             });
             */
         return ceres.call("verifyUserAccountExistance", email);
+    }
+
+    function verifyPhoneNumberExistance(phoneNumber)
+    {
+        ceres.call("verifyPhoneNumberExistance", phoneNumber).result
+            .then(function onsuccess(result){
+                phoneNumberExistanceVerified(!!result);
+            });
     }
 
     function getCollection(collection) {
