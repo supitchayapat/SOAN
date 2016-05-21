@@ -26,6 +26,7 @@ WebSocket {
 
     signal connected()
     signal userAccountExistanceVerified(bool doExists)
+    signal phoneNumberExistanceVerified(bool doExists)
     signal oldPasswordValid(bool valid)
 
     active: true
@@ -48,7 +49,7 @@ WebSocket {
 
     function createUser(email,password,profile)
     {
-        ceres.createUser(email,password,profile)
+        ceres.createUser(email.toLowerCase(),password,profile)
         .then(
             function onSuccess(userId){
                 userCreated();
@@ -107,7 +108,7 @@ WebSocket {
     }
 
     function loginWithPassword(email,password){
-        return ceres.loginWithPassword(email,password)
+        return ceres.loginWithPassword(email.toLowerCase(),password)
         .then(function onSuccess(userId){
             login()
         })
@@ -169,6 +170,14 @@ WebSocket {
                     .then(function onsuccess(result){
                         userAccountExistanceVerified(!isNaN(result) && true === !!result);
                     });
+    }
+
+    function verifyPhoneNumberExistance(phoneNumber)
+    {
+        ceres.call("verifyPhoneNumberExistance", phoneNumber).result
+            .then(function onsuccess(result){
+                phoneNumberExistanceVerified(!!result);
+            });
     }
 
 

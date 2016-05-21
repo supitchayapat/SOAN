@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.2
 import QtQml.Models 2.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
+import Qure 0.1
 
 Page {
     id: page
