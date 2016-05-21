@@ -48,7 +48,7 @@ Page {
                     verticalCenter: parent.verticalCenter
                 }
 
-                onClicked:  Qt.openUrlExternally('tel:+'+phoneNumber)
+                onClicked:  Qt.openUrlExternally('tel:'+tel)
 
                 Icon {
                     name: "communication/call"
