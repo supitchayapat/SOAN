@@ -1,6 +1,6 @@
 import QtQuick 2.5
 import Material 0.3
-import "define_values.js" as Defines_values
+
 /* TODO use directely the JS Error class instead of importing Error.js
  see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error*/
 import "Error.js" as Err
@@ -9,6 +9,12 @@ import "Error.js" as Err
 TextField{
 
     id:root
+
+    //TODO : this is a temporary alias to be able to change
+    //the checked icon visibility without passing the the validators (editingFinishedValidations...)
+    //When these validators will manage the asynchronus validation this property should be deleted
+    // Now its used in changePassword.qml for the old password validation
+    property alias checkedIconVisibility: checkedIcon.visible
 
     //TODO : isValid is binded to checkedIcon.visible, but this depends on useValidatingIcon
     // property. So isValid will reflect validity only if useValidatingIcon is true.
@@ -83,7 +89,8 @@ TextField{
 
     //TODO : this is to specific to be here, should be set in child components
     // and delted from here
-    font.pixelSize: dp(Defines_values.Base_text_font)
+    font.pointSize: 16
+    floatingLabel: true
 
     Icon{
         id:checkedIcon
