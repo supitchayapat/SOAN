@@ -1,4 +1,4 @@
-import Qt.WebSockets 1.0
+import QtWebSockets 1.0
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
@@ -76,11 +76,8 @@ WebSocket {
             }, function(e){
                 console.log('tryResumeLogin : CATCH');
                 resumeLoginFailed();
-            })
-            //.catch()
-            //.then();
+            });
 
-            //});
     }
     function updateUser(user){
         return ceres.call("updateUser",user);
@@ -92,9 +89,9 @@ WebSocket {
 
     function checkPassword(password){
         ceres.call("checkPassword", Sha256.sha256_digest(password)).result
-                    .then(function response(result){
-                        oldPasswordValid(result);
-                    });
+            .then(function response(result){
+                oldPasswordValid(result);
+            });
     }
 
     function forgotPassword(email)

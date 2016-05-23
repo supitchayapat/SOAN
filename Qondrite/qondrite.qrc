@@ -7,5 +7,6 @@
         <file>q.js</file>
         <file>qmldir</file>
         <file>sha256.js</file>
+        <file>QtSettings.js</file>
     </qresource>
 </RCC>
