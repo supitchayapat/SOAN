@@ -13,7 +13,6 @@ Page {
     property int fieldWidth: parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
     property int textFieldWidth: isEditable?column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing):0
     property int labelWidth: isEditable?0:column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
-
     property var userCollection;
     property var user;
 
@@ -377,7 +376,7 @@ Page {
                 id:tel_txtFld
 
                 Layout.fillWidth: true
-                font.family: "roboto"
+                font.family: Defines_values.textFieldsFontFamily
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 visible : isEditable
 

@@ -53,6 +53,7 @@ Page {
 
         EmailTextField {
             id: textEmail_txtFld
+
             width: parent.width
             echoMode: TextInput.Normal
             placeholderText: qsTr( "Adresse email" )
