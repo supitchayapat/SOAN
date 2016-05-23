@@ -301,6 +301,7 @@ Page {
                     EmailTextField {
                         id:email_txtFld
 
+                        inputMethodHints: Qt.ImhEmailCharactersOnly
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true

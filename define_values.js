@@ -30,3 +30,4 @@ var Default_verticalspacing = 15;
 var Default_horizontalspacing = 40;
 var Signup1RowSpacing = 20;
 var SignupColumnpercent = 2;
+var CardMessageHeight = 60

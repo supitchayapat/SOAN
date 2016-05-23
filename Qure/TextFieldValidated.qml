@@ -90,6 +90,7 @@ TextField{
     //TODO : this is to specific to be here, should be set in child components
     // and delted from here
     font.pointSize: 16
+    floatingLabel: true
 
     Icon{
         id:checkedIcon
