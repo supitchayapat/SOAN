@@ -4,6 +4,7 @@ import Material 0.3
 /* TODO use directely the JS Error class instead of importing Error.js
  see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error*/
 import "Error.js" as Err
+import "../Qondrite/q.js" as Qlib
 
 //TODO : for validations we need to support a promise as a return value
 TextField{
@@ -116,7 +117,8 @@ TextField{
                     retValidators.push(validators[i].call().then(
                         function onsuccess(resp){
                             return resp;
-                        }, function onerror(resp){
+                        })
+                        .catch(function onerror(resp){
                             return resp;
                         })
                     );
@@ -126,13 +128,14 @@ TextField{
 
             hasError = false;
             helperText = "";
+            checkedIcon.visible = false;
 
-            AsyncLib.Q.all(getValidators(calls)).then(function(responses){
+            Qlib.Q.all(getValidators(calls)).then(function(responses){
                 for (var i = 0; i< responses.length; i++){
                     if (typeof responses[i] !== 'object'){
                         continue;
                     }
-                    hasError = (responses[i].response === false);
+                    hasError = (responses[i].response || false) === false;
                     helperText = hasError ? responses[i].message : "";
                     checkedIcon.visible = ! hasError;
                     if (hasError){
@@ -142,9 +145,6 @@ TextField{
 
             });
         }
-    }
-
-    onEditingFinished: {
     }
 
     onTextChanged: {

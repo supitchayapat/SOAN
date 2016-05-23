@@ -13,15 +13,15 @@ Page {
         id:accountInfo
 
         property var infos : ({
-          name        : ""   ,
-          companyName : ""   ,
-          address     : ""   ,
-          latitude    : 0.0  ,
-          longitude   : 0.0  ,
-          tel         : ""   ,
-          ambulance   : false,
-          vsl         : false
-        })
+                                  name        : ""   ,
+                                  companyName : ""   ,
+                                  address     : ""   ,
+                                  latitude    : 0.0  ,
+                                  longitude   : 0.0  ,
+                                  tel         : ""   ,
+                                  ambulance   : false,
+                                  vsl         : false
+                              })
         property string email: ""
         property string password: ""
     }
@@ -68,7 +68,7 @@ Page {
 
         onActiveChanged: {
             if(active) backgroundColor = Theme.primaryColor
-             else backgroundColor = disabledColor
+            else backgroundColor = disabledColor
         }
 
         function updateButtonState(validity){
@@ -298,7 +298,6 @@ Page {
                         name: "communication/email"
                         size: dp(Defines_values.Default_iconsize)
                     }
-
                     EmailTextField {
                         id:email_txtFld
 
@@ -307,6 +306,7 @@ Page {
                         Layout.fillWidth: true
                         serverGateway: Qondrite
 
+                        emailExistanceValidation : true
                         onEditingFinished:{
                             accountInfo.email = text
                             accountInfo.infosChanged()

@@ -53,6 +53,7 @@ Item {
 
         EmailTextField {
             id: textEmail_txtFld
+
             width: parent.width
             echoMode: TextInput.Normal
             placeholderText: qsTr( "Adresse email" )
@@ -68,7 +69,7 @@ Item {
                 },
                 function onerror(error){
                     textEmail_txtFld.text = ""
-                    if (error.error == 403){
+                    if (error.error === 403){
                         snackbar.open(qsTr("Cet email ne correspond à aucun utilisateur"));
                     }
                 }
