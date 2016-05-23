@@ -54,7 +54,6 @@ Item {
         EmailTextField {
             id: textEmail_txtFld
 
-            inputMethodHints: Qt.ImhEmailCharactersOnly
             width: parent.width
             echoMode: TextInput.Normal
             placeholderText: qsTr( "Adresse email" )

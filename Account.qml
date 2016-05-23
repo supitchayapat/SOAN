@@ -339,9 +339,8 @@ Page {
             }
 
             EmailTextField {
-                id:Te_txtFld
+                id:email_txtFld
 
-                inputMethodHints: Qt.ImhEmailCharactersOnly
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 font.family: Defines_values.textFieldsFontFamily
                 width:textFieldWidth
@@ -377,7 +376,7 @@ Page {
                 id:tel_txtFld
 
                 Layout.fillWidth: true
-                font.family: "roboto"
+                font.family: Defines_values.textFieldsFontFamily
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 visible : isEditable
 

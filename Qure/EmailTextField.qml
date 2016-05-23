@@ -8,6 +8,7 @@ TextFieldValidated{
     placeholderText: qsTr("Email")
     validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,4}/}
     validatorWarning: qsTr("Adresse email invalide")
+    inputMethodHints: Qt.ImhEmailCharactersOnly
 
     onEditingFinished: if(emailExistanceValidation) Qondrite.verifyUserAccountExistance(text)
 
