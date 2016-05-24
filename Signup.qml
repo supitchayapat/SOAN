@@ -305,7 +305,6 @@ Page {
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
                         serverGateway: Qondrite
-
                         emailExistanceValidation : true
                         onEditingFinished:{
                             accountInfo.email = text
