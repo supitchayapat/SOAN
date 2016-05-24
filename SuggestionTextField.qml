@@ -9,6 +9,9 @@ RowLayout{
     property alias hasError:_myTxtField.hasError
     property alias helperText: _myTxtField.helperText
     property alias text: _myTxtField.text
+    property int lineHeight: _myTxtField.height
+
+    height: lineHeight*(Math.min(suggestionlist.count, 5) + 1)
 
     signal searchForText(string text);
     signal editingFinished();
@@ -23,20 +26,83 @@ RowLayout{
         suggestionModel.append(data1)
     }
 
-    TextField{
-        id:_myTxtField
+    Column{
+        anchors.fill: parent
 
-        Layout.fillWidth: true
-        Layout.alignment: Qt.AlignLeft
-        placeholderText: qsTr("Adresse")
-        font.family: textFieldFont.name
-        validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
+        RowLayout{
+            width:parent.width
+            TextField{
+                id:_myTxtField
+
+                Layout.fillWidth: true
+                Layout.preferredHeight: lineHeight
+                Layout.alignment: Qt.AlignLeft
+                placeholderText: qsTr("Adresse")
+                font.family: textFieldFont.name
+                validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
+
+                onTextChanged: {
+                    if(text.length>0){
+                        suggestionlist.visible = true
+                        search_btn.visible = true
+                    }else{
+                        closeSuggestionList()
+                        search_btn.visible = false
+                    }
+                    myRoot.textChanged(text)
+                }
+
+                onFocusChanged: {
+                    if(focus == false){
+                        closeSuggestionList()
+                    }
+                }
+
+                onEditingFinished: myRoot.editingFinished()
+            }
+
+            ActionButton{
+                id:search_btn
+
+                height: lineHeight*0.6
+                width:height
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                iconName: "action/input"
+                Layout.alignment: Qt.AlignRight
+                enabled: _myTxtField.text!=""
+                //state:_myTxtField.text!=""?"btn_shown":"btn_hiden"
+
+                onClicked: {
+                    myRoot.searchForText(myRoot.text)
+                    suggestionlist.model.clear()
+                }
+
+                states: [
+                    State {
+                        name: "btn_shown"
+                        PropertyChanges { target: search_btn; visible: true; scale:0.8 }
+                    },
+                    State {
+                        name: "btn_hiden"
+                        PropertyChanges { target: search_btn; visible: false; scale:0.5  }
+                    }
+                ]
+
+                transitions: Transition {
+                    NumberAnimation { target:search_btn; properties: "scale"; easing.type: Easing.Linear; duration: 500}
+                }
+            }
+
+
+        }
+
 
         ListView{
             id:suggestionlist
 
-            width:parent.width
-            height: parent.height*Math.min(suggestionlist.count, 5)
+            width:myRoot.width
+            height: lineHeight*Math.min(suggestionlist.count, 5)
             clip:true
             y:parent.height
             visible:false
@@ -79,59 +145,11 @@ RowLayout{
                 }
             }
         }
-
-        onTextChanged: {
-            if(text.length>0){
-                suggestionlist.visible = true
-                search_btn.visible = true
-            }else{
-                closeSuggestionList()
-                search_btn.visible = false
-            }
-            myRoot.textChanged(text)
-        }
-
-        onFocusChanged: {
-            if(focus == false){
-                closeSuggestionList()
-            }
-        }
-
-        onEditingFinished: myRoot.editingFinished()
     }
 
-    ActionButton{
-        id:search_btn
 
-        /*height: parent.height*0.6
-        width:height*/
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        iconName: "action/input"
-        Layout.alignment: Qt.AlignRight
-        enabled: _myTxtField.text!=""
-        //state:_myTxtField.text!=""?"btn_shown":"btn_hiden"
 
-        onClicked: {
-            myRoot.searchForText(myRoot.text)
-            suggestionlist.model.clear()
-        }
 
-        states: [
-            State {
-                name: "btn_shown"
-                PropertyChanges { target: search_btn; visible: true; scale:0.8 }
-            },
-            State {
-                name: "btn_hiden"
-                PropertyChanges { target: search_btn; visible: false; scale:0.5  }
-            }
-        ]
-
-        transitions: Transition {
-            NumberAnimation { target:search_btn; properties: "scale"; easing.type: Easing.Linear; duration: 500}
-        }
-    }
 
 }
 

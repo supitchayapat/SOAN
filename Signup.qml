@@ -252,6 +252,10 @@ Page {
 
                     SuggestionTextField{
                         id:address_txtField
+                        Rectangle{
+                            anchors.fill: parent
+                            color:"blue"
+                        }
 
 
                         QtObject {
@@ -261,9 +265,10 @@ Page {
 
 
                         Layout.fillWidth: true
+                        lineHeight: 170
                         // @TODO this validator may need to be changed with a correct regExp for this case
 
-                        /*onTextChanged: {
+                        onTextChanged: {
                             //accountInfo.address = text
                             //this is how to use SuggestionTextField
                             suggestionModel.clear()
@@ -274,7 +279,7 @@ Page {
 
                         }
 
-                        onEditingFinished: {
+                        /*onEditingFinished: {
                             // run validation only if undone yet for current address and address length is worth it
                             if(address_txtField.text.length > 3)
                             {
