@@ -12,7 +12,7 @@ Page {
 
     actionBar.switchDelegate : AvailabilitySwitch{}
 
-    property var collection : []
+    property var availabilityCollection;
 
     actions:[
         Action{//availability switch
@@ -20,7 +20,7 @@ Page {
             displayAsSwitch:true
 
             onTriggered: {
-
+                //availabilityCollection._localToRemoteUpdate(/*userid*/, {availability : state})
             }
         }
     ]
@@ -97,13 +97,20 @@ Page {
         console.log(JSON.stringify(userInfo));
 
         var subscription  = Qondrite.subscribe("availability",function(){
-                                    var collection = Qondrite.getCollection("availability")._set._items;
+                        availabilityCollection = Qondrite.getCollection("availability");
+                        var availabilityItems = availabilityCollection._set._items;
+                        for( var id in availabilityItems){
+                            if( collection.hasOwnProperty(id) ) {
+                                ambliste.append(collection[id]);
+                            }
+                        }
 
-                                    for( var id in collection){
-                                        if( collection.hasOwnProperty(id) ) {
-                                            ambliste.append(collection[id]);
-                                        }
-                                    }
+                        var reactiveAvailabilityCollection = Qondrite.reactiveQuery(availabilityCollection);
+
+                        reactiveAvailabilityCollection.on("change", function(id){
+                            //change the item in the list using its id
+                        });
+
 
                                 });
 
