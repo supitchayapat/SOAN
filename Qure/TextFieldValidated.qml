@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import Material 0.3
+import Material 0.1
 
 /* TODO use directely the JS Error class instead of importing Error.js
  see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error*/

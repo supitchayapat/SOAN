@@ -12,7 +12,4 @@
     <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>
     </qresource>
-    <qresource prefix="/">
-        <file>tests/unit/tst_PhoneTextField.qml</file>
-    </qresource>
 </RCC>
