@@ -341,6 +341,7 @@ Page {
             EmailTextField {
                 id:email_txtFld
 
+                serverGateway : Qondrite
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 font.family: Defines_values.textFieldsFontFamily
                 width:textFieldWidth
@@ -379,6 +380,7 @@ Page {
                 font.family: Defines_values.textFieldsFontFamily
                 font.pixelSize: dp(Defines_values.Base_text_font)
                 visible : isEditable
+                serverGateway : Qondrite
 
                 onEditingFinished: {
                     accountInfo.infos.tel = text

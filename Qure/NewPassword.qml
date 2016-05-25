@@ -1,7 +1,10 @@
 import QtQuick 2.5
 import Material 0.3
 import QtQuick.Layouts 1.2
+import Qondrite 0.1
 import "Error.js" as Err
+import "../Qondrite/q.js" as Qlib
+
 
 ColumnLayout{
     id : root
@@ -34,8 +37,14 @@ ColumnLayout{
 
         Component.onCompleted: {
             onEditingValidations.push(new Err.Error(function() {
-                return _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld)}
-            ,passwordsDontMatchWarning))
+                var dfd = Qlib.Q.defer();
+                var check =  _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld);
+                dfd.resolve({
+                    response : check,
+                    message : check === true ? "" : passwordsDontMatchWarning
+                });
+                return dfd.promise;
+            }, Err.Error.scope.REMOTE));
         }
     }
 
@@ -46,12 +55,21 @@ ColumnLayout{
         Layout.fillWidth: parent
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
-        validatorWarning: root.validatorWarning
-
+        validatorWarning: root.validatorWarning        
+        serverGateway: Qondrite
         onIsValidChanged: if(isValid && !password_txtfld.isValid) password_txtfld.manageValidation()
 
         Component.onCompleted: {
-            onEditingValidations.unshift(new Err.Error(function() { return _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld)},passwordsDontMatchWarning))
+            onEditingValidations.unshift(new Err.Error(function() {
+                var dfd = Qlib.Q.defer();
+                var check = _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld);
+                dfd.resolve({
+                    response : check,
+                    message : check === true ? "" :  passwordsDontMatchWarning
+                });
+                return dfd.promise;
+           }, Err.Error.scope.LOCAL
+           ));
         }
     }
 

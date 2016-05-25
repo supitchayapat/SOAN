@@ -12,11 +12,11 @@ TextFieldValidated{
 
     Component.onCompleted: {
 
-        if (typeof serverGateway !== 'object')
-        {
-            throw "serverGateway must be supplied before running validations";
-        }
         onEditingFinishedValidations.unshift(new Err.Error(function(){
+            if (typeof serverGateway !== 'object')
+            {
+                throw "serverGateway must be supplied before running validations";
+            }
             var dfd = Qlib.Q.defer();
             if (! emailExistanceValidation){
                 dfd.resolve( {
@@ -40,7 +40,7 @@ TextFieldValidated{
                     });
                     return dfd.promise;
                 });
-        }));
+        }, Err.Error.scope.REMOTE));
 
         onEditingFinishedValidations.unshift(
              new Err.Error(function(){
@@ -49,7 +49,7 @@ TextFieldValidated{
                  dfd.resolve( {
                         response : runTest,
                         message : runTest ? "" : qsTr("Adresse email invalide")
-                    });
+                    }, Err.Error.scope.LOCAL);
                  return dfd.promise;
             }));
     }

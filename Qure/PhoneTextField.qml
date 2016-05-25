@@ -21,6 +21,10 @@ TextFieldValidated{
 
         onEditingFinishedValidations.unshift(
             new Err.Error(function(){
+                if (typeof serverGateway !== 'object')
+                {
+                    throw "serverGateway must be supplied before running validations";
+                }
                 return serverGateway.verifyPhoneNumberExistance(text).result
                 .then(function(doExists){
                     var dfd = Qlib.Q.defer();
@@ -33,6 +37,6 @@ TextFieldValidated{
                     throw { message : qsTr("Numero de téléphone incomplet") };
 
                 })
-            }));
+            }, Err.Error.scope.REMOTE));
     }
 }

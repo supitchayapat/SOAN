@@ -61,6 +61,35 @@ TextField{
 
     property var serverGateway : undefined
 
+    function manageValidation(){
+        console.log('MANAGE');
+        if(validator != null){
+            if ( text == ""){
+                hasError = false
+                checkedIcon.visible = false
+                return
+            }
+            /* TODO : here we are only handling the case of RegExpValidator
+             * but the validator could be also an IntValidator or a DoubleValidator
+             * please manage the missing cases*/
+            if(text != "" && text.toString().match(validator.regExp) != null)
+            {
+                hasError = false
+                checkedIcon.visible = true
+            }
+            else if((text != "" && text.toString().match(validator.regExp) === null) ){
+                hasError = true
+                checkedIcon.visible = false
+            }
+
+        }
+        else{
+            console.log("TextFiledValidated : this component needs a validator,
+                        you can set the validator using validator property")
+            console.trace()
+            throw "property exception"
+        }
+    }
     //TODO : this is to specific to be here, should be set in child components
     // and delted from here
     font.pointSize: 16
@@ -94,11 +123,11 @@ TextField{
         id:_validateEngine
 
         function onEditingCalls(){
-            return evaluateCalls(onEditingValidations)
+            return evaluateCalls(onEditingValidations);
         }
 
         function onEditingFinishedCalls(){
-            return evaluateCalls(onEditingFinishedValidations)
+            return evaluateCalls(onEditingFinishedValidations);
         }
 
         function evaluateCalls(calls)
@@ -106,16 +135,12 @@ TextField{
             if (calls.length === 0){
                 return ;
             }
-            if (typeof serverGateway !== 'object')
-            {
-                throw "serverGateway must be supplied before running validations";
-            }
             function getValidators(validators)
             {
                 var retValidators = [];
                 for (var i=0; i< calls.length; i++){
-                    retValidators.push(validators[i].call().then(
-                        function onsuccess(resp){
+                    retValidators.push(validators[i].call()
+                        .then(function onsuccess(resp){
                             return resp;
                         })
                         .catch(function onerror(resp){
@@ -163,9 +188,20 @@ TextField{
         }
         else{
             timer.stop();
-            _validateEngine.onEditingFinishedCalls();
+            serverGateway === undefined ?  manageValidation() : _validateEngine.onEditingFinishedCalls();
         }
     }
+
+    Component.onCompleted: {
+        onEditingValidations.unshift(new Err.Error(function (){
+                 var dfd = Qlib.Q.defer();
+                 if (validator === null)
+                     dfd.resolve({ response : true});
+                 else
+                     dfd.resolve({ response : (text !== "" && text.toString().match(validator.regExp) !== null) });
+                 return dfd.promise;
+             }))
+        }
 }
 
 // TODO : Support of multiple errors and helper texts with priorities
