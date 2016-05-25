@@ -8,6 +8,7 @@ import Qure 0.1
 
 Page {
 
+    actionBar.hidden: true
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
     FontLoader {id : labelFont; name : Defines_values.textFieldsFontFamily}
 
