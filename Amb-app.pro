@@ -30,6 +30,4 @@ CONFIG += c++11
 #to use when need to debug qml
 #CONFIG += qml_debug
 
-SUBDIRS += \
-    tests/tests \
-    tests
+SUBDIRS += tests
