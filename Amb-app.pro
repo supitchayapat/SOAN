@@ -1,4 +1,4 @@
-TEMPLATE = app
+TEMPLATE = subdirs
 
 QT += qml quick svg websockets
 
@@ -29,3 +29,5 @@ CONFIG += c++11
 
 #to use when need to debug qml
 #CONFIG += qml_debug
+
+SUBDIRS += tests
