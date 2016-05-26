@@ -42,4 +42,19 @@ ApplicationWindow {
             }
         }
     }
+
+    Snackbar {
+        id: socketAlert
+    }
+
+    Component.onCompleted: {
+        Qondrite.onClose.connect(function(){
+            socketAlert.open('La connexion à Internet a été interrompue ! Veuillez relancer l\'application');
+
+        });
+        Qondrite.onError.connect(function(){
+            socketAlert.open('La connexion à Internet a échoué ! Veuillez relancer l\'application');
+
+        });
+    }
 }
