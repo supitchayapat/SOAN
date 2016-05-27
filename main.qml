@@ -37,6 +37,8 @@ ApplicationWindow {
                 pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
             }
             onDisconnectPressed: {
+
+                Qondrite.updateUserAvailability(false);
                 pageStack.push(Qt.resolvedUrl("Signin.qml"))
                 Qondrite.logout();
             }

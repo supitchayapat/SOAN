@@ -56,6 +56,11 @@ WebSocket {
         return ceres.call("updateUser",user);
     }
 
+    function updateUserAvailability(state)
+    {
+        return ceres.call("updateUserAvailability", state);
+    }
+
     function changePassword(oldPassword,newPassword){
         return ceres.call("changePassword",oldPassword, newPassword);
     }
@@ -69,7 +74,6 @@ WebSocket {
 
     function forgotPassword(email)
     {
-        console.log('forgotPassword : '+email );
         return ceres.call("forgotPassword", { email : email });
     }
 
