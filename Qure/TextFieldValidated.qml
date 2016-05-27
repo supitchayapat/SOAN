@@ -62,7 +62,7 @@ TextField{
     property var serverGateway : undefined
 
     function manageValidation(){
-        console.log('MANAGE');
+
         if(validator != null){
             if ( text == ""){
                 hasError = false
@@ -113,8 +113,10 @@ TextField{
         triggeredOnStart: false
 
         onTriggered: {
-            _validateEngine.onEditingCalls();
-            _validateEngine.onEditingFinishedCalls();
+            if (text!=""){
+                _validateEngine.onEditingCalls();
+                _validateEngine.onEditingFinishedCalls();
+            }
             timerDone = true
         }
     }
@@ -130,7 +132,7 @@ TextField{
             return evaluateCalls(onEditingFinishedValidations);
         }
 
-        function evaluateCalls(calls)
+        function evaluateCalls(calls, s)
         {
             if (calls.length === 0){
                 return ;
@@ -188,7 +190,12 @@ TextField{
         }
         else{
             timer.stop();
-            serverGateway === undefined ?  manageValidation() : _validateEngine.onEditingFinishedCalls();
+            if (serverGateway === undefined){
+                manageValidation()
+            }
+            else if (text != ""){
+                _validateEngine.onEditingFinishedCalls();
+            }
         }
     }
 
