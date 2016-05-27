@@ -13,6 +13,7 @@ Switch {
 
     style: ControlStyles.SwitchStyle {
         handle: View {
+            id : handle_item
             width: control.height
             height: control.height
             radius: width / 2
@@ -25,7 +26,7 @@ Switch {
         }
 
         groove: Item {
-            width: 100 * Units.dp
+            width: control.height * 2
             height: control.height
 
             Rectangle {
