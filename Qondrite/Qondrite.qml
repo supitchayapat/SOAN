@@ -30,8 +30,9 @@ WebSocket {
 
     function _connect() {
         console.log("Connecting to " + meteor_url);
-
-        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), false, function(event) { console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message ); });
+        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), false, function(event) {
+            console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message );
+        });
         console.log("done");
     }
 

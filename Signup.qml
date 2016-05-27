@@ -26,6 +26,8 @@ Page {
         property string password: ""
     }
 
+
+
     ProgressBySteps{
         id : progressBySteps
 
@@ -424,12 +426,13 @@ Page {
         id: snackbar
     }
 
+
     // TODO : here we bind the signal to a specific function in the scope of Component.onCompleted.
     // It will be nice to have access to those signal handlers directly with signal handlers :
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
-        Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
+        Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})        
     }
 
 
