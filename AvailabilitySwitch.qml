@@ -13,7 +13,6 @@ Switch {
 
     style: ControlStyles.SwitchStyle {
         handle: View {
-            id : handle_item
             width: control.height
             height: control.height
             radius: width / 2
