@@ -14,14 +14,16 @@ Page {
 
     property var availabilityCollection;
 
+    property var itemIdToIndexMap;
+
     actions:[
         Action{//availability switch
             iconName: "awesome/close"
             displayAsSwitch:true
-
-            onTriggered: {
-                //availabilityCollection._localToRemoteUpdate(/*userid*/, {availability : state})
+            onCheckedChanged: {
+                Qondrite.changeAvailability(checked)
             }
+
         }
     ]
 
@@ -33,6 +35,7 @@ Page {
         id: listelements
 
         ListItem.Standard{
+
             text:companyName
 
             action: Icon {
@@ -99,16 +102,24 @@ Page {
         var subscription  = Qondrite.subscribe("availability",function(){
                         availabilityCollection = Qondrite.getCollection("availability");
                         var availabilityItems = availabilityCollection._set._items;
+                        var index = 0;
+                        var mapConstructed = {};
                         for( var id in availabilityItems){
-                            if( collection.hasOwnProperty(id) ) {
-                                ambliste.append(collection[id]);
+                            if(availabilityItems.hasOwnProperty(id) ) {
+                                ambliste.append(availabilityItems[id]);
+                                mapConstructed[id] = index;
+                                index++;
                             }
                         }
+
+                        itemIdToIndexMap = mapConstructed;
 
                         var reactiveAvailabilityCollection = Qondrite.reactiveQuery(availabilityCollection);
 
                         reactiveAvailabilityCollection.on("change", function(id){
-                            //change the item in the list using its id
+                            var indexInList = itemIdToIndexMap[id];
+                            var itemInList = ambliste.get(indexInList)
+                            console.log(JSON.stringify(itemInList))
                         });
 
 

@@ -69,8 +69,11 @@ WebSocket {
 
     function forgotPassword(email)
     {
-        console.log('forgotPassword : '+email );
         return ceres.call("forgotPassword", { email : email });
+    }
+
+    function changeAvailability(available){
+        ceres.call("changeAvailability", available);
     }
 
     function emit(signalName,param){

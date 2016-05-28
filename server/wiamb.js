@@ -75,6 +75,18 @@ var wiambAPI = {
 			throw new Meteor.Error("Then email provided is unknown");
 		}
 		return Accounts.sendResetPasswordEmail(Meteor.user()._id, email);
+	},
+	"changeAvailability" : function updateAvailability(availability){
+		console.log("Changing the availability to "+availability);
+		Availability.update(
+		   { user_id: Meteor.userId() },
+		   {
+			   	$set: 
+			   	{
+	     				availability: availability 
+	     		}
+		   }
+		)
 	}
 };
 
