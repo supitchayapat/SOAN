@@ -6,7 +6,9 @@ import "define_values.js" as Defines_values
 import Qondrite 0.1
 import Qure 0.1
 
-Item {
+Page {
+
+    actionBar.hidden: true
 
     FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
     FontLoader {id : labelFont; name : Defines_values.textFieldsFontFamily}
