@@ -13,12 +13,17 @@ var wiambAPI = {
 		return Meteor.users.find({emails : { $elemMatch : { address : email}  }}).count();		
 	},
     "verifyPhoneNumberExistance" : function(phoneNumber)
-    {
+	{
         if (! /^0[1-9]([-\/. ]?[0-9]{2}){4}$/.test(phoneNumber)){
-            throw new Meteor.Error("Phone number is not valid");
-        }
-        return Meteor.users.find({ "profile.tel" : { $in : [phoneNumber] } }).count();      
-    },
+        	throw new Meteor.Error("Phone number is not valid");
+   	    }
+   	    var filter = {};
+   	    filter["profile.tel"] = { $in : [phoneNumber] };
+   	    if (Meteor.user()){
+   	    	filter["_id"] = { $ne : Meteor.user()._id };
+   	    }
+        return Meteor.users.find(filter).count();
+	},
 	"validateAddress" : function(address)
 	{
 		console.log('Meteor:validateAddress : '+address);
