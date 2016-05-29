@@ -951,7 +951,7 @@ Asteroid.prototype.logout = function () {
             self._emit("logoutError", err);
             deferred.reject(err);
         } else {
-            delete self.uerId;
+            delete self.userId;
             delete self.loggedIn;
             Asteroid.utils.multiStorage.del(self._host + "__" + self._instanceId + "__login_token__");
             self._emit("logout");

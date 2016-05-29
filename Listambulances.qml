@@ -16,13 +16,12 @@ Page {
 
     property var itemIdToIndexMap;
 
-    property var index: 0
-
     function initList(){
 
         availabilityCollection = Qondrite.getCollection("availability");
         var availabilityItems = availabilityCollection._set._items;
         itemIdToIndexMap = {};
+        var index=  0;
         for( var id in availabilityItems){
             if(availabilityItems.hasOwnProperty(id) ) {
                 ambliste.append(availabilityItems[id]);
