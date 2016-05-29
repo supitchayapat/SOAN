@@ -25,7 +25,7 @@ Switch {
         }
 
         groove: Item {
-            width: 100 * Units.dp
+            width: control.height * 2
             height: control.height
 
             Rectangle {
