@@ -120,7 +120,7 @@ if (Meteor.isServer) {
 	    
 	    Availability.insert({
 	    	user_id  : user._id, 
-	    	availability : 0, 
+	    	availability : false, 
 	    	geoloc : {type : "Point", coordinates  : [user.profile.longitude,user.profile.latitude]}, 
 	    	tel  : user.profile.tel,
 	    	companyName  : user.profile.companyName

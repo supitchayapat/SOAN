@@ -16,6 +16,40 @@ Page {
 
     property var itemIdToIndexMap;
 
+    property var index: 0
+
+    function initList(){
+
+        availabilityCollection = Qondrite.getCollection("availability");
+        var availabilityItems = availabilityCollection._set._items;
+        itemIdToIndexMap = {};
+        for( var id in availabilityItems){
+            if(availabilityItems.hasOwnProperty(id) ) {
+                ambliste.append(availabilityItems[id]);
+                itemIdToIndexMap[id] = index;
+                index++;
+            }
+        }
+    }
+
+    function bindEventsToList(){
+        var reactiveAvailabilityCollection = Qondrite.reactiveQuery(availabilityCollection);
+
+        reactiveAvailabilityCollection.on("change", function(id){
+            ambliste.set(itemIdToIndexMap[id],
+                         availabilityCollection._set._items[id]);
+        });
+
+        reactiveAvailabilityCollection.on("add", function(id){
+             ambliste.append(availabilityCollection._set._items[id])
+             itemIdToIndexMap[id] = Object.keys(itemIdToIndexMap).length;
+        })
+
+        reactiveAvailabilityCollection.on("delete",function(id){
+            ambliste.remove(itemIdToIndexMap[id]);
+            delete itemIdToIndexMap[id];
+        })
+    }
     actions:[
         Action{//availability switch
             iconName: "awesome/close"
@@ -94,43 +128,13 @@ Page {
 
     Component.onCompleted: {
 
-        var userCollection = Qondrite.getCollection("users");
-        var userInfo = userCollection._set.toArray()[0];
-        console.log("user infooo");
-        console.log(JSON.stringify(userInfo));
 
         var subscription  = Qondrite.subscribe("availability",function(){
-                        availabilityCollection = Qondrite.getCollection("availability");
-                        var availabilityItems = availabilityCollection._set._items;
-                        var index = 0;
-                        var mapConstructed = {};
-                        for( var id in availabilityItems){
-                            if(availabilityItems.hasOwnProperty(id) ) {
-                                ambliste.append(availabilityItems[id]);
-                                mapConstructed[id] = index;
-                                index++;
-                            }
-                        }
+                        initList()
+                        bindEventsToList()
+            });
 
-                        itemIdToIndexMap = mapConstructed;
-
-                        var reactiveAvailabilityCollection = Qondrite.reactiveQuery(availabilityCollection);
-
-                        reactiveAvailabilityCollection.on("change", function(id){
-                            var indexInList = itemIdToIndexMap[id];
-                            var itemInList = ambliste.get(indexInList)
-                            console.log(JSON.stringify(itemInList))
-                        });
-
-
-                                });
-
-        Qondrite.loggingOut.connect(
-                        function()
-                        {
-                            subscription.stop();
-                        }
-                    )
+        Qondrite.loggingOut.connect(function(){subscription.stop();})
 
     }
 
