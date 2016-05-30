@@ -64,16 +64,6 @@ Page {
         });
     }
 
-    function isFormValid(){
-            return  name_txtFld.isValid
-                    && companyName_txtFld.isValid
-                    && email_txtFld.isValid
-                    && address_txtField.isValid
-                    && tel_txtFld.isValid
-                    && (demandeCheckBox.checked || vslCheckBox.checked)
-                    ? true :false
-    }
-
     function changePassword(oldPassword,newPassword){
         Qondrite.changePassword(oldPassword,newPassword)
             .result.then(
