@@ -80,6 +80,18 @@ var wiambAPI = {
 			throw new Meteor.Error("Then email provided is unknown");
 		}
 		return Accounts.sendResetPasswordEmail(Meteor.user()._id, email);
+	},
+	"changeAvailability" : function updateAvailability(availability){
+		console.log("Changing the availability to "+availability);
+		Availability.update(
+		   { user_id: Meteor.userId() },
+		   {
+			   	$set: 
+			   	{
+	     				availability: availability 
+	     		}
+		   }
+		)
 	}
 };
 
@@ -113,7 +125,7 @@ if (Meteor.isServer) {
 	    
 	    Availability.insert({
 	    	user_id  : user._id, 
-	    	availability : 0, 
+	    	availability : false, 
 	    	geoloc : {type : "Point", coordinates  : [user.profile.longitude,user.profile.latitude]}, 
 	    	tel  : user.profile.tel,
 	    	companyName  : user.profile.companyName
