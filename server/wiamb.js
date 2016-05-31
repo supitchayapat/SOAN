@@ -62,6 +62,10 @@ var wiambAPI = {
 				}
 			});		
 	},
+	"updateUserAvailability" : function(state)
+    {
+        Availability.update({ user_id: Meteor.user()._id}, {$set: { "availability" : (state  ? true : false) } });
+    },
 	"checkPassword" : function checkPassword(encodedPassword){
 
 		    if (Meteor.userId()) {
