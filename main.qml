@@ -2,6 +2,8 @@ import QtQuick 2.5
 import Material 0.3
 import QtQuick.Window 2.0
 import Qondrite 0.1
+import Qure 0.1
+import "define_values.js" as Defines_values
 
 
 ApplicationWindow {
@@ -43,5 +45,49 @@ ApplicationWindow {
                 Qondrite.logout();
             }
         }
+    }
+
+    Snackbar {
+        id: socketAlert
+    }
+
+    OverlayLayer {
+        id: ajaxSpinner
+        visible:  false
+        opacity: .3
+        color: Defines_values.remoteCallSpinnerColor
+        ProgressCircle {
+            id: spinnerIcon
+            opacity: 1
+            dashThickness : 4
+            visible: true
+            color:  Defines_values.remoteCallSpinnerIconColor
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+        }
+        function show(){
+            visible = true;
+            spinnerIcon.visible = true;
+        }
+        function hide()
+        {
+            visible = false
+            spinnerIcon.visible = false;
+        }
+    }
+
+    Component.onCompleted: {
+        Qondrite.onClose.connect(function(){
+            socketAlert.open('La connexion à Internet a été interrompue ! Veuillez relancer l\'application');
+        });
+        Qondrite.onError.connect(function(){
+            socketAlert.open('La connexion à Internet a échoué ! Veuillez relancer l\'application');
+        });
+        Qondrite._on("remoteCallStart", function(data){
+            ajaxSpinner.show();
+        });
+        Qondrite._on("remoteCallSuccess", function(data){
+            ajaxSpinner.hide();
+        });
     }
 }

@@ -58,6 +58,8 @@ TextField{
     /*called while editing to reformat the text, the formated text should be returned as a string*/
     property var onEditingFormating : function(){return text}
 
+    property bool isDirty: false
+
     /*manage the hasError property through the onEditingValidations calls.
       update the checkedIcon visibility*/
     function manageValidation(){
@@ -158,6 +160,9 @@ TextField{
     }
 
     onTextChanged: {
+        if (isDirty === false){
+            isDirty = true
+        }
         if(text == ""){
             checkedIcon.visible = false
             hasError = false

@@ -22,6 +22,8 @@ var PrimaryColor = "#2196F3";
 var Materialgraycolor = "gray";
 var ListambulancesBackgroundlevel = '200';
 var ListambulancesDecorationlevel = '300';
+var remoteCallSpinnerIconColor = PrimaryColor
+var remoteCallSpinnerColor = 'gray'
 
 //sizevalues
 var ListambulancesButtonwidth = 80;

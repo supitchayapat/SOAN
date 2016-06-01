@@ -499,21 +499,27 @@ Asteroid.prototype.apply = function (method, params) {
     if (!Array.isArray(params)) {
         params = [];
     }
+    var self = this;
     // Create the result and updated promises
     var resultDeferred = Q.defer();
     var updatedDeferred = Q.defer();
+    self._emit("remoteCallStart");
+
     var onResult = function (err, res) {
         // The onResult handler takes care of errors
         if (err) {
+            self._emit("remoteCallError", err);
             // If errors ccur, reject both promises
             resultDeferred.reject(err);
             updatedDeferred.reject();
         } else {
+            self._emit("remoteCallSuccess", res);
             // Otherwise resolve the result one
             resultDeferred.resolve(res);
         }
     };
     var onUpdated = function () {
+        self._emit("remoteCallSuccess");
         // Just resolve the updated promise
         updatedDeferred.resolve();
     };
