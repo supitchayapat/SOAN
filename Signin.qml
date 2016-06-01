@@ -7,11 +7,12 @@ import Qondrite 0.1
 import Qure 0.1
 
 Page {
+    id:root
 
     actionBar.hidden: true
 
-    FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
-    FontLoader {id : labelFont; name : Defines_values.textFieldsFontFamily}
+    property int rowHeight: root.height/12
+    property int linesSpacing: root.height/30
 
     Rectangle{
         id : backgroud_rct
@@ -24,6 +25,7 @@ Page {
         id: confirmed_dlg
 
         width: parent.width - parent.width/6
+        height:parent.height/2.2
         hasActions: false
         z:1
 
@@ -50,6 +52,7 @@ Page {
         id: forgottenPassword_dlg
 
         width: parent.width - parent.width/6
+        height:parent.height/2.2
         text: qsTr("Mot de passe oublié")
         z:1
 
@@ -90,17 +93,16 @@ Page {
             centerIn: parent
             left: parent.left
             right :parent.right
-            leftMargin: parent.width/12
-            rightMargin: parent.width/12
+            leftMargin: parent.width/8
+            rightMargin: parent.width/8
         }
 
         width:parent.width
-
-        spacing:dp(40)
+        spacing:linesSpacing
 
         Column{
 
-            spacing:dp(20)
+            spacing:linesSpacing
 
             anchors {
                 right :parent.right
@@ -112,9 +114,8 @@ Page {
                 id : emailTxtField
 
                 placeholderText: "Email"
-                font.pixelSize: dp(20)
-                font.family: textFieldFont.name
                 width: parent.width
+                height: rowHeight
             }
 
 
@@ -122,16 +123,15 @@ Page {
                 id : pwdTxtField
 
                 placeholderText: "mot de passe"
-                font.pixelSize: dp(20)
-                font.family: textFieldFont.name
                 width: parent.width
                 echoMode: TextInput.Password
+                height: rowHeight
             }
         }
 
         Column{
 
-            spacing: dp(10)
+            spacing:linesSpacing/2
 
             anchors {
                 right :parent.right
@@ -145,6 +145,7 @@ Page {
                 text: "Connexion"
                 elevation: 1
                 width: parent.width
+                height: rowHeight
                 activeFocusOnPress: true
                 backgroundColor: Theme.primaryColor
 
@@ -155,6 +156,7 @@ Page {
 
             Button {
                 width: parent.width
+                height: rowHeight
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Creer un compte"
                 elevation: 1
@@ -188,7 +190,6 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             color: Palette.colors["red"]["500"]
             fontStyles: "dialog"
-            font.family: labelFont.name
             visible: false
         }
     }

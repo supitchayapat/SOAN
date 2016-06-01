@@ -4,10 +4,12 @@ import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
 import QtQuick.Controls 1.4 as Controls
+import QtQml.Models 2.2
 import Qure 0.1
 
 Page {
     id:root
+    property int lineH: 170*Units.dp
 
     QtObject{
         id:accountInfo
@@ -18,55 +20,25 @@ Page {
                                   address     : ""   ,
                                   latitude    : 0.0  ,
                                   longitude   : 0.0  ,
-                                  tel         : ""   ,
-                                  ambulance   : false,
-                                  vsl         : false
+                                  tel         : ""
                               })
         property string email: ""
         property string password: ""
-    }
+        onInfosChanged:{
+            nextButton.updateButtonState(isSignupValid())
 
-
-
-    ProgressBySteps{
-        id : progressBySteps
-
-        stepCount: 2
-        height: parent.height * 0.05
-
-        anchors{
-            left: parent.left
-            leftMargin: parent.width * 0.1
-            right: parent.right
-            rightMargin: parent.width * 0.1
-            top: parent.top
-            topMargin: dp(Defines_values.SignupLoaderMargin)
         }
     }
-
-    Controls.StackView {
-        id: pageStep_ldr
-
-        anchors{
-            topMargin: dp(Defines_values.SignupLoaderMargin)
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-            top: progressBySteps.bottom
-        }
-
-        initialItem: firstPage
-        /*sourceComponent: firstPage
-        onSourceComponentChanged: nextButton.active = false*/
-    }
-
     ActionButton {
         id: nextButton
 
         property bool active: false
         property color disabledColor : Palette.colors["grey"]["300"]
-
+        height: lineH
         backgroundColor: disabledColor
+        width: height
+        elevation: 1
+        iconName: "content/send"
 
         onActiveChanged: {
             if(active) backgroundColor = Theme.primaryColor
@@ -84,18 +56,16 @@ Page {
             horizontalCenter: parent.horizontalCenter
         }
 
-        elevation: 1
-        iconName: "content/send"
         action: Action {
             onTriggered:{
-                if(pageStep_ldr.depth == 1 && nextButton.active)
+                if(pageStep_ldr.depth === 1 && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     pageStep_ldr.push(secondPage)
                     backButton.visible = true;
                     backButton.enabled = true;
                 }
-                else if(pageStep_ldr.depth == 2 && nextButton.active)
+                else if(pageStep_ldr.depth === 2 && nextButton.active)
                 {
                     progressBySteps.nextStep()
                     snackbar.open("Loading ... ")
@@ -106,321 +76,209 @@ Page {
         }
     }
 
-    ActionButton {
-        id: backButton
+    
+    ObjectModel{
+        id:infoListModel
 
-        backgroundColor: Theme.primaryColor
-        visible: false
-        enabled: false
-        anchors {
-            bottom: parent.bottom
-            bottomMargin: dp(10)
-            left:parent.left
-        }
-        elevation: 1
-        iconName: "content/forward"
-        transform: Rotation { origin.x: backButton.width/2; origin.y: backButton.height/2; angle: 180}
-        action: Action {
-            onTriggered:{
-                pageStep_ldr.pop()
-                visible = false;
-                enabled  = false;
-            }
-        }
-    }
+        RowLayout{
+            id:nomprenom_txtFld
 
-    Component{
-        id:firstPage
+            spacing : dp(Defines_values.Signup1RowSpacing)
+            height: lineH
+            width:fieldsListView.width
 
-        Item{
+            Icon {
+                id:icon
 
-            function isStep1Valid(){
-                return  nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
-                        && email_txtFld.isValid  && address_txtField.isValid
-                        && tel_txtFld.isValid
-                        ? true : false
+
+                name: "action/account_circle"
+                size: parent.height*0.7
             }
 
-            function updateButtonState(){
-                nextButton.action = isStep1Valid()
-            }
+            TextFieldValidated{
+                id:nom
 
-            Connections{
-                target : accountInfo
-                onInfosChanged: {
-                    if (pageStep_ldr.depth == 1)
-                    {
-                        nextButton.updateButtonState(isStep1Valid())
-                    }
-                }
-            }
+                inputMethodHints: Qt.ImhNoPredictiveText
+                placeholderText:"Nom et Prénom"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi}
 
-            FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
-
-            Column {
-                id: column
-
-                spacing: dp(Defines_values.Default_horizontalspacing)
-
-                anchors{
-                    right: parent.right
-                    rightMargin: parent.width*0.1
-                    left : parent.left
-                    leftMargin: parent.width*0.1
-                    top : parent.top
-                    bottom :parent.bottom
-                }
-
-                RowLayout{
-                    id:firstRow
-
-                    spacing : dp(Defines_values.Signup1RowSpacing)
-
-                    anchors{
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    Icon {
-                        id:icon
-
-                        name: "action/account_circle"
-                        size: dp(Defines_values.Default_iconsize)
-                    }
-
-                    TextFieldValidated{
-                        id:nomprenom_txtFld
-
-                        inputMethodHints: Qt.ImhNoPredictiveText
-                        placeholderText:"Nom et Prénom"
-                        font.pixelSize: dp(Defines_values.Base_text_font)
-                        font.family: textFieldFont.name
-                        Layout.fillWidth: true
-                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
-
-                        onEditingFinished: {
-                            accountInfo.infos.name = text
-                            accountInfo.infosChanged()
-                        }
-
-                        onIsValidChanged: accountInfo.infosChanged()
-
-                    }
-                }
-
-                RowLayout{
-                    spacing : dp(Defines_values.Signup1RowSpacing)
-
-                    anchors{
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    Icon {
-                        name: "/communication/business"
-                        size: dp(Defines_values.Default_iconsize)
-                    }
-
-                    TextFieldValidated{
-                        id:nomdelastructure_txtFld
-
-                        placeholderText: "Nom de la structure"
-                        font.pixelSize: dp(Defines_values.Base_text_font)
-                        font.family: textFieldFont.name
-                        Layout.fillWidth: true
-                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
-
-                        onEditingFinished:{
-                            accountInfo.infos.companyName = text
-                            accountInfo.infosChanged()
-                        }
-
-                        onIsValidChanged: accountInfo.infosChanged()
-                    }
-                }
-
-                RowLayout{
-                    spacing : dp(Defines_values.Signup1RowSpacing)
-
-                    anchors{
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    Icon {
-                        name: "maps/place"
-                        size: dp(Defines_values.Default_iconsize)
-                    }
-
-                    TextFieldValidated
-                    {
-                        id:address_txtField
-
-                        placeholderText: qsTr("Adresse")
-                        font.pixelSize: dp(Defines_values.Base_text_font)
-                        font.family: textFieldFont.name
-
-                        Layout.fillWidth: true
-                        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
-
-                        onEditingFinished: {
-                            // run validation only if undone yet for current address and address length is worth it
-                            if(address_txtField.text.length > 3)
-                            {
-                                //TODO handle this call with new callbacks list of TextFieldValidated
-                                Qondrite.validateAddress(text)
-                                .then(function(result)
-                                {
-                                    if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                        validatorWarning = qsTr("Adresse invalide")
-                                    }
-                                    else{
-                                        accountInfo.infos.latitude = result[0].latitude;
-                                        accountInfo.infos.longitude = result[0].longitude;
-                                        accountInfo.infos.address = text
-                                        accountInfo.infosChanged()
-                                    }
-
-                                });
-                            }
-                            onIsValidChanged: accountInfo.infosChanged()
-                        }
-                    }
-                }
-
-                RowLayout{
-                    spacing : dp(Defines_values.Signup1RowSpacing)
-
-                    anchors{
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    Icon {
-                        name: "communication/email"
-                        size: dp(Defines_values.Default_iconsize)
-                    }
-                    EmailTextField {
-                        id:email_txtFld
-
-                        font.pixelSize: dp(Defines_values.Base_text_font)
-                        font.family: textFieldFont.name
-                        Layout.fillWidth: true
-                        emailExistanceValidation : true
-
-                        onEditingFinished:{
-                            accountInfo.email = text
-                            accountInfo.infosChanged()
-                        }
-
-                        onIsValidChanged: accountInfo.infosChanged()
-                    }
-                }
-
-                RowLayout{
-                    spacing : dp(Defines_values.Signup1RowSpacing)
-
-                    anchors{
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    Icon {
-
-                        name: "communication/call"
-                        size: dp(Defines_values.Default_iconsize)
-                    }
-
-                    PhoneTextField{
-                        id:tel_txtFld
-
-                        Layout.fillWidth: true
-                        font.family: textFieldFont.name
-                        font.pixelSize: dp(Defines_values.Base_text_font)
-
-                        onEditingFinished: {
-                            accountInfo.infos.tel = text
-                            accountInfo.infosChanged()
-                        }
-
-                        onIsValidChanged: accountInfo.infosChanged()
-                    }
-                }
-            }
-
-        }
-    }
-
-    Component{
-        id:secondPage
-
-        Item{
-
-            FontLoader {id : textFieldFont; name : Defines_values.textFieldsFontFamily}
-
-            function isStep2Valid(){
-                return (demandeCheckBox.checked || vslCheckBox.checked) && newPassword.isValid ? true :false
-            }
-
-            Connections{
-                target : accountInfo
-
-                onInfosChanged: {
-                    if (pageStep_ldr.depth === 2)
-                    {
-                        nextButton.updateButtonState(isStep2Valid())
-                    }
-                }
-            }
-
-            Column{
-                id: topColumn
-
-                spacing: dp(Defines_values.Default_border_margins)
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                CheckBox {
-                    id: demandeCheckBox
-
-                    text: "Recevoir des demande en ambulances"
-
-                    onCheckedChanged: {
-                        accountInfo.infos.ambulance = demandeCheckBox.checked
-                        accountInfo.infosChanged()
-                    }
-                }
-
-                CheckBox {
-                    id: vslCheckBox
-
-                    text: "Recevoir des demande en VSL"
-
-                    onCheckedChanged: {
-                        accountInfo.infos.vsl = vslCheckBox.checked
-                        accountInfo.infosChanged()
-                    }
-                }
-            }
-
-            NewPassword{
-                id: newPassword
-
-                anchors{
-                    top:topColumn.bottom
-                    topMargin: Defines_values.Signup2passwordTopmargin
-                    left :parent.left
-                    leftMargin:  dp(parent.width /8)
-                    rightMargin: dp(parent.width /8)
-                    right : parent.right
-                }
-
-                onIsValidChanged: {
-                    if(isValid) accountInfo.password = password
+                onEditingFinished: {
+                    accountInfo.infos.name = text
                     accountInfo.infosChanged()
                 }
+
+                onIsValidChanged: accountInfo.infosChanged()
             }
         }
+
+        RowLayout{
+            spacing : dp(Defines_values.Signup1RowSpacing)
+
+            width:fieldsListView.width
+            height: lineH
+
+            Icon {
+                name: "communication/business"
+                size: parent.height*0.7
+            }
+
+            TextFieldValidated{
+                id:nomdelastructure_txtFld
+
+                placeholderText: "Nom de la structure"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                // @TODO this validator may need to be changed with a correct regExp for this case
+                validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+
+                onEditingFinished:{
+                    accountInfo.infos.companyName = text
+                    accountInfo.infosChanged()
+                }
+
+                onIsValidChanged: accountInfo.infosChanged()
+            }
+        }
+
+        RowLayout{
+            spacing : dp(Defines_values.Signup1RowSpacing)
+
+            width:fieldsListView.width
+            height: lineH
+            Icon {
+                name: "maps/place"
+                size: parent.height*0.7
+            }
+
+
+            TextFieldValidated{
+                id:address_txtField
+
+                QtObject {
+                    id : previousAddress
+                    property string value : ""
+                }
+
+                placeholderText: qsTr("Adresse")
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                // @TODO this validator may need to be changed with a correct regExp for this case
+                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
+
+
+                onEditingFinished: {
+                    // run validation only if undone yet for current address and address length is worth it
+                    if(address_txtField.text.length > 3)
+                    {
+                        //TODO handle this call with new callbacks list of TextFieldValidated
+                        Qondrite.validateAddress(text).result
+                        .then(function(result)
+                        {
+                            if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                                validatorWarning = qsTr("Adresse invalide")
+                            }
+                            else{
+                                accountInfo.infos.latitude = result[0].latitude;
+                                accountInfo.infos.longitude = result[0].longitude;
+                                accountInfo.infos.address = text
+                                accountInfo.infosChanged()
+                            }
+
+
+                        });
+
+
+                    }
+                }
+
+                onIsValidChanged: accountInfo.infosChanged()
+            }
+        }
+
+        RowLayout{
+            spacing : dp(Defines_values.Signup1RowSpacing)
+            height: lineH
+            width:fieldsListView.width
+
+            Icon {
+                name: "communication/email"
+                size: parent.height*0.7
+            }
+
+            EmailTextField {
+                id:email_txtFld
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                onEditingFinished:{
+                    accountInfo.email = text
+                    accountInfo.infosChanged()
+
+                }
+
+                onIsValidChanged: accountInfo.infosChanged()
+            }
+        }
+
+        RowLayout{
+            spacing : dp(Defines_values.Signup1RowSpacing)
+            height: lineH
+            width:fieldsListView.width
+
+            Icon {
+
+                name: "communication/call"
+                size: parent.height*0.7
+            }
+
+            PhoneTextField{
+                id:tel_txtFld
+
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                onEditingFinished: {
+                    accountInfo.infos.tel = text
+                    accountInfo.infosChanged()
+                }
+
+                onIsValidChanged: accountInfo.infosChanged()
+            }
+        }
+
+        NewPassword{
+            id: newPassword
+
+            height: lineH*2
+            width:fieldsListView.width
+
+            onIsValidChanged: {
+                if(isValid) accountInfo.password = password
+                accountInfo.infosChanged()
+            }
+        }
+
     }
+
+    ListView{
+        id:fieldsListView
+        anchors{
+            left: parent.left
+            leftMargin: parent.width/20
+            right: parent.right
+            rightMargin: parent.width/20
+            top: parent.top
+            topMargin: 60*Units.dp
+            bottom: parent.bottom
+
+        }
+        model:infoListModel
+    }
+
+
 
     Snackbar {
         id: snackbar
@@ -432,8 +290,7 @@ Page {
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
-        Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})        
+        Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
     }
-
 
 }

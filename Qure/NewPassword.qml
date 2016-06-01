@@ -26,7 +26,7 @@ ColumnLayout{
         id: password_txtfld
 
         placeholderText: qsTr("mot de passe")
-        Layout.fillWidth: parent
+        Layout.fillWidth: true
         anchors.horizontalCenter: parent.horizontalCenter
         validatorWarning: root.validatorWarning
 
@@ -43,7 +43,7 @@ ColumnLayout{
         id: passwordConfirmation_txtfld
 
         placeholderText: qsTr("Confirmer le mot de passe")
-        Layout.fillWidth: parent
+        Layout.fillWidth: true
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
         validatorWarning: root.validatorWarning
