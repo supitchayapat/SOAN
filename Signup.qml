@@ -26,6 +26,8 @@ Page {
         property string password: ""
     }
 
+
+
     ProgressBySteps{
         id : progressBySteps
 
@@ -257,7 +259,7 @@ Page {
                         placeholderText: qsTr("Adresse")
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
-                        serverGateway: Qondrite
+
                         Layout.fillWidth: true
                         validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
@@ -424,13 +426,13 @@ Page {
         id: snackbar
     }
 
+
     // TODO : here we bind the signal to a specific function in the scope of Component.onCompleted.
     // It will be nice to have access to those signal handlers directly with signal handlers :
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
         Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
-        //email_txtFld.serverGateway = Qondrite;
     }
 
 

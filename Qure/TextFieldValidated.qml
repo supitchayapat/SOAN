@@ -61,12 +61,21 @@ TextField{
 
     property var serverGateway : undefined
 
+    property bool isPristine: true
+
+    /*manage the hasError property through the onEditingValidations calls.
+      update the checkedIcon visibility*/
     function manageValidation(){
+
+        hasError = false;
+        checkedIcon.visible = ! hasError;
+        helperText = "";
 
         if(validator != null){
             if ( text == ""){
-                hasError = false
-                checkedIcon.visible = false
+                hasError = true
+                checkedIcon.visible = ! hasError
+                helperText = qsTr("Ce champ est obligatoire");
                 return
             }
             /* TODO : here we are only handling the case of RegExpValidator
@@ -175,6 +184,10 @@ TextField{
     }
 
     onTextChanged: {
+        if (isPristine){
+            isPristine = ! isPristine;
+        }
+
         if(text == ""){
             checkedIcon.visible = false
             hasError = false
