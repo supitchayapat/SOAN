@@ -13,8 +13,8 @@ Page {
 
     function isFormValid (){
         return nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
-        && email_txtFld.isValid  && address_txtField.isValid
-        && tel_txtFld.isValid && newPassword.isValid
+                && email_txtFld.isValid  && address_txtField.isValid
+                && tel_txtFld.isValid && newPassword.isValid
     }
 
     QtObject{
@@ -41,27 +41,24 @@ Page {
 
         property bool active: false
         property color disabledColor : Palette.colors["grey"]["300"]
-        height: lineH
-        backgroundColor: disabledColor
-        width: height
-        elevation: 1
-        iconName: "content/send"
-
-        onActiveChanged: {
-            if(active) backgroundColor = Theme.primaryColor
-            else backgroundColor = disabledColor
-        }
-
         function updateButtonState(validity){
             if(validity) active = true
             else active = false
         }
 
         anchors {
-            bottom: parent.bottom
-            bottomMargin: dp(10)
+            top: fieldsListView.bottom
+            topMargin: dp(20)
             horizontalCenter: parent.horizontalCenter
+            bottom : parent.bottom
+            bottomMargin : dp(20)
         }
+
+        backgroundColor: disabledColor
+        height: lineH
+        width: height
+        elevation: 1
+        iconName: "content/send"
 
         action: Action {
             onTriggered:{
@@ -81,9 +78,14 @@ Page {
                 }
             }
         }
+
+        onActiveChanged: {
+            if(active) backgroundColor = Theme.primaryColor
+            else backgroundColor = disabledColor
+        }
     }
 
-    
+
     ObjectModel{
         id:infoListModel
 
@@ -192,11 +194,7 @@ Page {
                                 accountInfo.infos.address = text
                                 accountInfo.infosChanged()
                             }
-
-
                         });
-
-
                     }
                 }
 
@@ -235,14 +233,12 @@ Page {
             width:fieldsListView.width
 
             Icon {
-
                 name: "communication/call"
                 size: parent.height*0.7
             }
 
             PhoneTextField{
                 id:tel_txtFld
-
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -272,6 +268,10 @@ Page {
 
     ListView{
         id:fieldsListView
+
+        height: parent.height * 0.75
+        clip: true
+
         anchors{
             left: parent.left
             leftMargin: parent.width/20
@@ -279,18 +279,13 @@ Page {
             rightMargin: parent.width/20
             top: parent.top
             topMargin: 60*Units.dp
-            bottom: parent.bottom
-
         }
         model:infoListModel
     }
 
-
-
     Snackbar {
         id: snackbar
     }
-
 
     // TODO : here we bind the signal to a specific function in the scope of Component.onCompleted.
     // It will be nice to have access to those signal handlers directly with signal handlers :
