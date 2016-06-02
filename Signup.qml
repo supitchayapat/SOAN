@@ -257,10 +257,12 @@ Page {
             height: lineH*2
 
             anchors {
-                left : parent.left
-                right : parent.right
-                leftMargin : fieldsListView.width *0.25
-                rightMargin : fieldsListView.width *0.25
+                // Note : because we are using a ListModel the parent may be null before the element is affected
+                // to the ListView, so we cath the error when parent is null
+                left : try{parent.left} catch(all){}
+                right : try{parent.right} catch(all){}
+                leftMargin : try{parent.width *0.25} catch(all){}
+                rightMargin : try{parent.width *0.25} catch(all){}
             }
 
             onIsValidChanged: {
@@ -287,7 +289,6 @@ Page {
         }
 
         model:infoListModel
-
     }
 
     Snackbar {
