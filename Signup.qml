@@ -99,7 +99,6 @@ Page {
             Icon {
                 id:icon
 
-
                 name: "action/account_circle"
                 size: parent.height*0.7
             }
@@ -256,7 +255,13 @@ Page {
             id: newPassword
 
             height: lineH*2
-            width:fieldsListView.width
+
+            anchors {
+                left : parent.left
+                right : parent.right
+                leftMargin : fieldsListView.width *0.25
+                rightMargin : fieldsListView.width *0.25
+            }
 
             onIsValidChanged: {
                 if(isValid) accountInfo.password = password
@@ -280,7 +285,9 @@ Page {
             top: parent.top
             topMargin: 60*Units.dp
         }
+
         model:infoListModel
+
     }
 
     Snackbar {
