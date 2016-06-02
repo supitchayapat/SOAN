@@ -54,7 +54,7 @@ ApplicationWindow {
     OverlayLayer {
         id: ajaxSpinner
         visible:  false
-        opacity: .3
+        opacity: 0.3
         color: Defines_values.remoteCallSpinnerColor
         ProgressCircle {
             id: spinnerIcon

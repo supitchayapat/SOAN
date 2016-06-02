@@ -190,7 +190,7 @@ Page {
 
                     TextFieldValidated{
                         id:nomprenom_txtFld
-
+                        isRequired : true
                         inputMethodHints: Qt.ImhNoPredictiveText
                         placeholderText:"Nom et Prénom"
                         font.pixelSize: dp(Defines_values.Base_text_font)
@@ -223,7 +223,7 @@ Page {
 
                     TextFieldValidated{
                         id:nomdelastructure_txtFld
-
+                        isRequired : true
                         placeholderText: "Nom de la structure"
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
@@ -255,7 +255,7 @@ Page {
                     TextFieldValidated
                     {
                         id:address_txtField
-
+                        isRequired : true
                         placeholderText: qsTr("Adresse")
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
@@ -302,7 +302,7 @@ Page {
                     }
                     EmailTextField {
                         id:email_txtFld
-
+                        isRequired : true
                         font.pixelSize: dp(Defines_values.Base_text_font)
                         font.family: textFieldFont.name
                         Layout.fillWidth: true
@@ -333,7 +333,7 @@ Page {
 
                     PhoneTextField{
                         id:tel_txtFld
-
+                        isRequired : true
                         Layout.fillWidth: true
                         font.family: textFieldFont.name
                         font.pixelSize: dp(Defines_values.Base_text_font)
