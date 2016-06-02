@@ -62,20 +62,9 @@ Page {
 
         action: Action {
             onTriggered:{
-                if(pageStep_ldr.depth === 1 && nextButton.active)
-                {
-                    progressBySteps.nextStep()
-                    pageStep_ldr.push(secondPage)
-                    backButton.visible = true;
-                    backButton.enabled = true;
-                }
-                else if(pageStep_ldr.depth === 2 && nextButton.active)
-                {
-                    progressBySteps.nextStep()
-                    snackbar.open("Chargement ... ")
+                snackbar.open("Chargement ... ")
 
-                    Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
-                }
+                Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
             }
         }
 
