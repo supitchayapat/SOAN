@@ -43,7 +43,6 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width:forgottenPassword_dlg.width - dp(120)
                 wrapMode: Text.WordWrap
-                font.family: labelFont.name
             }
         }
     }
@@ -62,7 +61,6 @@ Page {
             width: parent.width
             echoMode: TextInput.Normal
             placeholderText: qsTr( "Adresse email" )
-            font.family: textFieldFont.name
         }
 
         onAccepted: {
