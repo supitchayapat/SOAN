@@ -11,6 +11,12 @@ Page {
     id:root
     property int lineH: 170*Units.dp
 
+    function isFormValid (){
+        return nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
+        && email_txtFld.isValid  && address_txtField.isValid
+        && tel_txtFld.isValid && newPassword.isValid
+    }
+
     QtObject{
         id:accountInfo
 
@@ -24,11 +30,12 @@ Page {
                               })
         property string email: ""
         property string password: ""
-        onInfosChanged:{
-            nextButton.updateButtonState(isSignupValid())
 
+        onInfosChanged:{
+            nextButton.updateButtonState(isFormValid())
         }
     }
+
     ActionButton {
         id: nextButton
 
@@ -68,7 +75,7 @@ Page {
                 else if(pageStep_ldr.depth === 2 && nextButton.active)
                 {
                     progressBySteps.nextStep()
-                    snackbar.open("Loading ... ")
+                    snackbar.open("Chargement ... ")
 
                     Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
                 }
@@ -81,7 +88,7 @@ Page {
         id:infoListModel
 
         RowLayout{
-            id:nomprenom_txtFld
+            id:nomprenom_rowLyt
 
             spacing : dp(Defines_values.Signup1RowSpacing)
             height: lineH
@@ -96,7 +103,7 @@ Page {
             }
 
             TextFieldValidated{
-                id:nom
+                id:nomprenom_txtFld
 
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:"Nom et Prénom"
