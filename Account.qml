@@ -10,9 +10,12 @@ Page {
     id: page
 
     property bool isEditable: false
-    property int fieldWidth: parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
-    property int textFieldWidth: isEditable?column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing):0
-    property int labelWidth: isEditable?0:column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
+
+    property int fieldWidth: isEditable?0:infoListView.width - lineH
+    property int textFieldWidth: isEditable?infoListView.width - lineH:0
+    property int lineH: 170*Units.dp
+    property int labelWidth: isEditable?infoListView.width - lineH:0
+    
     property var userCollection;
     property var user;
 
@@ -43,8 +46,7 @@ Page {
         companyName_txtFld.text = userProfile.companyName;
         tel_lbl.text = userProfile.tel;
         tel_txtFld.text = userProfile.tel;
-        demandeCheckBox.checked = transportType_lbl.text.indexOf("Ambulance")!==-1
-        vslCheckBox.checked = transportType_lbl.text.indexOf("VST")!==-1
+
     }
 
     function addListenerToUpdateLabelsWhenUserInfoChanged(){
@@ -65,22 +67,19 @@ Page {
     }
 
     function isFormValid(){
-            return  name_txtFld.isValid
-                    && companyName_txtFld.isValid
-                    && email_txtFld.isValid
-                    && address_txtField.isValid
-                    && tel_txtFld.isValid
-                    && (demandeCheckBox.checked || vslCheckBox.checked)
-                    ? true :false
-    }
+        return  name_txtFld.isValid
+                && companyName_txtFld.isValid
+                && email_txtFld.isValid
+                && address_txtField.isValid
+                && tel_txtFld.isValid    }
 
     function changePassword(oldPassword,newPassword){
         Qondrite.changePassword(oldPassword,newPassword)
-            .result.then(
-                function onSucess(){
-                    confirmed_dlg.show()
-                }
-            );}
+        .result.then(
+             function onSucess(){
+                 confirmed_dlg.show()
+             }
+             );}
 
     backAction: navDrawer.action
 
@@ -103,7 +102,6 @@ Page {
                 tel_txtFld.focus = true;
                 email_txtFld.focus = true;
                 address_txtField.focus = true;
-                demandeCheckBox.focus = true;
             }
         },
         Action{//ok btn
@@ -126,13 +124,13 @@ Page {
                             {
                                 "email" :email_txtFld.text,
                                 "profile"  : {
-                                        "address"  :address_txtField.text,
-                                        "companyName"  :companyName_txtFld.text,
-                                        "name" :name_txtFld.text,
-                                        "tel"  :tel_txtFld.text,
-                                        "latitude" : accountInfo.infos.latitude,
-                                        "longitude" : accountInfo.infos.longitude
-                                  }
+                                    "address"  :address_txtField.text,
+                                    "companyName"  :companyName_txtFld.text,
+                                    "name" :name_txtFld.text,
+                                    "tel"  :tel_txtFld.text,
+                                    "latitude" : accountInfo.infos.latitude,
+                                    "longitude" : accountInfo.infos.longitude
+                                }
                             }).result.then(function success(){
                                 //TODO here the loading circle has to be hidden
                                 isEditable = false;
@@ -178,33 +176,27 @@ Page {
         onInfosChanged : validate_actBtn.updateValidationButtonState(isFormValid())
     }
 
-    Column{
-        id: column
-
-        spacing: dp(Defines_values.Default_horizontalspacing )
-
-        anchors{
-            top:parent.top
-            topMargin: dp(Defines_values.Accounttop_margin)
-            horizontalCenter: parent.horizontalCenter
-        }
+    ObjectModel{
+        id:infoListModel
 
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
             Icon {
                 name: "action/account_circle"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label {
                 id  : name_lbl
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                width:labelWidth
+
+                height:parent.height
+                width:fieldWidth
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
-
+                verticalAlignment: Text.AlignVCenter
             }
 
             TextFieldValidated{
@@ -212,9 +204,8 @@ Page {
 
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:qsTr("Nom et Prénom")
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                font.family: Defines_values.textFieldsFontFamily
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                height:parent.height
                 width:textFieldWidth
                 visible: isEditable
 
@@ -230,28 +221,29 @@ Page {
         Row{
 
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
             Icon {
                 name: "communication/business"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label{
                 id : companyname_lbl
 
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                width:labelWidth
+                width:fieldWidth
+                height:parent.height
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             TextFieldValidated{
                 id:companyName_txtFld
 
                 placeholderText: qsTr("Nom de la structure")
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                font.family: Defines_values.textFieldsFontFamily
+                height:parent.height
                 width:textFieldWidth
                 visible: isEditable
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
@@ -267,30 +259,31 @@ Page {
 
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
 
             Icon {
                 name: "maps/place"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label{
                 id  : address_lbl
-                font.pixelSize: dp(Defines_values.Base_text_font)
 
-                width:labelWidth
+                height:parent.height
+                width:fieldWidth
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             TextFieldValidated{
                 id:address_txtField
 
                 placeholderText: qsTr("Adresse")
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                font.family: Defines_values.textFieldsFontFamily
                 visible:isEditable
+                height:parent.height
                 width:textFieldWidth
 
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
@@ -322,27 +315,28 @@ Page {
 
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
             Icon {
                 name: "communication/email"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label {
                 id  : email_lbl
 
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                width:labelWidth
+                height:parent.height
+                width:fieldWidth
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             EmailTextField {
                 id:email_txtFld
 
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                font.family: Defines_values.textFieldsFontFamily
+                height:parent.height
                 width:textFieldWidth
                 visible: isEditable
 
@@ -357,27 +351,29 @@ Page {
 
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
             Icon {
                 name: "communication/call"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label{
                 id : tel_lbl
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                width:labelWidth
+
+                height:parent.height
+                width:fieldWidth
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             PhoneTextField{
                 id:tel_txtFld
 
-                Layout.fillWidth: true
-                font.family: Defines_values.textFieldsFontFamily
-                font.pixelSize: dp(Defines_values.Base_text_font)
+                height:parent.height
+                width:textFieldWidth
                 visible : isEditable
 
                 onEditingFinished: {
@@ -388,70 +384,37 @@ Page {
                 onIsValidChanged: accountInfo.infosChanged()
             }
         }
-
-        RowLayout{
-            spacing : dp(Defines_values.Default_verticalspacing)
-
-            Icon {
-                name: "maps/local_hospital"
-                size: dp(Defines_values.Default_iconsize)
-                visible: !isEditable
-            }
-
-            Label {
-                id : transportType_lbl
-
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                Layout.fillWidth:true
-                visible: !isEditable
-                anchors.verticalCenter : parent.verticalCenter
-            }
-
-            Column{
-                id: topColumn
-
-                spacing: dp(Defines_values.Default_border_margins)
-                anchors.horizontalCenter: parent.horizontalCenter
-                Layout.fillWidth:true
-                visible: isEditable
-
-                CheckBox {
-                    id: demandeCheckBox
-
-                    text: qsTr("Recevoir des demande en ambulances")
-                    onCheckedChanged: {
-                        accountInfo.infos.ambulance = demandeCheckBox.checked
-                        accountInfo.infosChanged()
-                    }
-                }
-
-                CheckBox {
-                    id: vslCheckBox
-
-                    text: qsTr("Recevoir des demande en VSL")
-
-                    onCheckedChanged: {
-                        accountInfo.infos.vsl = vslCheckBox.checked
-                        accountInfo.infosChanged()
-                    }
-                }
-            }
-
-        }
     }
 
-    Button {
 
-        anchors{
-            top:column.bottom
-            topMargin: dp(Defines_values.Default_verticalspacing)*2
-            left: column.left
+    Column{
+        id:pageColumn
+        anchors.fill:parent
+
+        ListView{
+            id:infoListView
+
+            anchors{
+                left:parent.left
+                right:parent.right
+                leftMargin: parent.width*0.05
+                rightMargin: parent.width*0.05
+            }
+
+            height: parent.height - lineH*1.3
+            model:infoListModel
         }
 
-        text:qsTr("Changer le mot de passe")
-        elevation: 1
-        onClicked: changepassword_dlg_cpnt.createObject(page).show();
-        Layout.fillWidth:true
+        Button {
+
+            text:qsTr("Changer le mot de passe")
+            elevation: 1
+            width:parent.width*0.7
+            height:lineH
+            anchors.horizontalCenter:parent.horizontalCenter
+
+            onClicked: changepassword_dlg_cpnt.createObject(page).show();
+        }
     }
 
     Dialog {
@@ -483,52 +446,56 @@ Page {
         id: changepassword_dlg_cpnt
 
         Dialog {
-                    id: changepassword_dlg
+            id: changepassword_dlg
 
-                    z :1
+            z :1
 
-                    text: "Mot de passe oublié"
-                    positiveButtonText: "Valider"
-                    negativeButtonText: "Annuler"
-                    positiveButtonEnabled:changePassword.isValid
+            text: "Mot de passe oublié"
+            positiveButtonText: "Valider"
+            negativeButtonText: "Annuler"
+            width:parent.width*0.7
+            height:parent.height*0.3
 
-                    onAccepted: {
-                       page.changePassword(changePassword.oldPassword,changePassword.password);
-                   }
+            positiveButtonEnabled:changePassword.isValid
 
-                    onClosed:{
-                        destroy()
-                    }
+            onAccepted: {
+                page.changePassword(changePassword.oldPassword,changePassword.password);
+            }
 
-                    ChangePassword{
-                        id :changePassword
+            onClosed:{
+                destroy()
+            }
 
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        spacing: dp(Defines_values.TextFieldValidatedMaring)
+            ChangePassword{
+                id :changePassword
 
-                        Component.onCompleted: {
-                            Qondrite.oldPasswordValid.connect(
-                                            function(isEqualToRealPassword)
-                                            {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: dp(Defines_values.TextFieldValidatedMaring)
 
-                                                if(isEqualToRealPassword){
-                                                    oldPasswordValidity = true
-                                                    oldPasswordVisibilityIcon = true
-                                                    console.log("------MOT DE PASSE VALIDE-----")
+                Component.onCompleted: {
+                    Qondrite.oldPasswordValid.connect(
+                                function(isEqualToRealPassword)
+                                {
 
-                                                }else{
-                                                    oldPasswordValidity = false
-                                                    oldPasswordVisibilityIcon = false
-                                                    console.log("------MOT DE PASSE INVALIDE-----")
-                                                }
-                                            }
-                                        )
-                        }
+                                    if(isEqualToRealPassword){
+                                        oldPasswordValidity = true
+                                        oldPasswordVisibilityIcon = true
+                                        console.log("------MOT DE PASSE VALIDE-----")
 
-                    }
-
+                                    }else{
+                                        oldPasswordValidity = false
+                                        oldPasswordVisibilityIcon = false
+                                        console.log("------MOT DE PASSE INVALIDE-----")
+                                    }
+                                }
+                                )
                 }
 
+            }
+
+        }
+
     }
+
     Component.onCompleted: loadUserInformation()
 }
