@@ -10,7 +10,6 @@ Page {
 
     backAction: navDrawer.action
 
-    actionBar.switchDelegate : AvailabilitySwitch{}
 
     property var availabilityCollection;
 
@@ -40,8 +39,8 @@ Page {
         });
 
         reactiveAvailabilityCollection.on("add", function(id){
-             ambliste.append(availabilityCollection._set._items[id])
-             itemIdToIndexMap[id] = Object.keys(itemIdToIndexMap).length;
+            ambliste.append(availabilityCollection._set._items[id])
+            itemIdToIndexMap[id] = Object.keys(itemIdToIndexMap).length;
         })
 
         reactiveAvailabilityCollection.on("delete",function(id){
@@ -49,15 +48,71 @@ Page {
             delete itemIdToIndexMap[id];
         })
     }
+
+    actionBar {
+        customContent:Button {
+            id:filterButton
+
+            property bool state: false
+            Component.onCompleted: console.log("filterButton.height "+ filterButton.height)
+            anchors{
+                right: parent.right
+                top: parent.top
+                topMargin: parent.height/4 - filterButton.height/4
+                rightMargin: topMargin
+            }
+            text: "Filtrer"
+            checkable:true
+            checked:true
+            activeFocusOnPress: state
+            backgroundColor: "white"
+
+            onClicked:{
+                state= !state
+            }
+        }
+        switchDelegate : AvailabilitySwitch{}
+        extendedContent: TextField {
+            id:searchTextField
+            placeholderText: "Search..."
+            height: root.height/13
+            width: parent.width
+            font.italic: true
+
+            Icon{
+                anchors {
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+                size: parent.height*0.8
+                name: parent.text === "" ? "action/search" : "awesome/close"
+                color: "white"
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        searchTextField.text = ""
+                    }
+                }
+            }
+
+            onTextChanged:{
+                ame: parent.text === "" ? "action/search" : "awesome/close"
+                //TODO update Init Callback
+            }
+        }
+    }
+
     actions:[
-        Action{//availability switch
-            iconName: "awesome/close"
+        Action{
+            id:action
             displayAsSwitch:true
+            checkable: true
             onCheckedChanged: {
                 Qondrite.changeAvailability(checked)
             }
 
         }
+
     ]
 
     ListModel {
@@ -112,14 +167,13 @@ Page {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top : parent.top
         anchors.topMargin: Defines_values.view_topMargin
-        height : dp(Defines_values.CardMessageHeight)
+        height : actionBar.height //dp(Defines_values.CardMessageHeight)
         visible: (ambliste.count ==0)
         width : page.width - Defines_values.Default_border_margins
         Text {
             id: ambliste_empty_text
             anchors.centerIn: parent
             text: qsTr("Aucun élément actuellement");
-            anchors.horizontalCenter: ambliste_empty.horizontalCenter
             font.italic: true
         }
     }
@@ -129,9 +183,9 @@ Page {
 
 
         var subscription  = Qondrite.subscribe("availability",function(){
-                        initList()
-                        bindEventsToList()
-            });
+            initList()
+            bindEventsToList()
+        });
 
         Qondrite.loggingOut.connect(function(){subscription.stop();})
 
