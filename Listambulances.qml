@@ -70,7 +70,7 @@ Page {
         ListItem.Standard{
 
             text:companyName
-
+            height:Defines_values.lineH*Units.dp
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
@@ -80,7 +80,7 @@ Page {
 
             Button {
                 width: dp(Defines_values.ListambulancesButtonwidth)
-
+                height:width
                 anchors{
                     right: parent.right
                     verticalCenter: parent.verticalCenter
