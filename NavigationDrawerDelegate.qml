@@ -8,7 +8,10 @@ import Qondrite 0.1
 // TODO this Component should be a singleton
 Rectangle{
 
-    property int lineH: 120*Units.dp
+    property int lineH: parent.height/9
+
+    property alias sidebarAccountName : accountName.text
+    property alias sidebarEmail : email.text
 
     signal goToAmbulanceListPage()
     signal goToAccountPage()
@@ -17,7 +20,7 @@ Rectangle{
     Rectangle{
         id: sidebar_rct
 
-        height:  dp(Defines_values.sidebar_height)
+        height:  parent.height/4
         color: Theme.primaryColor
 
         anchors{
@@ -93,7 +96,7 @@ Rectangle{
                 id: accountListItem
 
                 text: "Mon compte"
-                height:lineH
+                height: lineH
                 action: Icon {
                     anchors.centerIn: parent
                     name: "action/account_circle"
@@ -113,13 +116,13 @@ Rectangle{
 
             text: qsTr("Déconnexion")
             width: parent.width - parent.width/5
-            height:lineH
+            height: lineH
             backgroundColor: Theme.primaryColor
 
             anchors{
                 horizontalCenter: parent.horizontalCenter
                 bottom: parent.bottom
-                bottomMargin: parent.height *0.05
+                bottomMargin: height/2
             }
 
             onClicked: {
