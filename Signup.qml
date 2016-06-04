@@ -9,7 +9,7 @@ import Qure 0.1
 
 Page {
     id:root
-    property int lineH: 170*Units.dp
+    property int lineH: root.height/9
 
     function isFormValid (){
         return nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
@@ -47,11 +47,9 @@ Page {
         }
 
         anchors {
-            top: fieldsListView.bottom
-            topMargin: dp(20)
             horizontalCenter: parent.horizontalCenter
             bottom : parent.bottom
-            bottomMargin : dp(20)
+            bottomMargin : nextButton.height/2
         }
 
         backgroundColor: disabledColor
@@ -59,7 +57,6 @@ Page {
         width: height
         elevation: 1
         iconName: "content/send"
-
         action: Action {
             onTriggered:{
                 snackbar.open("Chargement ... ")
@@ -74,11 +71,10 @@ Page {
         }
     }
 
-
     ObjectModel{
         id:infoListModel
 
-        RowLayout{
+        Row{
             id:nomprenom_rowLyt
 
             spacing : dp(Defines_values.Signup1RowSpacing)
@@ -97,7 +93,7 @@ Page {
 
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:"Nom et Prénom"
-                Layout.fillWidth: true
+                width: fieldsListView.width - lineH
                 Layout.fillHeight: true
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi}
 
@@ -110,7 +106,7 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
 
             width:fieldsListView.width
@@ -125,8 +121,8 @@ Page {
                 id:nomdelastructure_txtFld
 
                 placeholderText: "Nom de la structure"
-                Layout.fillWidth: true
                 Layout.fillHeight: true
+                width: fieldsListView.width - lineH
                 // @TODO this validator may need to be changed with a correct regExp for this case
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
 
@@ -139,7 +135,7 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
 
             width:fieldsListView.width
@@ -159,7 +155,7 @@ Page {
                 }
 
                 placeholderText: qsTr("Adresse")
-                Layout.fillWidth: true
+                width: fieldsListView.width - lineH
                 Layout.fillHeight: true
                 // @TODO this validator may need to be changed with a correct regExp for this case
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
@@ -190,7 +186,7 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
             height: lineH
             width:fieldsListView.width
@@ -203,7 +199,7 @@ Page {
             EmailTextField {
                 id:email_txtFld
 
-                Layout.fillWidth: true
+                width: fieldsListView.width - lineH
                 Layout.fillHeight: true
                 onEditingFinished:{
                     accountInfo.email = text
@@ -215,7 +211,7 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
             height: lineH
             width:fieldsListView.width
@@ -228,7 +224,7 @@ Page {
             PhoneTextField{
                 id:tel_txtFld
 
-                Layout.fillWidth: true
+                width: fieldsListView.width - lineH
                 Layout.fillHeight: true
 
                 onEditingFinished: {
@@ -244,16 +240,8 @@ Page {
             id: newPassword
 
             height: lineH*2
-
-            anchors {
-                // Note : because we are using a ListModel the parent may be null before the element is affected
-                // to the ListView, so we cath the error when parent is null
-                left : try{parent.left} catch(all){}
-                right : try{parent.right} catch(all){}
-                leftMargin : try{parent.width *0.25} catch(all){}
-                rightMargin : try{parent.width *0.25} catch(all){}
-            }
-
+            Layout.fillWidth: true
+            width: fieldsListView.width - lineH
             onIsValidChanged: {
                 if(isValid) accountInfo.password = password
                 accountInfo.infosChanged()
