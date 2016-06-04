@@ -13,7 +13,7 @@ Page {
 
     property int fieldWidth: isEditable?0:infoListView.width - lineH
     property int textFieldWidth: isEditable?infoListView.width - lineH:0
-    property int lineH: 170*Units.dp
+    property int lineH: page.height/9
     property int labelWidth: isEditable?infoListView.width - lineH:0
     
     property var userCollection;
@@ -46,7 +46,6 @@ Page {
         companyName_txtFld.text = userProfile.companyName;
         tel_lbl.text = userProfile.tel;
         tel_txtFld.text = userProfile.tel;
-
     }
 
     function addListenerToUpdateLabelsWhenUserInfoChanged(){
@@ -389,7 +388,13 @@ Page {
 
     Column{
         id:pageColumn
-        anchors.fill:parent
+        anchors{
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            topMargin: lineH/5
+            bottom: parent.bottom
+        }
 
         ListView{
             id:infoListView
@@ -399,6 +404,7 @@ Page {
                 right:parent.right
                 leftMargin: parent.width*0.05
                 rightMargin: parent.width*0.05
+
             }
 
             height: parent.height - lineH*1.3
@@ -406,7 +412,6 @@ Page {
         }
 
         Button {
-
             text:qsTr("Changer le mot de passe")
             elevation: 1
             width:parent.width*0.7
