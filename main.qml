@@ -12,7 +12,7 @@ ApplicationWindow {
     visible: true
     width: Screen.width
     height: Screen.height
-    initialPage : Qt.resolvedUrl("Listambulances.qml")
+    initialPage : Qt.resolvedUrl("Signin.qml")
 
     theme {
         //WARNING: for the moment we support only light themes

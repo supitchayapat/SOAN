@@ -50,34 +50,19 @@ Page {
     }
 
     actionBar {
-        customContent:Button {
-            id:filterButton
 
-            property bool state: false
-            Component.onCompleted: console.log("filterButton.height "+ filterButton.height)
-            anchors{
-                right: parent.right
-                top: parent.top
-                topMargin: parent.height/4 - filterButton.height/4
-                rightMargin: topMargin
-            }
-            text: "Filtrer"
-            checkable:true
-            checked:true
-            activeFocusOnPress: state
-            backgroundColor: "white"
-
-            onClicked:{
-                state= !state
-            }
-        }
-        switchDelegate : AvailabilitySwitch{}
-        extendedContent: TextField {
+        customContent:TextField {
             id:searchTextField
-            placeholderText: "Search..."
+            placeholderText: "Rechercher ..."
             height: root.height/13
-            width: parent.width
+            width: parent.width- parent.width/10
             font.italic: true
+
+            anchors{
+                horizontalCenter: parent.horizontalCenter
+                top: parent.top
+                topMargin: parent.height/4 - searchTextField.height*0.3
+            }
 
             Icon{
                 anchors {
@@ -98,6 +83,24 @@ Page {
             onTextChanged:{
                 ame: parent.text === "" ? "action/search" : "awesome/close"
                 //TODO update Init Callback
+            }
+        }
+
+
+        switchDelegate : AvailabilitySwitch{}
+        extendedContent:Button {
+            id:filterButton
+
+            property bool state: false
+            height: searchTextField.height*3/4
+            text: "Filtrer"
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 10
+            activeFocusOnPress: state
+            backgroundColor: "white"
+
+            onClicked:{
+                state= !state
             }
         }
     }
