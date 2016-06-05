@@ -59,9 +59,9 @@ Page {
             font.italic: true
 
             anchors{
-                horizontalCenter: parent.horizontalCenter
                 top: parent.top
-                topMargin: parent.height/4 - searchTextField.height*0.3
+                right:parent.right
+                rightMargin: topMargin
             }
 
             Icon{
@@ -94,8 +94,12 @@ Page {
             property bool state: false
             height: searchTextField.height*3/4
             text: "Filtrer"
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 10
+            anchors{
+                right:parent.right
+                rightMargin: bottomMargin
+                bottom: parent.bottom
+                bottomMargin: parent.height*0.1
+            }
             activeFocusOnPress: state
             backgroundColor: "white"
 
