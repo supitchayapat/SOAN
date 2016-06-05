@@ -10,9 +10,6 @@ Rectangle{
 
     property int lineH: parent.height/9
 
-    property alias sidebarAccountName : accountName.text
-    property alias sidebarEmail : email.text
-
     signal goToAmbulanceListPage()
     signal goToAccountPage()
     signal disconnectPressed()
@@ -34,13 +31,12 @@ Rectangle{
 
             style: "title"
             color : "white"
-
+            text:"accountName"
             anchors{
                 verticalCenter:  sidebar_rct.verticalCenter
-                verticalCenterOffset: -4
-                left: parent.left
-                leftMargin: dp(Defines_values.sidebarleftMargin)
-            }
+                verticalCenterOffset: Units.dp(-4)
+                left: sidebar_rct.left
+                leftMargin: sidebar_rct.width*0.1
         }
 
         Label {
