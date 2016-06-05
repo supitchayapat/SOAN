@@ -125,16 +125,16 @@ Page {
         ListItem.Standard{
 
             text:companyName
-            height:Defines_values.lineH*Units.dp
+            height:actionBar.height *3/8
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height//dp(Defines_values.Default_iconsize)
                 color: availability ? Theme.primaryColor : Theme.light.hintColor
             }
 
             Button {
-                width: dp(Defines_values.ListambulancesButtonwidth)
+                width: parent.height//dp(Defines_values.ListambulancesButtonwidth)
                 height:width
                 anchors{
                     right: parent.right
@@ -146,7 +146,7 @@ Page {
                 Icon {
                     name: "communication/call"
                     anchors.centerIn: parent
-                    size: dp(Defines_values.Default_iconsize)
+                    size: parent.height*0.7//dp(Defines_values.Default_iconsize)
                     color: availability ? Theme.primaryColor : Theme.light.hintColor
                 }
             }
@@ -167,7 +167,7 @@ Page {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top : parent.top
         anchors.topMargin: Defines_values.view_topMargin
-        height : actionBar.height //dp(Defines_values.CardMessageHeight)
+        height : actionBar.height
         visible: (ambliste.count ==0)
         width : page.width - Defines_values.Default_border_margins
         Text {
