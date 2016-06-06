@@ -4,6 +4,7 @@ import Material.ListItems 0.1 as ListItem
 import "define_values.js" as Defines_values
 import Qondrite 0.1
 import Qure 0.1
+import QtQuick.Layouts 1.2
 
 Page {
     id: page
@@ -50,61 +51,56 @@ Page {
     }
 
     actionBar {
-
-        customContent:TextField {
-            id:searchTextField
-            placeholderText: "Rechercher ..."
-            height: root.height/13
-            width: parent.width- parent.width/10
-            font.italic: true
-
+        switchDelegate : AvailabilitySwitch{}
+        customContent:RowLayout{
+            spacing: dp(20)
+            width:parent.width - lineH
+            height: lineH*2/3
             anchors{
-                top: parent.top
-                right:parent.right
-                rightMargin: topMargin
+                verticalCenter: parent.verticalCenter
+                left:parent.left
+                leftMargin: parent.height*0.5
             }
 
-            Icon{
-                anchors {
-                    right: parent.right
-                    verticalCenter: parent.verticalCenter
+            Button {
+                id:filterButton
+
+                height: searchTextField.height*3/4
+                text: "Filtrer"
+                activeFocusOnPress: state
+                backgroundColor: "white"
+
+                onClicked:{
                 }
-                size: parent.height*0.8
-                name: parent.text === "" ? "action/search" : "awesome/close"
-                color: "white"
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: {
-                        searchTextField.text = ""
+            }
+
+            TextField {
+                id:searchTextField
+
+                placeholderText: "Rechercher ..."
+                font.italic: true
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                Icon{
+                    anchors {
+                        right: parent.right
+                        verticalCenter: parent.verticalCenter
+                    }
+                    size: parent.height
+                    name: parent.text === "" ? "action/search" : "awesome/close"
+                    color: "white"
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: {
+                            searchTextField.text = ""
+                        }
                     }
                 }
-            }
 
-            onTextChanged:{
-                ame: parent.text === "" ? "action/search" : "awesome/close"
-                //TODO update Init Callback
-            }
-        }
-
-
-        switchDelegate : AvailabilitySwitch{}
-        extendedContent:Button {
-            id:filterButton
-
-            property bool state: false
-            height: searchTextField.height*3/4
-            text: "Filtrer"
-            anchors{
-                right:parent.right
-                rightMargin: bottomMargin
-                bottom: parent.bottom
-                bottomMargin: parent.height*0.1
-            }
-            activeFocusOnPress: state
-            backgroundColor: "white"
-
-            onClicked:{
-                state= !state
+                onTextChanged:{
+                    //TODO relist the ListModel here !
+                }
             }
         }
     }
@@ -112,14 +108,13 @@ Page {
     actions:[
         Action{
             id:action
+
             displayAsSwitch:true
             checkable: true
             onCheckedChanged: {
                 Qondrite.changeAvailability(checked)
             }
-
         }
-
     ]
 
     ListModel {
@@ -130,18 +125,17 @@ Page {
         id: listelements
 
         ListItem.Standard{
-
             text:companyName
             height:actionBar.height *3/8
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
-                size: parent.height//dp(Defines_values.Default_iconsize)
+                size: parent.height
                 color: availability ? Theme.primaryColor : Theme.light.hintColor
             }
 
             Button {
-                width: parent.height//dp(Defines_values.ListambulancesButtonwidth)
+                width: parent.height
                 height:width
                 anchors{
                     right: parent.right
@@ -153,7 +147,7 @@ Page {
                 Icon {
                     name: "communication/call"
                     anchors.centerIn: parent
-                    size: parent.height*0.7//dp(Defines_values.Default_iconsize)
+                    size: parent.height*0.7
                     color: availability ? Theme.primaryColor : Theme.light.hintColor
                 }
             }
@@ -166,17 +160,18 @@ Page {
         anchors.topMargin: dp(Defines_values.ListambulancesTopMargin)
         model: ambliste
         delegate: listelements
-
     }
 
     Card {
         id: ambliste_empty
+
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top : parent.top
         anchors.topMargin: Defines_values.view_topMargin
         height : actionBar.height
         visible: (ambliste.count ==0)
         width : page.width - Defines_values.Default_border_margins
+
         Text {
             id: ambliste_empty_text
             anchors.centerIn: parent
