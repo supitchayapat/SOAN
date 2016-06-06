@@ -31,12 +31,11 @@ Rectangle{
 
             style: "title"
             color : "white"
-            text:"accountName"
             anchors{
                 verticalCenter:  sidebar_rct.verticalCenter
-                verticalCenterOffset: Units.dp(-4)
                 left: sidebar_rct.left
                 leftMargin: sidebar_rct.width*0.1
+            }
         }
 
         Label {
@@ -44,12 +43,11 @@ Rectangle{
 
             style: "body2"
             color : "white"
-
             anchors{
                 bottom: sidebar_rct.bottom
-                bottomMargin: dp(Defines_values.sidebarbottomMargin)
+                bottomMargin: Units.dp*Defines_values.sidebarbottomMargin
                 left: parent.left
-                leftMargin: dp(Defines_values.sidebarleftMargin)
+                leftMargin: Units.dp*Defines_values.sidebarleftMargin
             }
         }
     }
