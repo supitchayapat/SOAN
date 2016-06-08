@@ -100,6 +100,7 @@ TextField{
         name:"action/done"
         anchors.right: parent.right
         visible:  false
+        size:parent.height
         color:Theme.primaryColor
     }
 
