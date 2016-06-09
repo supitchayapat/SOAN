@@ -29,5 +29,6 @@
         <file alias="account_circle.svg">action_account_circle.svg</file>
         <file alias="done.svg">action_done.svg</file>
         <file alias="account_box.svg">action_account_box.svg</file>
+        <file alias="logout.svg">logout.svg</file>
     </qresource>
 </RCC>

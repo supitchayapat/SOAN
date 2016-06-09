@@ -72,7 +72,7 @@ Rectangle{
             ListItem.Standard {
                 id: ambListItem
 
-                text: "Liste d'Ambulances"
+                text: qsTr("Liste d'Ambulances")
                 height:lineH
 
                 action: Icon {
@@ -92,7 +92,7 @@ Rectangle{
             ListItem.Standard {
                 id: accountListItem
 
-                text: "Mon compte"
+                text: qsTr("Mon compte")
                 height:lineH
                 action: Icon {
                     anchors.centerIn: parent
@@ -107,24 +107,22 @@ Rectangle{
                     goToAccountPage();
                 }
             }
-        }
 
-        Button {
+            ListItem.Standard {
+                id: disconnectListItem
 
-            text: qsTr("Déconnexion")
-            width: parent.width - parent.width/5
-            height:lineH
-            backgroundColor: Theme.primaryColor
+                text: qsTr("Déconnexion")
+                height: lineH
+                action: Icon {
+                    anchors.centerIn: parent
+                    name: "action/logout"
+                    size: dp(Defines_values.Default_iconsize)
+                }
 
-            anchors{
-                horizontalCenter: parent.horizontalCenter
-                bottom: parent.bottom
-                bottomMargin: parent.height *0.05
-            }
-
-            onClicked: {
-                disconnectPressed()
-                navDrawer.close()
+                onClicked:{
+                    disconnectPressed()
+                    navDrawer.close()
+                }
             }
         }
     }
