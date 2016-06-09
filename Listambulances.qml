@@ -151,7 +151,7 @@ Page {
                 Icon {
                     name: "communication/call"
                     anchors.centerIn: parent
-                    size: parent.height//*0.7
+                    size: parent.height
                     color: availability ? Theme.primaryColor : Theme.light.hintColor
                 }
             }

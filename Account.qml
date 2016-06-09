@@ -15,7 +15,6 @@ Page {
     property int textFieldWidth: isEditable?infoListView.width - lineH:0
     property int lineH: page.height/9
     property int labelWidth: isEditable?infoListView.width - lineH:0
-    
     property var userCollection;
     property var user;
 
@@ -103,7 +102,7 @@ Page {
                 address_txtField.focus = true;
             }
         },
-        Action{//ok btn
+        Action{
             id :validate_actBtn
 
             function updateValidationButtonState(validity){
@@ -137,7 +136,7 @@ Page {
                             });
             }
         },
-        Action{//cancel btn
+        Action{
             iconName: "awesome/close"
             visible: isEditable
 
