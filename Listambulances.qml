@@ -1,4 +1,5 @@
 import QtQuick 2.5
+import QtQuick.Window 2.0
 import Material 0.3
 import Material.ListItems 0.1 as ListItem
 import "define_values.js" as Defines_values
@@ -10,10 +11,9 @@ Page {
     id: page
 
     backAction: navDrawer.action
-
-
+    property int newdp:  (Device.isMobile ? (Screen.height - Screen.desktopAvailableHeight)/24 : 1)
+    property int lineH: Device.gridUnit * newdp
     property var availabilityCollection;
-
     property var itemIdToIndexMap;
 
     function initList(){
@@ -53,19 +53,20 @@ Page {
     actionBar {
         switchDelegate : AvailabilitySwitch{}
         customContent:RowLayout{
-            spacing: dp(20)
-            width:parent.width - lineH
-            height: lineH*2/3
+            width:parent.width
+            height: lineH*0.8
             anchors{
                 verticalCenter: parent.verticalCenter
                 left:parent.left
-                leftMargin: parent.height*0.5
+                leftMargin: parent.width*0.05
+                right:parent.right
             }
 
             Button {
                 id:filterButton
 
-                height: searchTextField.height*3/4
+                Layout.fillHeight: true
+                Layout.maximumWidth : parent.width*0.3
                 text: "Filtrer"
                 activeFocusOnPress: state
                 backgroundColor: "white"
@@ -79,6 +80,8 @@ Page {
 
                 placeholderText: "Rechercher ..."
                 font.italic: true
+                Layout.preferredWidth : parent.width*0.6
+                Layout.minimumWidth : parent.width*0.5
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
@@ -125,8 +128,9 @@ Page {
         id: listelements
 
         ListItem.Standard{
+
             text:companyName
-            height:actionBar.height *3/8
+            height:lineH*1.3
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
@@ -147,7 +151,7 @@ Page {
                 Icon {
                     name: "communication/call"
                     anchors.centerIn: parent
-                    size: parent.height*0.7
+                    size: parent.height//*0.7
                     color: availability ? Theme.primaryColor : Theme.light.hintColor
                 }
             }
@@ -157,7 +161,7 @@ Page {
 
     ListView {
         anchors.fill: parent
-        anchors.topMargin: dp(Defines_values.ListambulancesTopMargin)
+        anchors.topMargin: Defines_values.ListambulancesTopMargin * newdp
         model: ambliste
         delegate: listelements
     }
