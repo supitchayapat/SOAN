@@ -324,8 +324,7 @@ Page {
                 id:email_txtFld
 
                 serverGateway : Qondrite
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                font.family: Defines_values.textFieldsFontFamily
+                font.pixelSize: dp(Defines_values.Base_text_font)                
                 height:parent.height
                 width:textFieldWidth
                 visible: isEditable
