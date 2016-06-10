@@ -12,12 +12,6 @@ Page {
 
     property int lineH: 170*Units.dp
 
-    function isFormValid (){
-        return nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
-                && email_txtFld.isValid  && address_txtField.isValid
-                && tel_txtFld.isValid && newPassword.isValid
-    }
-
     QtObject{
         id:accountInfo
 
@@ -32,9 +26,9 @@ Page {
         property string email: ""
         property string password: ""
 
-        onInfosChanged:{
-            nextButton.updateButtonState(isFormValid())
-        }
+        onInfosChanged:nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
+                                           && email_txtFld.isValid  && address_txtField.isValid
+                                           && tel_txtFld.isValid && newPassword.isValid  ? true:false
     }
 
     ActionButton {
@@ -42,10 +36,6 @@ Page {
 
         property bool active: false
         property color disabledColor : Palette.colors["grey"]["300"]
-        function updateButtonState(validity){
-            if(validity) active = true
-            else active = false
-        }
 
         anchors {
             top: fieldsListView.bottom

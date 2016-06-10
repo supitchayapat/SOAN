@@ -61,8 +61,15 @@ TextField{
 
     property var serverGateway : undefined
 
+    /*
+     Tells whether a field value has not been changed at all
+     It can help avoid to call a validation if the field is empty
+     */
     property bool isPristine: true
 
+    /*
+     tells whether the field must be field
+     */
     property bool isRequired : false
 
     /*manage the hasError property through the onEditingValidations calls.
