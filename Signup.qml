@@ -52,16 +52,15 @@ Page {
 
         action: Action {
             onTriggered:{
-                snackbar.open("Chargement ... ")
-
-                Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
+                if(nextButton.active){
+                    snackbar.open("Connexion au serveur, merci de patienter.")
+                    Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
+                }else{
+                    snackbar.open("Un des champs n'est pas valide, merci de revérifier")
+                }
             }
         }
-
-        onActiveChanged: {
-            if(active) backgroundColor = Theme.primaryColor
-            else backgroundColor = disabledColor
-        }
+        onActiveChanged: backgroundColor = active ?  Theme.primaryColor : disabledColor
     }
 
 
@@ -160,8 +159,7 @@ Page {
                     if(address_txtField.text.length > 3)
                     {
                         //TODO handle this call with new callbacks list of TextFieldValidated
-                        Qondrite.validateAddress(text).result
-                        .then(function(result)
+                        Qondrite.validateAddress(text).result.then(function(result)
                         {
                             if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
                                 validatorWarning = qsTr("Adresse invalide")
