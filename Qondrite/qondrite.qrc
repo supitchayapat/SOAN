@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/Qondrite">
+        <file>Qondrite.qml</file>
+        <file>asteroid.qml.js</file>
+        <file>ddp.js</file>
+        <file>Log.js</file>
+        <file>q.js</file>
+        <file>qmldir</file>
+        <file>sha256.js</file>
+    </qresource>
+</RCC>

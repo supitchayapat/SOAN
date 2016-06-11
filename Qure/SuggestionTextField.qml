@@ -1,6 +1,6 @@
-import QtQuick 2.6
-import QtQuick.Layouts 1.3
-import Material 0.2
+import QtQuick 2.5
+import Material 0.3
+
 
 RowLayout{
     id:myRoot

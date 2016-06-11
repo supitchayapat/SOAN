@@ -22,6 +22,8 @@ var PrimaryColor = "#2196F3";
 var Materialgraycolor = "gray";
 var ListambulancesBackgroundlevel = '200';
 var ListambulancesDecorationlevel = '300';
+var remoteCallSpinnerIconColor = PrimaryColor
+var remoteCallSpinnerColor = 'gray'
 
 //sizevalues
 var ListambulancesButtonwidth = 80;
@@ -30,3 +32,4 @@ var Default_verticalspacing = 15;
 var Default_horizontalspacing = 40;
 var Signup1RowSpacing = 20;
 var SignupColumnpercent = 2;
+var CardMessageHeight = 60

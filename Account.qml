@@ -4,26 +4,40 @@ import QtQuick.Layouts 1.2
 import QtQml.Models 2.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
+import Qure 0.1
 
 Page {
     id: page
 
     property bool isEditable: false
-    property int fieldWidth: parent.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
-    property int textFieldWidth: isEditable?column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing):0
-    property int labelWidth: isEditable?0:column.width - dp(Defines_values.Default_iconsize) - dp(Defines_values.Default_verticalspacing)
+
+    property int fieldWidth: isEditable?0:infoListView.width - lineH
+    property int textFieldWidth: isEditable?infoListView.width - lineH:0
+    property int lineH: 170*Units.dp
+    property int labelWidth: isEditable?infoListView.width - lineH:0
+    
+    property var userCollection;
+    property var user;
 
     function loadUserInformation(){
         //When a login signal is emmited, the users collection is sent
         //from server to client with only the current user in it
         //getting the first element of the collection is getting the logged in user
         //information
-        var userCollection = Qondrite.getCollection("users");
-        var userInfo = userCollection._set.toArray()[0];
-        var userProfile = userInfo.profile;
+        page.userCollection = Qondrite.getCollection("users");
+        user = page.userCollection._set.toArray()[0];
 
-        email_lbl.text = userInfo.emails[0].address;
-        email_txtFld.text = userInfo.emails[0].address;
+        initializeFieldsAndLabelsWithUserInfo();
+
+
+        addListenerToUpdateLabelsWhenUserInfoChanged();
+    }
+
+    function initializeFieldsAndLabelsWithUserInfo(){
+
+        var userProfile = user.profile;
+        email_lbl.text = user.emails[0].address;
+        email_txtFld.text = user.emails[0].address;
         name_lbl.text = userProfile.name;
         name_txtFld.text = userProfile.name;
         address_lbl.text = userProfile.address;
@@ -32,31 +46,33 @@ Page {
         companyName_txtFld.text = userProfile.companyName;
         tel_lbl.text = userProfile.tel;
         tel_txtFld.text = userProfile.tel;
-        transportType_lbl.text = getTransportTypeLabel(userProfile);
-        demandeCheckBox.checked = transportType_lbl.text.indexOf("Ambulance")!==-1
-        vslCheckBox.checked = transportType_lbl.text.indexOf("VST")!==-1
-        changePassword.oldPassword = userProfile.password
+
     }
 
-    function isFormValid(){
-            return  name_txtFld.isValid
-                    && companyName_txtFld.isValid
-                    && email_txtFld.isValid
-                    && address_txtField.isValid
-                    && tel_txtFld.isValid
-                    && (demandeCheckBox.checked || vslCheckBox.checked)
-                    ? true :false
+    function addListenerToUpdateLabelsWhenUserInfoChanged(){
+        var reactiveUserCollection = Qondrite.reactiveQuery(page.userCollection);
+
+        reactiveUserCollection.on("change", function(id){
+
+            if(user._id ==id){
+
+                user = page.userCollection._set.toArray()[0];
+                email_lbl.text = user.emails[0].address;
+                name_lbl.text = user.profile.name;
+                address_lbl.text = user.profile.address;
+                companyname_lbl.text = user.profile.companyName;
+                tel_lbl.text = user.profile.tel;
+            }
+        });
     }
 
-    function getTransportTypeLabel(userProfile){
-        if(userProfile.ambulance && userProfile.vsl){
-            return "VST et Ambulance";
-        }else if(userProfile.ambulance && !userProfile.vsl){
-            return "Ambulance uniquement"
-        }else if(!userProfile.ambulance && userProfile.vsl){
-            return "VST uniquement";
-        }
-    }
+    function changePassword(oldPassword,newPassword){
+        Qondrite.changePassword(oldPassword,newPassword)
+        .result.then(
+             function onSucess(){
+                 confirmed_dlg.show()
+             }
+             );}
 
     backAction: navDrawer.action
 
@@ -79,27 +95,35 @@ Page {
                 tel_txtFld.focus = true;
                 email_txtFld.focus = true;
                 address_txtField.focus = true;
-                demandeCheckBox.focus = true;
             }
         },
         Action{//ok btn
             id :validate_actBtn
-
-            function updateValidationButtonState(validity){
-                if(validity) enabled = true
-                else enabled = false
-            }
 
             enabled : true
             iconName: "awesome/check"
             visible: isEditable
 
             onTriggered: {
-              //TODO : add Qondrite call for updating user info just below
-              //TODO : if the Qondrite call return is sucess, create and call function that updates
-              // the labels texts from textfields texts directly without calling the server.
-              //TODO : add a loadingCircle in the page while waiting for server updating info
-                isEditable = false
+
+                //TODO : add a loadingCircle in the page while waiting for server updating info
+                Qondrite.updateUser(
+
+                            {
+                                "email" :email_txtFld.text,
+                                "profile"  : {
+                                    "address"  :address_txtField.text,
+                                    "companyName"  :companyName_txtFld.text,
+                                    "name" :name_txtFld.text,
+                                    "tel"  :tel_txtFld.text,
+                                    "latitude" : accountInfo.infos.latitude,
+                                    "longitude" : accountInfo.infos.longitude
+                                }
+                            }).result.then(function success(){
+                                //TODO here the loading circle has to be hidden
+                                isEditable = false;
+                                loadUserInformation();
+                            });
             }
         },
         Action{//cancel btn
@@ -133,40 +157,33 @@ Page {
                                   email       : false,
                                   password    : ""
                               })
+
+        onInfosChanged :validate_actBtn.enabled  =  name_txtFld.isValid && companyName_txtFld.isValid
+                                            && email_txtFld.isValid && address_txtField.isValid
+                                            && tel_txtFld.isValid ? true : false
     }
 
-    Connections{
-        target: accountInfo
-        onInfosChanged : validate_actBtn.updateValidationButtonState(isFormValid())
-    }
-
-    Column{
-        id: column
-
-        spacing: dp(Defines_values.Default_horizontalspacing )
-
-        anchors{
-            top:parent.top
-            topMargin: dp(Defines_values.Accounttop_margin)
-            horizontalCenter: parent.horizontalCenter
-        }
+    ObjectModel{
+        id:infoListModel
 
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
             Icon {
                 name: "action/account_circle"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label {
                 id  : name_lbl
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                width:labelWidth
+
+                height:parent.height
+                width:fieldWidth
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
-
+                verticalAlignment: Text.AlignVCenter
             }
 
             TextFieldValidated{
@@ -174,9 +191,8 @@ Page {
 
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:qsTr("Nom et Prénom")
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                font.family: Defines_values.textFieldsFontFamily
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                height:parent.height
                 width:textFieldWidth
                 visible: isEditable
 
@@ -192,33 +208,32 @@ Page {
         Row{
 
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
             Icon {
                 name: "communication/business"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label{
                 id : companyname_lbl
 
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                width:labelWidth
+                width:fieldWidth
+                height:parent.height
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             TextFieldValidated{
                 id:companyName_txtFld
 
                 placeholderText: qsTr("Nom de la structure")
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                font.family: Defines_values.textFieldsFontFamily
+                height:parent.height
                 width:textFieldWidth
                 visible: isEditable
-
-                // @TODO this validator may need to be changed with a correct regExp for this case
-                validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                 onEditingFinished:{
                     accountInfo.infos.companyName = text
@@ -231,40 +246,41 @@ Page {
 
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
 
             Icon {
                 name: "maps/place"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label{
                 id  : address_lbl
-                font.pixelSize: dp(Defines_values.Base_text_font)
 
-                width:labelWidth
+                height:parent.height
+                width:fieldWidth
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             TextFieldValidated{
                 id:address_txtField
 
                 placeholderText: qsTr("Adresse")
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                font.family: Defines_values.textFieldsFontFamily
                 visible:isEditable
+                height:parent.height
                 width:textFieldWidth
-                // @TODO this validator may need to be changed with a correct regExp for this case
-                validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
+
+                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                 onEditingFinished: {
                     // run validation only if undone yet for current address and address length is worth it
                     if(address_txtField.text.length > 3)
                     {
                         //TODO handle this call with new callbacks list of TextFieldValidated
-                        Qondrite.validateAddress(text).result
+                        Qondrite.validateAddress(text)
                         .then(function(result)
                         {
                             if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
@@ -286,27 +302,28 @@ Page {
 
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
             Icon {
                 name: "communication/email"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label {
                 id  : email_lbl
 
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                width:labelWidth
+                height:parent.height
+                width:fieldWidth
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             EmailTextField {
                 id:email_txtFld
 
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                font.family: Defines_values.textFieldsFontFamily
+                height:parent.height
                 width:textFieldWidth
                 visible: isEditable
 
@@ -321,27 +338,29 @@ Page {
 
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
-            width:parent.width
+            width:page.width
+            height: lineH
 
             Icon {
                 name: "communication/call"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.height*0.7
             }
 
             Label{
                 id : tel_lbl
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                width:labelWidth
+
+                height:parent.height
+                width:fieldWidth
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             PhoneTextField{
                 id:tel_txtFld
 
-                Layout.fillWidth: true
-                font.family: "roboto"
-                font.pixelSize: dp(Defines_values.Base_text_font)
+                height:parent.height
+                width:textFieldWidth
                 visible : isEditable
 
                 onEditingFinished: {
@@ -352,70 +371,37 @@ Page {
                 onIsValidChanged: accountInfo.infosChanged()
             }
         }
-
-        RowLayout{
-            spacing : dp(Defines_values.Default_verticalspacing)
-
-            Icon {
-                name: "maps/local_hospital"
-                size: dp(Defines_values.Default_iconsize)
-                visible: !isEditable
-            }
-
-            Label {
-                id : transportType_lbl
-
-                font.pixelSize: dp(Defines_values.Base_text_font)
-                Layout.fillWidth:true
-                visible: !isEditable
-                anchors.verticalCenter : parent.verticalCenter
-            }
-
-            Column{
-                id: topColumn
-
-                spacing: dp(Defines_values.Default_border_margins)
-                anchors.horizontalCenter: parent.horizontalCenter
-                Layout.fillWidth:true
-                visible: isEditable
-
-                CheckBox {
-                    id: demandeCheckBox
-
-                    text: qsTr("Recevoir des demande en ambulances")
-                    onCheckedChanged: {
-                        accountInfo.infos.ambulance = demandeCheckBox.checked
-                        accountInfo.infosChanged()
-                    }
-                }
-
-                CheckBox {
-                    id: vslCheckBox
-
-                    text: qsTr("Recevoir des demande en VSL")
-
-                    onCheckedChanged: {
-                        accountInfo.infos.vsl = vslCheckBox.checked
-                        accountInfo.infosChanged()
-                    }
-                }
-            }
-
-        }
     }
 
-    Button {
 
-        anchors{
-            top:column.bottom
-            topMargin: dp(Defines_values.Default_verticalspacing)*2
-            left: column.left
+    Column{
+        id:pageColumn
+        anchors.fill:parent
+
+        ListView{
+            id:infoListView
+
+            anchors{
+                left:parent.left
+                right:parent.right
+                leftMargin: parent.width*0.05
+                rightMargin: parent.width*0.05
+            }
+
+            height: parent.height - lineH*1.3
+            model:infoListModel
         }
 
-        text:qsTr("Changer le mot de passe")
-        elevation: 1
-        onClicked: changepassword_dlg.show()
-        Layout.fillWidth:true
+        Button {
+
+            text:qsTr("Changer le mot de passe")
+            elevation: 1
+            width:parent.width*0.7
+            height:lineH
+            anchors.horizontalCenter:parent.horizontalCenter
+
+            onClicked: changepassword_dlg_cpnt.createObject(page).show();
+        }
     }
 
     Dialog {
@@ -443,31 +429,59 @@ Page {
         }
     }
 
-    Dialog {
-        id: changepassword_dlg
+    Component{
+        id: changepassword_dlg_cpnt
 
-        onAccepted: {
-            confirmed_dlg.show()
-        }
+        Dialog {
+            id: changepassword_dlg
 
-        text: "Mot de passe oublié"
-        positiveButtonText: "Valider"
-        negativeButtonText: "Annuler"
-        z:1
+            z :1
 
-        ChangePassword{
-            id :changePassword
+            text: "Mot de passe oublié"
+            positiveButtonText: "Valider"
+            negativeButtonText: "Annuler"
+            width:parent.width*0.7
+            height:parent.height*0.3
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: dp(Defines_values.TextFieldValidatedMaring)
+            positiveButtonEnabled:changePassword.isValid
 
-            oldPassword: {
-                var userCollection = Qondrite.getCollection("users");
-                var userInfo = userCollection._set.toArray()[0];
-                var userProfile = userInfo.profile;
-                return userProfile.password
+            onAccepted: {
+                page.changePassword(changePassword.oldPassword,changePassword.password);
             }
+
+            onClosed:{
+                destroy()
+            }
+
+            ChangePassword{
+                id :changePassword
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: dp(Defines_values.TextFieldValidatedMaring)
+
+                Component.onCompleted: {
+                    Qondrite.oldPasswordValid.connect(
+                                function(isEqualToRealPassword)
+                                {
+
+                                    if(isEqualToRealPassword){
+                                        oldPasswordValidity = true
+                                        oldPasswordVisibilityIcon = true
+                                        console.log("------MOT DE PASSE VALIDE-----")
+
+                                    }else{
+                                        oldPasswordValidity = false
+                                        oldPasswordVisibilityIcon = false
+                                        console.log("------MOT DE PASSE INVALIDE-----")
+                                    }
+                                }
+                                )
+                }
+
+            }
+
         }
+
     }
 
     Component.onCompleted: loadUserInformation()

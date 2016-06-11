@@ -5,7 +5,6 @@ TextFieldValidated{
     id:rootField
 
     placeholderText: qsTr("Mot de passe")
-    floatingLabel: true
     echoMode: TextInput.Password
     validator: RegExpValidator{regExp: /([\-_\*'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]{6,}\s*)+/gi }
 }

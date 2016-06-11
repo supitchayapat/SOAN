@@ -12,6 +12,18 @@ var wiambAPI = {
         }
 		return Meteor.users.find({emails : { $elemMatch : { address : email}  }}).count();		
 	},
+    "verifyPhoneNumberExistance" : function(phoneNumber)
+	{
+        if (! /^0[1-9]([-\/. ]?[0-9]{2}){4}$/.test(phoneNumber)){
+        	throw new Meteor.Error("Phone number is not valid");
+   	    }
+   	    var filter = {};
+   	    filter["profile.tel"] = { $in : [phoneNumber] };
+   	    if (Meteor.user()){
+   	    	filter["_id"] = { $ne : Meteor.user()._id };
+   	    }
+        return Meteor.users.find(filter).count();
+	},
 	"validateAddress" : function(address)
 	{
 		console.log('Meteor:validateAddress : '+address);
@@ -22,6 +34,49 @@ var wiambAPI = {
 		});
 		return geo.geocode(address);		
 	},
+	"updateUser" : function(user){
+			
+			Meteor.users.update({_id: Meteor.userId()}, 
+			{
+				$set:
+				{
+					'emails.0.address'  : user.email,
+					'profile'  : user.profile
+				}
+			},
+				
+			{ multi: false },
+				
+			function(error,result){
+
+				if(result){
+					
+					Availability.update({user_id  : Meteor.userId()}, {
+		    	
+				    	$set : {
+					    	geoloc : {type : "Point", coordinates  : [user.profile.longitude,user.profile.latitude]}, 
+					    	tel  : user.profile.tel,
+					    	companyName  : user.profile.companyName	
+				    	}
+			    	});
+				}
+			});		
+	},
+	"updateUserAvailability" : function(state)
+    {
+        Availability.update({ user_id: Meteor.user()._id}, {$set: { "availability" : (state  ? true : false) } });
+    },
+	"checkPassword" : function checkPassword(encodedPassword){
+
+		    if (Meteor.userId()) {
+		      var user = Meteor.user();
+		      var password = {digest: encodedPassword, algorithm: 'sha-256'};
+		      var result = Accounts._checkPassword(user, password);
+		      return result.error == null;
+		    } else {
+		      return false;
+		    }
+	},
 	"resendPassword" : function(email, fct)
 	{
 		if (0 === wiambAPI.verifyUserAccountExistance(email))
@@ -29,10 +84,23 @@ var wiambAPI = {
 			throw new Meteor.Error("Then email provided is unknown");
 		}
 		return Accounts.sendResetPasswordEmail(Meteor.user()._id, email);
+	},
+	"changeAvailability" : function updateAvailability(availability){
+		console.log("Changing the availability to "+availability);
+		Availability.update(
+		   { user_id: Meteor.userId() },
+		   {
+			   	$set: 
+			   	{
+	     				availability: availability 
+	     		}
+		   }
+		)
 	}
 };
 
 Meteor.methods(wiambAPI);
+
 
 if (Meteor.isClient) {
 	
@@ -61,7 +129,7 @@ if (Meteor.isServer) {
 	    
 	    Availability.insert({
 	    	user_id  : user._id, 
-	    	availability : 0, 
+	    	availability : false, 
 	    	geoloc : {type : "Point", coordinates  : [user.profile.longitude,user.profile.latitude]}, 
 	    	tel  : user.profile.tel,
 	    	companyName  : user.profile.companyName

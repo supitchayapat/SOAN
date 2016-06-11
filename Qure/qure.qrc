@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/Qure">
+        <file>ChangePassword.qml</file>
+        <file>EmailTextField.qml</file>
+        <file>Error.js</file>
+        <file>NewPassword.qml</file>
+        <file>PasswordTextField.qml</file>
+        <file>PhoneTextField.js</file>
+        <file>PhoneTextField.qml</file>
+        <file>ProgressBySteps.qml</file>
+        <file>SuggestionTextField.qml</file>
+        <file>TextFieldValidated.qml</file>
+        <file>qmldir</file>
+        <file>RemoteCallSpinner.qml</file>
+    </qresource>
+</RCC>

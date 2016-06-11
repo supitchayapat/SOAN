@@ -2,6 +2,7 @@ import QtWebSockets 1.0
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
+import "sha256.js" as Sha256
 
 WebSocket {
     id: wsid
@@ -15,9 +16,12 @@ WebSocket {
 
     signal login()
     signal loginFailed()
+    signal loggingOut()
     signal userCreated()
     signal userCreationFailed()
     signal userAccountExistanceVerified(bool doExists)
+    signal phoneNumberExistanceVerified(bool doExists)
+    signal oldPasswordValid(bool valid)
 
     active: true
 
@@ -26,8 +30,9 @@ WebSocket {
 
     function _connect() {
         console.log("Connecting to " + meteor_url);
-
-        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), false, function(event) { console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message ); });
+        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), true, function(event) {
+            console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message );
+        });
         console.log("done");
     }
 
@@ -37,7 +42,7 @@ WebSocket {
 
     function createUser(email,password,profile)
     {
-        ceres.createUser(email,password,profile)
+        ceres.createUser(email.toLowerCase(),password,profile)
         .then(
             function onSuccess(userId){
                 userCreated();
@@ -48,10 +53,33 @@ WebSocket {
             })
     }
 
+    function updateUser(user){
+        return ceres.call("updateUser",user);
+    }
+
+    function updateUserAvailability(state)
+    {
+        return ceres.call("updateUserAvailability", state);
+    }
+
+    function changePassword(oldPassword,newPassword){
+        return ceres.call("changePassword",oldPassword, newPassword);
+    }
+
+    function checkPassword(password){
+        ceres.call("checkPassword", Sha256.sha256_digest(password)).result
+                    .then(function response(result){
+                        oldPasswordValid(result);
+                    });
+    }
+
     function forgotPassword(email)
     {
-        console.log('forgotPassword : '+email );
         return ceres.call("forgotPassword", { email : email });
+    }
+
+    function changeAvailability(available){
+        ceres.call("changeAvailability", available);
     }
 
     function emit(signalName,param){
@@ -59,7 +87,7 @@ WebSocket {
     }
 
     function loginWithPassword(email,password){
-        return ceres.loginWithPassword(email,password)
+        return ceres.loginWithPassword(email.toLowerCase(),password)
         .then(function onSuccess(userId){
             login()
         })
@@ -73,7 +101,8 @@ WebSocket {
         });
     }
 
-    function lougout(){
+    function logout(){
+        loggingOut()
         ceres.logout();
     }
 
@@ -120,6 +149,14 @@ WebSocket {
                     .then(function onsuccess(result){
                         userAccountExistanceVerified(!isNaN(result) && true === !!result);
                     });
+    }
+
+    function verifyPhoneNumberExistance(phoneNumber)
+    {
+        ceres.call("verifyPhoneNumberExistance", phoneNumber).result
+            .then(function onsuccess(result){
+                phoneNumberExistanceVerified(!!result);
+            });
     }
 
     function getCollection(collection) {

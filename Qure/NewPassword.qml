@@ -1,8 +1,8 @@
 import QtQuick 2.5
 import Material 0.3
 import QtQuick.Layouts 1.2
-import "define_values.js" as Defines_values
 import "Error.js" as Err
+
 ColumnLayout{
     id : root
 
@@ -18,15 +18,12 @@ ColumnLayout{
     readonly property alias passwordConfimationTypedText: passwordConfirmation_txtfld.text
     property alias validator: password_txtfld.validator
 
-    //TODO : size properties too specif to be here
-    width: parent.width
-    spacing: dp(Defines_values.TextFieldValidatedMaring)
 
     PasswordTextField{
         id: password_txtfld
 
         placeholderText: qsTr("mot de passe")
-        Layout.fillWidth: parent
+        Layout.fillWidth: true
         anchors.horizontalCenter: parent.horizontalCenter
         validatorWarning: root.validatorWarning
 
@@ -43,7 +40,7 @@ ColumnLayout{
         id: passwordConfirmation_txtfld
 
         placeholderText: qsTr("Confirmer le mot de passe")
-        Layout.fillWidth: parent
+        Layout.fillWidth: true
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
         validatorWarning: root.validatorWarning
