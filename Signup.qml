@@ -26,8 +26,8 @@ Page {
         property string password: ""
 
         onInfosChanged:nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
-                                           && email_txtFld.isValid  && address_txtField.isValid
-                                           && tel_txtFld.isValid && newPassword.isValid  ? true:false
+                       && email_txtFld.isValid  && address_txtField.isValid
+                       && tel_txtFld.isValid && newPassword.isValid  ? true:false
     }
 
     ActionButton {
@@ -159,7 +159,8 @@ Page {
                     if(address_txtField.text.length > 3)
                     {
                         //TODO handle this call with new callbacks list of TextFieldValidated
-                        Qondrite.validateAddress(text).result.then(function(result)
+                        Qondrite.validateAddress(text).result
+                        .then(function(result)
                         {
                             if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
                                 validatorWarning = qsTr("Adresse invalide")
