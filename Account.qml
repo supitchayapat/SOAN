@@ -2,6 +2,7 @@ import QtQuick 2.5
 import Material 0.3
 import QtQuick.Layouts 1.2
 import QtQml.Models 2.2
+import QtQuick.Window 2.0
 import "define_values.js" as Defines_values
 import Qondrite 0.1
 import Qure 0.1
@@ -16,6 +17,7 @@ Page {
     property int lineH: page.height/9
     property int labelWidth: isEditable?infoListView.width - lineH:0
     property var userCollection;
+    property int screenDp
     property var user;
 
     function loadUserInformation(){
@@ -371,7 +373,6 @@ Page {
         }
     }
 
-
     Column{
         id:pageColumn
         anchors{
@@ -380,6 +381,8 @@ Page {
             top: parent.top
             topMargin: lineH/5
             bottom: parent.bottom
+            bottomMargin: lineH/5
+
         }
 
         ListView{
@@ -411,7 +414,9 @@ Page {
     Dialog {
         id: confirmed_dlg
 
-        width: parent.width - parent.width/6
+        width: Math.min(450*screenDp,Screen.desktopAvailableWidth*0.8)
+        height:200*screenDp
+
         hasActions: false
         z:1
 
@@ -444,8 +449,8 @@ Page {
             text: "Mot de passe oublié"
             positiveButtonText: "Valider"
             negativeButtonText: "Annuler"
-            width:parent.width*0.7
-            height:parent.height*0.3
+            width: Math.min(450*page.screenDp,Screen.desktopAvailableWidth*0.8)
+            height:400*page.screenDp
 
             positiveButtonEnabled:changePassword.isValid
 
@@ -488,5 +493,13 @@ Page {
 
     }
 
-    Component.onCompleted: loadUserInformation()
+    Component.onCompleted: {
+        /*
+          the type of the target built is exposed to qml using Qt.platform.os
+          please refer to https://blog.qt.io/blog/2013/06/21/overview-of-the-new-features-in-qt-quick/
+          for more possible values
+        */
+        screenDp = Qt.platform.os === "android" ? (Screen.height - Screen.desktopAvailableHeight)/24 : 1
+        loadUserInformation()
+    }
 }
