@@ -60,7 +60,7 @@ Page {
                 }
             }
         }
-        onActiveChanged: backgroundColor = active ?  Theme.primaryColor : disabledColor
+        onActiveChanged: active==true ? backgroundColor = Theme.primaryColor : backgroundColor = disabledColor
     }
 
 
