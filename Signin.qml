@@ -25,12 +25,11 @@ Page {
         id: confirmed_dlg
 
         width: Math.min(450*screenDp,Screen.desktopAvailableWidth*0.8)
-        height:confirmed_dlg_column.height//250*screenDp
+        height:200*screenDp
         hasActions: false
         z:1
 
         Column{
-            id: confirmed_dlg_column
             anchors.fill: parent
 
             Icon{
