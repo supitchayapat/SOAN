@@ -43,51 +43,42 @@ ApplicationWindow {
                 Qondrite.updateUserAvailability(false);
                 pageStack.push(Qt.resolvedUrl("Signin.qml"))
                 Qondrite.logout();
+                remoteCallSpinner.hide();
             }
         }
     }
 
     Snackbar {
-        id: socketAlert
+        id: errorToast
     }
 
-    OverlayLayer {
-        id: ajaxSpinner
-        visible:  false
-        opacity: .3
+    RemoteCallSpinner {
+        id: remoteCallSpinner
         color: Defines_values.remoteCallSpinnerColor
-        ProgressCircle {
-            id: spinnerIcon
-            opacity: 1
-            dashThickness : 4
-            visible: true
-            color:  Defines_values.remoteCallSpinnerIconColor
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
+        icon.color: Defines_values.remoteCallSpinnerIconColor
+    }
+
+    function hideSpinner(error)
+    {
+        remoteCallSpinner.hide();
+        if (typeof error !== 'undefined' && error.toString() != "1"){
+            errorToast.open(error);
         }
-        function show(){
-            visible = true;
-            spinnerIcon.visible = true;
-        }
-        function hide()
-        {
-            visible = false
-            spinnerIcon.visible = false;
-        }
+    }
+
+    function internetOffCallback()
+    {
+        errorToast.open('La connexion à Internet a été interrompue ! Veuillez relancer l\'application');
     }
 
     Component.onCompleted: {
-        Qondrite.onClose.connect(function(){
-            socketAlert.open('La connexion à Internet a été interrompue ! Veuillez relancer l\'application');
-        });
-        Qondrite.onError.connect(function(){
-            socketAlert.open('La connexion à Internet a échoué ! Veuillez relancer l\'application');
-        });
-        Qondrite._on("remoteCallStart", function(data){
-            ajaxSpinner.show();
-        });
-        Qondrite._on("remoteCallSuccess", function(data){
-            ajaxSpinner.hide();
-        });
+        Qondrite.onClose.connect(internetOffCallback);
+        Qondrite.onError.connect(internetOffCallback);
+        Qondrite._on("remoteCallStart", function(){
+            remoteCallSpinner.show();
+         });
+        Qondrite._on("remoteCallSuccess", hideSpinner);
+        Qondrite._on("logout", hideSpinner);
+        Qondrite._on("logoutError", hideSpinner);
     }
 }

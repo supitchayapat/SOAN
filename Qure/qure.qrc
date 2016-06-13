@@ -11,5 +11,6 @@
         <file>SuggestionTextField.qml</file>
         <file>TextFieldValidated.qml</file>
         <file>qmldir</file>
+        <file>RemoteCallSpinner.qml</file>
     </qresource>
 </RCC>

@@ -64,13 +64,6 @@ Page {
         });
     }
 
-    function isFormValid(){
-        return  name_txtFld.isValid
-                && companyName_txtFld.isValid
-                && email_txtFld.isValid
-                && address_txtField.isValid
-                && tel_txtFld.isValid    }
-
     function changePassword(oldPassword,newPassword){
         Qondrite.changePassword(oldPassword,newPassword)
         .result.then(
@@ -104,11 +97,6 @@ Page {
         },
         Action{
             id :validate_actBtn
-
-            function updateValidationButtonState(validity){
-                if(validity) enabled = true
-                else enabled = false
-            }
 
             enabled : true
             iconName: "awesome/check"
@@ -167,11 +155,10 @@ Page {
                                   email       : false,
                                   password    : ""
                               })
-    }
 
-    Connections{
-        target: accountInfo
-        onInfosChanged : validate_actBtn.updateValidationButtonState(isFormValid())
+        onInfosChanged :validate_actBtn.enabled  =  name_txtFld.isValid && companyName_txtFld.isValid
+                                            && email_txtFld.isValid && address_txtField.isValid
+                                            && tel_txtFld.isValid ? true : false
     }
 
     ObjectModel{
