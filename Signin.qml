@@ -13,7 +13,7 @@ Page {
 
     property int rowHeight: root.height/12
     property int linesSpacing: root.height/30
-
+    property int screenDp: 1
     Rectangle{
         id : backgroud_rct
         anchors.fill: parent
@@ -24,25 +24,27 @@ Page {
     Dialog {    
         id: confirmed_dlg
 
-        width: parent.width - parent.width/6
-        height:parent.height/2.2
+        width: Math.min(450*screenDp,Screen.desktopAvailableWidth*0.8)
+        height:confirmed_dlg_column.height//250*screenDp
         hasActions: false
         z:1
 
         Column{
-            anchors.horizontalCenter: parent.horizontalCenter
+            id: confirmed_dlg_column
+            anchors.fill: parent
 
             Icon{
                 name:"action/done"
-                size: dp(100)
+                size: 100*screenDp
+                color:Theme.primaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Label {
                 text: "Verifier votre boite email pour le changement de votre mot de passe"
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:forgottenPassword_dlg.width - dp(120)
                 wrapMode: Text.WordWrap
+                width: parent.width
             }
         }
     }
@@ -50,8 +52,8 @@ Page {
     Dialog {
         id: forgottenPassword_dlg
 
-        width: parent.width - parent.width/6
-        height:parent.height/2.2
+        width: Math.min(450*screenDp,Screen.desktopAvailableWidth*0.8)
+        height:250*screenDp
         text: qsTr("Mot de passe oublié")
         z:1
 
@@ -202,6 +204,8 @@ Page {
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
+        screenDp = Qt.platform.os === "android" ? (Screen.height - Screen.desktopAvailableHeight)/24 : Units.dp
+
         Qondrite.onLogin.connect(function() {
             invalidCredentialsLabel.visible = false
             pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
