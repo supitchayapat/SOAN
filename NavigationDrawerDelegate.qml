@@ -1,5 +1,7 @@
+import QtQml.Models 2.2
 import QtQuick 2.5
 import Material 0.3
+import QtQuick.Window 2.0
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
 import Material.ListItems 0.1 as ListItem
@@ -53,7 +55,6 @@ Rectangle{
     }
 
     View {
-
         anchors{
             top:sidebar_rct.bottom
             topMargin: dp(Defines_values.view_topMargin)
@@ -62,68 +63,75 @@ Rectangle{
             bottom: parent.bottom
         }
 
-        Column {
-
+        ListView {
             anchors.fill: parent
-
-            ListItem.Standard {
-                id: ambListItem
-
-                text: "Liste d'Ambulances"
-                height:lineH
-
-                action: Icon {
-                    anchors.centerIn: parent
-                    name: "action/account_box"
-                    size: dp(Defines_values.Default_iconsize)
-                }
-
-                onClicked:{
-                    ambListItem.selected = true
-                    accountListItem.selected = false
-                    navDrawer.close()
-                    goToAmbulanceListPage()
-                }
-            }
-
-            ListItem.Standard {
-                id: accountListItem
-
-                text: "Mon compte"
-                height: lineH
-                action: Icon {
-                    anchors.centerIn: parent
-                    name: "action/account_circle"
-                    size: dp(Defines_values.Default_iconsize)
-                }
-
-                onClicked:{
-                    accountListItem.selected = true
-                    ambListItem.selected = false
-                    navDrawer.close()
-                    goToAccountPage();
-                }
-            }
+            clip: true
+            model:sideBarModel
+            footer: disconnectComponent
         }
+    }
 
-        Button {
+    Component{
+        id:disconnectComponent
+        ListItem.Standard {
+            id: disconnectListItem
 
             text: qsTr("Déconnexion")
-            width: parent.width - parent.width/5
             height: lineH
-            backgroundColor: Theme.primaryColor
-
-            anchors{
-                horizontalCenter: parent.horizontalCenter
-                bottom: parent.bottom
-                bottomMargin: height/2
+            action: Icon {
+                anchors.centerIn: parent
+                name: "action/logout"
+                size: dp(Defines_values.Default_iconsize)
             }
 
-            onClicked: {
+            onClicked:{
                 disconnectPressed()
                 navDrawer.close()
             }
         }
+    }
+
+    ObjectModel{
+        id:sideBarModel
+        ListItem.Standard {
+            id: ambListItem
+
+            text: qsTr("Liste d'Ambulances")
+            height:lineH
+
+            action: Icon {
+                anchors.centerIn: parent
+                name: "action/account_box"
+                size: dp(Defines_values.Default_iconsize)
+            }
+
+            onClicked:{
+                ambListItem.selected = true
+                accountListItem.selected = false
+                navDrawer.close()
+                goToAmbulanceListPage()
+            }
+        }
+
+        ListItem.Standard {
+            id: accountListItem
+
+            text: qsTr("Mon compte")
+            height:lineH
+            action: Icon {
+                anchors.centerIn: parent
+                name: "action/account_circle"
+                size: dp(Defines_values.Default_iconsize)
+            }
+
+            onClicked:{
+                accountListItem.selected = true
+                ambListItem.selected = false
+                navDrawer.close()
+                goToAccountPage();
+            }
+        }
+
     }
 
     Component.onCompleted: Qondrite.onLogin.connect(function(){

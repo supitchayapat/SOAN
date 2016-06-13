@@ -26,8 +26,8 @@ Page {
         property string password: ""
 
         onInfosChanged:nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
-                                           && email_txtFld.isValid  && address_txtField.isValid
-                                           && tel_txtFld.isValid && newPassword.isValid  ? true:false
+                       && email_txtFld.isValid  && address_txtField.isValid
+                       && tel_txtFld.isValid && newPassword.isValid  ? true:false
     }
 
     ActionButton {
@@ -49,16 +49,15 @@ Page {
         iconName: "content/send"
         action: Action {
             onTriggered:{
-                snackbar.open("Chargement ... ")
-
-                Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
+                if(nextButton.active){
+                    snackbar.open("Connexion au serveur, merci de patienter.")
+                    Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
+                }else{
+                    snackbar.open("Un des champs n'est pas valide, merci de revérifier")
+                }
             }
         }
-
-        onActiveChanged: {
-            if(active) backgroundColor = Theme.primaryColor
-            else backgroundColor = disabledColor
-        }
+        onActiveChanged: active==true ? backgroundColor = Theme.primaryColor : backgroundColor = disabledColor
     }
 
     ObjectModel{
