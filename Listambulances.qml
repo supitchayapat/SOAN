@@ -12,14 +12,51 @@ Page {
 
     actionBar.switchDelegate : AvailabilitySwitch{}
 
+    property var availabilityCollection;
+
+    property var itemIdToIndexMap;
+
+    function initList(){
+
+        availabilityCollection = Qondrite.getCollection("availability");
+        var availabilityItems = availabilityCollection._set._items;
+        itemIdToIndexMap = {};
+        var index=  0;
+        for( var id in availabilityItems){
+            if(availabilityItems.hasOwnProperty(id) ) {
+                ambliste.append(availabilityItems[id]);
+                itemIdToIndexMap[id] = index;
+                index++;
+            }
+        }
+    }
+
+    function bindEventsToList(){
+        var reactiveAvailabilityCollection = Qondrite.reactiveQuery(availabilityCollection);
+
+        reactiveAvailabilityCollection.on("change", function(id){
+            ambliste.set(itemIdToIndexMap[id],
+                         availabilityCollection._set._items[id]);
+        });
+
+        reactiveAvailabilityCollection.on("add", function(id){
+             ambliste.append(availabilityCollection._set._items[id])
+             itemIdToIndexMap[id] = Object.keys(itemIdToIndexMap).length;
+        })
+
+        reactiveAvailabilityCollection.on("delete",function(id){
+            ambliste.remove(itemIdToIndexMap[id]);
+            delete itemIdToIndexMap[id];
+        })
+    }
     actions:[
         Action{//availability switch
             iconName: "awesome/close"
             displayAsSwitch:true
-
-            onTriggered: {
-                //TODO send request to server
+            onCheckedChanged: {
+                Qondrite.changeAvailability(checked)
             }
+
         }
     ]
 
@@ -31,8 +68,9 @@ Page {
         id: listelements
 
         ListItem.Standard{
-            text: companyName
 
+            text:companyName
+            height:Defines_values.lineH*Units.dp
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
@@ -42,7 +80,7 @@ Page {
 
             Button {
                 width: dp(Defines_values.ListambulancesButtonwidth)
-
+                height:width
                 anchors{
                     right: parent.right
                     verticalCenter: parent.verticalCenter
@@ -88,16 +126,12 @@ Page {
 
 
     Component.onCompleted: {
+
         var subscription  = Qondrite.subscribe("availability",function(){
-            var collection = Qondrite.getCollection("availability")._set._items;
+                        initList()
+                        bindEventsToList()
+            });
 
-            for( var id in collection){
-                if( collection.hasOwnProperty(id) ) {
-                    ambliste.append(collection[id]);
-                }
-            }
-        });
-
-        Qondrite.loggingOut.connect(function(){ subscription.stop(); });
+        Qondrite.loggingOut.connect(function(){subscription.stop();})
     }
 }

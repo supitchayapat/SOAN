@@ -499,21 +499,27 @@ Asteroid.prototype.apply = function (method, params) {
     if (!Array.isArray(params)) {
         params = [];
     }
+    var self = this;
     // Create the result and updated promises
     var resultDeferred = Q.defer();
     var updatedDeferred = Q.defer();
+    self._emit("remoteCallStart");
+
     var onResult = function (err, res) {
         // The onResult handler takes care of errors
         if (err) {
+            self._emit("remoteCallError", err);
             // If errors ccur, reject both promises
             resultDeferred.reject(err);
             updatedDeferred.reject();
         } else {
+            self._emit("remoteCallSuccess", res);
             // Otherwise resolve the result one
             resultDeferred.resolve(res);
         }
     };
     var onUpdated = function () {
+        self._emit("remoteCallSuccess");
         // Just resolve the updated promise
         updatedDeferred.resolve();
     };
@@ -586,7 +592,7 @@ Collection.prototype._localToLocalInsert = function (item) {
 };
 Collection.prototype._remoteToLocalInsert = function (item) {
     // The server is the SSOT, add directly
-    this._set.put(item._id, item);
+    this._set.add(item._id, item);
 };
 Collection.prototype._localToRemoteInsert = function (item) {
     var self = this;
@@ -774,10 +780,15 @@ var ReactiveQuery = function (set) {
     });
     self._set.on("del", function (id) {
         self._getResult();
-        self._emit("change", id);
+        self._emit("delete", id);
+    });
+    self._set.on("add", function (id) {
+        self._getResult();
+        self._emit("add", id);
     });
 
-};
+
+}
 ReactiveQuery.prototype = Object.create(Asteroid.utils.EventEmitter.prototype);
 ReactiveQuery.constructor = ReactiveQuery;
 
@@ -965,6 +976,7 @@ var Set = function (readonly) {
         // Make the put and del methods private
         this._put = this.put;
         this._del = this.del;
+        this._add = this.add
         // Replace them with a throwy function
         this.put = this.del = function () {
             throw new Error("Attempt to modify readonly set");
@@ -986,6 +998,18 @@ Set.prototype.put = function (id, item) {
     // Return the set instance to allow method chainging
     return this;
 };
+
+Set.prototype.add = function (id, item) {
+    // Assert arguments type
+    Asteroid.utils.must.beString(id);
+    Asteroid.utils.must.beObject(item);
+    // Save a clone to avoid collateral damage
+    this._items[id] = Asteroid.utils.clone(item);
+    this._emit("add", id);
+    // Return the set instance to allow method chainging
+    return this;
+};
+
 
 Set.prototype.del = function (id) {
     // Assert arguments type
@@ -1038,6 +1062,15 @@ Set.prototype.filter = function (belongFn) {
         var belongs = belongFn(itemClone);
         if (belongs) {
             sub._put(id, items[id]);
+        }
+    });
+    this.on("add", function (id) {
+        // Clone the element to avoid
+        // collateral damage
+        var itemClone = Asteroid.utils.clone(items[id]);
+        var belongs = belongFn(itemClone);
+        if (belongs) {
+            sub.add(id, items[id]);
         }
     });
     this.on("del", function (id) {
@@ -1123,9 +1156,14 @@ Asteroid.prototype.subscribe = function (name /* , param1, param2, ... */) {
     var fingerprint = JSON.stringify(args);
     console.log(fingerprint);
     // Only subscribe if there is no cached subscription
+    var params = args.slice(1);
+
+    if(this._subscriptionsCache[fingerprint]){
+        this.subscriptions[this._subscriptionsCache[fingerprint].id].stop();
+    }
+
     if (!this._subscriptionsCache[fingerprint]) {
         // Get the parameters of the subscription
-        var params = args.slice(1);
         // Subscribe
         var sub = new Subscription(
             name,
@@ -1136,6 +1174,7 @@ Asteroid.prototype.subscribe = function (name /* , param1, param2, ... */) {
         this._subscriptionsCache[sub._fingerprint] = sub;
         this.subscriptions[sub.id] = sub;
     }
+
     return this._subscriptionsCache[fingerprint];
 };
 

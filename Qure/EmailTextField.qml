@@ -14,14 +14,14 @@ TextFieldValidated{
 
     Component.onCompleted: {
         Qondrite.userAccountExistanceVerified.connect(
-                    function(doUserAlreadyExists)
-                    {
-                        //TODO  : the server call to the the userAlreadyExistince service should be
-                        //added on the onEditingFinishedValidations array when it will be handling
-                        //validations with promises as well
-                        hasError = doUserAlreadyExists && text !=="" ? true : false;
-                        helperText = hasError ? qsTr("Cet email est déjà utilisé") : "";
-                    }
-                    );
+            function(doUserAlreadyExists)
+            {
+                //TODO  : the server call to the the userAlreadyExistince service should be
+                //added on the onEditingFinishedValidations array when it will be handling
+                //validations with promises as well
+                hasError = doUserAlreadyExists && text !=="" ? true : false;
+                helperText = hasError ? qsTr("Cet email est déjà utilisé") : "";
+            }
+        );
     }
 }

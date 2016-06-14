@@ -36,8 +36,9 @@ WebSocket {
 
     function _connect() {
         console.log("Connecting to " + meteor_url);
-
-        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), false, function(event) { console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message ); });
+        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), true, function(event) {
+            console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message );
+        });
         console.log("done");
         connected();
     }
@@ -83,6 +84,11 @@ WebSocket {
         return ceres.call("updateUser",user);
     }
 
+    function updateUserAvailability(state)
+    {
+        return ceres.call("updateUserAvailability", state);
+    }
+
     function changePassword(oldPassword,newPassword){
         return ceres.call("changePassword",oldPassword, newPassword);
     }
@@ -96,8 +102,11 @@ WebSocket {
 
     function forgotPassword(email)
     {
-        console.log('forgotPassword : '+email );
         return ceres.call("forgotPassword", { email : email });
+    }
+
+    function changeAvailability(available){
+        ceres.call("changeAvailability", available);
     }
 
     function emit(signalName,param){
