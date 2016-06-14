@@ -72,8 +72,32 @@ TextField{
      */
     property bool isRequired : false
 
-    /*manage the hasError property through the onEditingValidations calls.
-      update the checkedIcon visibility*/
+
+    /**
+      Check that a field marked as required has not a empty value
+      */
+    function checkRequired()
+    {
+        hasError = false;
+        checkedIcon.visible = ! hasError;
+        helperText = "";
+
+        if (text == "")
+        {
+            if (isRequired === true)
+            {
+                hasError = true
+                checkedIcon.visible = ! hasError
+                helperText = qsTr("Ce champ est obligatoire");
+            }
+            else {
+                hasError = false
+                checkedIcon.visible = false
+            }
+            return ! hasError;
+        }
+    }
+
     function manageValidation(){
 
         hasError = false;
@@ -82,21 +106,6 @@ TextField{
 
 
         if(validator != null){
-            if ( text == "")
-            {
-                if (isRequired === true)
-                {
-                    hasError = true
-                    checkedIcon.visible = ! hasError
-                    helperText = qsTr("Ce champ est obligatoire");
-                }
-                else {
-                    hasError = false
-                    checkedIcon.visible = false
-                }
-                return ! hasError;
-            }
-
 
             /* TODO : here we are only handling the case of RegExpValidator
              * but the validator could be also an IntValidator or a DoubleValidator
@@ -223,7 +232,7 @@ TextField{
            timer.restart()
         }
         else{
-            timer.stop();                       
+            timer.stop();
             manageValidation()
             if (! hasError){
                 _validateEngine.onEditingFinishedCalls();

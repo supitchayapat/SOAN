@@ -10,7 +10,9 @@ ColumnLayout{
     id : root
 
     readonly property alias password : _priv.password
-    readonly property alias isValid : _priv.isValid
+    readonly property alias isValid : _priv.isValid    
+    property alias isPasswordFieldRequired : password_txtfld.isRequired
+    property alias isPasswordConfirmFieldRequired : passwordConfirmation_txtfld.isRequired
     property string validatorWarning :  qsTr("6 caractères au minimum")
     property string passwordsDontMatchWarning: qsTr("les mots de passe sont différents")
     property alias passwordPlaceHolderText : password_txtfld.placeholderText
@@ -21,6 +23,12 @@ ColumnLayout{
     readonly property alias passwordConfimationTypedText: passwordConfirmation_txtfld.text
     property alias validator: password_txtfld.validator
 
+    // this function is a "facade" that validates the NewPassword component whatever things to be validated inside
+    function checkRequired()
+    {
+        password_txtfld.checkRequired(); passwordConfirmation_txtfld.checkRequired();
+    }
+
 
     PasswordTextField{
         id: password_txtfld
@@ -28,8 +36,7 @@ ColumnLayout{
         placeholderText: qsTr("mot de passe")
         Layout.fillWidth: true
         anchors.horizontalCenter: parent.horizontalCenter
-        validatorWarning: root.validatorWarning
-
+        validatorWarning: root.validatorWarning        
         onIsValidChanged: if(isValid && !passwordConfirmation_txtfld.isValid) passwordConfirmation_txtfld.manageValidation()
 
         Component.onCompleted: {
@@ -50,6 +57,7 @@ ColumnLayout{
 
         placeholderText: qsTr("Confirmer le mot de passe")
         Layout.fillWidth: true
+        //isRequired : isPasswordConfirmFieldRequired || false
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
         validatorWarning: root.validatorWarning        
@@ -74,10 +82,9 @@ ColumnLayout{
         id : _priv
         property string password: ""
         property bool isValid : password_txtfld.isValid && passwordConfirmation_txtfld.isValid
-
         function customValidation(pairedPass,thisCtxt){
             return pairedPass !== "" && pairedPass !== thisCtxt.text ? false : true
-        }
+        }        
     }
 
     onIsValidChanged: {

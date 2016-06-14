@@ -60,10 +60,7 @@ ApplicationWindow {
 
     function hideSpinner(error)
     {
-        remoteCallSpinner.hide();
-        if (typeof error !== 'undefined' && error.toString() != "1"){
-            errorToast.open(error);
-        }
+        remoteCallSpinner.hide();        
     }
 
     function internetOffCallback()

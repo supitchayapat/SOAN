@@ -26,9 +26,11 @@ Page {
         property string email: ""
         property string password: ""
 
-        onInfosChanged:nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
+        onInfosChanged: {
+            nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
                        && email_txtFld.isValid  && address_txtField.isValid
                        && tel_txtFld.isValid && newPassword.isValid  ? true:false
+        }
     }
 
     ActionButton {
@@ -53,15 +55,27 @@ Page {
 
         action: Action {
             onTriggered:{
+
                 if(nextButton.active){
                     snackbar.open("Connexion au serveur, merci de patienter.")
                     Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
                 }else{
-                    snackbar.open("Un des champs n'est pas valide, merci de revérifier")
+                    nextButton.checkFieldsRequired();
                 }
             }
         }
-        onActiveChanged: active==true ? backgroundColor = Theme.primaryColor : backgroundColor = disabledColor
+
+        function checkFieldsRequired()
+        {
+            nomprenom_txtFld.checkRequired();
+            nomdelastructure_txtFld.checkRequired();
+            email_txtFld.checkRequired();
+            address_txtField.checkRequired();
+            tel_txtFld.checkRequired();
+            newPassword.checkRequired();
+        }
+
+        onActiveChanged: backgroundColor = active===true ? Theme.primaryColor : disabledColor
     }
 
     ObjectModel{
@@ -168,13 +182,7 @@ Page {
                             }
 
                         });
-                    }
-                    else{
-                        accountInfo.infos.latitude = result[0].latitude;
-                        accountInfo.infos.longitude = result[0].longitude;
-                        accountInfo.infos.address = text
-                        accountInfo.infosChanged()
-                    }
+                    }                    
                 }
 
                 onIsValidChanged: accountInfo.infosChanged()
@@ -240,6 +248,9 @@ Page {
             id: newPassword
 
             height: lineH*2
+
+            isPasswordFieldRequired : true
+            isPasswordConfirmFieldRequired : true
 
             anchors {
                 // Note : because we are using a ListModel the parent may be null before the element is affected
