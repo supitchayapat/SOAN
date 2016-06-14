@@ -50,63 +50,7 @@ Page {
         })
     }
 
-    actionBar {
-        switchDelegate : AvailabilitySwitch{}
-        customContent:RowLayout{
-            width:parent.width
-            height: lineH*0.8
-            anchors{
-                verticalCenter: parent.verticalCenter
-                left:parent.left
-                leftMargin: parent.width*0.05
-                right:parent.right
-            }
-
-            Button {
-                id:filterButton
-
-                Layout.fillHeight: true
-                Layout.maximumWidth : parent.width*0.3
-                text: "Filtrer"
-                activeFocusOnPress: state
-                backgroundColor: "white"
-
-                onClicked:{
-                }
-            }
-
-            TextField {
-                id:searchTextField
-
-                placeholderText: "Rechercher ..."
-                font.italic: true
-                Layout.preferredWidth : parent.width*0.6
-                Layout.minimumWidth : parent.width*0.5
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                Icon{
-                    anchors {
-                        right: parent.right
-                        verticalCenter: parent.verticalCenter
-                    }
-                    size: parent.height
-                    name: parent.text === "" ? "action/search" : "awesome/close"
-                    color: "white"
-                    MouseArea{
-                        anchors.fill: parent
-                        onClicked: {
-                            searchTextField.text = ""
-                        }
-                    }
-                }
-
-                onTextChanged:{
-                    //TODO relist the ListModel here !
-                }
-            }
-        }
-    }
+    actionBar.switchDelegate : AvailabilitySwitch{}
 
     actions:[
         Action{

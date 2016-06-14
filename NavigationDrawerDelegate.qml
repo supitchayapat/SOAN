@@ -131,7 +131,6 @@ Rectangle{
                 goToAccountPage();
             }
         }
-
     }
 
     Component.onCompleted: Qondrite.onLogin.connect(function(){
