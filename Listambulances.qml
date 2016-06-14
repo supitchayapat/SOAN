@@ -127,15 +127,11 @@ Page {
 
     Component.onCompleted: {
 
-
         var subscription  = Qondrite.subscribe("availability",function(){
                         initList()
                         bindEventsToList()
             });
 
         Qondrite.loggingOut.connect(function(){subscription.stop();})
-
     }
-
-
 }

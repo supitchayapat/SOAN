@@ -861,7 +861,7 @@ Asteroid.prototype._tryResumeLogin = function () {
     var self = this;
     return Q()
         .then(function () {
-            return Asteroid.utils.multiStorage.get(self._host + "__" + self._instanceId + "__login_token__");
+            return Asteroid.utils.multiStorage.get('token');
         })
         .then(function (token) {
             if (!token) {
@@ -878,14 +878,15 @@ Asteroid.prototype._tryResumeLogin = function () {
                 if (err) {
                     delete self.userId;
                     delete self.loggedIn;
-                    Asteroid.utils.multiStorage.del(self._host + "__" + self._instanceId + "__login_token__");
+                    Asteroid.utils.multiStorage.del("token");
                     self._emit("loginError", err);
                     deferred.reject(err);
                 } else {
                     self.userId = res.id;
                     self.loggedIn = true;
-                    Asteroid.utils.multiStorage.set(self._host + "__" + self._instanceId + "__login_token__", res.token);
+                    Asteroid.utils.multiStorage.set("token", res.token);
                     self._emit("login", res.id);
+
                     deferred.resolve(res.id);
                 }
             });
@@ -936,12 +937,14 @@ Asteroid.prototype.loginWithPassword = function (usernameOrEmail, password) {
         if (err) {
             delete self.userId;
             delete self.loggedIn;
+            Asteroid.utils.multiStorage.del('token');
             //Asteroid.utils.multiStorage.del(self._host + "__" + self._instanceId + "__login_token__");
             deferred.reject(err);
 
         } else {
             self.userId = res.id;
             self.loggedIn = true;
+            Asteroid.utils.multiStorage.set('token', res.token);
             //Asteroid.utils.multiStorage.set(self._host + "__" + self._instanceId + "__login_token__", res.token);
             deferred.resolve(res.id);
         }
