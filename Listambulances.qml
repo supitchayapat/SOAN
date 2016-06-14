@@ -134,15 +134,12 @@ Page {
          please refer to https://blog.qt.io/blog/2013/06/21/overview-of-the-new-features-in-qt-quick/
          for more possible values
        */
-        screenDp = Qt.platform.os === "android" ? (Screen.height - Screen.desktopAvailableHeight)/24 : dp
+        screenDp = Qt.platform.os === "android" ? (Screen.height - Screen.desktopAvailableHeight)/24 : dp(1)
         var subscription  = Qondrite.subscribe("availability",function(){
             initList()
             bindEventsToList()
         });
 
         Qondrite.loggingOut.connect(function(){subscription.stop();})
-
     }
-
-
 }
