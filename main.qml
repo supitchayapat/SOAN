@@ -16,7 +16,7 @@ ApplicationWindow {
 
 
     // @TODO : set default initialPage at splashscreen loading
-    initialPage: Qt.resolvedUrl("");
+    initialPage: Qt.resolvedUrl("Signin.qml");
 
     theme {
         //WARNING: for the moment we support only light themes
@@ -43,10 +43,7 @@ ApplicationWindow {
         manageInitialPage();
         Qondrite.onResumeLogin.connect(function() {
             pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
-        });
-        Qondrite.onResumeLoginFailed.connect(function() {
-            pageStack.push(Qt.resolvedUrl("Signin.qml"));
-        });
+        });        
     }
 
 
