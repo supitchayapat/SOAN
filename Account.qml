@@ -14,10 +14,9 @@ Page {
 
     property int fieldWidth: isEditable?0:infoListView.width - lineH
     property int textFieldWidth: isEditable?infoListView.width - lineH:0
-    property int lineH: page.height/9
+    property int lineH: Device.gridUnit * Units.dp
     property int labelWidth: isEditable?infoListView.width - lineH:0
     property var userCollection;
-    property int screenDp
     property var user;
 
     function loadUserInformation(){
@@ -159,8 +158,8 @@ Page {
                               })
 
         onInfosChanged :validate_actBtn.enabled  =  name_txtFld.isValid && companyName_txtFld.isValid
-                                            && email_txtFld.isValid && address_txtField.isValid
-                                            && tel_txtFld.isValid ? true : false
+                        && email_txtFld.isValid && address_txtField.isValid
+                        && tel_txtFld.isValid ? true : false
     }
 
     ObjectModel{
@@ -192,7 +191,7 @@ Page {
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:qsTr("Nom et Prénom")
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
-                height:parent.height
+                anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
                 visible: isEditable
 
@@ -230,7 +229,7 @@ Page {
                 id:companyName_txtFld
 
                 placeholderText: qsTr("Nom de la structure")
-                height:parent.height
+                anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
                 visible: isEditable
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
@@ -270,7 +269,7 @@ Page {
 
                 placeholderText: qsTr("Adresse")
                 visible:isEditable
-                height:parent.height
+                anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
 
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
@@ -323,7 +322,7 @@ Page {
             EmailTextField {
                 id:email_txtFld
 
-                height:parent.height
+                anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
                 visible: isEditable
 
@@ -359,7 +358,7 @@ Page {
             PhoneTextField{
                 id:tel_txtFld
 
-                height:parent.height
+                anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
                 visible : isEditable
 
@@ -414,8 +413,8 @@ Page {
     Dialog {
         id: confirmed_dlg
 
-        width: Math.min(450*screenDp,Screen.desktopAvailableWidth*0.8)
-        height:200*screenDp
+        width: Math.min(Units.dp*450,Screen.desktopAvailableWidth*0.8)
+        height:Units.dp*200
 
         hasActions: false
         z:1
@@ -449,8 +448,8 @@ Page {
             text: "Mot de passe oublié"
             positiveButtonText: "Valider"
             negativeButtonText: "Annuler"
-            width: Math.min(450*page.screenDp,Screen.desktopAvailableWidth*0.8)
-            height:400*page.screenDp
+            width: Math.min(Units.dp*450,Screen.desktopAvailableWidth*0.8)
+            height:Units.dp*400
 
             positiveButtonEnabled:changePassword.isValid
 
@@ -492,14 +491,5 @@ Page {
         }
 
     }
-
-    Component.onCompleted: {
-        /*
-          the type of the target built is exposed to qml using Qt.platform.os
-          please refer to https://blog.qt.io/blog/2013/06/21/overview-of-the-new-features-in-qt-quick/
-          for more possible values
-        */
-        screenDp = Qt.platform.os === "android" ? (Screen.height - Screen.desktopAvailableHeight)/24 : dp(1)
-        loadUserInformation()
-    }
+    Component.onCompleted:loadUserInformation()
 }

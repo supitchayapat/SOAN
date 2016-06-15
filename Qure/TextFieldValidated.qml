@@ -103,7 +103,7 @@ TextField{
             right: parent.right
         }
         visible:  false
-        size:parent.height*0.6
+        size:parent.height
         color:Theme.primaryColor
     }
 

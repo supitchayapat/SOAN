@@ -230,7 +230,7 @@ Page {
 
             height: lineH*2
             Layout.fillWidth: true
-            width: fieldsListView.width - lineH
+            width: fieldsListView.width
             onIsValidChanged: {
                 if(isValid) accountInfo.password = password
                 accountInfo.infosChanged()
@@ -251,7 +251,7 @@ Page {
             right: parent.right
             rightMargin: parent.width/20
             top: parent.top
-            topMargin: 60*Units.dp
+            topMargin: 10*Units.dp
         }
 
         model:infoListModel

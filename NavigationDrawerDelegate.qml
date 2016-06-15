@@ -77,7 +77,6 @@ Rectangle{
             id: disconnectListItem
 
             text: qsTr("Déconnexion")
-            height: lineH
             action: Icon {
                 anchors.centerIn: parent
                 name: "action/logout"
@@ -97,7 +96,7 @@ Rectangle{
             id: ambListItem
 
             text: qsTr("Liste d'Ambulances")
-            height:lineH
+
 
             action: Icon {
                 anchors.centerIn: parent
@@ -117,7 +116,6 @@ Rectangle{
             id: accountListItem
 
             text: qsTr("Mon compte")
-            height:lineH
             action: Icon {
                 anchors.centerIn: parent
                 name: "action/account_circle"

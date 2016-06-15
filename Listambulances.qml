@@ -11,8 +11,6 @@ Page {
     id: page
 
     backAction: navDrawer.action
-    property int screenDp: dp
-    property int lineH: Device.gridUnit * screenDp
     property var availabilityCollection;
     property var itemIdToIndexMap;
 
@@ -73,7 +71,6 @@ Page {
 
         ListItem.Standard{
             text:companyName
-            height:lineH*1.3
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
@@ -104,7 +101,7 @@ Page {
 
     ListView {
         anchors.fill: parent
-        anchors.topMargin: Defines_values.ListambulancesTopMargin * screenDp
+        anchors.topMargin: Defines_values.ListambulancesTopMargin * Units.dp
         model: ambliste
         delegate: listelements
     }
@@ -129,12 +126,6 @@ Page {
 
 
     Component.onCompleted: {
-       /*
-         the type of the target built is exposed to qml using Qt.platform.os
-         please refer to https://blog.qt.io/blog/2013/06/21/overview-of-the-new-features-in-qt-quick/
-         for more possible values
-       */
-        screenDp = Qt.platform.os === "android" ? (Screen.height - Screen.desktopAvailableHeight)/24 : dp(1)
         var subscription  = Qondrite.subscribe("availability",function(){
             initList()
             bindEventsToList()
