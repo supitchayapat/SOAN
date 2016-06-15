@@ -72,6 +72,8 @@ TextField{
      */
     property bool isRequired : false
 
+    // this prop tells whether the "champs obligatoire" is displayed or not
+    // so we don't have to guess this state from what's text inside the helperText
     property bool isEmptyMessageDisplayed: false
 
     /**
