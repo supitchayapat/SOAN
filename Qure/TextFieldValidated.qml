@@ -72,22 +72,20 @@ TextField{
      */
     property bool isRequired : false
 
+    property bool isEmptyMessageDisplayed: false
 
     /**
       Check that a field marked as required has not a empty value
       */
     function checkRequired()
     {
-        hasError = false;
-        checkedIcon.visible = ! hasError;
-        helperText = "";
-
         if (text == "")
         {
             if (isRequired === true)
             {
                 hasError = true
                 checkedIcon.visible = ! hasError
+                isEmptyMessageDisplayed = true;
                 helperText = qsTr("Ce champ est obligatoire");
             }
             else {
@@ -99,11 +97,6 @@ TextField{
     }
 
     function manageValidation(){
-
-        hasError = false;
-        checkedIcon.visible = ! hasError;
-        helperText = "";
-
 
         if(validator != null){
 
@@ -192,10 +185,6 @@ TextField{
                 return retValidators;
             }
 
-            hasError = false;
-            helperText = "";
-            checkedIcon.visible = false;
-
             Qlib.Q.all(getValidators(calls)).then(function(responses){
                 for (var i = 0; i< responses.length; i++){
                     if (typeof responses[i] !== 'object'){
@@ -217,6 +206,13 @@ TextField{
         if (isPristine){
             isPristine = ! isPristine;
         }
+        if (!isPristine && isEmptyMessageDisplayed === true){
+            helperText = "";
+            isEmptyMessageDisplayed = false;
+        }
+        else {
+            helperText = ""
+        }
 
         if(text == ""){
             checkedIcon.visible = false
@@ -233,8 +229,10 @@ TextField{
         }
         else{
             timer.stop();
-            manageValidation()
-            if (! hasError){
+            if (text != ""){
+                manageValidation()
+            }
+            if (! hasError && text !=""){
                 _validateEngine.onEditingFinishedCalls();
             }
         }

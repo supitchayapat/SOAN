@@ -56,11 +56,12 @@ Page {
         action: Action {
             onTriggered:{
 
+                nextButton.checkFieldsRequired();
                 if(nextButton.active){
                     snackbar.open("Connexion au serveur, merci de patienter.")
                     Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
                 }else{
-                    nextButton.checkFieldsRequired();
+
                 }
             }
         }
