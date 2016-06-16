@@ -84,6 +84,7 @@ Page {
                 placeholderText:"Nom et Prénom"
                 width: fieldsListView.width - lineH
                 Layout.fillHeight: true
+                anchors.verticalCenter : parent.verticalCenter
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi}
 
                 onEditingFinished: {
@@ -112,6 +113,7 @@ Page {
                 placeholderText: "Nom de la structure"
                 Layout.fillHeight: true
                 width: fieldsListView.width - lineH
+                anchors.verticalCenter : parent.verticalCenter
                 // @TODO this validator may need to be changed with a correct regExp for this case
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
 
@@ -146,6 +148,7 @@ Page {
                 placeholderText: qsTr("Adresse")
                 width: fieldsListView.width - lineH
                 Layout.fillHeight: true
+                anchors.verticalCenter : parent.verticalCenter
                 // @TODO this validator may need to be changed with a correct regExp for this case
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
@@ -190,6 +193,7 @@ Page {
 
                 width: fieldsListView.width - lineH
                 Layout.fillHeight: true
+                anchors.verticalCenter : parent.verticalCenter
                 onEditingFinished:{
                     accountInfo.email = text
                     accountInfo.infosChanged()
@@ -215,6 +219,7 @@ Page {
 
                 width: fieldsListView.width - lineH
                 Layout.fillHeight: true
+                anchors.verticalCenter : parent.verticalCenter
 
                 onEditingFinished: {
                     accountInfo.infos.tel = text
@@ -236,7 +241,6 @@ Page {
                 accountInfo.infosChanged()
             }
         }
-
     }
 
     ListView{
