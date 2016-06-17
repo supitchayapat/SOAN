@@ -10,7 +10,12 @@ Page {
 
     backAction: navDrawer.action
 
-    actionBar.switchDelegate : AvailabilitySwitch{}
+    actionBar.customContent : AvailabilitySwitch{
+        anchors{
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+    }
 
     property var availabilityCollection;
 
@@ -49,16 +54,6 @@ Page {
             delete itemIdToIndexMap[id];
         })
     }
-    actions:[
-        Action{//availability switch
-            iconName: "awesome/close"
-            displayAsSwitch:true
-            onCheckedChanged: {
-                Qondrite.changeAvailability(checked)
-            }
-
-        }
-    ]
 
     ListModel {
         id:ambliste
