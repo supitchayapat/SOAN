@@ -146,13 +146,21 @@ TextField{
         interval: 1000
         triggeredOnStart: false
 
+        function delayedStop()
+        {
+            if (stopOnCallbacksComplete === true){
+                stopOnCallbacksComplete = ! stopOnCallbacksComplete;
+                timer.stop();
+            }
+        }
         onTriggered: {
             if (text!=""){
-                _validateEngine.onEditingCalls();
-                _validateEngine.onEditingFinishedCalls();
+                _validateEngine.onEditingCalls( delayedStop );
+                _validateEngine.onEditingFinishedCalls( delayedStop );
             }
             timerDone = true
         }
+        property bool stopOnCallbacksComplete :false
     }
 
     QtObject{
@@ -162,11 +170,11 @@ TextField{
             return evaluateCalls(onEditingValidations);
         }
 
-        function onEditingFinishedCalls(){
-            return evaluateCalls(onEditingFinishedValidations);
+        function onEditingFinishedCalls(callback){
+            return evaluateCalls(onEditingFinishedValidations, callback);
         }
 
-        function evaluateCalls(calls, s)
+        function evaluateCalls(calls, callback)
         {
             if (calls.length === 0){
                 return ;
@@ -199,7 +207,8 @@ TextField{
                         break;
                     }
                 }
-
+                if (typeof callback !== "undefined")
+                    callback();
             });
         }
     }
@@ -230,12 +239,16 @@ TextField{
            timer.restart()
         }
         else{
-            timer.stop();
-            if (text != ""){
-                manageValidation()
+            timer.stopOnCallbacksComplete = true;
+            if (text ==""){
+                timer.stop();
             }
+            else {
+                manageValidation();
+            }
+
             if (! hasError && text !=""){
-                _validateEngine.onEditingFinishedCalls();
+                _validateEngine.onEditingFinishedCalls( timer.delayedStop );
             }
         }
     }
