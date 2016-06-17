@@ -322,7 +322,7 @@ Page {
 
             EmailTextField {
                 id:email_txtFld
-
+                serverGateway : Qondrite
                 height:parent.height
                 width:textFieldWidth
                 visible: isEditable
@@ -362,6 +362,7 @@ Page {
                 height:parent.height
                 width:textFieldWidth
                 visible : isEditable
+                serverGateway : Qondrite
 
                 onEditingFinished: {
                     accountInfo.infos.tel = text

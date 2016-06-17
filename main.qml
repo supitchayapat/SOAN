@@ -79,10 +79,7 @@ ApplicationWindow {
 
     function hideSpinner(error)
     {
-        remoteCallSpinner.hide();
-        if (typeof error !== 'undefined' && error.toString() != "1"){
-            errorToast.open(error);
-        }
+        remoteCallSpinner.hide();        
     }
 
     function internetOffCallback()
@@ -99,9 +96,7 @@ ApplicationWindow {
 
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);
-        Qondrite._on("remoteCallStart", function(){
-            remoteCallSpinner.show();
-         });
+        Qondrite._on("remoteCallStart", function(){ remoteCallSpinner.show(); });
         Qondrite._on("remoteCallSuccess", hideSpinner);
         Qondrite._on("remoteCallError", hideSpinner);
         Qondrite._on("logout", hideSpinner);
