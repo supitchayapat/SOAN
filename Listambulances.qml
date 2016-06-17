@@ -48,19 +48,6 @@ Page {
         })
     }
 
-    actionBar.switchDelegate : AvailabilitySwitch{}
-
-    actions:[
-        Action{
-            id:action
-
-            displayAsSwitch:true
-            checkable: true
-            onCheckedChanged: {
-                Qondrite.changeAvailability(checked)
-            }
-        }
-    ]
 
     ListModel {
         id:ambliste
