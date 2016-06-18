@@ -9,6 +9,7 @@ import Qure 0.1
 
 Page {
     id:root
+
     property int lineH: 170*Units.dp
 
     QtObject{
@@ -25,9 +26,11 @@ Page {
         property string email: ""
         property string password: ""
 
-        onInfosChanged:nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
-                                           && email_txtFld.isValid  && address_txtField.isValid
-                                           && tel_txtFld.isValid && newPassword.isValid  ? true:false
+        onInfosChanged: {
+            nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
+                       && email_txtFld.isValid  && address_txtField.isValid
+                       && tel_txtFld.isValid && newPassword.isValid  ? true:false
+        }
     }
 
     ActionButton {
@@ -52,18 +55,29 @@ Page {
 
         action: Action {
             onTriggered:{
-                snackbar.open("Chargement ... ")
 
-                Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
+                nextButton.checkFieldsRequired();
+                if(nextButton.active){
+                    snackbar.open("Connexion au serveur, merci de patienter.")
+                    Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
+                }else{
+
+                }
             }
         }
 
-        onActiveChanged: {
-            if(active) backgroundColor = Theme.primaryColor
-            else backgroundColor = disabledColor
+        function checkFieldsRequired()
+        {
+            nomprenom_txtFld.checkRequired();
+            nomdelastructure_txtFld.checkRequired();
+            email_txtFld.checkRequired();
+            address_txtField.checkRequired();
+            tel_txtFld.checkRequired();
+            newPassword.checkRequired();
         }
-    }
 
+        onActiveChanged: backgroundColor = active===true ? Theme.primaryColor : disabledColor
+    }
 
     ObjectModel{
         id:infoListModel
@@ -73,11 +87,9 @@ Page {
 
             spacing : dp(Defines_values.Signup1RowSpacing)
             height: lineH
-            width:fieldsListView.width
+            width: fieldsListView.width
 
             Icon {
-                id:icon
-
                 name: "action/account_circle"
                 size: parent.height*0.7
             }
@@ -85,6 +97,7 @@ Page {
             TextFieldValidated{
                 id:nomprenom_txtFld
 
+                isRequired : true
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:"Nom et Prénom"
                 Layout.fillWidth: true
@@ -114,11 +127,11 @@ Page {
             TextFieldValidated{
                 id:nomdelastructure_txtFld
 
+                isRequired : true
                 placeholderText: "Nom de la structure"
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                // @TODO this validator may need to be changed with a correct regExp for this case
-                validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                 onEditingFinished:{
                     accountInfo.infos.companyName = text
@@ -134,24 +147,20 @@ Page {
 
             width:fieldsListView.width
             height: lineH
+
             Icon {
                 name: "maps/place"
                 size: parent.height*0.7
             }
 
-
             TextFieldValidated{
                 id:address_txtField
 
-                QtObject {
-                    id : previousAddress
-                    property string value : ""
-                }
-
+                isRequired : true
                 placeholderText: qsTr("Adresse")
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                // @TODO this validator may need to be changed with a correct regExp for this case
+
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                 onEditingFinished: {
@@ -159,10 +168,10 @@ Page {
                     if(address_txtField.text.length > 3)
                     {
                         //TODO handle this call with new callbacks list of TextFieldValidated
-                        Qondrite.validateAddress(text).result
+                        Qondrite.validateAddress(text)
                         .then(function(result)
                         {
-                            if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                            if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                                 validatorWarning = qsTr("Adresse invalide")
                             }
                             else{
@@ -171,8 +180,9 @@ Page {
                                 accountInfo.infos.address = text
                                 accountInfo.infosChanged()
                             }
+
                         });
-                    }
+                    }                    
                 }
 
                 onIsValidChanged: accountInfo.infosChanged()
@@ -186,18 +196,21 @@ Page {
 
             Icon {
                 name: "communication/email"
-                size: parent.height*0.7
+                size: parent.height *0.7
             }
 
             EmailTextField {
                 id:email_txtFld
 
+                isRequired : true
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                serverGateway: Qondrite
+                emailExistanceValidation : true
+
                 onEditingFinished:{
                     accountInfo.email = text
                     accountInfo.infosChanged()
-
                 }
 
                 onIsValidChanged: accountInfo.infosChanged()
@@ -217,8 +230,10 @@ Page {
             PhoneTextField{
                 id:tel_txtFld
 
+                isRequired : true
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                serverGateway: Qondrite
 
                 onEditingFinished: {
                     accountInfo.infos.tel = text
@@ -233,6 +248,9 @@ Page {
             id: newPassword
 
             height: lineH*2
+
+            isPasswordFieldRequired : true
+            isPasswordConfirmFieldRequired : true
 
             anchors {
                 // Note : because we are using a ListModel the parent may be null before the element is affected
@@ -280,5 +298,4 @@ Page {
     Component.onCompleted: {
         Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
     }
-
 }
