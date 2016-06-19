@@ -11,6 +11,13 @@ Page {
     id: page
 
     backAction: navDrawer.action
+    actionBar.customContent : AvailabilitySwitch{
+        anchors{
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+    }
+
     property var availabilityCollection;
     property var itemIdToIndexMap;
 
@@ -47,7 +54,6 @@ Page {
             delete itemIdToIndexMap[id];
         })
     }
-
 
     ListModel {
         id:ambliste

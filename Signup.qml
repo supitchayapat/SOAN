@@ -9,6 +9,7 @@ import Qure 0.1
 
 Page {
     id:root
+
     property int lineH: root.height/9
 
     QtObject{
@@ -25,9 +26,11 @@ Page {
         property string email: ""
         property string password: ""
 
-        onInfosChanged:nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
+        onInfosChanged: {
+            nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
                        && email_txtFld.isValid  && address_txtField.isValid
                        && tel_txtFld.isValid && newPassword.isValid  ? true:false
+        }
     }
 
     ActionButton {
@@ -49,15 +52,28 @@ Page {
         iconName: "content/send"
         action: Action {
             onTriggered:{
+
+                nextButton.checkFieldsRequired();
                 if(nextButton.active){
                     snackbar.open("Connexion au serveur, merci de patienter.")
                     Qondrite.createUser(accountInfo.email,accountInfo.password,accountInfo.infos)
                 }else{
-                    snackbar.open("Un des champs n'est pas valide, merci de revérifier")
+
                 }
             }
         }
-        onActiveChanged: active==true ? backgroundColor = Theme.primaryColor : backgroundColor = disabledColor
+
+        function checkFieldsRequired()
+        {
+            nomprenom_txtFld.checkRequired();
+            nomdelastructure_txtFld.checkRequired();
+            email_txtFld.checkRequired();
+            address_txtField.checkRequired();
+            tel_txtFld.checkRequired();
+            newPassword.checkRequired();
+        }
+
+        onActiveChanged: backgroundColor = active===true ? Theme.primaryColor : disabledColor
     }
 
     ObjectModel{
@@ -68,11 +84,9 @@ Page {
 
             spacing : dp(Defines_values.Signup1RowSpacing)
             height: lineH
-            width:fieldsListView.width
+            width: fieldsListView.width
 
             Icon {
-                id:icon
-
                 name: "action/account_circle"
                 size: parent.height*0.7
             }
@@ -80,6 +94,7 @@ Page {
             TextFieldValidated{
                 id:nomprenom_txtFld
 
+                isRequired : true
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:"Nom et Prénom"
                 width: fieldsListView.width - lineH
@@ -110,12 +125,12 @@ Page {
             TextFieldValidated{
                 id:nomdelastructure_txtFld
 
+                isRequired : true
                 placeholderText: "Nom de la structure"
                 Layout.fillHeight: true
                 width: fieldsListView.width - lineH
                 anchors.verticalCenter : parent.verticalCenter
-                // @TODO this validator may need to be changed with a correct regExp for this case
-                validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
+                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                 onEditingFinished:{
                     accountInfo.infos.companyName = text
@@ -131,25 +146,20 @@ Page {
 
             width:fieldsListView.width
             height: lineH
+
             Icon {
                 name: "maps/place"
                 size: parent.height*0.7
             }
 
-
             TextFieldValidated{
                 id:address_txtField
 
-                QtObject {
-                    id : previousAddress
-                    property string value : ""
-                }
-
+                isRequired : true
                 placeholderText: qsTr("Adresse")
                 width: fieldsListView.width - lineH
                 Layout.fillHeight: true
                 anchors.verticalCenter : parent.verticalCenter
-                // @TODO this validator may need to be changed with a correct regExp for this case
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
 
@@ -158,10 +168,10 @@ Page {
                     if(address_txtField.text.length > 3)
                     {
                         //TODO handle this call with new callbacks list of TextFieldValidated
-                        Qondrite.validateAddress(text).result
+                        Qondrite.validateAddress(text)
                         .then(function(result)
                         {
-                            if((Array.isArray(result) && result.length ===0) || result.status == "ERROR"){
+                            if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                                 validatorWarning = qsTr("Adresse invalide")
                             }
                             else{
@@ -170,8 +180,9 @@ Page {
                                 accountInfo.infos.address = text
                                 accountInfo.infosChanged()
                             }
+
                         });
-                    }
+                    }                    
                 }
 
                 onIsValidChanged: accountInfo.infosChanged()
@@ -185,7 +196,7 @@ Page {
 
             Icon {
                 name: "communication/email"
-                size: parent.height*0.7
+                size: parent.height *0.7
             }
 
             EmailTextField {
@@ -194,10 +205,13 @@ Page {
                 width: fieldsListView.width - lineH
                 Layout.fillHeight: true
                 anchors.verticalCenter : parent.verticalCenter
+                isRequired : true
+                serverGateway: Qondrite
+                emailExistanceValidation : true
+
                 onEditingFinished:{
                     accountInfo.email = text
                     accountInfo.infosChanged()
-
                 }
 
                 onIsValidChanged: accountInfo.infosChanged()
@@ -220,6 +234,8 @@ Page {
                 width: fieldsListView.width - lineH
                 Layout.fillHeight: true
                 anchors.verticalCenter : parent.verticalCenter
+                isRequired : true
+                serverGateway: Qondrite
 
                 onEditingFinished: {
                     accountInfo.infos.tel = text
@@ -234,8 +250,9 @@ Page {
             id: newPassword
 
             height: lineH*2
-            Layout.fillWidth: true
             width: fieldsListView.width
+            isPasswordFieldRequired : true
+            isPasswordConfirmFieldRequired : true
             onIsValidChanged: {
                 if(isValid) accountInfo.password = password
                 accountInfo.infosChanged()
@@ -272,5 +289,4 @@ Page {
     Component.onCompleted: {
         Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
     }
-
 }

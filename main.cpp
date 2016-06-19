@@ -17,7 +17,7 @@ static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *script
 
     QObject *qrondriteObject = qondrite.create();
     QJSValue result = scriptEngine->newQObject(qrondriteObject);
-    result.setProperty("meteor_url",QString("wiamb-imad.scalingo.io"));
+    result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
     return result;
 }
 

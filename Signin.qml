@@ -52,7 +52,7 @@ Page {
         id: forgottenPassword_dlg
 
         width: Math.min(450*screenDp,Screen.desktopAvailableWidth*0.8)
-        height:250*screenDp
+        height:280*screenDp
         text: qsTr("Mot de passe oublié")
         z:1
 
@@ -73,7 +73,7 @@ Page {
                 },
                 function onerror(error){
                     textEmail_txtFld.text = ""
-                    if (error.error == 403){
+                    if (error.error === 403){
                         snackbar.open(qsTr("Cet email ne correspond à aucun utilisateur"));
                     }
                 }

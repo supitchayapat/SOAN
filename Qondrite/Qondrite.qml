@@ -172,18 +172,12 @@ WebSocket {
 
     function verifyUserAccountExistance(email)
     {
-        ceres.call("verifyUserAccountExistance", email).result
-                    .then(function onsuccess(result){
-                        userAccountExistanceVerified(!isNaN(result) && true === !!result);
-                    });
+        return ceres.call("verifyUserAccountExistance", email);
     }
 
     function verifyPhoneNumberExistance(phoneNumber)
     {
-        ceres.call("verifyPhoneNumberExistance", phoneNumber).result
-            .then(function onsuccess(result){
-                phoneNumberExistanceVerified(!!result);
-            });
+        return ceres.call("verifyPhoneNumberExistance", phoneNumber);
     }
 
 

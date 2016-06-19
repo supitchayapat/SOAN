@@ -4,8 +4,8 @@ import Material 0.3
 /* TODO use directely the JS Error class instead of importing Error.js
  see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error*/
 import "Error.js" as Err
+import "../Qondrite/q.js" as Qlib
 
-//TODO : for validations we need to support a promise as a return value
 TextField{
 
     id:root
@@ -58,41 +58,72 @@ TextField{
     /*called while editing to reformat the text, the formated text should be returned as a string*/
     property var onEditingFormating : function(){return text}
 
-    property bool isDirty: false
+    property var serverGateway : undefined
 
-    /*manage the hasError property through the onEditingValidations calls.
-      update the checkedIcon visibility*/
-    function manageValidation(){
-        if(validator !== null){
-            if ( text == ""){
+    /*
+     Tells whether a field value has not been changed at all
+     It can help avoid to call a validation if the field is empty
+     */
+    property bool isPristine: true
+
+    /*
+     tells whether the field must be field
+     */
+    property bool isRequired : false
+
+    // this prop tells whether the "champs obligatoire" is displayed or not
+    // so we don't have to guess this state from what's text inside the helperText
+    property bool isEmptyMessageDisplayed: false
+
+    /**
+      Check that a field marked as required has not a empty value
+      */
+    function checkRequired()
+    {
+        if (text == "")
+        {
+            if (isRequired === true)
+            {
+                hasError = true
+                checkedIcon.visible = ! hasError
+                isEmptyMessageDisplayed = true;
+                helperText = qsTr("Ce champ est obligatoire");
+            }
+            else {
                 hasError = false
                 checkedIcon.visible = false
-                return
             }
+            return ! hasError;
+        }
+    }
 
-            if(_p.onEditingCalls())
+    function manageValidation(){
+
+        if(validator != null){
+
+            /* TODO : here we are only handling the case of RegExpValidator
+             * but the validator could be also an IntValidator or a DoubleValidator
+             * please manage the missing cases*/
+            if(text != "" && text.toString().match(validator.regExp) != null)
             {
                 hasError = false
                 checkedIcon.visible = true
             }
-
-            else if(!_p.onEditingCalls()){
+            else if((text != "" && text.toString().match(validator.regExp) === null) ){
                 hasError = true
                 checkedIcon.visible = false
             }
+
         }
         else{
-            console.log("TextFiledValidated :'"+ objectName +"': this component needs a validator,
+            console.log("TextFiledValidated : this component needs a validator,
                         you can set the validator using validator property")
             console.trace()
             throw "property exception"
         }
     }
 
-    //TODO : this is to specific to be here, should be set in child components
-    // and delted from here
-    font.pointSize: 16
-    floatingLabel: true
+     floatingLabel: true
 
     Icon{
         id:checkedIcon
@@ -115,58 +146,85 @@ TextField{
         interval: 1000
         triggeredOnStart: false
 
+        function delayedStop()
+        {
+            if (stopOnCallbacksComplete === true){
+                stopOnCallbacksComplete = ! stopOnCallbacksComplete;
+                timer.stop();
+            }
+        }
         onTriggered: {
-            manageValidation()
+            if (text!=""){
+                _validateEngine.onEditingCalls( delayedStop );
+                _validateEngine.onEditingFinishedCalls( delayedStop );
+            }
             timerDone = true
         }
+        property bool stopOnCallbacksComplete :false
     }
 
     QtObject{
-        id:_p
+        id:_validateEngine
 
         function onEditingCalls(){
-            return evaluateCalls(onEditingValidations)
-        }
-        function onEditingErrorText(){
-            return updtErrorText(onEditingValidations)
+            return evaluateCalls(onEditingValidations);
         }
 
-        function onEditingFinishedCalls(){
-            return evaluateCalls(onEditingFinishedValidations)
-        }
-        function onEditingFinishedErrorText(){
-            return updtErrorText(onEditingFinishedValidations)
+        function onEditingFinishedCalls(callback){
+            return evaluateCalls(onEditingFinishedValidations, callback);
         }
 
-        function updtErrorText(calls) {
-            var errortodisplay = ""
-            for (var i=0; i <calls.length; i++){
-                if(!calls[i].call()) {
-                    errortodisplay = calls[i].mess
-                    return errortodisplay
+        function evaluateCalls(calls, callback)
+        {
+            if (calls.length === 0){
+                return ;
+            }
+            function getValidators(validators)
+            {
+                var retValidators = [];
+                for (var i=0; i< calls.length; i++){
+                    retValidators.push(validators[i].call()
+                        .then(function onsuccess(resp){
+                            return resp;
+                        })
+                        .catch(function onerror(resp){
+                            return resp;
+                        })
+                    );
                 }
-                else errortodisplay = ""
+                return retValidators;
             }
-            return errortodisplay
-        }
-        function evaluateCalls(calls){
-            var isValid = true
-            for (var i= 0; i <calls.length; i++){
-                isValid&= calls[i].call()
-                if(!isValid) break
-            }
-            return isValid
-        }
-    }
 
-    onEditingFinished: {
-        checkedIcon.visible = useValidatingIcon && _p.onEditingCalls() && _p.onEditingFinishedCalls()
+            Qlib.Q.all(getValidators(calls)).then(function(responses){
+                for (var i = 0; i< responses.length; i++){
+                    if (typeof responses[i] !== 'object'){
+                        continue;
+                    }
+                    hasError = (responses[i].response || false) === false;
+                    helperText = hasError ? responses[i].message : "";
+                    checkedIcon.visible = ! hasError;
+                    if (hasError){
+                        break;
+                    }
+                }
+                if (typeof callback !== "undefined")
+                    callback();
+            });
+        }
     }
 
     onTextChanged: {
-        if (isDirty === false){
-            isDirty = true
+        if (isPristine){
+            isPristine = ! isPristine;
         }
+        if (!isPristine && isEmptyMessageDisplayed === true){
+            helperText = "";
+            isEmptyMessageDisplayed = false;
+        }
+        else {
+            helperText = ""
+        }
+
         if(text == ""){
             checkedIcon.visible = false
             hasError = false
@@ -178,60 +236,33 @@ TextField{
 
     onFocusChanged: {
         if(activeFocus || focus){
-           checkedIcon.visible = false
-           helperText = ""
            timer.restart()
         }
         else{
-            timer.stop()
-            if(text == ""){
-                checkedIcon.visible = false
-                return
+            timer.stopOnCallbacksComplete = true;
+            if (text ==""){
+                timer.stop();
             }
-            manageValidation()
-            if(hasError)
-                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
-        }
-    }
+            else {
+                manageValidation();
+            }
 
-
-    onHasErrorChanged: {
-        if(activeFocus || focus){
-            if(timer.timerDone && !hasError){
-                checkedIcon.visible = useValidatingIcon && text != ""
-                helperText = ""
-                return
+            if (! hasError && text !=""){
+                _validateEngine.onEditingFinishedCalls( timer.delayedStop );
             }
-            else if (timer.timerDone && hasError){
-                checkedIcon.visible = false
-                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
-                return
-            }
-            else if (!timer.timerDone && hasError){
-                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
-                return
-            }
-            else if (!timer.timerDone && !hasError){
-                helperText = Qt.binding(function(){return _p.onEditingErrorText()})
-                return
-            }
-            throw new Error("case not handled")
-        }
-        else{
-            checkedIcon.visible = useValidatingIcon && !hasError
-            hasError ?  helperText = _p.onEditingErrorText()
-                     :  helperText = ""
         }
     }
 
     Component.onCompleted: {
-        /* TODO : here we are only handling the case of RegExpValidator
-         * but the validator could be also an IntValidator or a DoubleValidator
-         * please manage the missing cases*/
-         onEditingValidations.unshift(new Err.Error(function (){
-             return text !== "" && text.toString().match(validator.regExp) !== null
-         },validatorWarning))
-    }
+        onEditingValidations.unshift(new Err.Error(function (){
+                 var dfd = Qlib.Q.defer();
+                 if (validator === null)
+                     dfd.resolve({ response : true});
+                 else
+                     dfd.resolve({ response : (text !== "" && text.toString().match(validator.regExp) !== null) });
+                 return dfd.promise;
+             }))
+        }
 }
 
 // TODO : Support of multiple errors and helper texts with priorities

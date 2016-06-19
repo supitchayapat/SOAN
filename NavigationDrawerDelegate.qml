@@ -7,7 +7,6 @@ import "define_values.js" as Defines_values
 import Material.ListItems 0.1 as ListItem
 import Qondrite 0.1
 
-// TODO this Component should be a singleton
 Rectangle{
 
     property int lineH: parent.height/9

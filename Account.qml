@@ -323,6 +323,7 @@ Page {
                 id:email_txtFld
 
                 anchors.verticalCenter : parent.verticalCenter
+                serverGateway : Qondrite
                 width:textFieldWidth
                 visible: isEditable
 
@@ -361,6 +362,7 @@ Page {
                 anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
                 visible : isEditable
+                serverGateway : Qondrite
 
                 onEditingFinished: {
                     accountInfo.infos.tel = text
