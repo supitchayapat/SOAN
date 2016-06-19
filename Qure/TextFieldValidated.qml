@@ -6,7 +6,6 @@ import Material 0.3
 import "Error.js" as Err
 import "../Qondrite/q.js" as Qlib
 
-//TODO : for validations we need to support a promise as a return value
 TextField{
 
     id:root
@@ -123,10 +122,8 @@ TextField{
             throw "property exception"
         }
     }
-    //TODO : this is to specific to be here, should be set in child components
-    // and delted from here
-    font.pointSize: 16
-    floatingLabel: true
+
+     floatingLabel: true
 
     Icon{
         id:checkedIcon
