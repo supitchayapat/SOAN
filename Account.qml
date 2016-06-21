@@ -5,6 +5,8 @@ import QtQml.Models 2.2
 import "define_values.js" as Defines_values
 import Qondrite 0.1
 import Qure 0.1
+import "qrc:/Qondrite/q.js" as Qlib
+import "qrc:/Qure/Error.js" as Err
 
 Page {
     id: page
@@ -274,26 +276,45 @@ Page {
                 width:textFieldWidth
 
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
+                serverGateway : Qondrite
 
                 onEditingFinished: {
-                    // run validation only if undone yet for current address and address length is worth it
-                    if(address_txtField.text.length > 3)
-                    {
-                        //TODO handle this call with new callbacks list of TextFieldValidated
-                        Qondrite.validateAddress(text)
-                        .then(function(result)
-                        {
-                            if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                validatorWarning = qsTr("Adresse invalide")
+                    accountInfo.infos.address = text
+                    accountInfo.infosChanged()
+                }
+
+                Component.onCompleted: {
+
+                        onEditingFinishedValidations.unshift(new Err.Error(function(){
+                            // run validation only if undone yet for current address and address length is worth it
+                            var dfd = Qlib.Q.defer();
+                            if(address_txtField.text.length > 3){
+                                return serverGateway.validateAddress(text).result.then(
+
+                                    function onsuccess(result){
+                                        var addressIsValid = true;
+                                        if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
+                                            addressIsValid = false;
+
+                                        }else{
+                                            accountInfo.infos.latitude = result[0].latitude;
+                                            accountInfo.infos.longitude = result[0].longitude;
+                                        }
+                                        dfd.resolve( {
+                                            response : addressIsValid,
+                                            message :  addressIsValid ? "" : qsTr("Adresse invalide")
+                                        });
+                                        return dfd.promise;
+                                    },
+                                    function onerror(resp){
+                                        dfd.resolve( {
+                                            response : false,
+                                            message : "error :"+resp.error.error
+                                        });
+                                        return dfd.promise;
+                                    });
                             }
-                            else{
-                                accountInfo.infos.latitude = result[0].latitude;
-                                accountInfo.infos.longitude = result[0].longitude;
-                                accountInfo.infos.address = text
-                                accountInfo.infosChanged()
-                            }
-                        });
-                    }
+                        }, Err.Error.scope.REMOTE));
                 }
 
                 onIsValidChanged: accountInfo.infosChanged()

@@ -19,15 +19,27 @@ Page {
     function initList(){
 
         availabilityCollection = Qondrite.getCollection("availability");
-        var availabilityItems = availabilityCollection._set._items;
-        itemIdToIndexMap = {};
-        var index=  0;
-        for( var id in availabilityItems){
-            if(availabilityItems.hasOwnProperty(id) ) {
-                ambliste.append(availabilityItems[id]);
-                itemIdToIndexMap[id] = index;
-                index++;
+        var availabilityItems = availabilityCollection._set.toArray();
+        availabilityItems = availabilityItems.sort(function(a,b){
+            if(a.availability !== b.availability){
+                if(a.companyName.toLowerCase() > b.companyName.toLowerCase()
+                        && a.availability ===true && b.availability === false)
+                    return -1;
+                if(a.companyName.toLowerCase() > b.companyName.toLowerCase()
+                        && a.availability ===false && b.availability === true)
+                    return 1;
             }
+            if(a.companyName.toLowerCase() > b.companyName.toLowerCase())
+                return 1;
+            if(a.companyName.toLowerCase() < b.companyName.toLowerCase())
+                return -1;
+
+            return 0;
+        })
+
+        var index=  0;
+        for(var i =0; i<availabilityItems.length;i++){
+            ambliste.append(availabilityItems[i]);
         }
     }
 
@@ -35,19 +47,40 @@ Page {
         var reactiveAvailabilityCollection = Qondrite.reactiveQuery(availabilityCollection);
 
         reactiveAvailabilityCollection.on("change", function(id){
-            ambliste.set(itemIdToIndexMap[id],
-                         availabilityCollection._set._items[id]);
+            var index = findIndexInList(id)
+            if(index !== -1){
+                ambliste.set(index,
+                             availabilityCollection._set._items[id]);
+                ambliste.move(index,getPositionForItem(id),1)
+            }
         });
 
         reactiveAvailabilityCollection.on("add", function(id){
-             ambliste.append(availabilityCollection._set._items[id])
-             itemIdToIndexMap[id] = Object.keys(itemIdToIndexMap).length;
+            var position  = getPositionForItem(id)
+            ambliste.insert(position,availabilityCollection._set._items[id])
         })
 
         reactiveAvailabilityCollection.on("delete",function(id){
-            ambliste.remove(itemIdToIndexMap[id]);
-            delete itemIdToIndexMap[id];
+            ambliste.remove(findIndexInList(id));
         })
+    }
+
+    function getPositionForItem(id){
+        var item = availabilityCollection._set._items[id]
+        for(var i=0;i<ambliste.count;i++){
+            console.log("comparing "+item.companyName+" and "+ambliste.get(i).companyName)
+            if(item.companyName.toLowerCase() < ambliste.get(i).companyName.toLowerCase())
+                return i
+        }
+        return ambliste.count;
+
+    }
+    function findIndexInList(itemId){
+        for(var i=0;i<ambliste.count;i++){
+            if(ambliste.get(i)._id === itemId)
+                return i
+        }
+        return -1;
     }
     actions:[
         Action{//availability switch
