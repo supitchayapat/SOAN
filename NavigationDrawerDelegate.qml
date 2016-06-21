@@ -7,7 +7,6 @@ import "define_values.js" as Defines_values
 import Material.ListItems 0.1 as ListItem
 import Qondrite 0.1
 
-// TODO this Component should be a singleton
 Rectangle{
 
     property int lineH: 120*Units.dp
@@ -15,6 +14,13 @@ Rectangle{
     signal goToAmbulanceListPage()
     signal goToAccountPage()
     signal disconnectPressed()
+
+    function loadSideBarInformation(){
+        var userCollection = Qondrite.getCollection("users");
+        var userInfo = userCollection._set.toArray()[0];
+        email.text = userInfo.emails[0].address;
+        accountName.text = userInfo.profile.name;
+    }
 
     Rectangle{
         id: sidebar_rct
@@ -137,10 +143,12 @@ Rectangle{
 
     }
 
-    Component.onCompleted: Qondrite.onLogin.connect(function(){
-        var userCollection = Qondrite.getCollection("users");
-        var userInfo = userCollection._set.toArray()[0];
-        email.text = userInfo.emails[0].address;
-        accountName.text = userInfo.profile.name;
-    })
+    Component.onCompleted: {
+        Qondrite.onLogin.connect(function(){
+            loadSideBarInformation()
+        })
+        Qondrite.onResumeLogin.connect(function(){
+            loadSideBarInformation()
+        })
+    }
 }
