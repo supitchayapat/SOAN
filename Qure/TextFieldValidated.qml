@@ -6,7 +6,6 @@ import Material 0.3
 import "Error.js" as Err
 import "../Qondrite/q.js" as Qlib
 
-//TODO : for validations we need to support a promise as a return value
 TextField{
 
     id:root
@@ -123,10 +122,8 @@ TextField{
             throw "property exception"
         }
     }
-    //TODO : this is to specific to be here, should be set in child components
-    // and delted from here
-    font.pointSize: 16
-    floatingLabel: true
+
+     floatingLabel: true
 
     Icon{
         id:checkedIcon
@@ -146,13 +143,21 @@ TextField{
         interval: 1000
         triggeredOnStart: false
 
+        function delayedStop()
+        {
+            if (stopOnCallbacksComplete === true){
+                stopOnCallbacksComplete = ! stopOnCallbacksComplete;
+                timer.stop();
+            }
+        }
         onTriggered: {
             if (text!=""){
-                _validateEngine.onEditingCalls();
-                _validateEngine.onEditingFinishedCalls();
+                _validateEngine.onEditingCalls( delayedStop );
+                _validateEngine.onEditingFinishedCalls( delayedStop );
             }
             timerDone = true
         }
+        property bool stopOnCallbacksComplete :false
     }
 
     QtObject{
@@ -162,11 +167,11 @@ TextField{
             return evaluateCalls(onEditingValidations);
         }
 
-        function onEditingFinishedCalls(){
-            return evaluateCalls(onEditingFinishedValidations);
+        function onEditingFinishedCalls(callback){
+            return evaluateCalls(onEditingFinishedValidations, callback);
         }
 
-        function evaluateCalls(calls, s)
+        function evaluateCalls(calls, callback)
         {
             if (calls.length === 0){
                 return ;
@@ -199,7 +204,8 @@ TextField{
                         break;
                     }
                 }
-
+                if (typeof callback !== "undefined")
+                    callback();
             });
         }
     }
@@ -230,12 +236,16 @@ TextField{
            timer.restart()
         }
         else{
-            timer.stop();
-            if (text != ""){
-                manageValidation()
+            timer.stopOnCallbacksComplete = true;
+            if (text ==""){
+                timer.stop();
             }
+            else {
+                manageValidation();
+            }
+
             if (! hasError && text !=""){
-                _validateEngine.onEditingFinishedCalls();
+                _validateEngine.onEditingFinishedCalls( timer.delayedStop );
             }
         }
     }

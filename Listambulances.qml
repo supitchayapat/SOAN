@@ -10,7 +10,12 @@ Page {
 
     backAction: navDrawer.action
 
-    actionBar.switchDelegate : AvailabilitySwitch{}
+    actionBar.customContent : AvailabilitySwitch{
+        anchors{
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+    }
 
     property var availabilityCollection;
 
@@ -93,6 +98,7 @@ Page {
         }
     ]
 
+
     ListModel {
         id:ambliste
     }
@@ -160,15 +166,11 @@ Page {
 
     Component.onCompleted: {
 
-
         var subscription  = Qondrite.subscribe("availability",function(){
                         initList()
                         bindEventsToList()
             });
 
         Qondrite.loggingOut.connect(function(){subscription.stop();})
-
     }
-
-
 }

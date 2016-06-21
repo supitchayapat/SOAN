@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import Material 0.3
 import QtQuick.Window 2.0
+import Qt.labs.settings 1.0
 import Qondrite 0.1
 import Qure 0.1
 import "define_values.js" as Defines_values
@@ -12,7 +13,12 @@ ApplicationWindow {
     visible: true
     width: Screen.width
     height: Screen.height
-    initialPage : Qt.resolvedUrl("Signin.qml")
+
+    signal login()
+
+
+    // @TODO : set default initialPage at splashscreen loading
+    initialPage: Qt.resolvedUrl("Signin.qml");
 
     theme {
         //WARNING: for the moment we support only light themes
@@ -22,6 +28,18 @@ ApplicationWindow {
         backgroundColor: "white"
     }
 
+    Settings{
+        id:appSettings
+        category: "userInfos"
+        property string username
+        property string token
+    }
+
+    function manageInitialPage()
+    {
+        Qondrite.setStorage(appSettings);
+        Qondrite.tryResumeLogin();
+    }
 
     NavigationDrawer {
         id:navDrawer
@@ -46,6 +64,7 @@ ApplicationWindow {
                 remoteCallSpinner.hide();
             }
         }
+
     }
 
     Snackbar {
@@ -69,6 +88,12 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
+
+        manageInitialPage();
+        Qondrite.onResumeLogin.connect(function() {
+            pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+        });
+
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);
         Qondrite._on("remoteCallStart", function(){ remoteCallSpinner.show(); });

@@ -2,6 +2,7 @@ import QtWebSockets 1.0
 
 import "asteroid.qml.js" as Ast
 import "Log.js" as Log
+import 'QtSettings.js' as QtSettings
 import "sha256.js" as Sha256
 
 WebSocket {
@@ -16,9 +17,14 @@ WebSocket {
 
     signal login()
     signal loginFailed()
+    signal resumeLogin()
+    signal resumeLoginFailed()
+
     signal loggingOut()
     signal userCreated()
     signal userCreationFailed()
+
+    signal connected()
     signal userAccountExistanceVerified(bool doExists)
     signal phoneNumberExistanceVerified(bool doExists)
     signal oldPasswordValid(bool valid)
@@ -34,7 +40,9 @@ WebSocket {
             console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message );
         });
         console.log("done");
+        connected();
     }
+
 
     function _on(signalMessage,callBack){
         ceres.on(signalMessage,callBack);
@@ -53,6 +61,25 @@ WebSocket {
             })
     }
 
+    function setStorage(storageEngine)
+    {
+        // replace Asteroid's localSotage 'CRUD' API with one given from input storageEngine
+        Ast.Asteroid.utils.multiStorage = QtSettings.API(storageEngine, q);
+    }
+
+    function tryResumeLogin()
+    {
+        ceres._tryResumeLogin()
+            .then(function(){
+                console.log('tryResumeLogin : RESUME OK');
+                resumeLogin();
+
+            }, function(e){
+                console.log('tryResumeLogin : CATCH');
+                resumeLoginFailed();
+            });
+
+    }
     function updateUser(user){
         return ceres.call("updateUser",user);
     }
@@ -68,9 +95,9 @@ WebSocket {
 
     function checkPassword(password){
         ceres.call("checkPassword", Sha256.sha256_digest(password)).result
-                    .then(function response(result){
-                        oldPasswordValid(result);
-                    });
+            .then(function response(result){
+                oldPasswordValid(result);
+            });
     }
 
     function forgotPassword(email)
@@ -141,6 +168,7 @@ WebSocket {
     {
         return ceres.call("verifyPhoneNumberExistance", phoneNumber);
     }
+
 
     function getCollection(collection) {
         var coll;
