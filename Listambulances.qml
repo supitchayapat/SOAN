@@ -141,6 +141,9 @@ Page {
         anchors.topMargin: dp(Defines_values.ListambulancesTopMargin)
         model: ambliste
         delegate: listelements
+        displaced: Transition {
+               NumberAnimation { properties: "x,y"; duration: 1000 }
+        }
 
     }
 
