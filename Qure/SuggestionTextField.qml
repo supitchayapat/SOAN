@@ -1,155 +1,110 @@
 import QtQuick 2.5
 import Material 0.3
+import QtQuick.Layouts 1.1
+import Qondrite 0.1
 
+Item{
+    id: myRoot
+    property alias textFieldHeight: address_txtField.height
+    property alias textFieldWidth: address_txtField.width
+    property alias listViewheight: suggestionlist.height
+    property int maxAddressListed: 5
 
-RowLayout{
-    id:myRoot
+    TextField{
+        id:address_txtField
 
-    property alias suggestionModel:suggestionlist.model
-    property alias hasError:_myTxtField.hasError
-    property alias helperText: _myTxtField.helperText
-    property alias text: _myTxtField.text
-    property int lineHeight: _myTxtField.height
+        placeholderText: qsTr("Adresse")
+        Layout.fillWidth: true
+        Layout.fillHeight: true
 
-    height: lineHeight*(Math.min(suggestionlist.count, 5) + 1)
+        font.pointSize: 16
 
-    signal searchForText(string text);
-    signal editingFinished();
-
-    function closeSuggestionList(){
-        suggestionModel.clear()
-        suggestionlist.visible = false
-    }
-
-    function addSuggestion(sugg){
-        var data1 = {'choice_name': sugg};
-        suggestionModel.append(data1)
-    }
-
-    Column{
-        anchors.fill: parent
-
-        RowLayout{
-            width:parent.width
-            TextField{
-                id:_myTxtField
-
-                Layout.fillWidth: true
-                Layout.preferredHeight: lineHeight
-                Layout.alignment: Qt.AlignLeft
-                placeholderText: qsTr("Adresse")
-                font.family: textFieldFont.name
-                validator: RegExpValidator{regExp:/(['a-zA-Z0-9 ]{3,}\s*)+/}
-
-                onTextChanged: {
-                    if(text.length>0){
-                        suggestionlist.visible = true
-                        search_btn.visible = true
-                    }else{
-                        closeSuggestionList()
-                        search_btn.visible = false
-                    }
-                    myRoot.textChanged(text)
-                }
-
-                onFocusChanged: {
-                    if(focus == false){
-                        closeSuggestionList()
-                    }
-                }
-
-                onEditingFinished: myRoot.editingFinished()
-            }
-
-            ActionButton{
-                id:search_btn
-
-                height: lineHeight*0.6
-                width:height
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                iconName: "action/input"
-                Layout.alignment: Qt.AlignRight
-                enabled: _myTxtField.text!=""
-                //state:_myTxtField.text!=""?"btn_shown":"btn_hiden"
-
-                onClicked: {
-                    myRoot.searchForText(myRoot.text)
+        onTextChanged: {
+            // run validation only if undone yet for current address and address length is worth it
+            if(address_txtField.text.length > 3)
+            {
+                suggestionlist.model.clear()
+                //TODO handle this call with new callbacks list of TextFieldValidated
+                Qondrite.validateAddress(text)
+                .then(function(result)
+                {
                     suggestionlist.model.clear()
-                }
-
-                states: [
-                    State {
-                        name: "btn_shown"
-                        PropertyChanges { target: search_btn; visible: true; scale:0.8 }
-                    },
-                    State {
-                        name: "btn_hiden"
-                        PropertyChanges { target: search_btn; visible: false; scale:0.5  }
+                    if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
+                        validatorWarning = qsTr("Adresse invalide")
+                        suggestionlist.visible = false
                     }
-                ]
-
-                transitions: Transition {
-                    NumberAnimation { target:search_btn; properties: "scale"; easing.type: Easing.Linear; duration: 500}
-                }
-            }
-
-
-        }
-
-
-        ListView{
-            id:suggestionlist
-
-            width:myRoot.width
-            height: lineHeight*Math.min(suggestionlist.count, 5)
-            clip:true
-            y:parent.height
-            visible:false
-            z:1000
-            model:ListModel{}
-            delegate: Rectangle{
-                id:myDelegate
-
-                width:_myTxtField.width
-                height: _myTxtField.height
-                Label {
-                    id:choice_label
-
-                    scale: suggestionlist.currentIndex == index?1.3:1
-                    text: choice_name
-                    verticalAlignment: Text.AlignVCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    transformOrigin: Item.Left
-                }
-                MouseArea{
-                    property Item pageParent : myRoot
-                    anchors.fill:parent
-
-                    onClicked: {
-                        _myTxtField.text = choice_name
-                        suggestionlist.currentIndex = index;
-                        pageParent.closeSuggestionList()
+                    else{
+                        for(var i=0; i<Math.min(result.length, maxAddressListed); i++){
+                            accountInfo.infos.latitude = result[i].latitude;
+                            accountInfo.infos.longitude = result[i].longitude;
+                            accountInfo.infos.address = text
+                            accountInfo.infosChanged()
+                            suggestionlist.model.insert(0, {"latitude": result[i].latitude,
+                                                      "longitude":result[i].longitude,
+                                                      "address":result[i].formattedAddress})
+                        }
+                        suggestionlist.visible = true
                     }
-
-                    onPressed: {
-                        choice_label.scale = 1.5
-                        myDelegate.color = Theme.accentColor
-
-                    }
-
-                    onReleased: {
-                        choice_label.scale = 1
-                        myDelegate.color = Theme.backgroundColor
-                    }
-                }
+                });
             }
         }
+
+//        onTextChanged: {
+//            if(text.length>0){
+//                suggestionlist.visible = true
+//                search_btn.visible = true
+//            }else{
+//                closeSuggestionList()
+//                search_btn.visible = false
+//            }
+//            myRoot.textChanged(text)
+//        }
     }
 
+    ListView{
+        id:suggestionlist
 
+        width:address_txtField.width
+        height: count*100 //parent.height*Math.min(suggestionlist.count, 5)
+        clip:true
+        anchors.top : address_txtField.bottom
+        visible:false
+        z:1000
+        model:ListModel{}
+        delegate: Rectangle{
+            id:myDelegate
 
+            width:address_txtField.width
+            height: 100
+            Label {
+                id:choice_label
+                anchors.fill: parent
+                text: address
+                verticalAlignment: Text.AlignVCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
+//            MouseArea{
+//                property Item pageParent : myRoot
+//                anchors.fill:parent
 
+//                onClicked: {
+//                    address_txtField.text = choice_name
+//                    suggestionlist.currentIndex = index;
+//                    pageParent.closeSuggestionList()
+//                }
 
+//                onPressed: {
+//                    choice_label.scale = 1.5
+//                    myDelegate.color = Theme.accentColor
+
+//                }
+
+//                onReleased: {
+//                    choice_label.scale = 1
+//                    myDelegate.color = Theme.backgroundColor
+//                }
+//            }
+        }
+    }
 }
 

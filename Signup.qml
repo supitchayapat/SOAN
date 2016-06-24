@@ -145,47 +145,32 @@ Page {
         RowLayout{
             spacing : dp(Defines_values.Signup1RowSpacing)
 
-            width:fieldsListView.width
-            height: lineH
+            width: fieldsListView.width
+            height: addressField.textFieldHeight + addressField.listViewheight
 
-            Icon {
-                name: "maps/place"
-                size: parent.height*0.7
+            Rectangle{
+                anchors.top: parent.top
+                anchors.topMargin: lineH * 0.3/2.0
+                height: adressIcon.height
+                width: adressIcon.width
+
+                Icon {
+                    id: adressIcon
+                    name: "maps/place"
+                    size: lineH*0.7
+                }
             }
 
-            TextFieldValidated{
-                id:address_txtField
-
-                isRequired : true
-                placeholderText: qsTr("Adresse")
+            Rectangle{
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
-
-                onEditingFinished: {
-                    // run validation only if undone yet for current address and address length is worth it
-                    if(address_txtField.text.length > 3)
-                    {
-                        //TODO handle this call with new callbacks list of TextFieldValidated
-                        Qondrite.validateAddress(text)
-                        .then(function(result)
-                        {
-                            if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                validatorWarning = qsTr("Adresse invalide")
-                            }
-                            else{
-                                accountInfo.infos.latitude = result[0].latitude;
-                                accountInfo.infos.longitude = result[0].longitude;
-                                accountInfo.infos.address = text
-                                accountInfo.infosChanged()
-                            }
-
-                        });
-                    }                    
+                SuggestionTextField{
+                    id: addressField
+                    maxAddressListed: 5
+                    textFieldHeight: lineH
+                    textFieldWidth: fieldsListView.width
                 }
-
-                onIsValidChanged: accountInfo.infosChanged()
             }
         }
 
