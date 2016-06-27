@@ -172,9 +172,13 @@ Page {
                         .then(function(result)
                         {
                             if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                validatorWarning = qsTr("Adresse invalide")
+                                validatorWarning = qsTr("Adresse invalide");
+                            }
+                            else if ((Array.isArray(result) && result.length >0) && ! result[0].hasOwnProperty('streetName')){
+                                validatorWarning = qsTr("Adresse incomplète");
                             }
                             else{
+                                text = result[0].formattedAddress;
                                 accountInfo.infos.latitude = result[0].latitude;
                                 accountInfo.infos.longitude = result[0].longitude;
                                 accountInfo.infos.address = text

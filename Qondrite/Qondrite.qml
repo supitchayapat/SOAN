@@ -156,8 +156,8 @@ WebSocket {
     }
 
     function validateAddress(address){
-        return ceres.call("validateAddress",address).result
-            .then(function(result)
+        return ceres.call("validateAddress",address).result;
+            /*.then(function(result)
             {
                 var dfd = q().defer();
                 if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
@@ -167,7 +167,7 @@ WebSocket {
                     dfd.resolve(result);
                 }
                 return dfd.promise;
-            });
+            });*/
     }
 
     function verifyUserAccountExistance(email)

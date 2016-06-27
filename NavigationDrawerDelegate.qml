@@ -13,6 +13,13 @@ Rectangle{
     signal goToAccountPage()
     signal disconnectPressed()
 
+    function loadSideBarInformation(){
+        var userCollection = Qondrite.getCollection("users");
+        var userInfo = userCollection._set.toArray()[0];
+        email.text = userInfo.emails[0].address;
+        accountName.text = userInfo.profile.name;
+    }
+
     Rectangle{
         id: sidebar_rct
 
@@ -128,10 +135,12 @@ Rectangle{
         }
     }
 
-    Component.onCompleted: Qondrite.onLogin.connect(function(){
-        var userCollection = Qondrite.getCollection("users");
-        var userInfo = userCollection._set.toArray()[0];
-        email.text = userInfo.emails[0].address;
-        accountName.text = userInfo.profile.name;
-    })
+    Component.onCompleted: {
+        Qondrite.onLogin.connect(function(){
+            loadSideBarInformation()
+        })
+        Qondrite.onResumeLogin.connect(function(){
+            loadSideBarInformation()
+        })
+    }
 }
