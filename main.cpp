@@ -32,9 +32,9 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
     for(auto o:engine.rootObjects()){
-         QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
+        QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
         if(item){
-              engine.rootContext()->setContextProperty("sideNavigationPanel", item);
+            engine.rootContext()->setContextProperty("sideNavigationPanel", item);
         }
     }
 
