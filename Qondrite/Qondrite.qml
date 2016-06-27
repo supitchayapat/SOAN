@@ -156,18 +156,7 @@ WebSocket {
     }
 
     function validateAddress(address){
-        return ceres.call("validateAddress",address).result;
-            /*.then(function(result)
-            {
-                var dfd = q().defer();
-                if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                    dfd.reject(result);
-                }
-                else{
-                    dfd.resolve(result);
-                }
-                return dfd.promise;
-            });*/
+        return ceres.call("validateAddress",address);
     }
 
     function verifyUserAccountExistance(email)
