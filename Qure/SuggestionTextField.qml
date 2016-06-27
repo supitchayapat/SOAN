@@ -10,6 +10,11 @@ Item{
     property alias listViewheight: suggestionlist.height
     property int maxAddressListed: 5
 
+    QtObject{
+        id: internal
+        property bool doSearch: true
+    }
+
     TextField{
         id:address_txtField
 
@@ -21,7 +26,7 @@ Item{
 
         onTextChanged: {
             // run validation only if undone yet for current address and address length is worth it
-            if(address_txtField.text.length > 3)
+            if(address_txtField.text.length > 3 && internal.doSearch)
             {
                 suggestionlist.model.clear()
                 //TODO handle this call with new callbacks list of TextFieldValidated
@@ -48,34 +53,26 @@ Item{
                 });
             }
         }
-
-//        onTextChanged: {
-//            if(text.length>0){
-//                suggestionlist.visible = true
-//                search_btn.visible = true
-//            }else{
-//                closeSuggestionList()
-//                search_btn.visible = false
-//            }
-//            myRoot.textChanged(text)
-//        }
     }
 
     ListView{
         id:suggestionlist
 
         width:address_txtField.width
-        height: count*100 //parent.height*Math.min(suggestionlist.count, 5)
+        height: count*100
         clip:true
         anchors.top : address_txtField.bottom
         visible:false
-        z:1000
+         highlightFollowsCurrentItem: false
+
         model:ListModel{}
         delegate: Rectangle{
             id:myDelegate
 
             width:address_txtField.width
             height: 100
+            color: "transparent"
+
             Label {
                 id:choice_label
                 anchors.fill: parent
@@ -83,27 +80,21 @@ Item{
                 verticalAlignment: Text.AlignVCenter
                 anchors.verticalCenter: parent.verticalCenter
             }
-//            MouseArea{
-//                property Item pageParent : myRoot
-//                anchors.fill:parent
 
-//                onClicked: {
-//                    address_txtField.text = choice_name
-//                    suggestionlist.currentIndex = index;
-//                    pageParent.closeSuggestionList()
-//                }
+            MouseArea{
+                anchors.fill:parent
+                hoverEnabled : true
 
-//                onPressed: {
-//                    choice_label.scale = 1.5
-//                    myDelegate.color = Theme.accentColor
+                onEntered: {myDelegate.color = "#4c8d8d8d"}
+                onExited: {myDelegate.color = "white"}
 
-//                }
-
-//                onReleased: {
-//                    choice_label.scale = 1
-//                    myDelegate.color = Theme.backgroundColor
-//                }
-//            }
+                onClicked: {
+                    internal.doSearch = false
+                    address_txtField.text = address
+                    suggestionlist.model.clear()
+                    internal.doSearch = true
+                }
+            }
         }
     }
 }
