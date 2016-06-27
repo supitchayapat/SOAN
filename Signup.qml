@@ -250,9 +250,16 @@ Page {
             id: newPassword
 
             height: lineH*2
-            width: fieldsListView.width
             isPasswordFieldRequired : true
             isPasswordConfirmFieldRequired : true
+            anchors {
+                // Note : because we are using a ListModel the parent may be null before the element is affected
+                // to the ListView, so we cath the error when parent is null
+                left : try{parent.left} catch(all){}
+                right : try{parent.right} catch(all){}
+                leftMargin : try{parent.width *0.25} catch(all){}
+                rightMargin : try{parent.width *0.25} catch(all){}
+            }
             onIsValidChanged: {
                 if(isValid) accountInfo.password = password
                 accountInfo.infosChanged()

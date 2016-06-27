@@ -13,7 +13,6 @@ Page {
 
     property int rowHeight: root.height/12
     property int linesSpacing: root.height/30
-    property int screenDp: dp
     Rectangle{
         id : backgroud_rct
         anchors.fill: parent
@@ -24,8 +23,8 @@ Page {
     Dialog {    
         id: confirmed_dlg
 
-        width: Math.min(450*screenDp,Screen.desktopAvailableWidth*0.8)
-        height:200*screenDp
+        width: Math.min(450*Units.dp,Screen.desktopAvailableWidth*0.8)
+        height:200*Units.dp
         hasActions: false
         z:1
 
@@ -34,7 +33,7 @@ Page {
 
             Icon{
                 name:"action/done"
-                size: 100*screenDp
+                size: 100*Units.dp
                 color:Theme.primaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -51,8 +50,8 @@ Page {
     Dialog {
         id: forgottenPassword_dlg
 
-        width: Math.min(450*screenDp,Screen.desktopAvailableWidth*0.8)
-        height:280*screenDp
+        width: Math.min(450*Units.dp,Screen.desktopAvailableWidth*0.8)
+        height:280*Units.dp
         text: qsTr("Mot de passe oublié")
         z:1
 
@@ -203,13 +202,6 @@ Page {
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
-        /*
-          the type of the target built is exposed to qml using Qt.platform.os
-          please refer to https://blog.qt.io/blog/2013/06/21/overview-of-the-new-features-in-qt-quick/
-          for more possible values
-        */
-        screenDp = Qt.platform.os === "android" ? (Screen.height - Screen.desktopAvailableHeight)/24 : dp(1)
-
         Qondrite.onLogin.connect(function() {
             invalidCredentialsLabel.visible = false
             pageStack.push(Qt.resolvedUrl("Listambulances.qml"))

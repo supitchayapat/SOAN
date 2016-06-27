@@ -9,8 +9,6 @@ import Qondrite 0.1
 
 Rectangle{
 
-    property int lineH: parent.height/9
-
     signal goToAmbulanceListPage()
     signal goToAccountPage()
     signal disconnectPressed()
