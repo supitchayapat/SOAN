@@ -2,6 +2,7 @@ import QtQuick 2.5
 import Material 0.3
 import QtQuick.Layouts 1.2
 import QtQml.Models 2.2
+import QtQuick.Window 2.0
 import "define_values.js" as Defines_values
 import Qondrite 0.1
 import Qure 0.1
@@ -15,9 +16,8 @@ Page {
 
     property int fieldWidth: isEditable?0:infoListView.width - lineH
     property int textFieldWidth: isEditable?infoListView.width - lineH:0
-    property int lineH: 170*Units.dp
+    property int lineH: Device.gridUnit * Units.dp
     property int labelWidth: isEditable?infoListView.width - lineH:0
-    
     property var userCollection;
     property var user;
 
@@ -48,7 +48,6 @@ Page {
         companyName_txtFld.text = userProfile.companyName;
         tel_lbl.text = userProfile.tel;
         tel_txtFld.text = userProfile.tel;
-
     }
 
     function addListenerToUpdateLabelsWhenUserInfoChanged(){
@@ -99,7 +98,7 @@ Page {
                 address_txtField.focus = true;
             }
         },
-        Action{//ok btn
+        Action{
             id :validate_actBtn
 
             enabled : true
@@ -128,7 +127,7 @@ Page {
                             });
             }
         },
-        Action{//cancel btn
+        Action{
             iconName: "awesome/close"
             visible: isEditable
 
@@ -161,8 +160,8 @@ Page {
                               })
 
         onInfosChanged :validate_actBtn.enabled  =  name_txtFld.isValid && companyName_txtFld.isValid
-                                            && email_txtFld.isValid && address_txtField.isValid
-                                            && tel_txtFld.isValid ? true : false
+                        && email_txtFld.isValid && address_txtField.isValid
+                        && tel_txtFld.isValid ? true : false
     }
 
     ObjectModel{
@@ -194,7 +193,7 @@ Page {
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:qsTr("Nom et Prénom")
                 validator: RegExpValidator{regExp:/([a-zA-Z]{3,30}\s*)+/}
-                height:parent.height
+                anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
                 visible: isEditable
 
@@ -232,7 +231,7 @@ Page {
                 id:companyName_txtFld
 
                 placeholderText: qsTr("Nom de la structure")
-                height:parent.height
+                anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
                 visible: isEditable
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
@@ -272,7 +271,7 @@ Page {
 
                 placeholderText: qsTr("Adresse")
                 visible:isEditable
-                height:parent.height
+                anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
 
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
@@ -343,8 +342,9 @@ Page {
 
             EmailTextField {
                 id:email_txtFld
+
+                anchors.verticalCenter : parent.verticalCenter
                 serverGateway : Qondrite
-                height:parent.height
                 width:textFieldWidth
                 visible: isEditable
 
@@ -380,7 +380,7 @@ Page {
             PhoneTextField{
                 id:tel_txtFld
 
-                height:parent.height
+                anchors.verticalCenter : parent.verticalCenter
                 width:textFieldWidth
                 visible : isEditable
                 serverGateway : Qondrite
@@ -395,10 +395,17 @@ Page {
         }
     }
 
-
     Column{
         id:pageColumn
-        anchors.fill:parent
+        anchors{
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            topMargin: lineH/5
+            bottom: parent.bottom
+            bottomMargin: lineH/5
+
+        }
 
         ListView{
             id:infoListView
@@ -408,6 +415,7 @@ Page {
                 right:parent.right
                 leftMargin: parent.width*0.05
                 rightMargin: parent.width*0.05
+
             }
 
             height: parent.height - lineH*1.3
@@ -415,7 +423,6 @@ Page {
         }
 
         Button {
-
             text:qsTr("Changer le mot de passe")
             elevation: 1
             width:parent.width*0.7
@@ -429,7 +436,9 @@ Page {
     Dialog {
         id: confirmed_dlg
 
-        width: parent.width - parent.width/6
+        width: Math.min(Units.dp*450,Screen.desktopAvailableWidth*0.8)
+        height:Units.dp*200
+
         hasActions: false
         z:1
 
@@ -462,8 +471,8 @@ Page {
             text: "Mot de passe oublié"
             positiveButtonText: "Valider"
             negativeButtonText: "Annuler"
-            width:parent.width*0.7
-            height:parent.height*0.3
+            width: Math.min(Units.dp*450,Screen.desktopAvailableWidth*0.8)
+            height:Units.dp*400
 
             positiveButtonEnabled:changePassword.isValid
 
@@ -505,6 +514,5 @@ Page {
         }
 
     }
-
-    Component.onCompleted: loadUserInformation()
+    Component.onCompleted:loadUserInformation()
 }

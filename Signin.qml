@@ -13,7 +13,6 @@ Page {
 
     property int rowHeight: root.height/12
     property int linesSpacing: root.height/30
-
     Rectangle{
         id : backgroud_rct
         anchors.fill: parent
@@ -24,25 +23,26 @@ Page {
     Dialog {    
         id: confirmed_dlg
 
-        width: parent.width - parent.width/6
-        height:parent.height/2.2
+        width: Math.min(450*Units.dp,Screen.desktopAvailableWidth*0.8)
+        height:200*Units.dp
         hasActions: false
         z:1
 
         Column{
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.fill: parent
 
             Icon{
                 name:"action/done"
-                size: dp(100)
+                size: 100*Units.dp
+                color:Theme.primaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Label {
                 text: "Verifier votre boite email pour le changement de votre mot de passe"
                 anchors.horizontalCenter: parent.horizontalCenter
-                width:forgottenPassword_dlg.width - dp(120)
                 wrapMode: Text.WordWrap
+                width: parent.width
             }
         }
     }
@@ -50,8 +50,8 @@ Page {
     Dialog {
         id: forgottenPassword_dlg
 
-        width: parent.width - parent.width/6
-        height:parent.height/2.2
+        width: Math.min(450*Units.dp,Screen.desktopAvailableWidth*0.8)
+        height:280*Units.dp
         text: qsTr("Mot de passe oublié")
         z:1
 

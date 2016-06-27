@@ -17,8 +17,7 @@ static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *script
 
     QObject *qrondriteObject = qondrite.create();
     QJSValue result = scriptEngine->newQObject(qrondriteObject);
-//    result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
-    result.setProperty("meteor_url",QString("wiamb-imad.scalingo.io"));
+    result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
     return result;
 }
 
@@ -33,9 +32,9 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
     for(auto o:engine.rootObjects()){
-         QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
+        QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
         if(item){
-              engine.rootContext()->setContextProperty("sideNavigationPanel", item);
+            engine.rootContext()->setContextProperty("sideNavigationPanel", item);
         }
     }
 
