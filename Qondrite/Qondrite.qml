@@ -36,7 +36,7 @@ WebSocket {
 
     function _connect() {
         console.log("Connecting to " + meteor_url);
-        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), true, function(event) {
+        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), false, function(event) {
             console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message );
         });
         console.log("done");
@@ -82,6 +82,10 @@ WebSocket {
     }
     function updateUser(user){
         return ceres.call("updateUser",user);
+    }
+
+    function getOwnAvailability(){
+        return ceres.call("getOwnAvailability");
     }
 
     function updateUserAvailability(state)

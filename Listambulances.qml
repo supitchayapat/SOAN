@@ -166,7 +166,6 @@ Page {
 
 
     Component.onCompleted: {
-
         var subscription  = Qondrite.subscribe("availability",function(){
                         initList()
                         bindEventsToList()
