@@ -55,7 +55,7 @@ ColumnLayout{
     PasswordTextField{
         id: passwordConfirmation_txtfld
 
-        placeholderText: qsTr("Confirmer le mot de passe")
+        placeholderText: qsTr("Confirmation")
         Layout.fillWidth: true
         //isRequired : isPasswordConfirmFieldRequired || false
         anchors.horizontalCenter: parent.horizontalCenter

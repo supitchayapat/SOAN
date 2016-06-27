@@ -17,26 +17,32 @@ static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *script
 
     QObject *qrondriteObject = qondrite.create();
     QJSValue result = scriptEngine->newQObject(qrondriteObject);
-//    result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
-//    result.setProperty("meteor_url",QString("wiamb-imad.scalingo.io"));
-    result.setProperty("meteor_url",QString("localhost:3000"));
+    result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
     return result;
 }
 
 int main(int argc, char *argv[])
 {
+    // TODO : move the this qputenv to an equivalent in the .pro file
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+
     QGuiApplication app(argc, argv);
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     QQmlApplicationEngine engine;
+
     engine.addImportPath(":/.");
     MaterialPlugin qmlMaterial;
     qmlMaterial.registerTypes("Material");
+
     qmlRegisterSingletonType("Qondrite",0,1,"Qondrite",singletonQondrite_provider);
+
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
     for(auto o:engine.rootObjects()){
-         QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
+        QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
         if(item){
-              engine.rootContext()->setContextProperty("sideNavigationPanel", item);
+            engine.rootContext()->setContextProperty("sideNavigationPanel", item);
         }
     }
 

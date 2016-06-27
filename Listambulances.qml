@@ -1,15 +1,16 @@
 import QtQuick 2.5
+import QtQuick.Window 2.0
 import Material 0.3
 import Material.ListItems 0.1 as ListItem
 import "define_values.js" as Defines_values
 import Qondrite 0.1
 import Qure 0.1
+import QtQuick.Layouts 1.2
 
 Page {
     id: page
 
     backAction: navDrawer.action
-
     actionBar.customContent : AvailabilitySwitch{
         anchors{
             right: parent.right
@@ -23,15 +24,12 @@ Page {
     property var availabilityCollection;
     property var availabilityItems;
 
-    property var itemIdToIndexMap;
-
     function initList(){
 
         availabilityCollection = Qondrite.getCollection("availability");
 
         availabilityItems = sortArray();
 
-        var index=  0;
         for(var i =0; i<availabilityItems.length;i++){
             ambliste.append(availabilityItems[i]);
         }
@@ -105,18 +103,16 @@ Page {
         id: listelements
 
         ListItem.Standard{
-
             text:companyName
-            height:Defines_values.lineH*Units.dp
             action: Icon {
                 anchors.centerIn: parent
                 name: "social/person"
-                size: dp(Defines_values.Default_iconsize)
+                size: parent.parent.height
                 color: availability ? Theme.primaryColor : Theme.light.hintColor
             }
 
             Button {
-                width: dp(Defines_values.ListambulancesButtonwidth)
+                width: parent.height
                 height:width
                 anchors{
                     right: parent.right
@@ -128,7 +124,7 @@ Page {
                 Icon {
                     name: "communication/call"
                     anchors.centerIn: parent
-                    size: dp(Defines_values.Default_iconsize)
+                    size: parent.height
                     color: availability ? Theme.primaryColor : Theme.light.hintColor
                 }
             }
@@ -138,28 +134,28 @@ Page {
 
     ListView {
         anchors.fill: parent
-        anchors.topMargin: dp(Defines_values.ListambulancesTopMargin)
+        anchors.topMargin: Defines_values.ListambulancesTopMargin * Units.dp
         model: ambliste
         delegate: listelements
         displaced: Transition {
                NumberAnimation { properties: "x,y"; duration: 1000 }
         }
-
     }
 
     Card {
         id: ambliste_empty
+
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top : parent.top
         anchors.topMargin: Defines_values.view_topMargin
-        height : dp(Defines_values.CardMessageHeight)
+        height : actionBar.height
         visible: (ambliste.count ==0)
         width : page.width - Defines_values.Default_border_margins
+
         Text {
             id: ambliste_empty_text
             anchors.centerIn: parent
             text: qsTr("Aucun élément actuellement");
-            anchors.horizontalCenter: ambliste_empty.horizontalCenter
             font.italic: true
         }
     }
@@ -167,9 +163,9 @@ Page {
 
     Component.onCompleted: {
         var subscription  = Qondrite.subscribe("availability",function(){
-                        initList()
-                        bindEventsToList()
-            });
+            initList()
+            bindEventsToList()
+        });
 
         Qondrite.loggingOut.connect(function(){subscription.stop();})
     }
