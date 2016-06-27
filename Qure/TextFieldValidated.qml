@@ -180,7 +180,7 @@ TextField{
             {
                 var retValidators = [];
                 for (var i=0; i< calls.length; i++){
-                    retValidators.push(validators[i].call()
+                    retValidators.push(validators[i].call.apply(this)
                         .then(function onsuccess(resp){
                             return resp;
                         })
