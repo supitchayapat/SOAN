@@ -171,16 +171,17 @@ TextField{
             return evaluateCalls(onEditingFinishedValidations, callback);
         }
 
-        function evaluateCalls(calls, callback)
+        function evaluateCalls(listCalls, callback)
         {
-            if (calls.length === 0){
+            if (listCalls.length === 0){
                 return ;
             }
+            console.log('listCalls.length : ', listCalls.length);
             function getValidators(validators)
             {
                 var retValidators = [];
-                for (var i=0; i< calls.length; i++){
-                    retValidators.push(validators[i].call.apply(this)
+                for (var i=0; i< validators.length; i++){
+                    retValidators.push(validators[i].call()
                         .then(function onsuccess(resp){
                             return resp;
                         })
@@ -192,7 +193,7 @@ TextField{
                 return retValidators;
             }
 
-            Qlib.Q.all(getValidators(calls)).then(function(responses){
+            Qlib.Q.all(getValidators(listCalls)).then(function(responses){
                 for (var i = 0; i< responses.length; i++){
                     if (typeof responses[i] !== 'object'){
                         continue;
@@ -251,15 +252,18 @@ TextField{
     }
 
     Component.onCompleted: {
-        onEditingValidations.unshift(new Err.Error(function (){
-                 var dfd = Qlib.Q.defer();
-                 if (validator === null)
-                     dfd.resolve({ response : true});
-                 else
-                     dfd.resolve({ response : (text !== "" && text.toString().match(validator.regExp) !== null) });
-                 return dfd.promise;
-             }))
-        }
+        onEditingValidations.unshift(Err.Error.create(function()
+            {
+                var dfd = Qlib.Q.defer();
+                var resp = (validator === null) ? true
+                                                : (text !== "" && text.toString().match(validator.regExp) !== null);
+                dfd.resolve({ response : resp});
+                return dfd.promise;
+            },
+            Err.Error.scope.LOCAL
+        )
+        );
+    }
 }
 
 // TODO : Support of multiple errors and helper texts with priorities

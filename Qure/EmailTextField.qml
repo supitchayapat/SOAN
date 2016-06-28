@@ -12,45 +12,55 @@ TextFieldValidated{
 
     Component.onCompleted: {
 
-        onEditingFinishedValidations.unshift(new Err.Error(function(){
-            if (typeof serverGateway !== 'object')
+        onEditingFinishedValidations.push(Err.Error.create(function()
             {
-                throw "serverGateway must be supplied before running validations";
-            }
-            var dfd = Qlib.Q.defer();
-            if (! emailExistanceValidation || isPristine === true){
-                dfd.resolve( {
-                    response : !emailExistanceValidation,
-                    message : ''
-                });
-                return dfd.promise;
-            }
-            return serverGateway.verifyUserAccountExistance(text).result.then(
-                function onsuccess(countUsers){
-                    dfd.resolve( {
-                        response : (countUsers === 0),
-                        message :  (countUsers === 0) ? "" : qsTr("Cette adresse email est déjà utilisée")
-                    });
-                    return dfd.promise;
-                },
-                function onerror(resp){
-                    dfd.resolve( {
-                        response : false,
-                        message : "error :"+resp.error.error
-                    });
-                    return dfd.promise;
-                });
-        }, Err.Error.scope.REMOTE));
-
-        onEditingFinishedValidations.unshift(
-             new Err.Error(function(){
                  var dfd = Qlib.Q.defer();
                  var runTest = validator.regExp.test(text);
                  dfd.resolve( {
                         response : runTest,
                         message : runTest ? "" : qsTr("Adresse email invalide")
-                    }, Err.Error.scope.LOCAL);
+                    });
                  return dfd.promise;
-            }));
+            },
+            Err.Error.scope.LOCAL,
+            'adresse_email_invalide'
+        )
+        );
+
+
+        onEditingFinishedValidations.push(Err.Error.create(function()
+            {
+                if (typeof serverGateway !== 'object')
+                {
+                    throw "serverGateway must be supplied before running validations";
+                }
+                var dfd = Qlib.Q.defer();
+                if (! emailExistanceValidation || isPristine === true){
+                    dfd.resolve( {
+                        response : !emailExistanceValidation,
+                        message : ''
+                    });
+                    return dfd.promise;
+                }
+                return serverGateway.verifyUserAccountExistance(text).result.then(
+                    function onsuccess(countUsers){
+                        return {
+                            response : (countUsers === 0),
+                            message :  (countUsers === 0) ? "" : qsTr("Cette adresse email est déjà utilisée")
+                        };
+                    })
+                .catch(function onerror(resp){
+                        return {
+                            response : false,
+                            message : "errorx :"+resp.error
+                        };
+                    });
+            },
+            Err.Error.scope.REMOTE,
+            'serverGateway.verifyUserAccountExistance'
+        )
+        );
+
+        console.log('Email > onCompleted > onEditingFinishedValidations.length : ', onEditingFinishedValidations.length);
     }
 }
