@@ -23,12 +23,12 @@ static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *script
 
 int main(int argc, char *argv[])
 {
+#ifndef Q_OS_ANDROID
     // TODO : move the this qputenv to an equivalent in the .pro file
     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
-
-    QGuiApplication app(argc, argv);
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
+#endif
+    QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
     engine.addImportPath(":/.");
