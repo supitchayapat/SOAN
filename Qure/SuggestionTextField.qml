@@ -1,99 +1,144 @@
 import QtQuick 2.5
 import Material 0.3
+import Material.ListItems 0.1 as ListItem
 import QtQuick.Layouts 1.1
 import Qondrite 0.1
+import "Error.js" as Err
+import "qrc:/Qondrite/q.js" as Qlib
+import Qure 0.1
 
+// TODO : try to use TextFieldValidated instead of Item as a root Item so that to reduce the number of needed properties aliases
 Item{
     id: myRoot
-    property alias textFieldHeight: address_txtField.height
-    property alias textFieldWidth: address_txtField.width
-    property alias listViewheight: suggestionlist.height
+
+    property int totalHeight : address_txtField.height + suggestionlist.height
     property int maxAddressListed: 5
+    property alias isRequired : address_txtField.isRequired
+    property alias serverGateway : address_txtField.serverGateway
+    property alias isValid : address_txtField.isValid
+    property alias text : address_txtField.text
+    signal editingFinished()
+    property bool listViewExpanded : suggestionlist.visible
+    property double latitude
+    property double longitude
 
     QtObject{
         id: internal
         property bool doSearch: true
     }
 
-    TextField{
+    TextFieldValidated{
         id:address_txtField
 
         placeholderText: qsTr("Adresse")
-        Layout.fillWidth: true
+        anchors.verticalCenter : parent.verticalCenter
+        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
+        serverGateway  : Qondrite
         Layout.fillHeight: true
+        width : parent.width
 
-        font.pointSize: 16
+        onEditingFinished :{
+            myRoot.editingFinished()
+        }
 
         onTextChanged: {
-            // run validation only if undone yet for current address and address length is worth it
-            if(address_txtField.text.length > 3 && internal.doSearch)
-            {
-                suggestionlist.model.clear()
-                //TODO handle this call with new callbacks list of TextFieldValidated
-                Qondrite.validateAddress(text)
-                .then(function(result)
-                {
-                    suggestionlist.model.clear()
-                    if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                        validatorWarning = qsTr("Adresse invalide")
-                        suggestionlist.visible = false
-                    }
-                    else{
-                        for(var i=0; i<Math.min(result.length, maxAddressListed); i++){
-                            accountInfo.infos.latitude = result[i].latitude;
-                            accountInfo.infos.longitude = result[i].longitude;
-                            accountInfo.infos.address = text
-                            accountInfo.infosChanged()
-                            suggestionlist.model.insert(0, {"latitude": result[i].latitude,
-                                                      "longitude":result[i].longitude,
-                                                      "address":result[i].formattedAddress})
-                        }
-                        suggestionlist.visible = true
-                    }
-                });
+            if(address_txtField.text.length > 3 && internal.doSearch){
+                return serverGateway.validateAddress(text).result.then(
+
+                            function onsuccess(result){
+//                                suggestionlist.model.clear()
+                                if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
+                                    suggestionlist.visible = false
+
+                                }else{
+                                    suggestionlist.visible = true
+                                }
+                            },
+                            function onerror(resp){
+                                dfd.resolve( {
+                                                response : false,
+                                                message : "error :"+resp.error.error
+                                            });
+                                 suggestionlist.visible = false
+                                return dfd.promise;
+                            }
+                            );
             }
         }
+
+        Component.onCompleted: {
+
+            onEditingFinishedValidations.unshift(new Err.Error(function(){
+                // run validation only if undone yet for current address and address length is worth it
+                var dfd = Qlib.Q.defer();
+                if(address_txtField.text.length > 3){
+                    return serverGateway.validateAddress(text).result.then(
+
+                                function onsuccess(result){
+                                    var addressIsValid = true;
+                                    if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
+                                        addressIsValid = false;
+
+                                    }else{
+                                        // TODO : this should be moved to the component instantiation and not its definition
+                                        // instead set  the properties of this Component longitude and latitude and make use
+                                        // of it in its instantiation
+                                        accountInfo.infos.latitude = result[0].latitude;
+                                        accountInfo.infos.longitude = result[0].longitude;
+                                    }
+                                    dfd.resolve( {
+                                                    response : addressIsValid,
+                                                    message :  addressIsValid ? "" : qsTr("Adresse invalide")
+                                                });
+                                    return dfd.promise;
+                                },
+                                function onerror(resp){
+                                    dfd.resolve( {
+                                                    response : false,
+                                                    message : "error :"+resp.error.error
+                                                });
+                                    return dfd.promise;
+                                });
+                }
+            }, Err.Error.scope.REMOTE));
+        }
+    }
+
+    //TODO the suggestionlist need to be hidden on focus lost
+    onFocusChanged: {
+        if(!focus) suggestionlist.visible = false
     }
 
     ListView{
         id:suggestionlist
 
         width:address_txtField.width
-        height: count*100
+        height: count * 48 * Units.dp
         clip:true
         anchors.top : address_txtField.bottom
         visible:false
-         highlightFollowsCurrentItem: false
+        highlightFollowsCurrentItem: false
 
-        model:ListModel{}
-        delegate: Rectangle{
+        model: 5
+        delegate:  ListItem.Standard{
             id:myDelegate
 
-            width:address_txtField.width
-            height: 100
-            color: "transparent"
-
-            Label {
-                id:choice_label
-                anchors.fill: parent
-                text: address
-                verticalAlignment: Text.AlignVCenter
-                anchors.verticalCenter: parent.verticalCenter
+            action: Icon {
+                anchors.centerIn: parent
+                name: "maps/place"
             }
 
-            MouseArea{
-                anchors.fill:parent
-                hoverEnabled : true
+            width:address_txtField.width
+            text: "address"
 
-                onEntered: {myDelegate.color = "#4c8d8d8d"}
-                onExited: {myDelegate.color = "white"}
-
-                onClicked: {
-                    internal.doSearch = false
-                    address_txtField.text = address
-                    suggestionlist.model.clear()
-                    internal.doSearch = true
-                }
+            onClicked: {
+                internal.doSearch = false
+                address_txtField.text = text
+                suggestionlist.model.clear()
+                 //TODO the suggestionlist need to be hidden on element selected
+                suggestionlist.visble = false;
+                suggestionlist.height = 0;
+                internal.doSearch = true
             }
         }
     }
