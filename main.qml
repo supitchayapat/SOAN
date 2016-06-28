@@ -79,12 +79,35 @@ ApplicationWindow {
 
     function hideSpinner(error)
     {
-        remoteCallSpinner.hide();        
+        remoteCallSpinnerStartDelayed.stop();
+        onRemoteCallTimeout.stop();
+        remoteCallSpinner.hide();
     }
 
     function internetOffCallback()
     {
-        errorToast.open('La connexion à Internet a été interrompue ! Veuillez relancer l\'application');
+        errorToast.open('La connexion à Internet a été interrompue');
+    }
+
+    Timer {
+        id: remoteCallSpinnerStartDelayed
+        interval: 1200
+        repeat : false
+        triggeredOnStart: false
+        onTriggered: {
+            remoteCallSpinner.show();
+        }
+    }
+
+    Timer {
+        id: onRemoteCallTimeout
+        interval: 10000
+        repeat: false
+        triggeredOnStart: false
+        onTriggered: {
+            remoteCallSpinner.hide();
+            internetOffCallback.apply(this);
+        }
     }
 
     Component.onCompleted: {
@@ -96,7 +119,10 @@ ApplicationWindow {
 
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);
-        Qondrite._on("remoteCallStart", function(){ remoteCallSpinner.show(); });
+        Qondrite._on("remoteCallStart", function(){
+            remoteCallSpinnerStartDelayed.start();
+            onRemoteCallTimeout.start()
+        });
         Qondrite._on("remoteCallSuccess", hideSpinner);
         Qondrite._on("remoteCallError", hideSpinner);
         Qondrite._on("logout", hideSpinner);

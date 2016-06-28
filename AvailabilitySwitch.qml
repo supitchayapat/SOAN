@@ -9,7 +9,7 @@ Switch {
     property Item actionBarItem: parent.parent.parent !== null ? parent.parent.parent : control
 
     color: "#76ff03"
-    height : actionBarItem.height * 0.8
+    height : actionBarItem.height * 0.5
 
     style: ControlStyles.SwitchStyle {
         handle: View {

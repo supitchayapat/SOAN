@@ -2,15 +2,17 @@ import QtQuick 2.5
 import Material 0.3
 import QtQuick.Layouts 1.2
 import "define_values.js" as Defines_values
+import "qrc:/Qondrite/q.js" as Qlib
 import Qondrite 0.1
 import QtQuick.Controls 1.4 as Controls
 import QtQml.Models 2.2
+import "qrc:/Qure/Error.js" as Err
 import Qure 0.1
 
 Page {
     id:root
 
-    property int lineH: 170*Units.dp
+    property int lineH: root.height/9
 
     QtObject{
         id:accountInfo
@@ -40,11 +42,9 @@ Page {
         property color disabledColor : Palette.colors["grey"]["300"]
 
         anchors {
-            top: fieldsListView.bottom
-            topMargin: dp(20)
             horizontalCenter: parent.horizontalCenter
             bottom : parent.bottom
-            bottomMargin : dp(20)
+            bottomMargin : nextButton.height/2
         }
 
         backgroundColor: disabledColor
@@ -52,7 +52,6 @@ Page {
         width: height
         elevation: 1
         iconName: "content/send"
-
         action: Action {
             onTriggered:{
 
@@ -82,7 +81,7 @@ Page {
     ObjectModel{
         id:infoListModel
 
-        RowLayout{
+        Row{
             id:nomprenom_rowLyt
 
             spacing : dp(Defines_values.Signup1RowSpacing)
@@ -100,8 +99,9 @@ Page {
                 isRequired : true
                 inputMethodHints: Qt.ImhNoPredictiveText
                 placeholderText:"Nom et Prénom"
-                Layout.fillWidth: true
+                width: fieldsListView.width - lineH
                 Layout.fillHeight: true
+                anchors.verticalCenter : parent.verticalCenter
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi}
 
                 onEditingFinished: {
@@ -113,7 +113,7 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
 
             width:fieldsListView.width
@@ -129,8 +129,9 @@ Page {
 
                 isRequired : true
                 placeholderText: "Nom de la structure"
-                Layout.fillWidth: true
                 Layout.fillHeight: true
+                width: fieldsListView.width - lineH
+                anchors.verticalCenter : parent.verticalCenter
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
 
                 onEditingFinished:{
@@ -142,7 +143,7 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
 
             width:fieldsListView.width
@@ -158,43 +159,59 @@ Page {
 
                 isRequired : true
                 placeholderText: qsTr("Adresse")
-                Layout.fillWidth: true
+                width: fieldsListView.width - lineH
                 Layout.fillHeight: true
-
+                anchors.verticalCenter : parent.verticalCenter
                 validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
+                serverGateway  : Qondrite
 
 
                 onEditingFinished: {
-                    // run validation only if undone yet for current address and address length is worth it
-                    if(address_txtField.text.length > 3)
-                    {
-                        //TODO handle this call with new callbacks list of TextFieldValidated
-                        Qondrite.validateAddress(text)
-                        .then(function(result)
-                        {
-                            if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                validatorWarning = qsTr("Adresse invalide");
-                            }
-                            else if ((Array.isArray(result) && result.length >0) && ! result[0].hasOwnProperty('streetName')){
-                                validatorWarning = qsTr("Adresse incomplète");
-                            }
-                            else{
-                                text = result[0].formattedAddress;
-                                accountInfo.infos.latitude = result[0].latitude;
-                                accountInfo.infos.longitude = result[0].longitude;
-                                accountInfo.infos.address = text
-                                accountInfo.infosChanged()
-                            }
 
-                        });
-                    }                    
+                    accountInfo.infos.address = text
+                    accountInfo.infosChanged()
+                }
+
+
+                Component.onCompleted: {
+
+                        onEditingFinishedValidations.unshift(new Err.Error(function(){
+                            // run validation only if undone yet for current address and address length is worth it
+                            var dfd = Qlib.Q.defer();
+                            if(address_txtField.text.length > 3){
+                                return serverGateway.validateAddress(text).result.then(
+
+                                    function onsuccess(result){
+                                        var addressIsValid = true;
+                                        if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
+                                            addressIsValid = false;
+
+                                        }else{
+                                            accountInfo.infos.latitude = result[0].latitude;
+                                            accountInfo.infos.longitude = result[0].longitude;
+                                        }
+                                        dfd.resolve( {
+                                            response : addressIsValid,
+                                            message :  addressIsValid ? "" : qsTr("Adresse invalide")
+                                        });
+                                        return dfd.promise;
+                                    },
+                                    function onerror(resp){
+                                        dfd.resolve( {
+                                            response : false,
+                                            message : "error :"+resp.error.error
+                                        });
+                                        return dfd.promise;
+                                    });
+                            }
+                        }, Err.Error.scope.REMOTE));
                 }
 
                 onIsValidChanged: accountInfo.infosChanged()
             }
         }
 
-        RowLayout{
+        Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
             height: lineH
             width:fieldsListView.width
@@ -207,9 +224,10 @@ Page {
             EmailTextField {
                 id:email_txtFld
 
-                isRequired : true
-                Layout.fillWidth: true
+                width: fieldsListView.width - lineH
                 Layout.fillHeight: true
+                anchors.verticalCenter : parent.verticalCenter
+                isRequired : true
                 serverGateway: Qondrite
                 emailExistanceValidation : true
 
@@ -222,7 +240,7 @@ Page {
             }
         }
 
-        RowLayout{
+        Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
             height: lineH
             width:fieldsListView.width
@@ -235,9 +253,10 @@ Page {
             PhoneTextField{
                 id:tel_txtFld
 
-                isRequired : true
-                Layout.fillWidth: true
+                width: fieldsListView.width - lineH
                 Layout.fillHeight: true
+                anchors.verticalCenter : parent.verticalCenter
+                isRequired : true
                 serverGateway: Qondrite
 
                 onEditingFinished: {
@@ -253,10 +272,8 @@ Page {
             id: newPassword
 
             height: lineH*2
-
             isPasswordFieldRequired : true
             isPasswordConfirmFieldRequired : true
-
             anchors {
                 // Note : because we are using a ListModel the parent may be null before the element is affected
                 // to the ListView, so we cath the error when parent is null
@@ -265,13 +282,11 @@ Page {
                 leftMargin : try{parent.width *0.25} catch(all){}
                 rightMargin : try{parent.width *0.25} catch(all){}
             }
-
             onIsValidChanged: {
                 if(isValid) accountInfo.password = password
                 accountInfo.infosChanged()
             }
         }
-
     }
 
     ListView{
@@ -286,7 +301,7 @@ Page {
             right: parent.right
             rightMargin: parent.width/20
             top: parent.top
-            topMargin: 60*Units.dp
+            topMargin: 10*Units.dp
         }
 
         model:infoListModel

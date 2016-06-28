@@ -9,8 +9,6 @@ import Qondrite 0.1
 
 Rectangle{
 
-    property int lineH: 120*Units.dp
-
     signal goToAmbulanceListPage()
     signal goToAccountPage()
     signal disconnectPressed()
@@ -25,7 +23,7 @@ Rectangle{
     Rectangle{
         id: sidebar_rct
 
-        height:  dp(Defines_values.sidebar_height)
+        height:  parent.height/4
         color: Theme.primaryColor
 
         anchors{
@@ -39,12 +37,10 @@ Rectangle{
 
             style: "title"
             color : "white"
-
             anchors{
                 verticalCenter:  sidebar_rct.verticalCenter
-                verticalCenterOffset: -4
-                left: parent.left
-                leftMargin: dp(Defines_values.sidebarleftMargin)
+                left: sidebar_rct.left
+                leftMargin: sidebar_rct.width*0.1
             }
         }
 
@@ -53,12 +49,11 @@ Rectangle{
 
             style: "body2"
             color : "white"
-
             anchors{
                 bottom: sidebar_rct.bottom
-                bottomMargin: dp(Defines_values.sidebarbottomMargin)
+                bottomMargin: Units.dp*Defines_values.sidebarbottomMargin
                 left: parent.left
-                leftMargin: dp(Defines_values.sidebarleftMargin)
+                leftMargin: Units.dp*Defines_values.sidebarleftMargin
             }
         }
     }
@@ -86,7 +81,6 @@ Rectangle{
             id: disconnectListItem
 
             text: qsTr("Déconnexion")
-            height: lineH
             action: Icon {
                 anchors.centerIn: parent
                 name: "action/logout"
@@ -106,7 +100,7 @@ Rectangle{
             id: ambListItem
 
             text: qsTr("Liste d'Ambulances")
-            height:lineH
+
 
             action: Icon {
                 anchors.centerIn: parent
@@ -126,7 +120,6 @@ Rectangle{
             id: accountListItem
 
             text: qsTr("Mon compte")
-            height:lineH
             action: Icon {
                 anchors.centerIn: parent
                 name: "action/account_circle"
@@ -140,7 +133,6 @@ Rectangle{
                 goToAccountPage();
             }
         }
-
     }
 
     Component.onCompleted: {

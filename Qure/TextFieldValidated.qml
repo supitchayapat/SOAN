@@ -129,9 +129,12 @@ TextField{
         id:checkedIcon
 
         name:"action/done"
-        anchors.right: parent.right
+        anchors{
+            verticalCenter: root.verticalCenter
+            right: parent.right
+        }
         visible:  false
-        size:parent.height
+        size:parent.height*0.7
         color:Theme.primaryColor
     }
 
