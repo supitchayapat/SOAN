@@ -80,24 +80,24 @@ Item{
                                         addressIsValid = false;
 
                                     }else{
-                                        // TODO : this should be moved to the component instantiation and not its definition
-                                        // instead set  the properties of this Component longitude and latitude and make use
-                                        // of it in its instantiation
-                                        accountInfo.infos.latitude = result[0].latitude;
-                                        accountInfo.infos.longitude = result[0].longitude;
+                                        suggestionlist.model.clear();
+                                        for (var i= 0; i < result.length; i++)
+                                        {
+                                            suggestionlist.model.append({
+                                                postalAddress : result[i].formattedAddress,
+                                                latitude : result[i].latitude,
+                                                longitude : result[i].longitude
+                                            });
+                                        }
                                     }
-                                    dfd.resolve( {
-                                                    response : addressIsValid,
-                                                    message :  addressIsValid ? "" : qsTr("Adresse invalide")
-                                                });
-                                    return dfd.promise;
+                                    return {    response : addressIsValid,
+                                                message :  addressIsValid ? "" : qsTr("Adresse invalide")
+                                            };
                                 },
                                 function onerror(resp){
-                                    dfd.resolve( {
-                                                    response : false,
-                                                    message : "error :"+resp.error.error
-                                                });
-                                    return dfd.promise;
+                                    return {    response : false,
+                                                message : "error :"+resp.error.error
+                                            };
                                 });
                 }
             }, Err.Error.scope.REMOTE));
@@ -109,6 +109,8 @@ Item{
         if(!focus) suggestionlist.visible = false
     }
 
+
+
     ListView{
         id:suggestionlist
 
@@ -118,8 +120,7 @@ Item{
         anchors.top : address_txtField.bottom
         visible:false
         highlightFollowsCurrentItem: false
-
-        model: 5
+        model: gMapsEntries
         delegate:  ListItem.Standard{
             id:myDelegate
 
@@ -129,18 +130,28 @@ Item{
             }
 
             width:address_txtField.width
-            text: "address"
+            // postalCode is a property of 'gMapsEntries' ListModel. All the model's properties are set above in suggestionlist.model.append({...})
+            text: postalAddress
 
             onClicked: {
                 internal.doSearch = false
                 address_txtField.text = text
+                accountInfo.infos.latitude = latitude
+                accountInfo.infos.longitude = longitude;
                 suggestionlist.model.clear()
                  //TODO the suggestionlist need to be hidden on element selected
-                suggestionlist.visble = false;
+                suggestionlist.visible = false;
                 suggestionlist.height = 0;
                 internal.doSearch = true
             }
         }
     }
+
+    ListModel {
+        id: gMapsEntries
+    }
+
+
+
 }
 
