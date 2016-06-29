@@ -19,24 +19,25 @@ TextFieldValidated{
 
     Component.onCompleted: {
 
-        onEditingFinishedValidations.unshift(
-            new Err.Error(function(){
+        onEditingFinishedValidations.push(Err.Error.create(function()
+            {
                 if (typeof serverGateway !== 'object')
                 {
                     throw "serverGateway must be supplied before running validations";
                 }
                 return serverGateway.verifyPhoneNumberExistance(text).result
                 .then(function(doExists){
-                    var dfd = Qlib.Q.defer();
-                    dfd.resolve({
+                    return {
                         response : !doExists,
                         message : doExists ? qsTr("Ce numéro de téléphone est déjà utilisé") : ""
-                    });
-                    return dfd.promise;
-                }, function onerror(){
-                    throw { message : qsTr("Numero de téléphone incomplet") };
-
+                    };
                 })
-            }, Err.Error.scope.REMOTE));
+                .catch(function onerror(){
+                    throw { message : qsTr("Numero de téléphone incomplet") };
+                })
+            },
+            Err.Error.scope.REMOTE,
+            'serverGateway.verifyPhoneNumberExistance'
+        ));
     }
 }
