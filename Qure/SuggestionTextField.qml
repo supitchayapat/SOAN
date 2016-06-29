@@ -82,18 +82,8 @@ Item{
                                     var addressIsValid = true;
                                     if(result.status === "ERROR"){
                                         addressIsValid = false;
-
-                                    }else{
-                                        suggestionlist.model.clear();
-                                        for (var i= 0; i < result.length; i++)
-                                        {
-                                            suggestionlist.model.append({
-                                                postalAddress : result[i].formattedAddress,
-                                                latitude : result[i].latitude,
-                                                longitude : result[i].longitude
-                                            });
-                                        }
                                     }
+
                                     return {    response : addressIsValid,
                                                 message :  addressIsValid ? "" : qsTr("Adresse invalide")
                                             };
