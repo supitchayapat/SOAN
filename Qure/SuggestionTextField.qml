@@ -106,14 +106,11 @@ Item{
                 }
             }, Err.Error.scope.REMOTE));
         }
+
+        onActiveFocusChanged:  {
+                suggestionlist.visible = false
+        }
     }
-
-    //TODO the suggestionlist need to be hidden on focus lost
-    onFocusChanged: {
-        if(!focus) suggestionlist.visible = false
-    }
-
-
 
     ListView{
         id:suggestionlist
@@ -152,10 +149,6 @@ Item{
 
     ListModel {
         id: gMapsEntries
-//        count : 5
     }
-
-
-
 }
 
