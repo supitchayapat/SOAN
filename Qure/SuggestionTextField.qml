@@ -141,8 +141,6 @@ Item{
             onClicked: {
                 internal.doSearch = false
                 address_txtField.text = text
-                accountInfo.infos.latitude = latitude
-                accountInfo.infos.longitude = longitude;
                 suggestionlist.model.clear()
                  //TODO the suggestionlist need to be hidden on element selected
                 suggestionlist.visible = false;

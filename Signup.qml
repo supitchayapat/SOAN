@@ -161,6 +161,8 @@ Page {
 
                 onEditingFinished: {
                     accountInfo.infos.address = text
+                    accountInfo.infos.latitude = latitude
+                    accountInfo.infos.longitude = longitude;
                     accountInfo.infosChanged()
                 }
 
