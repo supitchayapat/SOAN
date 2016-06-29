@@ -12,7 +12,7 @@ Item{
     id: myRoot
 
     property int totalHeight : address_txtField.height + suggestionlist.height
-    property int maxAddressListed: 5
+    property int maxAddressListed: 3
     property alias isRequired : address_txtField.isRequired
     property alias serverGateway : address_txtField.serverGateway
     property alias isValid : address_txtField.isValid
@@ -46,11 +46,16 @@ Item{
                 return serverGateway.validateAddress(text).result.then(
 
                             function onsuccess(result){
-//                                suggestionlist.model.clear()
+                                gMapsEntries.clear()
                                 if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                                     suggestionlist.visible = false
 
                                 }else{
+                                    for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
+                                        gMapsEntries.append({"latitude": result[i].latitude,
+                                                                           "longitude":result[i].longitude,
+                                                                           "postalAddress":result[i].formattedAddress});
+                                    }
                                     suggestionlist.visible = true
                                 }
                             },
@@ -131,7 +136,7 @@ Item{
 
             width:address_txtField.width
             // postalCode is a property of 'gMapsEntries' ListModel. All the model's properties are set above in suggestionlist.model.append({...})
-            text: postalAddress
+            text:  postalAddress
 
             onClicked: {
                 internal.doSearch = false
@@ -149,6 +154,7 @@ Item{
 
     ListModel {
         id: gMapsEntries
+//        count : 5
     }
 
 

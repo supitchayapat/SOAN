@@ -156,7 +156,7 @@ Page {
                 id: addressField
                 height : lineH
                 width : fieldsListView.width - lineH
-                maxAddressListed: 5
+                maxAddressListed: 3
                 isRequired : true
 
                 onEditingFinished: {
