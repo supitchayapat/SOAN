@@ -1,10 +1,15 @@
 
+var Error = {}
 
-var Error = function (callback, scope, message) {
-    this.mess = message
-    this.call = callback
-    this.isActive = this.call
-    this.scope = scope
+Error.create = function(_callback, scope, fullname)
+{
+    function ErrorClass(_callback, scope, fullname){
+        this.fullname = fullname;
+        this.call = _callback;
+        this.isActive = this.call;
+        this.scope = scope;
+    };
+    return new ErrorClass(_callback, scope, fullname);
 }
 
 Error.scope = {
