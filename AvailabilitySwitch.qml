@@ -1,6 +1,7 @@
 import QtQuick 2.6
 import QtQuick.Controls.Styles 1.4 as ControlStyles
 import Material 0.3
+import Qondrite 0.1
 
 Switch {
     id: control
@@ -55,5 +56,11 @@ Switch {
                 }
             }
         }
+    }
+    Component.onCompleted: {
+        Qondrite.getOwnAvailability().result.then(function(ownAvailability){
+            checked = ownAvailability;
+
+        })
     }
 }

@@ -96,6 +96,13 @@ var wiambAPI = {
 	     		}
 		   }
 		)
+	},
+	"getOwnAvailability" : function getOwnAvailability(){
+		return  Availability.findOne(
+			{
+				user_id : {$eq : Meteor.userId()}
+			}
+		).availability;
 	}
 };
 

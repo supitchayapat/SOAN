@@ -84,6 +84,10 @@ WebSocket {
         return ceres.call("updateUser",user);
     }
 
+    function getOwnAvailability(){
+        return ceres.call("getOwnAvailability");
+    }
+
     function updateUserAvailability(state)
     {
         return ceres.call("updateUserAvailability", state);
