@@ -7,6 +7,7 @@ import "Error.js" as Err
 import "qrc:/Qondrite/q.js" as Qlib
 import Qure 0.1
 
+// TODO : handle the case where the address is France, this should display a warning and put the Component on Error state
 // TODO : try to use TextFieldValidated instead of Item as a root Item so that to reduce the number of needed properties aliases
 Item{
     id: myRoot
@@ -21,11 +22,8 @@ Item{
     property bool listViewExpanded : suggestionlist.visible
     property double latitude
     property double longitude
-
-    QtObject{
-        id: internal
-        property bool doSearch: true
-    }
+    property string forcedResult : ""
+    property bool selectedFromSuggestion : false
 
     TextFieldValidated{
         id:address_txtField
@@ -38,7 +36,15 @@ Item{
         width : parent.width
         validationDelay: 200
 
+
         onEditingFinished :{
+             if(!selectedFromSuggestion && !isPristine) {
+                 text = forcedResult
+                 isPristine = true
+                 suggestionlist.model.clear()
+                 suggestionlist.visible = false;
+             }
+             selectedFromSuggestion = false
             myRoot.editingFinished()
         }
 
@@ -46,7 +52,7 @@ Item{
             onEditingFinishedValidations.unshift(Err.Error.create(function(){
                 // run validation only if undone yet for current address and address length is worth it
                 var dfd = Qlib.Q.defer();
-                if(address_txtField.text.length > 3 &&  internal.doSearch && !isPristine){
+                if(address_txtField.text.length > 3 &&  !isPristine){
                     return serverGateway.validateAddress(text).result.then(
 
                                 function onsuccess(result){
@@ -54,6 +60,7 @@ Item{
                                     if((Array.isArray(result) && result.length ===0)||result.status === "ERROR"){
                                         addressIsValid = false;
                                     }
+                                    else  forcedResult = result[0].formattedAddress
 
                                     return {    response : addressIsValid,
                                                 message :  addressIsValid ? "" : qsTr("Adresse invalide")
@@ -68,8 +75,7 @@ Item{
             }, Err.Error.scope.REMOTE));
 
             onEditingValidations.unshift(Err.Error.create(function(){
-                internal.doSearch = true
-                if(address_txtField.text.length > 3 && internal.doSearch && !isPristine){
+                if(address_txtField.text.length > 3 && !isPristine){
                     return serverGateway.validateAddress(text).result.then(
 
                                 function onsuccess(result){
@@ -101,8 +107,8 @@ Item{
 
         onActiveFocusChanged:  {
                 suggestionlist.visible = false
-                if(activeFocus ) internal.doSearch = true
         }
+
     }
 
     ListView{
@@ -128,7 +134,7 @@ Item{
             text:  postalAddress
 
             onClicked: {
-                internal.doSearch = false
+                myRoot.selectedFromSuggestion = true
                 address_txtField.text = text
                 address_txtField.isPristine = true
                 suggestionlist.model.clear()
