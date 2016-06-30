@@ -238,6 +238,9 @@ TextField{
     onFocusChanged: {
         if(activeFocus || focus){
            timer.restart()
+            if (!isPristine){
+                isPristine = !isPristine;
+            }
         }
         else{
             timer.stopOnCallbacksComplete = true;

@@ -32,55 +32,26 @@ Item{
 
         placeholderText: qsTr("Adresse")
         anchors.verticalCenter : parent.verticalCenter
-        validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
+        validator: RegExpValidator{regExp: /^[\-'a-z0-9 ,àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
         serverGateway  : Qondrite
         Layout.fillHeight: true
         width : parent.width
+        validationDelay: 200
 
         onEditingFinished :{
             myRoot.editingFinished()
-        }
-
-        onTextChanged: {
-            if(address_txtField.text.length > 3 && internal.doSearch){
-                return serverGateway.validateAddress(text).result.then(
-
-                            function onsuccess(result){
-                                gMapsEntries.clear()
-                                if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                    suggestionlist.visible = false
-
-                                }else{
-                                    for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
-                                        gMapsEntries.append({"latitude": result[i].latitude,
-                                                                           "longitude":result[i].longitude,
-                                                                           "postalAddress":result[i].formattedAddress});
-                                    }
-                                    suggestionlist.visible = true
-                                }
-                            },
-                            function onerror(resp){
-                                dfd.resolve( {
-                                                response : false,
-                                                message : "error :"+resp.error.error
-                                            });
-                                 suggestionlist.visible = false
-                                return dfd.promise;
-                            }
-                            );
-            }
         }
 
         Component.onCompleted: {
             onEditingFinishedValidations.unshift(Err.Error.create(function(){
                 // run validation only if undone yet for current address and address length is worth it
                 var dfd = Qlib.Q.defer();
-                if(address_txtField.text.length > 3){
+                if(address_txtField.text.length > 3 &&  internal.doSearch && !isPristine){
                     return serverGateway.validateAddress(text).result.then(
 
                                 function onsuccess(result){
                                     var addressIsValid = true;
-                                    if(result.status === "ERROR"){
+                                    if((Array.isArray(result) && result.length ===0)||result.status === "ERROR"){
                                         addressIsValid = false;
                                     }
 
@@ -95,10 +66,42 @@ Item{
                                 });
                 }
             }, Err.Error.scope.REMOTE));
+
+            onEditingValidations.unshift(Err.Error.create(function(){
+                internal.doSearch = true
+                if(address_txtField.text.length > 3 && internal.doSearch && !isPristine){
+                    return serverGateway.validateAddress(text).result.then(
+
+                                function onsuccess(result){
+                                    gMapsEntries.clear()
+                                    if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
+                                        suggestionlist.visible = false
+
+                                    }else{
+                                        for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
+                                            gMapsEntries.append({"latitude": result[i].latitude,
+                                                                               "longitude":result[i].longitude,
+                                                                               "postalAddress":result[i].formattedAddress});
+                                        }
+                                        suggestionlist.visible = true
+                                    }
+                                },
+                                function onerror(resp){
+                                    dfd.resolve( {
+                                                    response : false,
+                                                    message : "error :"+resp.error.error
+                                                });
+                                     suggestionlist.visible = false
+                                    return dfd.promise;
+                                }
+                                );
+                }
+            }, Err.Error.scope.REMOTE));
         }
 
         onActiveFocusChanged:  {
                 suggestionlist.visible = false
+                if(activeFocus ) internal.doSearch = true
         }
     }
 
@@ -127,12 +130,9 @@ Item{
             onClicked: {
                 internal.doSearch = false
                 address_txtField.text = text
-                address_txtField.manageValidation()
+                address_txtField.isPristine = true
                 suggestionlist.model.clear()
-                 //TODO the suggestionlist need to be hidden on element selected
                 suggestionlist.visible = false;
-                suggestionlist.height = 0;
-                internal.doSearch = true
             }
         }
     }
