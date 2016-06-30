@@ -52,9 +52,9 @@ Item{
             onEditingFinishedValidations.unshift(Err.Error.create(function(){
                 // run validation only if undone yet for current address and address length is worth it
                 var dfd = Qlib.Q.defer();
-                if(address_txtField.text.length > 3 &&  !isPristine){
-                    return serverGateway.validateAddress(text).result.then(
 
+                if(address_txtField.text.length > 3 &&  !isPristine){
+                    return serverGateway.validateAddress(text).result.then(                            
                                 function onsuccess(result){
                                     var addressIsValid = true;
                                     if((Array.isArray(result) && result.length ===0)||result.status === "ERROR"){
@@ -62,24 +62,28 @@ Item{
                                     }
                                     else  forcedResult = result[0].formattedAddress
 
-                                    return {    response : addressIsValid,
+                                    dfd.resolve({    response : addressIsValid,
                                                 message :  addressIsValid ? "" : qsTr("Adresse invalide")
-                                            };
+                                            });
+                                    return dfd.promise;
                                 },
                                 function onerror(resp){
-                                    return {    response : false,
+                                    dfd.resolve({    response : false,
                                                 message : "error :"+resp.error.error
-                                            };
+                                            });
+                                    return dfd.promise;
                                 });
                 }
+                return dfd.promise;
+
             }, Err.Error.scope.REMOTE));
 
             onEditingValidations.unshift(Err.Error.create(function(){
+                var dfd = Qlib.Q.defer();
                 if(address_txtField.text.length > 3 && !isPristine){
                     return serverGateway.validateAddress(text).result.then(
-
                                 function onsuccess(result){
-                                    gMapsEntries.clear()
+                                    gMapsEntries.clear();
                                     if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                                         suggestionlist.visible = false
 
@@ -91,6 +95,7 @@ Item{
                                         }
                                         suggestionlist.visible = true
                                     }
+                                    return dfd.promise;
                                 },
                                 function onerror(resp){
                                     dfd.resolve( {
@@ -102,6 +107,8 @@ Item{
                                 }
                                 );
                 }
+                return dfd.promise;
+
             }, Err.Error.scope.REMOTE));
         }
 
