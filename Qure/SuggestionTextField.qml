@@ -25,6 +25,10 @@ Item{
     property string forcedResult : ""
     property bool selectedFromSuggestion : false
 
+    function checkRequired() {
+        return address_txtField.checkRequired();
+    }
+
     TextFieldValidated{
         id:address_txtField
 
@@ -35,7 +39,6 @@ Item{
         Layout.fillHeight: true
         width : parent.width
         validationDelay: 200
-
 
         onEditingFinished :{
              if(!selectedFromSuggestion && !isPristine) {
@@ -89,9 +92,10 @@ Item{
 
                                     }else{
                                         for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
-                                            gMapsEntries.append({"latitude": result[i].latitude,
-                                                                               "longitude":result[i].longitude,
-                                                                               "postalAddress":result[i].formattedAddress});
+                                            gMapsEntries.append({
+                                                                    "latitude": result[i].latitude,
+                                                                    "longitude":result[i].longitude,
+                                                                    "postalAddress":result[i].formattedAddress});
                                         }
                                         suggestionlist.visible = true
                                     }
@@ -102,11 +106,11 @@ Item{
                                                     response : false,
                                                     message : "error :"+resp.error.error
                                                 });
-                                     suggestionlist.visible = false
+                                    suggestionlist.visible = false
                                     return dfd.promise;
-                                }
-                                );
+                                });
                 }
+
                 return dfd.promise;
 
             }, Err.Error.scope.REMOTE));

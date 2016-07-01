@@ -69,8 +69,8 @@ Page {
         {
             nomprenom_txtFld.checkRequired();
             nomdelastructure_txtFld.checkRequired();
+            addressField.checkRequired();
             email_txtFld.checkRequired();
-            address_txtField.checkRequired();
             tel_txtFld.checkRequired();
             newPassword.checkRequired();
         }
