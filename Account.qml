@@ -443,9 +443,7 @@ Page {
         z:1
 
         Column{
-
-            anchors.horizontalCenter: parent.horizontalCenter
-
+            anchors.fill: parent
             Icon{
                 name:"action/done"
                 size: dp(100)
