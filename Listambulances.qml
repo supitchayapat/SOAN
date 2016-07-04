@@ -12,6 +12,8 @@ Page {
 
     backAction: navDrawer.action
     actionBar.customContent : AvailabilitySwitch{
+        id: switchControl
+
         anchors{
             right: parent.right
             verticalCenter: parent.verticalCenter
@@ -166,7 +168,9 @@ Page {
             initList()
             bindEventsToList()
         });
-
+        Qondrite.getOwnAvailability().result.then(function(ownAvailability){
+            switchControl.checked = ownAvailability;
+        })
         Qondrite.loggingOut.connect(function(){subscription.stop();})
     }
 }
