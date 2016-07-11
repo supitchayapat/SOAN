@@ -58,7 +58,7 @@ ApplicationWindow {
             }
             onDisconnectPressed: {
 
-                Qondrite.updateUserAvailability(false);
+                Qondrite.changeAvailability(false);
                 pageStack.push(Qt.resolvedUrl("Signin.qml"))
                 Qondrite.logout();
                 remoteCallSpinner.hide();
@@ -125,7 +125,7 @@ ApplicationWindow {
         });
         Qondrite._on("remoteCallSuccess", hideSpinner);
         Qondrite._on("remoteCallError", hideSpinner);
-        Qondrite._on("logout", hideSpinner);
+        Qondrite._on("logout",hideSpinner);
         Qondrite._on("logoutError", hideSpinner);
     }
 }
