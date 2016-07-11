@@ -16,7 +16,6 @@ ApplicationWindow {
 
     signal login()
 
-
     // @TODO : set default initialPage at splashscreen loading
     initialPage: Qt.resolvedUrl("Signin.qml");
 
@@ -40,7 +39,6 @@ ApplicationWindow {
         Qondrite.setStorage(appSettings);
         Qondrite.tryResumeLogin();
     }
-
     NavigationDrawer {
         id:navDrawer
 
@@ -110,6 +108,7 @@ ApplicationWindow {
         }
     }
 
+    onLogin : { pageStack.pop(singup); pageStack.pop(signin) }
     Component.onCompleted: {
 
         manageInitialPage();
@@ -123,9 +122,14 @@ ApplicationWindow {
             remoteCallSpinnerStartDelayed.start();
             onRemoteCallTimeout.start()
         });
+        Qondrite.connect.login(function () {
+            pagestack.pop(signup)
+            pageStack.pop(signin)
+        });
         Qondrite._on("remoteCallSuccess", hideSpinner);
         Qondrite._on("remoteCallError", hideSpinner);
         Qondrite._on("logout", hideSpinner);
         Qondrite._on("logoutError", hideSpinner);
     }
+
 }
