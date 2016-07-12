@@ -36,7 +36,6 @@ WebSocket {
 
     function _connect() {
         console.log("Connecting to " + meteor_url);
-        //ceres = new Ast.Asteroid(wsid, meteor_url.toString(), true, false, 10000, function(event) {
         ceres = new Ast.Asteroid({
             ws : wsid,
             host : meteor_url.toString(),

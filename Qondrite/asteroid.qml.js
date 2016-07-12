@@ -44,7 +44,6 @@ var Asteroid;
     this.subscriptions = {};
     this._subscriptionsCache = {};
     // Set __ddpOptions
-    //this._setDdpOptions(ws, host, ssl, do_not_autoreconnect, socketInterceptFunction);
     this._setDdpOptions(config);
     // Init the instance
     this._init();
