@@ -185,6 +185,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             TextFieldValidated{
@@ -225,6 +226,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             TextFieldValidated{
@@ -264,6 +266,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             TextFieldValidated{
@@ -338,6 +341,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             EmailTextField {
@@ -375,6 +379,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             PhoneTextField{
