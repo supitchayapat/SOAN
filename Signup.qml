@@ -316,6 +316,6 @@ Page {
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
-        Qondrite.onUserCreated.connect(function() { pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"},replace: true})})
+        Qondrite.onUserCreated.connect(function() { pageStack.pop() })
     }
 }

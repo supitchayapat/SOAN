@@ -49,7 +49,14 @@ ApplicationWindow {
             objectName: "sidePanel"
 
             onGoToAccountPage: {
-                pageStack.push({item:Qt.resolvedUrl("Account.qml")})
+                if(pageStack.find(function(item) {return item.name === "AccountPage"})){
+                    pageStack.pop(pageStack.find(function(item) {
+                        return item.name === "AccountPage";
+                    }))
+                }
+                else{
+                    pageStack.push({item:Qt.resolvedUrl("Account.qml"),"properties" : {"name" : "AccountPage"}})
+                }
             }
             onGoToAmbulanceListPage: {
                 pageStack.pop(pageStack.find(function(item) {
@@ -58,9 +65,10 @@ ApplicationWindow {
             }
             onDisconnectPressed: {
                 Qondrite.changeAvailability(false);
-                pageStack.push({"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},replace:true, destroyOnPop:true})
                 Qondrite.logout();
                 remoteCallSpinner.hide();
+                pageStack.clear()
+                pageStack.push({"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},replace:true, destroyOnPop:true})
             }
         }
 
@@ -113,10 +121,10 @@ ApplicationWindow {
         manageInitialPage();
 
         Qondrite.onResumeLogin.connect(function() {
-            pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"}, replace: true})
+                pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"}, replace: true})
         });
         Qondrite.onLogin.connect(function () {
-            pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"},replace: true})
+                pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"},replace: true})
         });
         Qondrite._on("logout",hideSpinner);
         Qondrite._on("logoutError", hideSpinner);
