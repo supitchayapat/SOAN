@@ -17,7 +17,7 @@ ApplicationWindow {
     signal login()
 
     // @TODO : set default initialPage at splashscreen loading
-    initialPage: Qt.resolvedUrl("Signin.qml");
+    initialPage: {"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},"destroyOnPop":true}
 
     theme {
         //WARNING: for the moment we support only light themes
@@ -49,15 +49,16 @@ ApplicationWindow {
             objectName: "sidePanel"
 
             onGoToAccountPage: {
-                pageStack.push(Qt.resolvedUrl("Account.qml"))
+                pageStack.push({item:Qt.resolvedUrl("Account.qml")})
             }
             onGoToAmbulanceListPage: {
-                pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+                pageStack.pop(pageStack.find(function(item) {
+                    return item.name === "ListAmbPage";
+                }))
             }
             onDisconnectPressed: {
-
                 Qondrite.changeAvailability(false);
-                pageStack.push(Qt.resolvedUrl("Signin.qml"))
+                pageStack.push({"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},replace:true, destroyOnPop:true})
                 Qondrite.logout();
                 remoteCallSpinner.hide();
             }
@@ -108,28 +109,27 @@ ApplicationWindow {
         }
     }
 
-    onLogin : { pageStack.pop(singup); pageStack.pop(signin) }
     Component.onCompleted: {
-
         manageInitialPage();
+
         Qondrite.onResumeLogin.connect(function() {
-            pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+            pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"}, replace: true})
         });
+        Qondrite.onLogin.connect(function () {
+            pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"},replace: true})
+        });
+        Qondrite._on("logout",hideSpinner);
+        Qondrite._on("logoutError", hideSpinner);
 
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);
+
         Qondrite._on("remoteCallStart", function(){
             remoteCallSpinnerStartDelayed.start();
             onRemoteCallTimeout.start()
         });
-        Qondrite.connect.login(function () {
-            pagestack.pop(signup)
-            pageStack.pop(signin)
-        });
         Qondrite._on("remoteCallSuccess", hideSpinner);
         Qondrite._on("remoteCallError", hideSpinner);
-        Qondrite._on("logout",hideSpinner);
-        Qondrite._on("logoutError", hideSpinner);
     }
 
 }
