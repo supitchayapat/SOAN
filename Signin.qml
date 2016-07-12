@@ -164,8 +164,7 @@ Page {
                 onClicked:{
                     pageStack.push({"item": Qt.resolvedUrl("Signup.qml"),
                                        "properties" : {"name" : "SignupPage"},
-                                       "destroyOnPop":true,
-                                       replace:true})
+                                       "destroyOnPop":true})
                 }
             }
         }
