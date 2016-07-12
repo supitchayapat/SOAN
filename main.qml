@@ -116,6 +116,9 @@ ApplicationWindow {
         Qondrite.onResumeLogin.connect(function() {
             pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
         });
+        Qondrite.onResumeLoginFailed.connect(function() {
+            pageStack.push(Qt.resolvedUrl("Signin.qml"))
+        });
 
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);
