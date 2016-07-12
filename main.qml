@@ -49,14 +49,9 @@ ApplicationWindow {
             objectName: "sidePanel"
 
             onGoToAccountPage: {
-                if(pageStack.find(function(item) {return item.name === "AccountPage"})){
-                    pageStack.pop(pageStack.find(function(item) {
-                        return item.name === "AccountPage";
-                    }))
-                }
-                else{
+                //FIXME : the condition below doesn't seems to work and AccountPage is pushed many times
+                //  if(pageStack.currentItem.name !== "AccountPage"){
                     pageStack.push({item:Qt.resolvedUrl("Account.qml"),"properties" : {"name" : "AccountPage"}})
-                }
             }
             onGoToAmbulanceListPage: {
                 pageStack.pop(pageStack.find(function(item) {
@@ -71,7 +66,6 @@ ApplicationWindow {
                 pageStack.push({"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},replace:true, destroyOnPop:true})
             }
         }
-
     }
 
     Snackbar {
