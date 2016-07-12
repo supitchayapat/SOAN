@@ -24,14 +24,13 @@ var DDP;
 		};
 	})();
 
-    var DISABLE_PING = false;
-	var INIT_DDP_MESSAGE = "{\"server_id\":\"0\"}";
+    var INIT_DDP_MESSAGE = "{\"server_id\":\"0\"}";
 	// After hitting the plateau, it'll try to reconnect
 	// every 16.5 seconds
 	var RECONNECT_ATTEMPTS_BEFORE_PLATEAU = 10;
 	var TIMER_INCREMENT = 300;
     var DEFAULT_PING_INTERVAL = 10000;
-	var DDP_SERVER_MESSAGES = [
+    var DDP_SERVER_MESSAGES = [
 		"added", "changed", "connected", "error", "failed",
 		"nosub", "ready", "removed", "result", "updated",
 		"ping", "pong"
@@ -158,7 +157,7 @@ var DDP;
         this._socket.sendTextMessage(message);
 	};
 
-	DDP.prototype._try_reconnect = function () {
+    DDP.prototype._try_reconnect = function () {
         if (this._reconnect_count < RECONNECT_ATTEMPTS_BEFORE_PLATEAU) {
             this._socket.setTimeout(this.connect.bind(this), this._reconnect_incremental_timer);
 			this._reconnect_count += 1;
@@ -237,17 +236,15 @@ var DDP;
 			self._send(self._queue.shift());
 		}
 		self._emit(eventName, data);
-		// Set up keepalive ping-s
-        if (DISABLE_PING === false)
-        {
-            self._ping_interval_handle = this._socket.setInterval(function () {
-                var id = uniqueId();
-                self._send({
-                    msg: "ping",
-                    id: id
-                });
-            }, self._ping_interval);
-        }
+        // Set up keepalive ping-s
+        self._ping_interval_handle = this._socket.setInterval(function () {
+            var id = uniqueId();
+            self._send({
+                msg: "ping",
+                id: id
+            });
+        }, self._ping_interval);
+
 	};
 	DDP.prototype._on_failed = function (data) {
 		this.readyState = 4;
@@ -280,9 +277,9 @@ var DDP;
 				timestamp: Date.now()
 			});
 		}
-        if (DISABLE_PING === false){
-            this._socket.clearInterval(this._ping_interval_handle);
-        }
+
+        this._socket.clearInterval(this._ping_interval_handle);
+
 		this.readyState = 4;
 		this._emit("socket_close");
 		if (this._autoreconnect) {
@@ -297,9 +294,9 @@ var DDP;
 				timestamp: Date.now()
 			});
 		}
-        if (DISABLE_PING === false){
-            this._socket.clearInterval(this._ping_interval_handle);
-        }
+
+        this._socket.clearInterval(this._ping_interval_handle);
+
 		this.readyState = 4;
 		this._emit("socket_error", e);
 	};
