@@ -10,9 +10,9 @@ import "qrc:/Qure/Error.js" as Err
 import Qure 0.1
 
 Page {
-    id:root
+    id:signup_pg
 
-    property int lineH: root.height/9
+    property int lineH: signup_pg.height/9
 
     QtObject{
         id:accountInfo
@@ -275,6 +275,6 @@ Page {
     // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
     // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
-        Qondrite.onUserCreated.connect(function() {pageStack.push(Qt.resolvedUrl("Listambulances.qml"))})
+        Qondrite.onUserCreated.connect(function() { pageStack.pop() })
     }
 }

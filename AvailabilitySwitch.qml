@@ -1,45 +1,41 @@
-import QtQuick 2.6
-import QtQuick.Controls.Styles 1.4 as ControlStyles
+import QtQuick 2.5
+import QtQuick.Controls.Styles.Material 0.1 as MaterialStyle
 import Material 0.3
-import Qondrite 0.1
 
 Switch {
     id: control
 
+    property color availableColor: "#76ff03"
     property color busyColor : "#f44336"
-    property Item actionBarItem: parent.parent.parent !== null ? parent.parent.parent : control
 
-    color: "#76ff03"
-    height : actionBarItem.height * 0.5
-
-    style: ControlStyles.SwitchStyle {
-        handle: View {
-            width: control.height
-            height: control.height
-            radius: width / 2
+    scale:1.7
+    style: MaterialStyle.SwitchStyle {
+        handle:View {
+            width: 22 * Units.dp
+            height: 22 * Units.dp
+            radius: height / 2
             elevation: 2
-            backgroundColor: control.enabled ? control.checked ? control.color
-                                                               : darkBackground ? busyColor
+            backgroundColor: control.enabled ? control.checked ? control.availableColor
+                                                               : control.darkBackground ? busyColor
                                                                                 : busyColor
-            : darkBackground ? busyColor
+            : control.darkBackground ? busyColor
             : busyColor
         }
 
         groove: Item {
-            width: control.height * 2
-            height: control.height
+            width: 40 * Units.dp
+            height: 22 * Units.dp
 
             Rectangle {
                 anchors.centerIn: parent
                 width: parent.width - 2 * Units.dp
-                height: parent.height * 0.5
+                height: 16 * Units.dp
                 radius: height / 2
-                color: control.enabled ? control.checked ? Theme.alpha(control.color, 0.65)
-                                                         : darkBackground ? Theme.alpha(busyColor, 0.8)
+                color: control.enabled ? control.checked ? Theme.alpha(control.availableColor, 0.65)
+                                                         : control.darkBackground ? Theme.alpha(busyColor, 0.8)
                                                                           : Theme.alpha(busyColor, 0.8)
-                : darkBackground ? Theme.alpha(busyColor, 0.8)
+                : control.darkBackground ? Theme.alpha(busyColor, 0.8)
                 : Theme.alpha(busyColor, 0.8)
-
 
                 Rectangle{
                     id:backgroud
@@ -56,11 +52,5 @@ Switch {
                 }
             }
         }
-    }
-    Component.onCompleted: {
-        Qondrite.getOwnAvailability().result.then(function(ownAvailability){
-            checked = ownAvailability;
-
-        })
     }
 }

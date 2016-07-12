@@ -7,12 +7,12 @@ import Qondrite 0.1
 import Qure 0.1
 
 Page {
-    id:root
+    id:signin_pg
 
     actionBar.hidden: true
 
-    property int rowHeight: root.height/12
-    property int linesSpacing: root.height/30
+    property int rowHeight: signin_pg.height/12
+    property int linesSpacing: signin_pg.height/30
     Rectangle{
         id : backgroud_rct
         anchors.fill: parent
@@ -20,7 +20,7 @@ Page {
         z : -1
     }
 
-    Dialog {    
+    Dialog {
         id: confirmed_dlg
 
         width: Math.min(450*Units.dp,Screen.desktopAvailableWidth*0.8)
@@ -66,17 +66,17 @@ Page {
         onAccepted: {
             //a signal with email name will be emited to a function,lets show confirmed dialog
             Qondrite.forgotPassword(textEmail_txtFld.text).result.then(
-                function onsuccess(){
-                    textEmail_txtFld.text = ""
-                    confirmed_dlg.show();
-                },
-                function onerror(error){
-                    textEmail_txtFld.text = ""
-                    if (error.error === 403){
-                        snackbar.open(qsTr("Cet email ne correspond à aucun utilisateur"));
-                    }
-                }
-            );
+                        function onsuccess(){
+                            textEmail_txtFld.text = ""
+                            confirmed_dlg.show();
+                        },
+                        function onerror(error){
+                            textEmail_txtFld.text = ""
+                            if (error.error === 403){
+                                snackbar.open(qsTr("Cet email ne correspond à aucun utilisateur"));
+                            }
+                        }
+                        );
 
         }
 
@@ -162,7 +162,9 @@ Page {
                 backgroundColor: Theme.primaryColor
 
                 onClicked:{
-                    pageStack.push(Qt.resolvedUrl("Signup.qml"))
+                    pageStack.push({"item": Qt.resolvedUrl("Signup.qml"),
+                                       "properties" : {"name" : "SignupPage"},
+                                       "destroyOnPop":true})
                 }
             }
         }
@@ -196,15 +198,9 @@ Page {
         id: snackbar
     }
 
-
-    // TODO : here we bind the signal to a specific function in the scope of Component.onCompleted.
-    // It will be nice to have access to those signal handlers directly with signal handlers :
-    // Qondrite.onLogin : pageStack.push(Qt.resolvedUrl("Listambulances.qml")
-    // we get "non-existent attached object qml" errors if we do that. please try to explore and improve
     Component.onCompleted: {
         Qondrite.onLogin.connect(function() {
             invalidCredentialsLabel.visible = false
-            pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
         })
 
         Qondrite.onLoginFailed.connect(function() {invalidCredentialsLabel.visible = true})
