@@ -1,36 +1,25 @@
-/*
- * QML Material - An application framework implementing Material Design.
- *
- * Copyright (C) 2015-2016 Michael Spencer <sonrisesoftware@gmail.com>
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-import QtQuick 2.4
-import QtQuick.Controls 1.3 as Controls
+import QtQuick 2.5
 import QtQuick.Controls.Styles 1.3 as ControlStyles
+import QtQuick.Controls.Styles.Material 0.1 as MaterialStyle
 import Material 0.3
 
-Controls.Switch {
+Switch {
     id: control
 
-    property color color: "#76ff03"
+    property color availableColor: "#76ff03"
     property color busyColor : "#f44336"
-    property bool darkBackground
 
     scale:1.7
-    style: ControlStyles.SwitchStyle {
-        handle: View {
+    style: MaterialStyle.SwitchStyle {
+        handle:View {
             width: 22 * Units.dp
             height: 22 * Units.dp
             radius: height / 2
             elevation: 2
-            backgroundColor: control.enabled ? control.checked ? control.color
-                                                               : darkBackground ? busyColor
+            backgroundColor: control.enabled ? control.checked ? control.availableColor
+                                                               : control.darkBackground ? busyColor
                                                                                 : busyColor
-            : darkBackground ? busyColor
+            : control.darkBackground ? busyColor
             : busyColor
         }
 
@@ -43,10 +32,10 @@ Controls.Switch {
                 width: parent.width - 2 * Units.dp
                 height: 16 * Units.dp
                 radius: height / 2
-                color: control.enabled ? control.checked ? Theme.alpha(control.color, 0.65)
-                                                         : darkBackground ? Theme.alpha(busyColor, 0.8)
+                color: control.enabled ? control.checked ? Theme.alpha(control.availableColor, 0.65)
+                                                         : control.darkBackground ? Theme.alpha(busyColor, 0.8)
                                                                           : Theme.alpha(busyColor, 0.8)
-                : darkBackground ? Theme.alpha(busyColor, 0.8)
+                : control.darkBackground ? Theme.alpha(busyColor, 0.8)
                 : Theme.alpha(busyColor, 0.8)
 
                 Rectangle{
