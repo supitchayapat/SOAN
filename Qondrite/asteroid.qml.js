@@ -27,7 +27,6 @@ var Asteroid;
 // Asteroid constructor //
 //////////////////////////
 
-//var Asteroid = function (ws, host, ssl, do_not_autoreconnect, socketInterceptFunction, instanceId) {
   var Asteroid = function(config){
     // Assert arguments type
 
