@@ -88,11 +88,6 @@ WebSocket {
         return ceres.call("getOwnAvailability");
     }
 
-    function updateUserAvailability(state)
-    {
-        return ceres.call("updateUserAvailability", state);
-    }
-
     function changePassword(oldPassword,newPassword){
         return ceres.call("changePassword",oldPassword, newPassword);
     }
