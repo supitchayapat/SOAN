@@ -86,7 +86,7 @@ ApplicationWindow {
 
     function internetOffCallback()
     {
-        errorToast.open('La connexion à Internet a été interrompue');
+        errorToast.open('La connexion à Internet a été interrompue');        
     }
 
     Timer {

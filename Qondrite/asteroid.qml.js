@@ -27,23 +27,25 @@ var Asteroid;
 // Asteroid constructor //
 //////////////////////////
 
-var Asteroid = function (ws, host, ssl, socketInterceptFunction, instanceId) {
+//var Asteroid = function (ws, host, ssl, do_not_autoreconnect, socketInterceptFunction, instanceId) {
+  var Asteroid = function(config){
     // Assert arguments type
 
-    Asteroid.utils.must.beString(host);
+    Asteroid.utils.must.beString(config.host);
 
 
     // An id may be assigned to the instance. This is to support
     // resuming login of multiple connections to the same host.
-    this._instanceId = instanceId || "0";
+    this._instanceId = config.instanceId || "0";
     // Configure the instance
-    this._host = (ssl ? "https://" : "http://") + host;
+    this._host = (config.ssl ? "https://" : "http://") + config.host;
     // Reference containers
     this.collections = {};
     this.subscriptions = {};
     this._subscriptionsCache = {};
     // Set __ddpOptions
-    this._setDdpOptions(ws, host, ssl, socketInterceptFunction);
+    //this._setDdpOptions(ws, host, ssl, do_not_autoreconnect, socketInterceptFunction);
+    this._setDdpOptions(config);
     // Init the instance
     this._init();
 };
@@ -1262,21 +1264,25 @@ Asteroid.utils.multiStorage.del = function (key) {
     return deferred.promise;
 };
 
-Asteroid.prototype._setDdpOptions = function (ws, host, ssl, socketInterceptFunction) {
+Asteroid.prototype._setDdpOptions = function (config) {
     // If SockJS is available, use it, otherwise, use WebSocket
     // Note: SockJS is required for IE9 support
 
     if (typeof SockJS === "function") {
         this._ddpOptions = {
-            endpoint: (ssl ? "https://" : "http://") + host + "/sockjs",
+            endpoint: (config.ssl ? "https://" : "http://") + config.host + "/sockjs",
             SocketConstructor: SockJS,
-            socketInterceptFunction: socketInterceptFunction
+            socketInterceptFunction: config.socketInterceptFunction,
+            do_not_autoreconnect : config.do_not_autoreconnect,
+            _ping_interval : config.ping_interval
         };
     } else {
         this._ddpOptions = {
-            endpoint: (ssl ? "wss://" : "ws://") + host + "/websocket",
-            SocketConstructor: ws,
-            socketInterceptFunction: socketInterceptFunction
+            endpoint: (config.ssl ? "wss://" : "ws://") + config.host + "/websocket",
+            SocketConstructor: config.ws,
+            socketInterceptFunction: config.socketInterceptFunction,
+            do_not_autoreconnect : config.do_not_autoreconnect,
+            _ping_interval : config.ping_interval
         };
     }
 };

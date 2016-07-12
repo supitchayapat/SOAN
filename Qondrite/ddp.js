@@ -24,13 +24,13 @@ var DDP;
 		};
 	})();
 
-    var DISABLE_PING = true;
+    var DISABLE_PING = false;
 	var INIT_DDP_MESSAGE = "{\"server_id\":\"0\"}";
 	// After hitting the plateau, it'll try to reconnect
 	// every 16.5 seconds
 	var RECONNECT_ATTEMPTS_BEFORE_PLATEAU = 10;
 	var TIMER_INCREMENT = 300;
-	var DEFAULT_PING_INTERVAL = 10000;
+    var DEFAULT_PING_INTERVAL = 10000;
 	var DDP_SERVER_MESSAGES = [
 		"added", "changed", "connected", "error", "failed",
 		"nosub", "ready", "removed", "result", "updated",
@@ -43,7 +43,7 @@ var DDP;
 		this._endpoint = options.endpoint;
 		this._SocketConstructor = options.SocketConstructor;
 		this._autoreconnect = !options.do_not_autoreconnect;
-		this._ping_interval = options._ping_interval || DEFAULT_PING_INTERVAL;
+        this._ping_interval = options._ping_interval;
 		this._socketInterceptFunction = options.socketInterceptFunction;
 		// Subscriptions callbacks
 		this._onReadyCallbacks   = {};
@@ -159,7 +159,7 @@ var DDP;
 	};
 
 	DDP.prototype._try_reconnect = function () {
-		if (this._reconnect_count < RECONNECT_ATTEMPTS_BEFORE_PLATEAU) {
+        if (this._reconnect_count < RECONNECT_ATTEMPTS_BEFORE_PLATEAU) {
             this._socket.setTimeout(this.connect.bind(this), this._reconnect_incremental_timer);
 			this._reconnect_count += 1;
 			this._reconnect_incremental_timer += TIMER_INCREMENT * this._reconnect_count;

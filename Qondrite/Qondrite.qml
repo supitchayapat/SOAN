@@ -36,10 +36,17 @@ WebSocket {
 
     function _connect() {
         console.log("Connecting to " + meteor_url);
-        ceres = new Ast.Asteroid(wsid, meteor_url.toString(), true, function(event) {
-            console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message );
+        //ceres = new Ast.Asteroid(wsid, meteor_url.toString(), true, false, 10000, function(event) {
+        ceres = new Ast.Asteroid({
+            ws : wsid,
+            host : meteor_url.toString(),
+            ssl : true,
+            do_not_autoreconnect : false,
+            ping_interval : 10000,
+            socketInterceptFunction : function(event) {
+                console.log("Asteroid:" + event.timestamp + ":" + event.type + ": " + event.message );
+            }
         });
-        console.log("done");
         connected();
     }
 
