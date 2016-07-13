@@ -60,8 +60,8 @@ TextField{
 
     property var serverGateway : undefined
 
-    // Another element's whom signals must be handled
     property var linkedElement : undefined
+
     /*
      Tells whether a field value has not been changed at all
      It can help avoid to call a validation if the field is empty
@@ -180,7 +180,7 @@ TextField{
         {
             if (listCalls.length === 0){
                 return ;
-            }            
+            }
             function getValidators(validators)
             {
                 var retValidators = [];
@@ -248,7 +248,7 @@ TextField{
             if (text ==""){
                 timer.stop();
             }
-            else if (linkedElement === undefined) {
+            else if (linkedElement === undefined){
                 manageValidation();
             }
 
@@ -278,7 +278,7 @@ TextField{
             },
             Err.Error.scope.LOCAL
         )
-        );        
+        );
     }
 }
 
