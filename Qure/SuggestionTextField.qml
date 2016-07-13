@@ -19,7 +19,6 @@ Item{
     property alias isValid : address_txtField.isValid
     property alias text : address_txtField.text
     signal editingFinished()
-    signal addressSelected()
     property bool listViewExpanded : suggestionlist.visible
     property double latitude
     property double longitude
@@ -32,7 +31,7 @@ Item{
 
     TextFieldValidated{
         id:address_txtField
-        linkedElement : myRoot
+
         placeholderText: qsTr("Adresse")
         anchors.verticalCenter : parent.verticalCenter
         validator: RegExpValidator{regExp: /^[\-'a-z0-9 ,àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
@@ -41,43 +40,75 @@ Item{
         width : parent.width
         validationDelay: 200
 
+        onEditingFinished :{
+             if(!selectedFromSuggestion && !isPristine) {
+                 text = forcedResult
+                 isPristine = true
+                 suggestionlist.model.clear()
+                 suggestionlist.visible = false;
+             }
+             selectedFromSuggestion = false
+            myRoot.editingFinished()
+        }
+
         Component.onCompleted: {
+            onEditingFinishedValidations.unshift(Err.Error.create(function(){
+                // run validation only if undone yet for current address and address length is worth it
+                var dfd = Qlib.Q.defer();
+
+                if(address_txtField.text.length > 3 &&  !isPristine){
+                    return serverGateway.validateAddress(text).result.then(                            
+                                function onsuccess(result){
+                                    var addressIsValid = true;
+                                    if((Array.isArray(result) && result.length ===0)||result.status === "ERROR"){
+                                        addressIsValid = false;
+                                    }
+                                    else  forcedResult = result[0].formattedAddress
+
+                                    dfd.resolve({    response : addressIsValid,
+                                                message :  addressIsValid ? "" : qsTr("Adresse invalide")
+                                            });
+                                    return dfd.promise;
+                                },
+                                function onerror(resp){
+                                    dfd.resolve({    response : false,
+                                                message : "error :"+resp.error.error
+                                            });
+                                    return dfd.promise;
+                                });
+                }
+                return dfd.promise;
+
+            }, Err.Error.scope.REMOTE));
 
             onEditingValidations.unshift(Err.Error.create(function(){
                 var dfd = Qlib.Q.defer();
                 if(address_txtField.text.length > 3 && !isPristine){
                     return serverGateway.validateAddress(text).result.then(
-                        function onsuccess(result){
-                            gMapsEntries.clear();
-                            if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                suggestionlist.visible = false
-
-                            }else{
-                                for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
-                                    if (result[i].streetName === undefined){
+                                function onsuccess(result){
+                                    gMapsEntries.clear();
+                                    if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                                         suggestionlist.visible = false
-                                        break;
+
+                                    }else{
+                                        for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
+                                            gMapsEntries.append({
+                                                                    "latitude": result[i].latitude,
+                                                                    "longitude":result[i].longitude,
+                                                                    "postalAddress":result[i].formattedAddress});
+                                        }
+                                        suggestionlist.visible = true
                                     }
-                                    gMapsEntries.append({
-                                                            "latitude": result[i].latitude,
-                                                            "longitude":result[i].longitude,
-                                                            "postalAddress":result[i].streetName +"\n"+ result[i].city + ", "+ result[i].zipcode });
-                                }
-                                suggestionlist.visible = true
-                            }
-                            dfd.resolve({
-                                response : true
-                            });
-                            return dfd.promise;
-                        },
-                        function onerror(resp){
-                            dfd.resolve( {
-                                            response : false,
-                                            message : "error :"+resp.error.error
-                                        });
-                            suggestionlist.visible = false
-                            return dfd.promise;
-                        });
+                                    return dfd.promise;
+                                },
+                                function onerror(resp){
+                                    dfd.resolve( {
+                                                    response : false,
+                                                    message : "error :"+resp.error.error
+                                                });
+                                    suggestionlist.visible = false
+                                    return dfd.promise;
+                                });
                 }
 
                 return dfd.promise;
@@ -93,7 +124,6 @@ Item{
 
     ListView{
         id:suggestionlist
-
 
         width:address_txtField.width
         height: count * 48 * Units.dp
@@ -115,13 +145,11 @@ Item{
             text:  postalAddress
 
             onClicked: {
-                addressSelected()
                 myRoot.selectedFromSuggestion = true
-                suggestionlist.add
                 address_txtField.text = text
                 address_txtField.isPristine = true
                 suggestionlist.model.clear()
-                suggestionlist.visible = false;                
+                suggestionlist.visible = false;
             }
         }
     }
