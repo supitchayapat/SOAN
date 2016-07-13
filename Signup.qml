@@ -30,7 +30,7 @@ Page {
 
         onInfosChanged: {
             nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
-                       && email_txtFld.isValid  && address_txtField.isValid
+                       && email_txtFld.isValid  && addressField.isValid
                        && tel_txtFld.isValid && newPassword.isValid  ? true:false
         }
     }
