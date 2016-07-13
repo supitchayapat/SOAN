@@ -87,7 +87,7 @@ ApplicationWindow {
 
     function internetOffCallback()
     {
-        errorToast.open('La connexion à Internet a été interrompue');
+        errorToast.open('La connexion à Internet a été interrompue');        
     }
 
     Timer {
@@ -120,8 +120,14 @@ ApplicationWindow {
         Qondrite.onLogin.connect(function () {
                 pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"},replace: true})
         });
+
+        Qondrite.onResumeLoginFailed.connect(function() {
+            pageStack.push(Qt.resolvedUrl("Signin.qml"))
+        });
+
         Qondrite._on("logout",hideSpinner);
         Qondrite._on("logoutError", hideSpinner);
+
 
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);

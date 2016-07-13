@@ -179,7 +179,6 @@ TextField{
             if (listCalls.length === 0){
                 return ;
             }
-            console.log('listCalls.length : ', listCalls.length);
             function getValidators(validators)
             {
                 var retValidators = [];
