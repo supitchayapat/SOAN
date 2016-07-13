@@ -60,6 +60,8 @@ TextField{
 
     property var serverGateway : undefined
 
+    // Another element's whom signals must be handled
+    property var linkedElement : undefined
     /*
      Tells whether a field value has not been changed at all
      It can help avoid to call a validation if the field is empty
@@ -247,7 +249,7 @@ TextField{
             if (text ==""){
                 timer.stop();
             }
-            else {
+            else if (linkedElement === undefined) {
                 manageValidation();
             }
 
@@ -258,6 +260,16 @@ TextField{
     }
 
     Component.onCompleted: {
+
+        if (linkedElement !== undefined){
+            linkedElement.onAddressSelected.connect(function(){
+                console.log('myRoot.onAddressSelected');
+                hasError = false;
+                helperText = "";
+                checkedIcon.visible = true;
+            })
+        }
+
         onEditingValidations.unshift(Err.Error.create(function()
             {
                 var dfd = Qlib.Q.defer();
@@ -268,7 +280,7 @@ TextField{
             },
             Err.Error.scope.LOCAL
         )
-        );
+        );        
     }
 }
 
