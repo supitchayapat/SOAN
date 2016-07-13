@@ -180,7 +180,8 @@ TextField{
         {
             if (listCalls.length === 0){
                 return ;
-            }            
+            }
+            console.log('listCalls.length : ', listCalls.length);
             function getValidators(validators)
             {
                 var retValidators = [];
@@ -262,6 +263,7 @@ TextField{
 
         if (linkedElement !== undefined){
             linkedElement.onAddressSelected.connect(function(){
+                console.log('myRoot.onAddressSelected');
                 hasError = false;
                 helperText = "";
                 checkedIcon.visible = true;
