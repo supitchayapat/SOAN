@@ -61,6 +61,7 @@ Item{
                                     gMapsEntries.append({
                                                             "latitude": result[i].latitude,
                                                             "longitude":result[i].longitude,
+                                                            "displayAddress" : result[i].formattedAddress,
                                                             "postalAddress":result[i].streetName +"\n"+ result[i].city + ", "+ result[i].zipcode });
                                 }
                                 suggestionlist.visible = true
@@ -118,7 +119,7 @@ Item{
                 addressSelected()
                 myRoot.selectedFromSuggestion = true
                 suggestionlist.add
-                address_txtField.text = text
+                address_txtField.text = displayAddress
                 address_txtField.isPristine = true
                 suggestionlist.model.clear()
                 suggestionlist.visible = false;                
