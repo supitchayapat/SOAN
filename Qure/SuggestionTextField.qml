@@ -116,7 +116,7 @@ Item{
                                                                             "latitude": result[i].latitude,
                                                                             "longitude":result[i].longitude,
                                                                             "displayAddress" : result[i].formattedAddress,
-                                                                            "postalAddress":result[i].streetName + "\n"+ result[i].city + ', '+result[i].zipcode
+                                                                            "postalAddress":result[i].streetNumber + ", "+result[i].streetName + "\n"+ result[i].city + ', '+result[i].zipcode
                                                                         });
                                                 }
                                                 suggestionlist.visible = true
