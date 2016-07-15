@@ -71,35 +71,8 @@ Item{
                     myRoot.editingFinished()
                 }
 
+
                 Component.onCompleted: {
-                    onEditingFinishedValidations.unshift(Err.Error.create(function(){
-                        // run validation only if undone yet for current address and address length is worth it
-                        var dfd = Qlib.Q.defer();
-
-                        if(address_txtField.text.length > 3 &&  !isPristine){
-                            return serverGateway.validateAddress(text).result.then(
-                                        function onsuccess(result){
-                                            var addressIsValid = true;
-                                            if((Array.isArray(result) && result.length ===0)||result.status === "ERROR"){
-                                                addressIsValid = false;
-                                            }
-                                            else  forcedResult = result[0].formattedAddress
-
-                                            dfd.resolve({    response : addressIsValid,
-                                                            message :  addressIsValid ? "" : qsTr("Adresse invalide")
-                                                        });
-                                            return dfd.promise;
-                                        },
-                                        function onerror(resp){
-                                            dfd.resolve({    response : false,
-                                                            message : "error :"+resp.error.error
-                                                        });
-                                            return dfd.promise;
-                                        });
-                        }
-                        return dfd.promise;
-
-                    }, Err.Error.scope.REMOTE));
 
                     onEditingValidations.unshift(Err.Error.create(function(){
                         var dfd = Qlib.Q.defer();
@@ -112,12 +85,17 @@ Item{
 
                                             }else{
                                                 for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
+                                                    if (result[i].streetName === undefined){
+                                                        continue;
+                                                    }
                                                     gMapsEntries.append({
-                                                                            "latitude": result[i].latitude,
-                                                                            "longitude":result[i].longitude,
-                                                                            "displayAddress" : result[i].formattedAddress,
-                                                                            "postalAddress":result[i].streetNumber + ", "+result[i].streetName + "\n"+ result[i].city + ', '+result[i].zipcode
-                                                                        });
+                                                        "latitude": result[i].latitude,
+                                                        "longitude":result[i].longitude,
+                                                        "displayAddress" : result[i].formattedAddress,
+                                                        "suggestAddress":   (result[i].streetNumber ? result[i].streetNumber+', ' : '') +
+                                                                            result[i].streetName +
+                                                                            "\n"+ result[i].city + ', '+result[i].zipcode
+                                                    });
                                                 }
                                                 suggestionlist.visible = true
                                             }
@@ -165,8 +143,8 @@ Item{
                 }
 
                 width:parent.width
-                // postalCode is a property of 'gMapsEntries' ListModel. All the model's properties are set above in suggestionlist.model.append({...})
-                text:  postalAddress
+                //suggestion is a suggestionlist's model's property : gMapEntries
+                text:  suggestAddress
 
                 onClicked: {
                     myRoot.selectedFromSuggestion = true
