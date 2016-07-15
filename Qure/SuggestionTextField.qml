@@ -51,7 +51,6 @@ Item{
 
             TextFieldValidated{
                 id:address_txtField
-
                 anchors.verticalCenter: parent.verticalCenter
                 width : parent.width - icon.size - rowContainer_p.spacing
                 placeholderText: qsTr("Adresse")
@@ -71,8 +70,11 @@ Item{
                     myRoot.editingFinished()
                 }
 
-
                 Component.onCompleted: {
+
+                    myRoot.onAddressSelected.connect(function(){
+                        address_txtField.forceValidationState(true);
+                    });
 
                     onEditingValidations.unshift(Err.Error.create(function(){
                         var dfd = Qlib.Q.defer();
@@ -80,21 +82,33 @@ Item{
                             return serverGateway.validateAddress(text).result.then(
                                         function onsuccess(result){
                                             gMapsEntries.clear();
+                                            var mode_snaptoNearestAddress = false;
+
                                             if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
                                                 suggestionlist.visible = false
+                                            }
+                                            else
+                                            {
+                                                    mode_snaptoNearestAddress = (result.length === 1);
+                                                    console.log('mode snapto '+ mode_snaptoNearestAddress.toString());
 
-                                            }else{
+
                                                 for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
-                                                    if (result[i].streetName === undefined){
+                                                    if (mode_snaptoNearestAddress && !result[i].hasOwnProperty('city')){
                                                         continue;
                                                     }
+
+                                                    if (!mode_snaptoNearestAddress && (!result[i].hasOwnProperty('streetName') || result[i].streetName === undefined)){
+                                                        continue;
+                                                    }
+                                                    console.log('include this snap result');
                                                     gMapsEntries.append({
                                                         "latitude": result[i].latitude,
                                                         "longitude":result[i].longitude,
                                                         "displayAddress" : result[i].formattedAddress,
                                                         "suggestAddress":   (result[i].streetNumber ? result[i].streetNumber+', ' : '') +
-                                                                            result[i].streetName +
-                                                                            "\n"+ result[i].city + ', '+result[i].zipcode
+                                                                            (result[i].streetName || '')+
+                                                                            "\n"+ result[i].city + (result[i].zipcode ? ', '+ result[i].zipcode : '')
                                                     });
                                                 }
                                                 suggestionlist.visible = true
@@ -150,6 +164,7 @@ Item{
                     myRoot.selectedFromSuggestion = true
                     suggestionlist.add
                     address_txtField.text = displayAddress
+                    addressSelected();
                     address_txtField.isPristine = true
                     suggestionlist.model.clear()
                     suggestionlist.visible = false;
