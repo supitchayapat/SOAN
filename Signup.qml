@@ -142,33 +142,30 @@ Page {
             }
         }
 
-        Row{
-            spacing : dp(Defines_values.Signup1RowSpacing)
-            width: fieldsListView.width
-            height: addressField.listViewExpanded ? addressField.totalHeight : lineH
 
-            Icon {
-                name: "maps/place"
-                size: lineH*0.7
+        SuggestionTextField{
+            id: addressField
+
+            width: fieldsListView.width
+            heighWithoutSuggestions: lineH
+
+            maxAddressListed: 3
+            isRequired : true
+
+            onEditingFinished: {
+                accountInfo.infos.address = text
+                accountInfo.infos.latitude = latitude
+                accountInfo.infos.longitude = longitude;
+                accountInfo.infosChanged()
             }
 
-            SuggestionTextField{
-                id: addressField
-                height : lineH
-                width : fieldsListView.width - lineH
-                maxAddressListed: 3
-                isRequired : true
+            onIsValidChanged: accountInfo.infosChanged()
 
-                onEditingFinished: {
-                    accountInfo.infos.address = text
-                    accountInfo.infos.latitude = latitude
-                    accountInfo.infos.longitude = longitude;
-                    accountInfo.infosChanged()
-                }
-
-                onIsValidChanged: accountInfo.infosChanged()
+            Component.onCompleted: {
+                rowContainer.spacing = Qt.binding(function(){return dp(Defines_values.Signup1RowSpacing)})
             }
         }
+
 
         Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
