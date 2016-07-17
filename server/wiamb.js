@@ -22,7 +22,7 @@ Accounts.emailTemplates.resetPassword = {
   },
   html(user, url) {
     return 'Bonjour!'+
-			"<br><br>Cliquez sur le lien ce dessous pour réinitialiser votre mot de passe" +
+			"<br><br>Cliquez sur le lien ci dessous pour réinitialiser votre mot de passe" +
 			"<br>"+url +
 			"<br><br>Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer cet email."+
 			"<br>Merci,"+
