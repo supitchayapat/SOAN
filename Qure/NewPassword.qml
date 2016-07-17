@@ -40,7 +40,7 @@ ColumnLayout{
         onIsValidChanged: if(isValid && !passwordConfirmation_txtfld.isValid) passwordConfirmation_txtfld.manageValidation()
 
         Component.onCompleted: {
-            onEditingValidations.push(new Err.Error(function() {
+            onEditingValidations.push(Err.Error.create(function() {
                 var dfd = Qlib.Q.defer();
                 var check =  _priv.customValidation(passwordConfirmation_txtfld.text,password_txtfld);
                 dfd.resolve({
@@ -65,7 +65,7 @@ ColumnLayout{
         onIsValidChanged: if(isValid && !password_txtfld.isValid) password_txtfld.manageValidation()
 
         Component.onCompleted: {
-            onEditingValidations.unshift(new Err.Error(function() {
+            onEditingValidations.unshift(Err.Error.create(function() {
                 var dfd = Qlib.Q.defer();
                 var check = _priv.customValidation(password_txtfld.text,passwordConfirmation_txtfld);
                 dfd.resolve({

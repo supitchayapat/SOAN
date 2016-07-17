@@ -16,9 +16,8 @@ ApplicationWindow {
 
     signal login()
 
-
     // @TODO : set default initialPage at splashscreen loading
-    initialPage: Qt.resolvedUrl("Signin.qml");
+    initialPage: {"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},"destroyOnPop":true}
 
     theme {
         //WARNING: for the moment we support only light themes
@@ -40,7 +39,6 @@ ApplicationWindow {
         Qondrite.setStorage(appSettings);
         Qondrite.tryResumeLogin();
     }
-
     NavigationDrawer {
         id:navDrawer
 
@@ -51,20 +49,23 @@ ApplicationWindow {
             objectName: "sidePanel"
 
             onGoToAccountPage: {
-                pageStack.push(Qt.resolvedUrl("Account.qml"))
+                //FIXME : the condition below doesn't seems to work and AccountPage is pushed many times
+                //  if(pageStack.currentItem.name !== "AccountPage"){
+                    pageStack.push({item:Qt.resolvedUrl("Account.qml"),"properties" : {"name" : "AccountPage"}})
             }
             onGoToAmbulanceListPage: {
-                pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+                pageStack.pop(pageStack.find(function(item) {
+                    return item.name === "ListAmbPage";
+                }))
             }
             onDisconnectPressed: {
-
-                Qondrite.updateUserAvailability(false);
-                pageStack.push(Qt.resolvedUrl("Signin.qml"))
+                Qondrite.changeAvailability(false);
                 Qondrite.logout();
                 remoteCallSpinner.hide();
+                pageStack.clear()
+                pageStack.push({"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},replace:true, destroyOnPop:true})
             }
         }
-
     }
 
     Snackbar {
@@ -86,7 +87,7 @@ ApplicationWindow {
 
     function internetOffCallback()
     {
-        errorToast.open('La connexion à Internet a été interrompue');
+        errorToast.open('La connexion à Internet a été interrompue');        
     }
 
     Timer {
@@ -111,21 +112,32 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-
         manageInitialPage();
+
         Qondrite.onResumeLogin.connect(function() {
-            pageStack.push(Qt.resolvedUrl("Listambulances.qml"))
+                pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"}, replace: true})
         });
+        Qondrite.onLogin.connect(function () {
+                pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),"properties" : {"name" : "ListAmbPage"},replace: true})
+        });
+
+        Qondrite.onResumeLoginFailed.connect(function() {
+            pageStack.push(Qt.resolvedUrl("Signin.qml"))
+        });
+
+        Qondrite._on("logout",hideSpinner);
+        Qondrite._on("logoutError", hideSpinner);
+
 
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);
+
         Qondrite._on("remoteCallStart", function(){
             remoteCallSpinnerStartDelayed.start();
             onRemoteCallTimeout.start()
         });
         Qondrite._on("remoteCallSuccess", hideSpinner);
         Qondrite._on("remoteCallError", hideSpinner);
-        Qondrite._on("logout", hideSpinner);
-        Qondrite._on("logoutError", hideSpinner);
     }
+
 }

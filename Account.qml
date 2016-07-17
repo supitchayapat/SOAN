@@ -185,6 +185,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             TextFieldValidated{
@@ -225,6 +226,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             TextFieldValidated{
@@ -264,6 +266,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             TextFieldValidated{
@@ -284,7 +287,7 @@ Page {
 
                 Component.onCompleted: {
 
-                        onEditingFinishedValidations.unshift(new Err.Error(function(){
+                        onEditingFinishedValidations.unshift(Err.Error.create(function(){
                             // run validation only if undone yet for current address and address length is worth it
                             var dfd = Qlib.Q.defer();
                             if(address_txtField.text.length > 3){
@@ -338,6 +341,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             EmailTextField {
@@ -375,6 +379,7 @@ Page {
                 visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
             }
 
             PhoneTextField{
@@ -443,12 +448,11 @@ Page {
         z:1
 
         Column{
-
-            anchors.horizontalCenter: parent.horizontalCenter
-
+            anchors.fill: parent
             Icon{
                 name:"action/done"
                 size: dp(100)
+                color:Theme.primaryColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
@@ -456,6 +460,7 @@ Page {
                 text: "votre nouveau mot de passe a été enregistré avec succès"
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
+                width: parent.width
             }
         }
     }
