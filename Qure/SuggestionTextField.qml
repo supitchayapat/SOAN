@@ -164,6 +164,8 @@ Item{
                     myRoot.selectedFromSuggestion = true
                     suggestionlist.add
                     address_txtField.text = displayAddress
+                    myRoot.longitude = longitude
+                    myRoot.latitude = latitude
                     addressSelected();
                     address_txtField.isPristine = true
                     suggestionlist.model.clear()
