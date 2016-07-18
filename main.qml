@@ -16,9 +16,6 @@ ApplicationWindow {
 
     signal login()
 
-    // @TODO : set default initialPage at splashscreen loading
-    initialPage: {"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},"destroyOnPop":true}
-
     theme {
         //WARNING: for the moment we support only light themes
         primaryColor: "#2196F3"
