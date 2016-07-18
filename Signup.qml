@@ -30,7 +30,7 @@ Page {
 
         onInfosChanged: {
             nextButton.active = nomprenom_txtFld.isValid && nomdelastructure_txtFld.isValid
-                       && email_txtFld.isValid  && address_txtField.isValid
+                       && email_txtFld.isValid  && addressField.isValid
                        && tel_txtFld.isValid && newPassword.isValid  ? true:false
         }
     }
@@ -69,8 +69,8 @@ Page {
         {
             nomprenom_txtFld.checkRequired();
             nomdelastructure_txtFld.checkRequired();
+            addressField.checkRequired();
             email_txtFld.checkRequired();
-            address_txtField.checkRequired();
             tel_txtFld.checkRequired();
             newPassword.checkRequired();
         }
@@ -115,7 +115,6 @@ Page {
 
         Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
-
             width:fieldsListView.width
             height: lineH
 
@@ -143,73 +142,30 @@ Page {
             }
         }
 
-        Row{
-            spacing : dp(Defines_values.Signup1RowSpacing)
 
-            width:fieldsListView.width
-            height: lineH
+        SuggestionTextField{
+            id: addressField
 
-            Icon {
-                name: "maps/place"
-                size: parent.height*0.7
+            width: fieldsListView.width
+            heighWithoutSuggestions: lineH
+
+            maxAddressListed: 3
+            isRequired : true
+
+            onEditingFinished: {
+                accountInfo.infos.address = text
+                accountInfo.infos.latitude = latitude
+                accountInfo.infos.longitude = longitude
+                accountInfo.infosChanged()
             }
 
-            TextFieldValidated{
-                id:address_txtField
+            onIsValidChanged: accountInfo.infosChanged()
 
-                isRequired : true
-                placeholderText: qsTr("Adresse")
-                width: fieldsListView.width - lineH
-                Layout.fillHeight: true
-                anchors.verticalCenter : parent.verticalCenter
-                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
-                serverGateway  : Qondrite
-
-
-                onEditingFinished: {
-
-                    accountInfo.infos.address = text
-                    accountInfo.infosChanged()
-                }
-
-
-                Component.onCompleted: {
-
-                        onEditingFinishedValidations.unshift(Err.Error.create(function(){
-                            // run validation only if undone yet for current address and address length is worth it
-                            var dfd = Qlib.Q.defer();
-                            if(address_txtField.text.length > 3){
-                                return serverGateway.validateAddress(text).result.then(
-
-                                    function onsuccess(result){
-                                        var addressIsValid = true;
-                                        if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                            addressIsValid = false;
-
-                                        }else{
-                                            accountInfo.infos.latitude = result[0].latitude;
-                                            accountInfo.infos.longitude = result[0].longitude;
-                                        }
-                                        dfd.resolve( {
-                                            response : addressIsValid,
-                                            message :  addressIsValid ? "" : qsTr("Adresse invalide")
-                                        });
-                                        return dfd.promise;
-                                    },
-                                    function onerror(resp){
-                                        dfd.resolve( {
-                                            response : false,
-                                            message : "error :"+resp.error.error
-                                        });
-                                        return dfd.promise;
-                                    });
-                            }
-                        }, Err.Error.scope.REMOTE));
-                }
-
-                onIsValidChanged: accountInfo.infosChanged()
+            Component.onCompleted: {
+                rowContainer.spacing = Qt.binding(function(){return dp(Defines_values.Signup1RowSpacing)})
             }
         }
+
 
         Row{
             spacing : dp(Defines_values.Signup1RowSpacing)
