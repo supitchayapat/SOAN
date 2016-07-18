@@ -25,6 +25,7 @@ Page {
 
     property var availabilityCollection;
     property var availabilityItems;
+    property var reactiveAvailabilityCollection;
 
     function initList(){
 
@@ -59,9 +60,9 @@ Page {
     }
 
     function bindEventsToList(){
-        var reactiveAvailabilityCollection = Qondrite.reactiveQuery(availabilityCollection);
+        reactiveAvailabilityCollection = Qondrite.reactiveQuery(availabilityCollection);
 
-        reactiveAvailabilityCollection.on("change", function(id){
+        reactiveAvailabilityCollection.on("change", function changeElement(id){
             var index = findIndexInList(id)
             if(index !== -1){
                 ambliste.set(index,
@@ -70,11 +71,11 @@ Page {
             }
         });
 
-        reactiveAvailabilityCollection.on("add", function(id){
+        reactiveAvailabilityCollection.on("add", function addElement(id){
             ambliste.insert(getPositionForItem(id),availabilityCollection._set._items[id])
         })
 
-        reactiveAvailabilityCollection.on("delete",function(id){
+        reactiveAvailabilityCollection.on("delete",function deleteElement(id){
             ambliste.remove(findIndexInList(id));
         })
     }
@@ -171,6 +172,11 @@ Page {
         Qondrite.getOwnAvailability().result.then(function(ownAvailability){
             availability_swch.checked = ownAvailability;
         })
-        Qondrite.loggingOut.connect(function(){subscription.stop();})
+        Qondrite.loggingOut.connect(function(){
+            reactiveAvailabilityCollection.off("change","changeElement");
+            reactiveAvailabilityCollection.off("add","addElement");
+            reactiveAvailabilityCollection.off("delete","deleteElement");
+            subscription.stop();
+        })
     }
 }
