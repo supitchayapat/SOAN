@@ -6,10 +6,11 @@ import Qondrite 0.1
 import "Error.js" as Err
 import "qrc:/Qondrite/q.js" as Qlib
 import Qure 0.1
+import QtGraphicalEffects 1.0
 
 // TODO : handle the case where the address is France, this should display a warning and put the Component on Error state
 // TODO : try to use TextFieldValidated instead of Item as a root Item so that to reduce the number of needed properties aliases
-Item{
+View{
     id: myRoot
 
     property int totalHeight : address_txtField.height + suggestionlist.height
@@ -34,6 +35,7 @@ Item{
     }
 
     height: listViewExpanded ? totalHeight : heighWithoutSuggestions
+    elevation : address_txtField.focus ? 1 : 0
 
     Column{
         id : columnContainer_p
@@ -134,7 +136,6 @@ Item{
                 onActiveFocusChanged:  {
                     suggestionlist.visible = false
                 }
-
             }
         }
 
@@ -142,7 +143,7 @@ Item{
             id:suggestionlist
 
             width:parent.width
-            height: count * 48 * Units.dp
+            height: count  * 48 * Units.dp + 24 * Units.dp
             clip:true
             visible:false
             highlightFollowsCurrentItem: false
