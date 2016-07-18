@@ -161,7 +161,16 @@ if (Meteor.isServer) {
     });
 
 	Meteor.startup(function () { 
+		var firstRecord = Availability.findOne({user_id : {$eq : "firstRecord"}});
+		
+	  		if(firstRecord==undefined){
+	  			Availability.insert({
+		    	user_id  : "firstRecord", 
+		    	geoloc : {type : "Point", coordinates  : [0,0]}});	
+  			}
+  		
   		Availability._ensureIndex( { geoloc : "2dsphere" } );
+
 		process.env.MAIL_URL = 'smtp://spateof:Sakron1sD@smtp.sendgrid.net:587'; 
 	});
 
