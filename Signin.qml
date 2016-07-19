@@ -55,6 +55,7 @@ Page {
         text: qsTr("Mot de passe oublié")
         z:1
 
+
         EmailTextField {
             id: textEmail_txtFld
 
