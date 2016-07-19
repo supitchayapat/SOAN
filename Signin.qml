@@ -56,6 +56,8 @@ Page {
         z:1
 
 
+        Rectangle{width: 1;height: 1}
+
         EmailTextField {
             id: textEmail_txtFld
 
