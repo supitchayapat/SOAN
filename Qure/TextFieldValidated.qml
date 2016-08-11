@@ -77,11 +77,6 @@ TextField{
     // so we don't have to guess this state from what's text inside the helperText
     property bool isEmptyMessageDisplayed: false
 
-    focus : true
-
-    onEditingFinished: nextItemInFocusChain().forceActiveFocus()
-
-
     /**
       Force validation state,
       may happen when the component delegates to a neighbor component its own validation
@@ -152,6 +147,8 @@ TextField{
     }
 
      floatingLabel: true
+
+     focus : true
 
     Icon{
         id:checkedIcon
@@ -239,6 +236,10 @@ TextField{
                     callback();
             });
         }
+    }
+
+    onEditingFinished: {
+        nextItemInFocusChain().forceActiveFocus()
     }
 
     onTextChanged: {
