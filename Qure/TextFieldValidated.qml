@@ -238,7 +238,7 @@ TextField{
         }
     }
 
-    onEditingFinished: {
+    Keys.onReturnPressed: {
         nextItemInFocusChain().forceActiveFocus()
     }
 
