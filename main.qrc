@@ -8,8 +8,10 @@
         <file>Signup.qml</file>
         <file>NavigationDrawerDelegate.qml</file>
         <file>AvailabilitySwitch.qml</file>
+        <file>Splash.qml</file>
     </qresource>
     <qresource lang="data, images, icones.." prefix="/rsrc">
         <file alias="ambulance-siren">ambulance-siren.png</file>
+        <file>splash_icon.png</file>
     </qresource>
 </RCC>
