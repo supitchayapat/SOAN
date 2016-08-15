@@ -148,6 +148,8 @@ TextField{
 
      floatingLabel: true
 
+     focus : true
+
     Icon{
         id:checkedIcon
 
@@ -234,6 +236,10 @@ TextField{
                     callback();
             });
         }
+    }
+
+    Keys.onReturnPressed: {
+        nextItemInFocusChain().forceActiveFocus()
     }
 
     onTextChanged: {
