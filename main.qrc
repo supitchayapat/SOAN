@@ -1,5 +1,5 @@
 <RCC>
-    <qresource lang="js, qml" prefix="/src">
+    <qresource prefix="/src" lang="js, qml">
         <file>Account.qml</file>
         <file>define_values.js</file>
         <file>Listambulances.qml</file>
@@ -10,7 +10,7 @@
         <file>AvailabilitySwitch.qml</file>
         <file>Splash.qml</file>
     </qresource>
-    <qresource lang="data, images, icones.." prefix="/rsrc">
+    <qresource prefix="/rsrc" lang="data, images, icones..">
         <file alias="ambulance-siren">ambulance-siren.png</file>
         <file>splash_icon.png</file>
     </qresource>

@@ -481,13 +481,7 @@ Page {
 
             positiveButtonEnabled:changePassword.isValid
 
-            onAccepted: {
-                page.changePassword(changePassword.oldPassword,changePassword.password);
-            }
-
-            onClosed:{
-                destroy()
-            }
+            Rectangle{width: 1;height: 1}
 
             ChangePassword{
                 id :changePassword
@@ -516,8 +510,14 @@ Page {
 
             }
 
-        }
+            onAccepted: {
+                page.changePassword(changePassword.oldPassword,changePassword.password);
+            }
 
+            onClosed:{
+                destroy()
+            }
+        }
     }
     Component.onCompleted:loadUserInformation()
 }

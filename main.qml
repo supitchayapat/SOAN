@@ -17,6 +17,7 @@ Materials.ApplicationWindow {
 
     property bool isConnected: false
     property bool isSplashShown: false
+    signal login()
 
     initialPage: Splash{
         id:splash

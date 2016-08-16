@@ -9,6 +9,7 @@ TextFieldValidated{
     placeholderText: qsTr("Email")
     validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
     validatorWarning: qsTr("Adresse email invalide")
+    validationDelay: 1500
 
     Component.onCompleted: {
 

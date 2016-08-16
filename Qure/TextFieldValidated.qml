@@ -58,7 +58,9 @@ TextField{
     /*called while editing to reformat the text, the formated text should be returned as a string*/
     property var onEditingFormating : function(){return text}
 
-    property var serverGateway : undefined
+    property var serverGateway : undefined    
+
+    property bool delegateValidation : false
 
     /*
      Tells whether a field value has not been changed at all
@@ -74,6 +76,19 @@ TextField{
     // this prop tells whether the "champs obligatoire" is displayed or not
     // so we don't have to guess this state from what's text inside the helperText
     property bool isEmptyMessageDisplayed: false
+
+    /**
+      Force validation state,
+      may happen when the component delegates to a neighbor component its own validation
+      */
+    function forceValidationState(state, errorMessage)
+    {
+        delegateValidation = true;
+        hasError = !state;
+        helperText = (hasError && errorMessage) ? errorMessage: "";
+        checkedIcon.visible = ! hasError;
+        delegateValidation = ! delegateValidation;
+    }
 
     /**
       Check that a field marked as required has not a empty value
@@ -99,20 +114,28 @@ TextField{
 
     function manageValidation(){
 
-        if(validator != null){
+        if(validator !== null){
 
             /* TODO : here we are only handling the case of RegExpValidator
              * but the validator could be also an IntValidator or a DoubleValidator
              * please manage the missing cases*/
-            if(text != "" && text.toString().match(validator.regExp) != null)
+            if (text !== ""){
+                hasError = (text.toString().match(validator.regExp) === null);
+                checkedIcon.visible = ! hasError;
+            }
+
+            /*
+            if(text !== "" && text.toString().match(validator.regExp) !== null)
             {
-                hasError = false
-                checkedIcon.visible = true
+                hasError = false;
+                checkedIcon.visible = true;
             }
-            else if((text != "" && text.toString().match(validator.regExp) === null) ){
-                hasError = true
-                checkedIcon.visible = false
+            else if(text !== "" && text.toString().match(validator.regExp) === null){
+                hasError = true;
+                checkedIcon.visible = false;
             }
+            */
+
 
         }
         else{
@@ -124,6 +147,8 @@ TextField{
     }
 
      floatingLabel: true
+
+     focus : true
 
     Icon{
         id:checkedIcon
@@ -213,6 +238,10 @@ TextField{
         }
     }
 
+    Keys.onReturnPressed: {
+        nextItemInFocusChain().forceActiveFocus()
+    }
+
     onTextChanged: {
         if (isPristine){
             isPristine = ! isPristine;
@@ -237,13 +266,16 @@ TextField{
     onFocusChanged: {
         if(activeFocus || focus){
            timer.restart()
+            if (!isPristine){
+                isPristine = !isPristine;
+            }
         }
         else{
             timer.stopOnCallbacksComplete = true;
             if (text ==""){
                 timer.stop();
             }
-            else {
+            else if (delegateValidation === false){
                 manageValidation();
             }
 
@@ -254,6 +286,7 @@ TextField{
     }
 
     Component.onCompleted: {
+
         onEditingValidations.unshift(Err.Error.create(function()
             {
                 var dfd = Qlib.Q.defer();
