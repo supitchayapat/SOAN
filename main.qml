@@ -5,19 +5,40 @@ import QtQuick.Window 2.0
 import Qt.labs.settings 1.0
 import Qondrite 0.1
 import Qure 0.1
-import "."
 import "define_values.js" as Defines_values
+
 
 Materials.ApplicationWindow {
     id: app
 
+    property bool isConnected: false
+    property bool isSplashShown: false
+
+    signal login()
+
+    function manageInitialPage()
+    {
+        Qondrite.setStorage(appSettings);
+        Qondrite.tryResumeLogin();
+    }
+
+    function hideSpinner(error)
+    {
+        remoteCallSpinnerStartDelayed.stop();
+        onRemoteCallTimeout.stop();
+        remoteCallSpinner.hide();
+    }
+
+    function internetOffCallback()
+    {
+        splash.showErrorMessage = true
+        errorToast.open('La connexion à Internet a été interrompue');
+    }
+
     visible: true
     width: Screen.width
     height: Screen.height
-
-    property bool isConnected: false
-    property bool isSplashShown: false
-    signal login()
+    color: "white"
 
     initialPage: Splash{
         id:splash
@@ -68,12 +89,6 @@ Materials.ApplicationWindow {
         property string token
     }
 
-    function manageInitialPage()
-    {
-        Qondrite.setStorage(appSettings);
-        Qondrite.tryResumeLogin();
-    }
-
     Materials.NavigationDrawer {
         id:navDrawer
 
@@ -113,18 +128,6 @@ Materials.ApplicationWindow {
         icon.color: Defines_values.remoteCallSpinnerIconColor
     }
 
-    function hideSpinner(error)
-    {
-        remoteCallSpinnerStartDelayed.stop();
-        onRemoteCallTimeout.stop();
-        remoteCallSpinner.hide();
-    }
-
-    function internetOffCallback()
-    {
-        errorToast.open('La connexion à Internet a été interrompue');
-    }
-
     Timer {
         id: remoteCallSpinnerStartDelayed
         interval: 1200
@@ -146,12 +149,12 @@ Materials.ApplicationWindow {
         }
     }
 
-
     Component.onCompleted: {
 
         Qondrite.onOpen.connect(function () {
 
             isConnected = true
+            splash.showErrorMessage = false
             manageInitialPage();
 
             if(isSplashShown){
@@ -166,6 +169,7 @@ Materials.ApplicationWindow {
                                    "properties" : {"name" : "ListAmbPage"},
                                    replace: true})
             });
+
             Qondrite.onLogin.connect(function () {
                 pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
                                    "properties" : {"name" : "ListAmbPage"},
@@ -179,10 +183,6 @@ Materials.ApplicationWindow {
             Qondrite._on("logout",hideSpinner);
             Qondrite._on("logoutError", hideSpinner);
 
-
-            Qondrite.onClose.connect(internetOffCallback);
-            Qondrite.onError.connect(internetOffCallback);
-
             Qondrite._on("remoteCallStart", function(){
                 remoteCallSpinnerStartDelayed.start();
                 onRemoteCallTimeout.start()
@@ -190,5 +190,8 @@ Materials.ApplicationWindow {
             Qondrite._on("remoteCallSuccess", hideSpinner);
             Qondrite._on("remoteCallError", hideSpinner);
         })
+
+        Qondrite.onClose.connect(internetOffCallback);
+        Qondrite.onError.connect(internetOffCallback);
     }
 }
