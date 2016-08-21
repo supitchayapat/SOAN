@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
+    //WARNING the following generate a conflict with initialItem in main.qml
 //    for(auto o:engine.rootObjects()){
 //        QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
 //        if(item){
