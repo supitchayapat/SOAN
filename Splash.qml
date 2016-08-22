@@ -6,6 +6,7 @@ Page {
     id: splash
 
     property bool showErrorMessage: false
+    property int timeoutDelay: 500
 
     signal shown()
 
@@ -78,7 +79,10 @@ Page {
 
     Timer {
         id: timer
-        interval: 500; running: false; repeat: false
+        interval: timeoutDelay
+        running: false
+        repeat: false
+
         onTriggered: {
             shown()
             errorTextMessage.visible = showErrorMessage
