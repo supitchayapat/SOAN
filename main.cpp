@@ -39,12 +39,13 @@ int main(int argc, char *argv[])
 
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
-    for(auto o:engine.rootObjects()){
-        QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
-        if(item){
-            engine.rootContext()->setContextProperty("sideNavigationPanel", item);
-        }
-    }
+    //WARNING the following generate a conflict with initialItem in main.qml
+//    for(auto o:engine.rootObjects()){
+//        QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
+//        if(item){
+//            engine.rootContext()->setContextProperty("sideNavigationPanel", item);
+//        }
+//    }
 
     return app.exec();
 }
