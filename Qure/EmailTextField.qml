@@ -2,6 +2,7 @@ import QtQuick 2.5
 import Material 0.3
 import "Error.js" as Err
 import "../Qondrite/q.js" as Qlib
+import Qondrite 0.1
 
 TextFieldValidated{
     inputMethodHints: Qt.ImhEmailCharactersOnly
@@ -10,6 +11,7 @@ TextFieldValidated{
     validator: RegExpValidator{regExp:/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/}
     validatorWarning: qsTr("Adresse email invalide")
     validationDelay: 1500
+    serverGateway: Qondrite
 
     Component.onCompleted: {
 
@@ -33,6 +35,7 @@ TextFieldValidated{
             {
                 if (typeof serverGateway !== 'object')
                 {
+                    console.trace()
                     throw "serverGateway must be supplied before running validations";
                 }
                 var dfd = Qlib.Q.defer();
