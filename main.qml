@@ -58,13 +58,6 @@ Materials.ApplicationWindow {
         }
     }
 
-    Keys.onReleased: {
-                if (event.matches(StandardKey.Back)) {
-                    console.log("back caught by delegate");
-                    event.accepted = true;
-                }
-            }
-
     theme {
         //WARNING: for the moment we support only light themes
         primaryColor: "#2196F3"
