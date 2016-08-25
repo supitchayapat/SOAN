@@ -94,7 +94,7 @@ Materials.ApplicationWindow {
         property bool isLoginResumedFlag: false
         property bool isSplashShownFlag: false
         property bool isConnectedFlag: false
-        property bool doSignalSlotInitFlag: true
+        property bool areQondriteHandlersConnected: true
 
     }
 
@@ -174,8 +174,8 @@ Materials.ApplicationWindow {
 
             manageInitialPage();
 
-            if(_p.doSignalSlotInitFlag){
-                _p.doSignalSlotInitFlag = false
+            if(_p.areQondriteHandlersConnected){
+                _p.areQondriteHandlersConnected = false
 
                 Qondrite._on("logout",hideSpinner);
                 Qondrite._on("logoutError", hideSpinner);
