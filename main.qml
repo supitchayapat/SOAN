@@ -11,9 +11,6 @@ import "define_values.js" as Defines_values
 Materials.ApplicationWindow {
     id: app
 
-    property bool isConnected: false
-    property bool isSplashShown: false
-
     signal login()
 
     function manageInitialPage()
@@ -31,6 +28,7 @@ Materials.ApplicationWindow {
 
     function internetOffCallback()
     {
+        _p.isConnectedFlag = false
         splash.showErrorMessage = true
         errorToast.open('La connexion à Internet a été interrompue');
     }
@@ -43,11 +41,19 @@ Materials.ApplicationWindow {
     initialPage: Splash{
         id:splash
         onShown: {
-            isSplashShown = true
-            if(isConnected){
-                pageStack.push({item: Qt.resolvedUrl("Signin.qml"),
-                                   properties: {"name" : "SigninPage"},
-                                   replace:true})
+            _p.isSplashShownFlag = true
+            if(_p.isConnectedFlag){
+                _p.isSplashShownFlag = false
+                if(!_p.isLoginResumedFlag){
+                    pageStack.push({item: Qt.resolvedUrl("Signin.qml"),
+                                       properties: {"name" : "SigninPage"},
+                                       replace:true})
+                }else{
+                    _p.isLoginResumedFlag = false
+                    pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
+                                       "properties" : {"name" : "ListAmbPage"},
+                                       replace: true})
+                }
             }
         }
     }
@@ -73,6 +79,7 @@ Materials.ApplicationWindow {
                 from: 0
                 to: 1
             }
+
             PropertyAnimation {
                 target: exitItem
                 property: "opacity"
@@ -80,6 +87,15 @@ Materials.ApplicationWindow {
                 to: 0
             }
         }
+    }
+
+    QtObject{
+        id: _p
+        property bool isLoginResumedFlag: false
+        property bool isSplashShownFlag: false
+        property bool isConnectedFlag: false
+        property bool areQondriteHandlersConnected: true
+
     }
 
     Settings{
@@ -153,42 +169,48 @@ Materials.ApplicationWindow {
 
         Qondrite.onOpen.connect(function () {
 
-            isConnected = true
+            _p.isConnectedFlag = true
             splash.showErrorMessage = false
+
             manageInitialPage();
 
-            if(isSplashShown){
-                pageStack.push({item: Qt.resolvedUrl("Signin.qml"),
-                                   properties: {"name" : "SigninPage"},
-                                   replace:true})
+            if(_p.areQondriteHandlersConnected){
+                _p.areQondriteHandlersConnected = false
+
+                Qondrite._on("logout",hideSpinner);
+                Qondrite._on("logoutError", hideSpinner);
+
+                Qondrite._on("remoteCallStart", function(){
+                    remoteCallSpinnerStartDelayed.start();
+                    onRemoteCallTimeout.start()
+                });
+
+                Qondrite._on("remoteCallSuccess", hideSpinner);
+                Qondrite._on("remoteCallError", hideSpinner);
+
+                Qondrite.onLogin.connect(function () {
+                    pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
+                                       "properties" : {"name" : "ListAmbPage"},
+                                       replace: true})
+                });
+
+                Qondrite.onResumeLoginFailed.connect(function() {
+                    if(_p.isSplashShownFlag){
+                        _p.isLoginResumedFlag = false
+                        pageStack.push(Qt.resolvedUrl("Signin.qml"))
+                    }
+                });
+
+                Qondrite.onResumeLogin.connect(function() {
+                    _p.isLoginResumedFlag = true
+                    if(_p.isSplashShownFlag){
+                        _p.isLoginResumedFlag = false
+                        pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
+                                           "properties" : {"name" : "ListAmbPage"},
+                                           replace: true})
+                    }
+                });
             }
-
-            Qondrite.onResumeLogin.connect(function() {
-
-                pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
-                                   "properties" : {"name" : "ListAmbPage"},
-                                   replace: true})
-            });
-
-            Qondrite.onLogin.connect(function () {
-                pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
-                                   "properties" : {"name" : "ListAmbPage"},
-                                   replace: true})
-            });
-
-            Qondrite.onResumeLoginFailed.connect(function() {
-                pageStack.push(Qt.resolvedUrl("Signin.qml"))
-            });
-
-            Qondrite._on("logout",hideSpinner);
-            Qondrite._on("logoutError", hideSpinner);
-
-            Qondrite._on("remoteCallStart", function(){
-                remoteCallSpinnerStartDelayed.start();
-                onRemoteCallTimeout.start()
-            });
-            Qondrite._on("remoteCallSuccess", hideSpinner);
-            Qondrite._on("remoteCallError", hideSpinner);
         })
 
         Qondrite.onClose.connect(internetOffCallback);
