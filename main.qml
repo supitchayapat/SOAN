@@ -12,6 +12,7 @@ Materials.ApplicationWindow {
     id: app
 
     signal login()
+    signal sendBackground()
 
     function manageInitialPage()
     {
@@ -215,5 +216,13 @@ Materials.ApplicationWindow {
 
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);
+
+        pageStack.onBackPressed.connect(function(){
+            if(pageStack.__lastDepth > 1){
+                pageStack.pop();
+            }else{
+                sendBackground()
+            }
+        });
     }
 }

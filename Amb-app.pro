@@ -39,6 +39,7 @@ DISTFILES += \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
     android/res/drawable/splash.xml \
-    android/res/values/style.xml
+    android/res/values/style.xml \
+    android/src/io/spateof/wiamb/MyActivity.java
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
