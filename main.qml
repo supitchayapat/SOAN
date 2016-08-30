@@ -7,7 +7,6 @@ import Qondrite 0.1
 import Qure 0.1
 import "define_values.js" as Defines_values
 
-
 Materials.ApplicationWindow {
     id: app
 
@@ -217,7 +216,8 @@ Materials.ApplicationWindow {
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);
 
-        pageStack.onBackPressed.connect(function(){
+        pageStack.Keys.onBackPressed.connect(function(event){
+            event.accept = true
             if(pageStack.__lastDepth > 1){
                 pageStack.pop();
             }else{
