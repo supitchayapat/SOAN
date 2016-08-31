@@ -40,6 +40,6 @@ DISTFILES += \
     android/gradlew.bat \
     android/res/drawable/splash.xml \
     android/res/values/style.xml \
-    android/src/io/spateof/wiamb/MyActivity.java
+    android/src/io/spateof/wiamb/QtAndroindActivityManager.java
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

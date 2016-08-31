@@ -2,7 +2,7 @@
 <manifest package="io.spateof.wiamb" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" android:installLocation="auto">
     <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="Ambu+" android:icon="@drawable/icon">
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation"
-                  android:name="io.spateof.wiamb.MyActivity"
+                  android:name="io.spateof.wiamb.QtAndroindActivityManager"
                   android:label="Ambu+"
                   android:screenOrientation="portrait"
                   android:theme="@style/CustomTheme"
