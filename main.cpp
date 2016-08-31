@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
 
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
+    // linking between backButtonClicked (main.qml) and onBackClicked method (Android side)
+    // workaround: no direct way to use qml signals in the new QObject::connect syntax hence using lambda with qml signals
     QSignalMapper signalMapper;
     QObject* appWindow = engine.rootObjects()[0];
     QObject::connect( appWindow, SIGNAL(sendBackground()), &signalMapper, SLOT(map()));
