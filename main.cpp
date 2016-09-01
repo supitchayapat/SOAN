@@ -4,6 +4,8 @@
 #include <QQuickItem>
 #include <QObject>
 #include <QtQml>
+#include <QtAndroid>
+#include <QAndroidJniObject>
 #include "qml-material/src/plugin.h"
 
 static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
@@ -38,6 +40,17 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType("Qondrite",0,1,"Qondrite",singletonQondrite_provider);
 
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
+
+    // linking between backButtonClicked (main.qml) and onBackClicked method (Android side)
+    // workaround: no direct way to use qml signals in the new QObject::connect syntax hence using lambda with qml signals
+    QSignalMapper signalMapper;
+    QObject* appWindow = engine.rootObjects()[0];
+    QObject::connect( appWindow, SIGNAL(sendBackground()), &signalMapper, SLOT(map()));
+    signalMapper.setMapping( appWindow, "appWindow" );
+
+    QObject::connect( &signalMapper, static_cast<void(QSignalMapper::*)(const QString&)>(&QSignalMapper::mapped), [&]() {
+        QtAndroid::androidActivity().callMethod<void>("onBackClicked");
+    });
 
     //WARNING the following generate a conflict with initialItem in main.qml
 //    for(auto o:engine.rootObjects()){
