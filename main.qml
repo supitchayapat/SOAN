@@ -46,12 +46,12 @@ Materials.ApplicationWindow {
                 _p.isSplashShownFlag = false
                 if(!_p.isLoginResumedFlag){
                     pageStack.push({item: Qt.resolvedUrl("Signin.qml"),
-                                       properties: {"name" : "SigninPage"},
-                                       replace:true})
+                                       properties: {"objectName" : "signinPage"},
+                                       replace: true})
                 }else{
                     _p.isLoginResumedFlag = false
                     pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
-                                       "properties" : {"name" : "ListAmbPage"},
+                                       "properties" : {"objectName" : "listAmbPage"},
                                        replace: true})
                 }
             }
@@ -115,21 +115,26 @@ Materials.ApplicationWindow {
             objectName: "sidePanel"
 
             onGoToAccountPage: {
-                //FIXME : the condition below doesn't seems to work and AccountPage is pushed many times
-                //  if(pageStack.currentItem.name !== "AccountPage"){
-                pageStack.push({item:Qt.resolvedUrl("Account.qml"),"properties" : {"name" : "AccountPage"}})
+                  if(pageStack.currentItem.objectName !== "accountPage"){
+                      pageStack.push({item:Qt.resolvedUrl("Account.qml"),
+                                         "properties": {"objectName": "accountPage"}})
+                  }
             }
             onGoToAmbulanceListPage: {
-                pageStack.pop(pageStack.find(function(item) {
-                    return item.name === "ListAmbPage";
-                }))
+                if(pageStack.currentItem.objectName !== "listAmbPage"){
+                    pageStack.pop(pageStack.find(function(item) {
+                        return item.objectName === "listAmbPage";
+                    }))
+                }
             }
             onDisconnectPressed: {
                 Qondrite.changeAvailability(false);
                 Qondrite.logout();
                 remoteCallSpinner.hide();
                 pageStack.clear()
-                pageStack.push({"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},replace:true, destroyOnPop:true})
+                pageStack.push({"item": Qt.resolvedUrl("Signin.qml"),
+                                   "properties": {"objectName": "signinPage"},
+                                   replace:true})
             }
         }
     }
@@ -190,14 +195,16 @@ Materials.ApplicationWindow {
 
                 Qondrite.onLogin.connect(function () {
                     pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
-                                       "properties" : {"name" : "ListAmbPage"},
+                                       "properties" : {"objectName" : "listAmbPage"},
                                        replace: true})
                 });
 
                 Qondrite.onResumeLoginFailed.connect(function() {
                     if(_p.isSplashShownFlag){
                         _p.isLoginResumedFlag = false
-                        pageStack.push(Qt.resolvedUrl("Signin.qml"))
+                        pageStack.push({item: Qt.resolvedUrl("Signin.qml"),
+                                           properties: {"objectName" : "signinPage"},
+                                           replace:true})
                     }
                 });
 
@@ -205,9 +212,10 @@ Materials.ApplicationWindow {
                     _p.isLoginResumedFlag = true
                     if(_p.isSplashShownFlag){
                         _p.isLoginResumedFlag = false
-                        pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
-                                           "properties" : {"name" : "ListAmbPage"},
-                                           replace: true})
+                        pageStack.push({item: Qt.resolvedUrl("Listambulances.qml"),
+                                           "properties": {"objectName": "listAmbPage"},
+                                           replace: true
+                                       })
                     }
                 });
             }
@@ -219,10 +227,15 @@ Materials.ApplicationWindow {
         pageStack.Keys.onBackPressed.connect(function(event){
             event.accept = true
             if(pageStack.__lastDepth > 1){
-                pageStack.pop();
+                var item = pageStack.pop();
+                if(item.objectName === "listAmbPage"){
+                    navDelegateDrawer.selectUserAccount()
+                }else if(item.objectName === "accountPage"){
+                    navDelegateDrawer.selectAmbList()
+                }
             }else{
                 sendBackground()
             }
-        });
+        })
     }
 }
