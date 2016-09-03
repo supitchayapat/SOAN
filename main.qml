@@ -225,9 +225,10 @@ Materials.ApplicationWindow {
         Qondrite.onError.connect(internetOffCallback);
 
         pageStack.Keys.onBackPressed.connect(function(event){
-            event.accept = true
+            event.accepted = true
             if(pageStack.__lastDepth > 1){
                 var item = pageStack.pop();
+                console.log(pageStack.currentItem)
                 if(item.objectName === "listAmbPage"){
                     navDelegateDrawer.selectUserAccount()
                 }else if(item.objectName === "accountPage"){
@@ -235,6 +236,13 @@ Materials.ApplicationWindow {
                 }
             }else{
                 sendBackground()
+            }
+        })
+
+        navDrawer.Keys.onReleased.connect(function(event){
+            if (event.key === Qt.Key_Back) {
+                event.accepted = true
+                navDrawer.close()
             }
         })
     }
