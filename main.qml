@@ -228,7 +228,6 @@ Materials.ApplicationWindow {
             event.accepted = true
             if(pageStack.__lastDepth > 1){
                 var item = pageStack.pop();
-                console.log(pageStack.currentItem)
                 if(item.objectName === "listAmbPage"){
                     navDelegateDrawer.selectUserAccount()
                 }else if(item.objectName === "accountPage"){
