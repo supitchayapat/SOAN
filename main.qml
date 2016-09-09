@@ -1,17 +1,21 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.4 as Controls
-import Material 0.3 as Materials
-import QtQuick.Window 2.0
+import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
+import QtQuick.Controls 1.4 as Controls
+
+import Material 0.3 as Materials
 import Qondrite 0.1
 import Qure 0.1
 import "define_values.js" as Defines_values
+import "navDrawerLoaderScript.js" as NavDrawerLoaderScript
 
 Materials.ApplicationWindow {
     id: app
 
     signal login()
     signal sendBackground()
+
+    property var navDrawer;
 
     function manageInitialPage()
     {
@@ -50,6 +54,7 @@ Materials.ApplicationWindow {
                                        replace: true})
                 }else{
                     _p.isLoginResumedFlag = false
+                    NavDrawerLoaderScript.loadNavDrawer();
                     pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
                                        "properties" : {"objectName" : "listAmbPage"},
                                        replace: true})
@@ -103,40 +108,6 @@ Materials.ApplicationWindow {
         category: "userInfos"
         property string username
         property string token
-    }
-
-    Materials.NavigationDrawer {
-        id:navDrawer
-
-        NavigationDrawerDelegate{
-            id:navDelegateDrawer
-
-            anchors.fill: parent
-            objectName: "sidePanel"
-
-            onGoToAccountPage: {
-                  if(pageStack.currentItem.objectName !== "accountPage"){
-                      pageStack.push({item:Qt.resolvedUrl("Account.qml"),
-                                         "properties": {"objectName": "accountPage"}})
-                  }
-            }
-            onGoToAmbulanceListPage: {
-                if(pageStack.currentItem.objectName !== "listAmbPage"){
-                    pageStack.pop(pageStack.find(function(item) {
-                        return item.objectName === "listAmbPage";
-                    }))
-                }
-            }
-            onDisconnectPressed: {
-                Qondrite.changeAvailability(false);
-                Qondrite.logout();
-                remoteCallSpinner.hide();
-                pageStack.clear()
-                pageStack.push({"item": Qt.resolvedUrl("Signin.qml"),
-                                   "properties": {"objectName": "signinPage"},
-                                   replace:true})
-            }
-        }
     }
 
     Materials.Snackbar {
@@ -194,6 +165,7 @@ Materials.ApplicationWindow {
                 Qondrite._on("remoteCallError", hideSpinner);
 
                 Qondrite.onLogin.connect(function () {
+                    NavDrawerLoaderScript.loadNavDrawer();
                     pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
                                        "properties" : {"objectName" : "listAmbPage"},
                                        replace: true})
@@ -212,6 +184,7 @@ Materials.ApplicationWindow {
                     _p.isLoginResumedFlag = true
                     if(_p.isSplashShownFlag){
                         _p.isLoginResumedFlag = false
+                        NavDrawerLoaderScript.loadNavDrawer();
                         pageStack.push({item: Qt.resolvedUrl("Listambulances.qml"),
                                            "properties": {"objectName": "listAmbPage"},
                                            replace: true
@@ -229,19 +202,12 @@ Materials.ApplicationWindow {
             if(pageStack.__lastDepth > 1){
                 var item = pageStack.pop();
                 if(item.objectName === "listAmbPage"){
-                    navDelegateDrawer.selectUserAccount()
+                    navDrawer.navDelegateDrawer.selectUserAccount()
                 }else if(item.objectName === "accountPage"){
-                    navDelegateDrawer.selectAmbList()
+                    navDrawer.navDelegateDrawer.selectAmbList()
                 }
             }else{
                 sendBackground()
-            }
-        })
-
-        navDrawer.Keys.onReleased.connect(function(event){
-            if (event.key === Qt.Key_Back) {
-                event.accepted = true
-                navDrawer.close()
             }
         })
     }

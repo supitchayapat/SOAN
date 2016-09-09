@@ -147,13 +147,6 @@ Rectangle{
 
     Component.onCompleted: {
         selectAmbList();
-
-        Qondrite.onLogin.connect(function(){
-            loadSideBarInformation()
-        })
-
-        Qondrite.onResumeLogin.connect(function(){
-            loadSideBarInformation()
-        })
+        loadSideBarInformation()
     }
 }
