@@ -194,6 +194,22 @@ if (Meteor.isServer) {
 	Meteor.publish('availability', function tasksPublication() {
 		var currentUserGelocation = Availability.findOne({user_id : {$in : [this.userId]}},{geoloc  : 1});
 		
+		var backedUpUserId = this.userId;
+		
+		this._session.socket.on("close", Meteor.bindEnvironment(function()
+            {
+              Availability.update(
+				   { user_id: backedUpUserId },
+				   {
+					   	$set: 
+					   	{
+			     				availability: false 
+			     		}
+				   }
+				);
+            }, function(e){console.log(e)}));
+
+		
 		 	return  Availability.find(
 		 		{
 			 		user_id : {$ne : this.userId}, 
