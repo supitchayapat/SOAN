@@ -10,8 +10,8 @@ Item {
 
     signal shown()
 
-    width: Screen.desktopAvailableWidth
-    height: Screen.desktopAvailableHeight
+    width: parent.width
+    height: parent.height
 
     Rectangle{
         id: splashRec
@@ -22,11 +22,11 @@ Item {
         Image {
             id: splashImage
             source: "qrc:/rsrc/splash_icon.png"
+            fillMode: Image.PreserveAspectFit
 
-            x: (Screen.desktopAvailableWidth - width)/2.0
-            y: (Screen.desktopAvailableHeight - height)/2.0
-            width: sourceSize.width > Screen.desktopAvailableWidth ? Screen.desktopAvailableWidth - 10 : sourceSize.width - 10
-            height: sourceSize.height * width/(Screen.desktopAvailableWidth - 10.0)
+            x: (splash.width - width)/2.0
+            y: (splash.height - height)/2.0
+            width: sourceSize.width > splash.width ? splash.width - 10 : sourceSize.width - 10
         }
 
         OpacityAnimator {
