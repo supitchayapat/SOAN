@@ -74,6 +74,19 @@ Item {
         }
     }
 
+    ProgressCircle {
+        id: remoteCallSpinnerIcon
+        opacity: 1
+        dashThickness : 4
+        visible: !showErrorMessage && errorTextMessage.opacity === 1
+
+        anchors{
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+            bottomMargin: 150
+        }
+    }
+
     Timer {
         id: timer
         interval: timeoutDelay
