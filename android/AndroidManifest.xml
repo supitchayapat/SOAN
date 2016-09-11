@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <manifest package="io.spateof.wiamb" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" android:installLocation="auto">
-    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="Ambu+" android:icon="@drawable/icon">
+    <application android:hardwareAccelerated="true"
+                 android:name="org.qtproject.qt5.android.bindings.QtApplication"
+                 android:label="Ambu+"
+                 android:icon="@drawable/icon"
+                 android:theme="@style/AppTheme">
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation"
                   android:name="io.spateof.wiamb.QtAndroindActivityManager"
                   android:label="Ambu+"
                   android:screenOrientation="portrait"
-                  android:theme="@style/CustomTheme"
-                  android:launchMode="standard">
+                  android:theme="@style/AppTheme"
+                  android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

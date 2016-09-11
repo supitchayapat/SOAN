@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Window 2.0
 import Material 0.3
 
-Page {
+Item {
     id: splash
 
     property bool showErrorMessage: false
@@ -12,9 +12,6 @@ Page {
 
     width: Screen.desktopAvailableWidth
     height: Screen.desktopAvailableHeight
-
-    canGoBack: false
-    actionBar.hidden: true
 
     Rectangle{
         id: splashRec
