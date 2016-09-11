@@ -145,11 +145,6 @@ Materials.ApplicationWindow {
 
         Qondrite.onOpen.connect(function () {
 
-            _p.isConnectedFlag = true
-            splash.showErrorMessage = false
-
-            manageInitialPage();
-
             if(_p.areQondriteHandlersConnected){
                 _p.areQondriteHandlersConnected = false
 
@@ -192,6 +187,11 @@ Materials.ApplicationWindow {
                     }
                 });
             }
+
+            _p.isConnectedFlag = true
+            splash.showErrorMessage = false
+
+            manageInitialPage();
         })
 
         Qondrite.onClose.connect(internetOffCallback);
