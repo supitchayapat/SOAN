@@ -41,7 +41,8 @@ Materials.NavigationDrawer {
             Qondrite.logout();
             remoteCallSpinner.hide();
             // Workaround: remove all but the first page and then replace it with signin page
-            // problem comes from animation
+            // problem comes from animation: maybe we should find a way to wait till
+            // the navDrawer closing animation to be completed before clearing the pageStack
             pageStack.pop(null)
             pageStack.push({"item": Qt.resolvedUrl("Signin.qml"),
                                "properties": {"objectName": "signinPage"},
