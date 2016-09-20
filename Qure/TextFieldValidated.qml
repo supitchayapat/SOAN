@@ -58,9 +58,11 @@ TextField{
     /*called while editing to reformat the text, the formated text should be returned as a string*/
     property var onEditingFormating : function(){return text}
 
-    property var serverGateway : undefined    
+    property var serverGateway : undefined
 
     property bool delegateValidation : false
+
+    property bool blockTextChangedSignal : false
 
     /*
      Tells whether a field value has not been changed at all
@@ -95,7 +97,7 @@ TextField{
       */
     function checkRequired()
     {
-        if (text == "")
+        if (text === "")
         {
             if (isRequired === true)
             {
@@ -173,16 +175,15 @@ TextField{
 
         function delayedStop()
         {
-            if (stopOnCallbacksComplete === true){
-                stopOnCallbacksComplete = ! stopOnCallbacksComplete;
+            if (stopOnCallbacksComplete){
+                stopOnCallbacksComplete = false;
                 timer.stop();
             }
         }
         onTriggered: {
-            if (text!=""){
-                _validateEngine.onEditingCalls( delayedStop );
-                _validateEngine.onEditingFinishedCalls( delayedStop );
-            }
+            _validateEngine.onEditingCalls( delayedStop );
+            _validateEngine.onEditingFinishedCalls( delayedStop );
+
             timerDone = true
         }
         property bool stopOnCallbacksComplete :false
@@ -204,6 +205,7 @@ TextField{
             if (listCalls.length === 0){
                 return ;
             }
+
             function getValidators(validators)
             {
                 var retValidators = [];
@@ -243,10 +245,10 @@ TextField{
     }
 
     onTextChanged: {
-        if (isPristine){
-            isPristine = ! isPristine;
+        if (isPristine && !blockTextChangedSignal){
+            isPristine = false;
         }
-        if (!isPristine && isEmptyMessageDisplayed === true){
+        if (!isPristine && isEmptyMessageDisplayed){
             helperText = "";
             isEmptyMessageDisplayed = false;
         }
@@ -254,32 +256,38 @@ TextField{
             helperText = ""
         }
 
-        if(text == ""){
+        if(text === ""){
             checkedIcon.visible = false
             hasError = false
-            return
+        }else{
+            text = onEditingFormating()
         }
-        timer.restart()
-        text = onEditingFormating()
+
+        if(!blockTextChangedSignal){
+            timer.restart()
+        }else{
+            timer.stop()
+            timer.timerDone = true
+        }
     }
 
     onFocusChanged: {
         if(activeFocus || focus){
            timer.restart()
             if (!isPristine){
-                isPristine = !isPristine;
+                isPristine = true;
             }
         }
         else{
             timer.stopOnCallbacksComplete = true;
-            if (text ==""){
+            if (text === ""){
                 timer.stop();
             }
-            else if (delegateValidation === false){
+            else if (!delegateValidation){
                 manageValidation();
             }
 
-            if (! hasError && text !=""){
+            if (! hasError && text !== "" && !blockTextChangedSignal){
                 _validateEngine.onEditingFinishedCalls( timer.delayedStop );
             }
         }
@@ -296,8 +304,7 @@ TextField{
                 return dfd.promise;
             },
             Err.Error.scope.LOCAL
-        )
-        );
+        ));
     }
 }
 
