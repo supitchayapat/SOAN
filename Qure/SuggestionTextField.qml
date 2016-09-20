@@ -29,9 +29,64 @@ View{
     property int heighWithoutSuggestions
     property Column columnContainer : columnContainer_p
     property Row rowContainer : rowContainer_p
+    property alias blockTextChangedSignal: address_txtField.blockTextChangedSignal
 
-    function checkRequired() {
-        return address_txtField.checkRequired();
+    QtObject{
+        id: _p
+
+        property var dfd : Qlib.Q.defer()
+
+        function checkRequired() {
+            return address_txtField.checkRequired();
+        }
+
+        function onsuccess(result){
+            gMapsEntries.clear();
+            var mode_snaptoNearestAddress = false;
+
+            if((Array.isArray(result) && result.length === 0)
+                    || result.status === "ERROR"){
+                suggestionlist.visible = false
+            }else{
+                mode_snaptoNearestAddress = (result.length === 1);
+                console.log('mode snapto '+ mode_snaptoNearestAddress.toString());
+
+                for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
+                    if (mode_snaptoNearestAddress
+                            && !result[i].hasOwnProperty('city')){
+                        continue;
+                    }
+
+                    if (!mode_snaptoNearestAddress
+                            && (!result[i].hasOwnProperty('streetName')
+                                || result[i].streetName === undefined)){
+                        continue;
+                    }
+
+                    console.log('include this snap result');
+                    gMapsEntries.append(
+                                {
+                                    "latitude": result[i].latitude,
+                                    "longitude":result[i].longitude,
+                                    "displayAddress" : result[i].formattedAddress,
+                                    "suggestAddress":   (result[i].streetNumber ? result[i].streetNumber+', ' : '') +
+                                                        (result[i].streetName || '')+
+                                                        "\n"+ result[i].city + (result[i].zipcode ? ', '+ result[i].zipcode : '')
+                                });
+                }
+                suggestionlist.visible = true
+            }
+            return dfd.promise;
+        }
+
+        function onerror(resp){
+            dfd.resolve( {
+                            response : false,
+                            message : "error :"+resp.error.error
+                        });
+            suggestionlist.visible = false
+            return dfd.promise;
+        }
     }
 
     height: listViewExpanded ? totalHeight : heighWithoutSuggestions
@@ -44,11 +99,12 @@ View{
         Row{
             id : rowContainer_p
             width: parent.width
+            height: heighWithoutSuggestions
 
             Icon {
                 id: icon
                 name: "maps/place"
-                size: heighWithoutSuggestions*0.7
+                size: parent.height*0.7
             }
 
             TextFieldValidated{
@@ -79,56 +135,13 @@ View{
                     });
 
                     onEditingValidations.unshift(Err.Error.create(function(){
-                        var dfd = Qlib.Q.defer();
                         if(address_txtField.text.length > 3 && !isPristine){
-                            return serverGateway.validateAddress(text).result.then(
-                                        function onsuccess(result){
-                                            gMapsEntries.clear();
-                                            var mode_snaptoNearestAddress = false;
-
-                                            if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                                suggestionlist.visible = false
-                                            }
-                                            else
-                                            {
-                                                    mode_snaptoNearestAddress = (result.length === 1);
-                                                    console.log('mode snapto '+ mode_snaptoNearestAddress.toString());
-
-
-                                                for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
-                                                    if (mode_snaptoNearestAddress && !result[i].hasOwnProperty('city')){
-                                                        continue;
-                                                    }
-
-                                                    if (!mode_snaptoNearestAddress && (!result[i].hasOwnProperty('streetName') || result[i].streetName === undefined)){
-                                                        continue;
-                                                    }
-                                                    console.log('include this snap result');
-                                                    gMapsEntries.append({
-                                                        "latitude": result[i].latitude,
-                                                        "longitude":result[i].longitude,
-                                                        "displayAddress" : result[i].formattedAddress,
-                                                        "suggestAddress":   (result[i].streetNumber ? result[i].streetNumber+', ' : '') +
-                                                                            (result[i].streetName || '')+
-                                                                            "\n"+ result[i].city + (result[i].zipcode ? ', '+ result[i].zipcode : '')
-                                                    });
-                                                }
-                                                suggestionlist.visible = true
-                                            }
-                                            return dfd.promise;
-                                        },
-                                        function onerror(resp){
-                                            dfd.resolve( {
-                                                            response : false,
-                                                            message : "error :"+resp.error.error
-                                                        });
-                                            suggestionlist.visible = false
-                                            return dfd.promise;
-                                        });
-
+                            return serverGateway.validateAddress(text).result.then(_p.onsuccess, _p.onerror);
+                        }else{
+                            suggestionlist.visible = false;
                         }
 
-                        return dfd.promise;
+                        return _p.dfd.promise;
 
                     }, Err.Error.scope.REMOTE));
                 }
@@ -179,5 +192,7 @@ View{
     ListModel {
         id: gMapsEntries
     }
+
+    onVisibleChanged: suggestionlist.visible = false;
 }
 
