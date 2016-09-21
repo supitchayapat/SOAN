@@ -34,24 +34,34 @@ View{
     QtObject{
         id: _p
 
-        property var dfd : Qlib.Q.defer()
+        property var dfd
 
         function checkRequired() {
             return address_txtField.checkRequired();
         }
 
         function onsuccess(result){
+            dfd = Qlib.Q.defer();
             gMapsEntries.clear();
             var mode_snaptoNearestAddress = false;
 
-            if((Array.isArray(result) && result.length === 0)
+            if((Array.isArray(result) && result[0].formattedAddress === "France")
                     || result.status === "ERROR"){
+                dfd.resolve({
+                                response : false,
+                                message : "error : l'adresse n'a pas pu être trouvée"
+                            });
                 suggestionlist.visible = false
             }else{
+
+                dfd.resolve({response : false,
+                                message :"" });
+                suggestionlist.visible = false
+
                 mode_snaptoNearestAddress = (result.length === 1);
                 console.log('mode snapto '+ mode_snaptoNearestAddress.toString());
 
-                for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
+                for (var i= 0; i < Math.min(maxAddressListed, result.length); i++){
                     if (mode_snaptoNearestAddress
                             && !result[i].hasOwnProperty('city')){
                         continue;
@@ -59,7 +69,7 @@ View{
 
                     if (!mode_snaptoNearestAddress
                             && (!result[i].hasOwnProperty('streetName')
-                                || result[i].streetName === undefined)){
+                                || (result[i].streetName === undefined))){
                         continue;
                     }
 
@@ -80,6 +90,7 @@ View{
         }
 
         function onerror(resp){
+            dfd = Qlib.Q.defer();
             dfd.resolve( {
                             response : false,
                             message : "error :"+resp.error.error
@@ -90,7 +101,6 @@ View{
     }
 
     height: listViewExpanded ? totalHeight : heighWithoutSuggestions
-    elevation : address_txtField.focus ? 1 : 0
 
     Column{
         id : columnContainer_p
@@ -137,10 +147,10 @@ View{
                     onEditingValidations.unshift(Err.Error.create(function(){
                         if(address_txtField.text.length > 3 && !isPristine){
                             return serverGateway.validateAddress(text).result.then(_p.onsuccess, _p.onerror);
-                        }else{
-                            suggestionlist.visible = false;
                         }
 
+                        suggestionlist.visible = false;
+                        _p.dfd = Qlib.Q.defer();
                         return _p.dfd.promise;
 
                     }, Err.Error.scope.REMOTE));
@@ -156,7 +166,7 @@ View{
             id:suggestionlist
 
             width:parent.width
-            height: count  * 48 * Units.dp + 24 * Units.dp
+            height: count  * 48 * Units.dp + 24 * Units.dp + 4 * Units.dp
             clip:true
             visible:false
             highlightFollowsCurrentItem: false
@@ -193,6 +203,15 @@ View{
         id: gMapsEntries
     }
 
-    onVisibleChanged: suggestionlist.visible = false;
+    onVisibleChanged: {
+        gMapsEntries.clear();
+        suggestionlist.visible = false;
+        address_txtField.focus = false;
+        address_txtField.forceValidationState(true);
+
+        if(visible){
+            forcedResult = text;
+        }
+    }
 }
 
