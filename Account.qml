@@ -21,7 +21,8 @@ Page {
     property var userCollection;
     property var user;
 
-    function loadUserInformation(){
+    function loadUserInformation()
+    {
         //When a login signal is emmited, the users collection is sent
         //from server to client with only the current user in it
         //getting the first element of the collection is getting the logged in user
@@ -30,50 +31,60 @@ Page {
         user = page.userCollection._set.toArray()[0];
 
         initializeFieldsAndLabelsWithUserInfo();
-
-
         addListenerToUpdateLabelsWhenUserInfoChanged();
     }
 
-    function initializeFieldsAndLabelsWithUserInfo(){
+    function setFields(user)
+    {
+        address_txtField.blockTextChangedSignal = true
+        tel_txtFld.blockTextChangedSignal = true
 
         var userProfile = user.profile;
-        email_lbl.text = user.emails[0].address;
         email_txtFld.text = user.emails[0].address;
-        name_lbl.text = userProfile.name;
         name_txtFld.text = userProfile.name;
-        address_lbl.text = userProfile.address;
         address_txtField.text = userProfile.address;
-        companyname_lbl.text = userProfile.companyName;
         companyName_txtFld.text = userProfile.companyName;
-        tel_lbl.text = userProfile.tel;
         tel_txtFld.text = userProfile.tel;
+
+        address_txtField.blockTextChangedSignal = false
+        tel_txtFld.blockTextChangedSignal = false
     }
 
-    function addListenerToUpdateLabelsWhenUserInfoChanged(){
+    function setLabels(user)
+    {
+        var userProfile = user.profile;
+        email_lbl.text = user.emails[0].address;
+        name_lbl.text = userProfile.name;
+        address_lbl.text = userProfile.address;
+        companyname_lbl.text = userProfile.companyName;
+        tel_lbl.text = userProfile.tel;
+    }
+
+    function initializeFieldsAndLabelsWithUserInfo()
+    {
+        setFields(user)
+        setLabels(user)
+    }
+
+    function addListenerToUpdateLabelsWhenUserInfoChanged()
+    {
         var reactiveUserCollection = Qondrite.reactiveQuery(page.userCollection);
 
         reactiveUserCollection.on("change", function(id){
-
-            if(user._id ==id){
-
+            if(user._id === id){
                 user = page.userCollection._set.toArray()[0];
-                email_lbl.text = user.emails[0].address;
-                name_lbl.text = user.profile.name;
-                address_lbl.text = user.profile.address;
-                companyname_lbl.text = user.profile.companyName;
-                tel_lbl.text = user.profile.tel;
+                setLabels(user)
             }
         });
     }
 
-    function changePassword(oldPassword,newPassword){
-        Qondrite.changePassword(oldPassword,newPassword)
-        .result.then(
+    function changePassword(oldPassword, newPassword)
+    {
+        Qondrite.changePassword(oldPassword, newPassword).result.then(
              function onSucess(){
                  confirmed_dlg.show()
-             }
-             );}
+             });
+    }
 
     backAction: navDrawer.action
 
@@ -84,18 +95,8 @@ Page {
 
             onTriggered: {
                 isEditable = true
+                setFields(user)
 
-                email_txtFld.text = email_lbl.text;
-                name_txtFld.text = name_lbl.text;
-                address_txtField.text = address_lbl.text;
-                companyName_txtFld.text = companyname_lbl.text;
-                tel_txtFld.text = tel_lbl.text;
-
-                name_txtFld.focus = true;
-                companyName_txtFld.focus = true;
-                tel_txtFld.focus = true;
-                email_txtFld.focus = true;
-                address_txtField.focus = true;
             }
         },
         Action{
@@ -109,7 +110,6 @@ Page {
 
                 //TODO : add a loadingCircle in the page while waiting for server updating info
                 Qondrite.updateUser(
-
                             {
                                 "email" :email_txtFld.text,
                                 "profile"  : {
@@ -132,12 +132,7 @@ Page {
             visible: isEditable
 
             onTriggered: {
-                email_txtFld.text = email_lbl.text;
-                name_txtFld.text = name_lbl.text;
-                address_txtField.text = address_lbl.text;
-                companyName_txtFld.text = companyname_lbl.text;
-                tel_txtFld.text = tel_lbl.text;
-
+                setFields(user)
                 isEditable = false
             }
         }
@@ -250,8 +245,8 @@ Page {
         Row{
             spacing : dp(Defines_values.Default_verticalspacing)
             width:page.width
-            height: lineH
-
+            height: isEditable? 0 : lineH
+            visible: !isEditable
 
             Icon {
                 name: "maps/place"
@@ -263,63 +258,33 @@ Page {
 
                 height:parent.height
                 width:fieldWidth
-                visible: !isEditable
                 anchors.verticalCenter : parent.verticalCenter
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
             }
+        }
 
-            TextFieldValidated{
-                id:address_txtField
+        SuggestionTextField{
+            id: address_txtField
 
-                placeholderText: qsTr("Adresse")
-                visible:isEditable
-                anchors.verticalCenter : parent.verticalCenter
-                width:textFieldWidth
+            visible: isEditable
+            width: parent.width
+            heighWithoutSuggestions: isEditable? lineH : 0
 
-                validator: RegExpValidator{regExp: /^[\-'a-z0-9 àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ]*$/gi }
-                serverGateway : Qondrite
+            maxAddressListed: 3
+            isRequired : true
 
-                onEditingFinished: {
-                    accountInfo.infos.address = text
-                    accountInfo.infosChanged()
-                }
+            onEditingFinished: {
+                accountInfo.infos.address = text
+                accountInfo.infos.latitude = latitude
+                accountInfo.infos.longitude = longitude
+                accountInfo.infosChanged()
+            }
 
-                Component.onCompleted: {
+            onIsValidChanged: accountInfo.infosChanged()
 
-                        onEditingFinishedValidations.unshift(Err.Error.create(function(){
-                            // run validation only if undone yet for current address and address length is worth it
-                            var dfd = Qlib.Q.defer();
-                            if(address_txtField.text.length > 3){
-                                return serverGateway.validateAddress(text).result.then(
-
-                                    function onsuccess(result){
-                                        var addressIsValid = true;
-                                        if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                            addressIsValid = false;
-
-                                        }else{
-                                            accountInfo.infos.latitude = result[0].latitude;
-                                            accountInfo.infos.longitude = result[0].longitude;
-                                        }
-                                        dfd.resolve( {
-                                            response : addressIsValid,
-                                            message :  addressIsValid ? "" : qsTr("Adresse invalide")
-                                        });
-                                        return dfd.promise;
-                                    },
-                                    function onerror(resp){
-                                        dfd.resolve( {
-                                            response : false,
-                                            message : "error :"+resp.error.error
-                                        });
-                                        return dfd.promise;
-                                    });
-                            }
-                        }, Err.Error.scope.REMOTE));
-                }
-
-                onIsValidChanged: accountInfo.infosChanged()
+            Component.onCompleted: {
+                rowContainer.spacing = dp(Defines_values.Default_verticalspacing)
             }
         }
 
@@ -493,7 +458,6 @@ Page {
                     Qondrite.oldPasswordValid.connect(
                                 function(isEqualToRealPassword)
                                 {
-
                                     if(isEqualToRealPassword){
                                         oldPasswordValidity = true
                                         oldPasswordVisibilityIcon = true
@@ -504,10 +468,8 @@ Page {
                                         oldPasswordVisibilityIcon = false
                                         console.log("------MOT DE PASSE INVALIDE-----")
                                     }
-                                }
-                                )
+                                })
                 }
-
             }
 
             onAccepted: {
@@ -519,5 +481,5 @@ Page {
             }
         }
     }
-    Component.onCompleted:loadUserInformation()
+    Component.onCompleted: loadUserInformation()
 }
