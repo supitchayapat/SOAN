@@ -300,7 +300,8 @@ TextField{
                 var dfd = Qlib.Q.defer();
                 var resp = (validator === null) ? true
                                                 : (text !== "" && text.toString().match(validator.regExp) !== null);
-                dfd.resolve({ response : resp});
+                dfd.resolve({ response : resp,
+                            message : resp === true ? "" : validatorWarning});
                 return dfd.promise;
             },
             Err.Error.scope.LOCAL
