@@ -2,7 +2,6 @@ TEMPLATE = app
 
 QT += qml quick svg websockets
 
-SOURCES += main.cpp
 
 RESOURCES += \
     main.qrc \
@@ -28,7 +27,8 @@ include(qml-material/material.pri)
 CONFIG += c++11
 
 #to use when need to debug qml
-#CONFIG += qml_debug
+CONFIG += qml_debug \
+CONFIG += debug \
 
 DISTFILES += \
     android/AndroidManifest.xml \
@@ -40,6 +40,21 @@ DISTFILES += \
     android/gradlew.bat \
     android/res/drawable/splash.xml \
     android/res/values/style.xml \
-    android/build.gradle
+    android/build.gradle \
+    utils/android/pull_sysroot.py \
+    android/src/com/spateof/ambuplus/notifications/local/LocalNotificationAndroid.java
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+HEADERS += \
+    Qure/notifications/local/localnotificationandroid.h \
+    appaction.h \
+    appactions.h
+
+SOURCES += main.cpp \
+    Qure/notifications/local/localnotificationandroid.cpp \
+    native.cpp \
+    appaction.cpp \
+    appactions.cpp
+
+OTHER_FILES += android/src/com/spateof/ambuplus/notifications/local/LocalNotificationAndroid.java

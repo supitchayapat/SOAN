@@ -5,6 +5,10 @@
 #include <QObject>
 #include <QtQml>
 #include "qml-material/src/plugin.h"
+#include "appaction.h"
+#include "appactions.h"
+#include <QtAndroid>
+#include "appactions.h"
 
 static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -30,12 +34,14 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-
+    QtAndroid::androidActivity().callMethod<void>("registerBroadcastReceiver", "()V");
+//    AppActions *appActions  = new AppActions();
     engine.addImportPath(":/.");
     MaterialPlugin qmlMaterial;
     qmlMaterial.registerTypes("Material");
 
     qmlRegisterSingletonType("Qondrite",0,1,"Qondrite",singletonQondrite_provider);
+    qmlRegisterType<AppAction>("Qure", 0, 1, "AppAction");
 
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
