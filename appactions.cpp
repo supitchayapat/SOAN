@@ -31,8 +31,9 @@ AppActions::~AppActions()
     qDebug() << "======= Destroying appActions";
 }
 
+Q_GLOBAL_STATIC(AppActions,appActions)
+
 AppActions *AppActions::instance()
 {
-    return instance();
+    return appActions();
 }
-Q_GLOBAL_STATIC(AppActions,appActions)
