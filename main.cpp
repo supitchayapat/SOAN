@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    QtAndroid::androidActivity().callMethod<void>("registerBroadcastReceiver", "()V");
+//    QtAndroid::androidActivity().callMethod<void>("registerBroadcastReceiver", "()V");
 //    AppActions *appActions  = new AppActions();
     engine.addImportPath(":/.");
     MaterialPlugin qmlMaterial;

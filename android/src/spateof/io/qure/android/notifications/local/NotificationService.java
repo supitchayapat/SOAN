@@ -32,7 +32,6 @@ public class NotificationService extends IntentService {
     protected Intent _alarmIntent;
     protected PendingIntent _alarmPendingIntent;
     public static  NotificationIntentsReceiver receiver = new NotificationIntentsReceiver();
-    private ArrayList<PendingIntent> _pendingIntents;
 
     private QureNotificationsManager qureNotificationsManager = new QureNotificationsManager(this);
 
@@ -42,7 +41,7 @@ public class NotificationService extends IntentService {
         actions.add("AVAILABLE_ACTION");
         actions.add("BUSY_ACTION");
         receiver.set_actions(actions);
-        _pendingIntents = receiver.get_pendingIntents();
+        loadAndConfigureAlarms(QureActivity.appContext());
     }
 
     public void loadAndConfigureAlarms(Context context) {
@@ -50,7 +49,6 @@ public class NotificationService extends IntentService {
         _alarmIntent = new Intent(context ,this.getClass());
         _alarmPendingIntent = PendingIntent.getService(context, 100, _alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         _alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 1000, 60000, _alarmPendingIntent);
-
     }
 
     @Override
@@ -73,8 +71,8 @@ public class NotificationService extends IntentService {
                 .flags(Notification.DEFAULT_ALL)
                 .autoCancel(true)
                 .click(QureActivity.class)
-                .button(R.drawable.pugnotification_ic_launcher, "Disponible", _pendingIntents.get(0))
-                .button(R.drawable.pugnotification_ic_launcher, "Indisponible", _pendingIntents.get(1))
+                .button(R.drawable.pugnotification_ic_launcher, "Disponible", receiver.get_pendingIntents().get(0))
+                .button(R.drawable.pugnotification_ic_launcher, "Indisponible", receiver.get_pendingIntents().get(1))
                 .simple()
                 .build();
     }

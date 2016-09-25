@@ -20,24 +20,23 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
     public void registerBroadcastReceiver() {
         // Qt is running on a different thread than Android.
         // In order to register the receiver we need to execute it in the Android UI thread
-        _notificationService = new NotificationService();
-        _notificationService.loadAndConfigureAlarms(this);
-        runOnUiThread(new RegisterReceiverRunnable(this));
+//        runOnUiThread(new RegisterReceiverRunnable(this));
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        Debug.waitForDebugger();
+//        Debug.waitForDebugger();
         super.onCreate(savedInstanceState);
         _context = getApplicationContext();
+        _notificationService = new NotificationService();
     }
 
     @Override
     protected void onDestroy() {
         Log.d(TAG,"Activity is going  to be destroyed");
-//        if(_notificationService.is_onlyOnMainActivityRunning())
-//            _notificationService.cancel(_notificationService._alarmPendingIntent);
+        _notificationService.stopSelf();
         super.onDestroy();
     }
 
