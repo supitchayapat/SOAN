@@ -13,7 +13,6 @@ import com.spateof.ambuplus.R;
 import java.util.ArrayList;
 
 import spateof.io.qure.android.bindings.QureActivity;
-import spateof.io.qure.android.bindings.QureAppActionsProvider;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -23,6 +22,8 @@ import spateof.io.qure.android.bindings.QureAppActionsProvider;
  * helper methods.
  */
 public class NotificationService extends IntentService {
+
+    private static final String TAG = NotificationService.class.getSimpleName();
 
     //Notification Manager Types
     //TODO : add other types of managers as NotificationManager class
@@ -55,13 +56,14 @@ public class NotificationService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            Log.d("NotificationService","===========onHandelIntent");
+            Log.d(TAG,"on Handel Intent "+ intent.getAction());
             QureNotificationsManager.with(this);
             buildNotification();
         }
     }
 
     private void buildNotification(){
+        Log.d(TAG, "building notification");
         qureNotificationsManager.load()
                 .title("dispo ?")
                 .message("veuillez mettre à jour votre dispo")
@@ -75,7 +77,5 @@ public class NotificationService extends IntentService {
                 .button(R.drawable.pugnotification_ic_launcher, "Indisponible", _pendingIntents.get(1))
                 .simple()
                 .build();
-
-//        qureNotificationsManager.builder(QureNotificationsManager.BuilderType.SIMPLE);
     }
 }

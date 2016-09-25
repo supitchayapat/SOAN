@@ -12,6 +12,7 @@ import br.com.goncalves.pugnotification.notification.Load;
  */
 public class QureNotification extends Load {
 
+      private static final String TAG = QureNotification.class.getSimpleName();
 //    private QureNotification _instance;
 //    private QureNotificationsManager _notificationsManager;
 //    private Builder _builder;

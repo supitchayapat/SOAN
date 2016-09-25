@@ -1,5 +1,7 @@
 package spateof.io.qure.android.bindings;
 
+import spateof.io.qure.android.notifications.local.QureNotificationsManager;
+
 /**
  * Created by issam on 9/16/2016.
  */
@@ -7,5 +9,10 @@ public class QureAppActionsProvider {
     // define the native function
     // these functions are called by the Qt C++ object
     // when it receives a new notification
+    private static final String TAG = QureAppActionsProvider.class.getSimpleName();
+    // ATTENTION  : Android studio warn about this method not being registered in JNI, but it's not the case
+    // See bug : https://code.google.com/p/android/issues/detail?id=181918
+    // workaround is using   @SuppressWarnings("JniMissingFunction")
+    @SuppressWarnings ("callAction")
     public static native void callAction(String action);
 }

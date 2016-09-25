@@ -9,11 +9,10 @@ import spateof.io.qure.android.notifications.local.NotificationService;
 
 public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity {
 
-    private static Context context;
+    private static final String TAG = QureActivity.class.getSimpleName();
     public static NotificationService _notificationService;
 
     public QureActivity(){}
-
 
     // this method is called by C++ to register the BroadcastReceiver.
     public void registerBroadcastReceiver() {
@@ -27,21 +26,19 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        Debug.waitForDebugger();
+//        Debug.waitForDebugger();
         super.onCreate(savedInstanceState);
-        QureActivity.context = getApplicationContext();
     }
-
 
     @Override
     protected void onDestroy() {
-        Log.d("Notification activity","======Activity is going to be destroyed ======");
+        Log.d(TAG,"Activity is going  to be destroyed");
 //        if(_notificationService.is_onlyOnMainActivityRunning())
 //            _notificationService.cancel(_notificationService._alarmPendingIntent);
         super.onDestroy();
     }
 
     public static Context getAppContext() {
-        return QureActivity.context;
+        return QureActivity.getAppContext();
     }
 }
