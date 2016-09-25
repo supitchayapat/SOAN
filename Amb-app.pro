@@ -41,20 +41,15 @@ DISTFILES += \
     android/res/drawable/splash.xml \
     android/res/values/style.xml \
     android/build.gradle \
-    utils/android/pull_sysroot.py \
-    android/src/com/spateof/ambuplus/notifications/local/LocalNotificationAndroid.java
+    utils/android/pull_sysroot.py
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 HEADERS += \
-    Qure/notifications/local/localnotificationandroid.h \
     appaction.h \
     appactions.h
 
 SOURCES += main.cpp \
-    Qure/notifications/local/localnotificationandroid.cpp \
     native.cpp \
     appaction.cpp \
     appactions.cpp
-
-OTHER_FILES += android/src/com/spateof/ambuplus/notifications/local/LocalNotificationAndroid.java
