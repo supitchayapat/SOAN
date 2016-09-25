@@ -33,17 +33,17 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
     public void initNotificationsReception() {
         Log.d(TAG,  "initNotificationsReception: "+ _actions.size());
         for (int i = 0; i <_actions.size() ; i++) {
-            Intent intent = new Intent (QureActivity.getAppContext(),NotificationIntentsReceiver.class);
+            Intent intent = new Intent (QureActivity.appContext(),NotificationIntentsReceiver.class);
             intent.setAction(_actions.get(i));
             // TODO : here we need to replace the related intent instead of adding it, in case it exists already.
             if(!_intents.contains(intent))
             {
                 _intents.add(intent);
             }
-            if(! _pendingIntents.contains(PendingIntent.getBroadcast(QureActivity.getAppContext()
+            if(! _pendingIntents.contains(PendingIntent.getBroadcast(QureActivity.appContext()
                     ,123456,intent,PendingIntent.FLAG_UPDATE_CURRENT)))
             {
-               _pendingIntents.add(PendingIntent.getBroadcast(QureActivity.getAppContext()
+               _pendingIntents.add(PendingIntent.getBroadcast(QureActivity.appContext()
                        ,123456,intent,PendingIntent.FLAG_UPDATE_CURRENT));
             }
         }

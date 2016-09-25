@@ -10,7 +10,9 @@ import spateof.io.qure.android.notifications.local.NotificationService;
 public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity {
 
     private static final String TAG = QureActivity.class.getSimpleName();
+    private static Context _context;
     public static NotificationService _notificationService;
+
 
     public QureActivity(){}
 
@@ -26,8 +28,9 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-//        Debug.waitForDebugger();
+        Debug.waitForDebugger();
         super.onCreate(savedInstanceState);
+        _context = getApplicationContext();
     }
 
     @Override
@@ -38,7 +41,7 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
         super.onDestroy();
     }
 
-    public static Context getAppContext() {
-        return QureActivity.getAppContext();
+    public static Context appContext() {
+        return _context;
     }
 }
