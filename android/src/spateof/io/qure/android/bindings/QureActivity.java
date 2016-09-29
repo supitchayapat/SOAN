@@ -13,9 +13,6 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
     private static Context _context;
     public static NotificationService _notificationService;
 
-
-    public QureActivity(){}
-
     // this method is called by C++ to register the BroadcastReceiver.
     public void registerBroadcastReceiver() {
         // Qt is running on a different thread than Android.
