@@ -4,24 +4,25 @@
 AppActions::AppActions()
 {
     qDebug() << "==========creating appActions";
+    _actionsCaller = QSharedPointer<QHash<QString, AppAction*>>(new QHash<QString, AppAction*>);
 }
 
 void AppActions::callAction(QString action)
 {
     qDebug() << "========callAction called from AmbuplusActions:" << action;
-    QHash<QString,AppAction*>::const_iterator i = _actionsCaller.find(action);
-    if(i != _actionsCaller.end())
-        _actionsCaller.value(action)->trigger();
-    qDebug() << "========callAction found ?" << (i != _actionsCaller.end()) ;
+    QHash<QString,AppAction*>::const_iterator i = _actionsCaller.data()->find(action);
+    if(i != _actionsCaller.data()->end())
+        _actionsCaller.data()->value(action)->trigger();
+    qDebug() << "========callAction found ?" << (i != _actionsCaller.data()->end()) ;
 }
 
 
-QHash<QString, AppAction*> AppActions::actionsCaller() const
+QSharedPointer< QHash<QString, AppAction*> > AppActions::actionsCaller() const
 {
     return _actionsCaller;
 }
 
-void AppActions::setActionsCaller(const QHash<QString, AppAction*> &actionsCaller)
+void AppActions::setActionsCaller(const QSharedPointer<QHash<QString, AppAction*>> &actionsCaller)
 {
     _actionsCaller = actionsCaller;
 }

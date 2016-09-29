@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.spateof.ambuplus.R;
+import spateof.io.ambuplus.R;
 
 import java.util.ArrayList;
 

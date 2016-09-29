@@ -149,22 +149,6 @@ Materials.ApplicationWindow {
         }
     }
 
-    AppAction{
-        name:"AVAILABLE_ACTION"
-        jobCallback : function(){
-            Qondrite.changeAvailability(true);
-            console.log("====================Setting availability to true")
-        }
-    }
-
-    AppAction{
-        name:"BUSY_ACTION"
-        jobCallback : function(){
-            Qondrite.changeAvailability(true);
-            console.log("====================Setting availability to false")
-        }
-    }
-
     Component.onCompleted: {
 
         Qondrite.onOpen.connect(function () {
