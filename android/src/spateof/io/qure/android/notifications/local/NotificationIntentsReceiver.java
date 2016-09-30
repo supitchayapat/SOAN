@@ -1,5 +1,6 @@
 package spateof.io.qure.android.notifications.local;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import br.com.goncalves.pugnotification.notification.PugNotification;
 import spateof.io.qure.android.bindings.QureActivity;
 import spateof.io.qure.android.bindings.QureAppActionsProvider;
 
@@ -56,6 +58,8 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
         String action = intent.getAction();
         Log.d(TAG,"received action :"+ action);
         QureAppActionsProvider.callAction(action);
+        PugNotification.with(context).cancel(1456789);
+//        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
     }
 
     public ArrayList<String> get_actions() {
@@ -82,4 +86,5 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
     public void set_pendingIntents(ArrayList<PendingIntent> _pendingIntents) {
         this._pendingIntents = _pendingIntents;
     }
+
 }

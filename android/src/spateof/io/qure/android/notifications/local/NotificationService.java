@@ -64,6 +64,7 @@ public class NotificationService extends IntentService {
         Log.d(TAG, "building notification");
         qureNotificationsManager.load()
                 .title("dispo ?")
+                .identifier(1456789)
                 .message("veuillez mettre à jour votre dispo")
                 .bigTextStyle("Merci de mettre à jour votre disponibilité")
                 .smallIcon(R.drawable.icon)
