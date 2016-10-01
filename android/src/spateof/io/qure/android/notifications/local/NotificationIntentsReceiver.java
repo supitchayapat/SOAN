@@ -36,6 +36,8 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
         Log.d(TAG,  "initNotificationsReception: "+ _actions.size());
         for (int i = 0; i <_actions.size() ; i++) {
             Intent intent = new Intent();
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.setAction(_actions.get(i));
             // TODO : here we need to replace the related intent instead of adding it, in case it exists already.
             if(!_intents.contains(intent))
@@ -58,13 +60,12 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
         String action = intent.getAction();
         Log.d(TAG,"received action :"+ action);
         QureAppActionsProvider.callAction(action);
-        PugNotification.with(context).cancel(1456789);
-//        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        QureNotificationsManager.with(context).cancel(1456789);
     }
 
     public ArrayList<String> get_actions() {
-        return _actions;
-    }
+            return _actions;
+        }
 
     public void set_actions(ArrayList<String> actions) {
         this._actions = actions;

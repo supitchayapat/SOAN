@@ -77,4 +77,9 @@ public class NotificationService extends IntentService {
                 .simple()
                 .build();
     }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG,"Service is now going to be destroyed");
+    }
 }
