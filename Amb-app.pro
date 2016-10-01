@@ -47,14 +47,12 @@ DISTFILES += \
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 HEADERS += \
-    Qure/notifications/local/localnotificationandroid.h \
     appaction.h \
     appactions.h
 
 SOURCES += main.cpp \
-    Qure/notifications/local/localnotificationandroid.cpp \
-    native.cpp \
     appaction.cpp \
-    appactions.cpp
+    appactions.cpp \
+    qureNativeAndroid.cpp
 
 OTHER_FILES += android/src/com/spateof/ambuplus/notifications/local/LocalNotificationAndroid.java

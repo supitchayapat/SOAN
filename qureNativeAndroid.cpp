@@ -6,18 +6,11 @@
 
 #include "appactions.h"
 
-// TODO : remane this file to ambuplusNative as it specific to this project.
-// define our native static functions
-// these are the functions that Java part will call directly from Android UI thread
 
 static void callAction(JNIEnv /*env*/, jobject /*obj*/, jstring action)
 {
     QAndroidJniObject jniaction(action);
     QString action_ = jniaction.toString();
-    qDebug() << "========convertin jstring to String : " << action_;
-//    qDebug() << "================AmbuplusActions is aLive : " << AppActions::instance()->exists()
-//    AmbuplusActions::instance().dumpObjectInfo();
-    qDebug() << "================calling method succed : " <<
     QMetaObject::invokeMethod(AppActions::instance()
                               , "callAction"
                               , Qt::DirectConnection

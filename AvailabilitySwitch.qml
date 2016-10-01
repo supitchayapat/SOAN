@@ -1,6 +1,7 @@
 import QtQuick 2.5
 import QtQuick.Controls.Styles.Material 0.1 as MaterialStyle
 import Material 0.3
+import Qure 0.1
 
 Switch {
     id: control
@@ -52,5 +53,19 @@ Switch {
                 }
             }
         }
+    }
+
+    AppAction{
+        name:"AVAILABLE_ACTION"
+        jobCallback : function(){checked = true}
+    }
+
+    AppAction{
+        name:"BUSY_ACTION"
+        jobCallback : function(){checked = false}
+    }
+
+    onCheckedChanged: {
+        Qondrite.changeAvailability(checked)
     }
 }

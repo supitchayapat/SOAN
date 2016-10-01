@@ -2,13 +2,6 @@
 #include "appactions.h"
 #include <QDebug>
 
-AppAction::AppAction(QObject *parent) :
-    QObject(parent)
-{
-    qDebug() << "=====creating action :" << _name << " with job" << _job.toString();
-//    qDebug() << "AppActions container exists ? :" <<  AppActions.instance().exists();;
-}
-
 QString AppAction::name() const
 {
     return _name;
@@ -17,7 +10,6 @@ QString AppAction::name() const
 void AppAction::setName(const QString &name)
 {
     if(name !=""){
-        qDebug() << "=====setting action :" << name ;
         _name = name;
         Q_ASSERT( AppActions::instance()->actionsCaller().data() != nullptr);
         AppActions::instance()->actionsCaller().data()->insert(_name,this);
@@ -38,7 +30,6 @@ void AppAction::setJob(const QJSValue &job)
 
 void AppAction::trigger()
 {
-    qDebug() << "=========invoking call from c++";
     _job.call();
-    qDebug() << "=========calling successed ? " << (!_job.isError());
+    emit triggered();
 }
