@@ -13,44 +13,8 @@ import br.com.goncalves.pugnotification.notification.PugNotification;
  */
 public class QureNotificationsManager extends PugNotification {
 
-    private static final String TAG = QureNotificationsManager.class.getSimpleName();
-    private Builder builder;
-    private Load notification;
-
-    public  Map<String,NotificationIntentsReceiver> IntentsToActions;
-
     public QureNotificationsManager(Context context) {
         super(context);
     }
-
-//    public Load newNotification() {
-//        notification = load();
-//        return notification;
-//    }
-
-//    public enum  BuilderType {
-//        SIMPLE,
-//        CUSTOM,
-//        WEAR
-//    }
-
-//    public Builder builder(@NonNull BuilderType type) {
-//        switch (type) {
-//            case SIMPLE:
-//                builder = notification.simple();
-//                break;
-//            case CUSTOM:
-//                builder = notification.custom();
-//                break;
-//            case WEAR:
-//                builder = notification.wear();
-//                break;
-//            default:
-//                throw new  IllegalArgumentException("Unknown Builder type");
-//        }
-//        return builder;
-//    }
-//
-//    public void fireNotification() { builder.build()}
 
 }
