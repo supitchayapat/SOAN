@@ -1,5 +1,6 @@
 package spateof.io.qure.android.notifications.local;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import br.com.goncalves.pugnotification.notification.PugNotification;
 import spateof.io.qure.android.bindings.QureActivity;
 import spateof.io.qure.android.bindings.QureAppActionsProvider;
 
@@ -32,7 +34,9 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
     public void initNotificationsReception() {
         Log.d(TAG,  "initNotificationsReception: "+ _actions.size());
         for (int i = 0; i <_actions.size() ; i++) {
-            Intent intent = new Intent (QureActivity.appContext(),NotificationIntentsReceiver.class);
+            Intent intent = new Intent();
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+//                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.setAction(_actions.get(i));
             // TODO : here we need to replace the related intent instead of adding it, in case it exists already.
             if(! _pendingIntents.contains(PendingIntent.getBroadcast(QureActivity.appContext()
@@ -51,11 +55,12 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
         String action = intent.getAction();
         Log.d(TAG,"received action :"+ action);
         QureAppActionsProvider.callAction(action);
+        QureNotificationsManager.with(context).cancel(1456789);
     }
 
     public ArrayList<String> get_actions() {
-        return _actions;
-    }
+            return _actions;
+        }
 
     public void set_actions(ArrayList<String> actions) {
         this._actions = actions;
@@ -69,4 +74,5 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
     public void set_pendingIntents(ArrayList<PendingIntent> _pendingIntents) {
         this._pendingIntents = _pendingIntents;
     }
+
 }

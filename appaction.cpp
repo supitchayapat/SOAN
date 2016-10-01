@@ -16,10 +16,13 @@ QString AppAction::name() const
 
 void AppAction::setName(const QString &name)
 {
-    qDebug() << "=====setting action :" << name ;
-//    AppActions::instance()->actionsCaller().remove(_name);
-    _name = name;
-    AppActions::instance()->actionsCaller().insert(_name,this);
+    if(name !=""){
+        qDebug() << "=====setting action :" << name ;
+        _name = name;
+        Q_ASSERT( AppActions::instance()->actionsCaller().data() != nullptr);
+        AppActions::instance()->actionsCaller().data()->insert(_name,this);
+        Q_ASSERT(AppActions::instance()->actionsCaller().data()->size() > 0);
+    }
 }
 
 QJSValue AppAction::job() const
@@ -30,16 +33,12 @@ QJSValue AppAction::job() const
 void AppAction::setJob(const QJSValue &job)
 {
     _job = job;
-    AppActions::instance()->actionsCaller().insert(_name,this);
+    AppActions::instance()->actionsCaller().data()->insert(_name,this);
 }
 
 void AppAction::trigger()
 {
     qDebug() << "=========invoking call from c++";
-    QJSValue ret = _job.call();
-    qDebug() << "=========calling successed ? " << (ret.isError());
-//    QVariant arg;
-//    QMetaObject::invokeMethod(this, "jobCallback"
-//                              ,Qt::AutoConnection
-//                              ,Q_ARG(QVariant, arg));
+    _job.call();
+    qDebug() << "=========calling successed ? " << (!_job.isError());
 }
