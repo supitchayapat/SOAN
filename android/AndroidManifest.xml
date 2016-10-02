@@ -1,9 +1,15 @@
 <?xml version="1.0"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="spateof.io.ambuplus" android:installLocation="auto" android:versionCode="1" android:versionName="1.0">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="spateof.io.ambuplus"
+    android:installLocation="auto" android:versionCode="1" android:versionName="1.0">
 
     <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="23"/>
 
-    <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
+    <supports-screens android:anyDensity=   "true"
+                      android:largeScreens= "true"
+                      android:normalScreens="true"
+                      android:smallScreens= "true"/>
 
     <!--
          The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.
@@ -18,18 +24,23 @@
     -->
     <!-- %%INSERT_FEATURES -->
 
+    <application android:name="org.qtproject.qt5.android.bindings.QtApplication"
+                 android:hardwareAccelerated="true"
+                 android:icon="@drawable/icon"
+                 android:label="Ambu+"
+                 android:theme="@style/AppTheme">
 
+        <activity android:name="spateof.io.qure.android.bindings.QureActivity"
+                  android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation"
+                  android:label="Ambu+"
+                  android:launchMode="singleTop"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/AppTheme">
 
-
-    <!-- Attention : keep debuggable = true only on dev, not on the release branch -->
-    <application android:name="org.qtproject.qt5.android.bindings.QtApplication" android:hardwareAccelerated="true" android:icon="@drawable/icon" android:label="Ambu+">
-        <activity android:name="spateof.io.qure.android.bindings.QureActivity" android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation" android:label="Ambu+" android:launchMode="standard" android:screenOrientation="portrait" android:theme="@style/CustomTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
-        </intent-filter>
-
+            </intent-filter>
 
 
             <meta-data android:name="android.app.lib_name" android:value="-- %%INSERT_APP_LIB_NAME%% --"/>
@@ -87,6 +98,4 @@
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
     </application>
-
-<uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

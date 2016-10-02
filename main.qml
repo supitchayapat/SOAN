@@ -1,20 +1,21 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.4 as Controls
-import Material 0.3 as Materials
-import QtQuick.Window 2.0
+import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
+import QtQuick.Controls 1.4 as Controls
+
+import Material 0.3 as Materials
 import Qondrite 0.1
 import Qure 0.1
 import "define_values.js" as Defines_values
-
+import "navDrawerLoaderScript.js" as NavDrawerLoaderScript
 
 Materials.ApplicationWindow {
     id: app
 
-    property bool isConnected: false
-    property bool isSplashShown: false
-
     signal login()
+    signal sendBackground()
+
+    property var navDrawer;
 
     function manageInitialPage()
     {
@@ -31,6 +32,7 @@ Materials.ApplicationWindow {
 
     function internetOffCallback()
     {
+        _p.isConnectedFlag = false
         splash.showErrorMessage = true
         errorToast.open('La connexion à Internet a été interrompue');
     }
@@ -43,11 +45,20 @@ Materials.ApplicationWindow {
     initialPage: Splash{
         id:splash
         onShown: {
-            isSplashShown = true
-            if(isConnected){
-                pageStack.push({item: Qt.resolvedUrl("Signin.qml"),
-                                   properties: {"name" : "SigninPage"},
-                                   replace:true})
+            _p.isSplashShownFlag = true
+            if(_p.isConnectedFlag){
+                _p.isSplashShownFlag = false
+                if(!_p.isLoginResumedFlag){
+                    pageStack.push({item: Qt.resolvedUrl("Signin.qml"),
+                                       properties: {"objectName" : "signinPage"},
+                                       replace: true})
+                }else{
+                    _p.isLoginResumedFlag = false
+                    NavDrawerLoaderScript.loadNavDrawer();
+                    pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
+                                       "properties" : {"objectName" : "listAmbPage"},
+                                       replace: true})
+                }
             }
         }
     }
@@ -73,6 +84,7 @@ Materials.ApplicationWindow {
                 from: 0
                 to: 1
             }
+
             PropertyAnimation {
                 target: exitItem
                 property: "opacity"
@@ -82,40 +94,20 @@ Materials.ApplicationWindow {
         }
     }
 
+    QtObject{
+        id: _p
+        property bool isLoginResumedFlag: false
+        property bool isSplashShownFlag: false
+        property bool isConnectedFlag: false
+        property bool areQondriteHandlersConnected: true
+
+    }
+
     Settings{
         id: appSettings
         category: "userInfos"
         property string username
         property string token
-    }
-
-    Materials.NavigationDrawer {
-        id:navDrawer
-
-        NavigationDrawerDelegate{
-            id:navDelegateDrawer
-
-            anchors.fill: parent
-            objectName: "sidePanel"
-
-            onGoToAccountPage: {
-                //FIXME : the condition below doesn't seems to work and AccountPage is pushed many times
-                //  if(pageStack.currentItem.name !== "AccountPage"){
-                pageStack.push({item:Qt.resolvedUrl("Account.qml"),"properties" : {"name" : "AccountPage"}})
-            }
-            onGoToAmbulanceListPage: {
-                pageStack.pop(pageStack.find(function(item) {
-                    return item.name === "ListAmbPage";
-                }))
-            }
-            onDisconnectPressed: {
-                Qondrite.changeAvailability(false);
-                Qondrite.logout();
-                remoteCallSpinner.hide();
-                pageStack.clear()
-                pageStack.push({"item": Qt.resolvedUrl("Signin.qml"), "properties" : {"name" : "SigninPage"},replace:true, destroyOnPop:true})
-            }
-        }
     }
 
     Materials.Snackbar {
@@ -153,45 +145,70 @@ Materials.ApplicationWindow {
 
         Qondrite.onOpen.connect(function () {
 
-            isConnected = true
-            splash.showErrorMessage = false
-            manageInitialPage();
+            if(_p.areQondriteHandlersConnected){
+                _p.areQondriteHandlersConnected = false
 
-            if(isSplashShown){
-                pageStack.push({item: Qt.resolvedUrl("Signin.qml"),
-                                   properties: {"name" : "SigninPage"},
-                                   replace:true})
+                Qondrite._on("logout",hideSpinner);
+                Qondrite._on("logoutError", hideSpinner);
+
+                Qondrite._on("remoteCallStart", function(){
+                    remoteCallSpinnerStartDelayed.start();
+                    onRemoteCallTimeout.start()
+                });
+
+                Qondrite._on("remoteCallSuccess", hideSpinner);
+                Qondrite._on("remoteCallError", hideSpinner);
+
+                Qondrite.onLogin.connect(function () {
+                    NavDrawerLoaderScript.loadNavDrawer();
+                    pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
+                                       "properties" : {"objectName" : "listAmbPage"},
+                                       replace: true})
+                });
+
+                Qondrite.onResumeLoginFailed.connect(function() {
+                    if(_p.isSplashShownFlag){
+                        _p.isLoginResumedFlag = false
+                        pageStack.push({item: Qt.resolvedUrl("Signin.qml"),
+                                           properties: {"objectName" : "signinPage"},
+                                           replace:true})
+                    }
+                });
+
+                Qondrite.onResumeLogin.connect(function() {
+                    _p.isLoginResumedFlag = true
+                    if(_p.isSplashShownFlag){
+                        _p.isLoginResumedFlag = false
+                        NavDrawerLoaderScript.loadNavDrawer();
+                        pageStack.push({item: Qt.resolvedUrl("Listambulances.qml"),
+                                           "properties": {"objectName": "listAmbPage"},
+                                           replace: true
+                                       })
+                    }
+                });
             }
 
-            Qondrite.onResumeLogin.connect(function() {
+            _p.isConnectedFlag = true
+            splash.showErrorMessage = false
 
-                pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
-                                   "properties" : {"name" : "ListAmbPage"},
-                                   replace: true})
-            });
-
-            Qondrite.onLogin.connect(function () {
-                pageStack.push({item:Qt.resolvedUrl("Listambulances.qml"),
-                                   "properties" : {"name" : "ListAmbPage"},
-                                   replace: true})
-            });
-
-            Qondrite.onResumeLoginFailed.connect(function() {
-                pageStack.push(Qt.resolvedUrl("Signin.qml"))
-            });
-
-            Qondrite._on("logout",hideSpinner);
-            Qondrite._on("logoutError", hideSpinner);
-
-            Qondrite._on("remoteCallStart", function(){
-                remoteCallSpinnerStartDelayed.start();
-                onRemoteCallTimeout.start()
-            });
-            Qondrite._on("remoteCallSuccess", hideSpinner);
-            Qondrite._on("remoteCallError", hideSpinner);
+            manageInitialPage();
         })
 
         Qondrite.onClose.connect(internetOffCallback);
         Qondrite.onError.connect(internetOffCallback);
+
+        pageStack.Keys.onBackPressed.connect(function(event){
+            event.accepted = true
+            if(pageStack.__lastDepth > 1){
+                var item = pageStack.pop();
+                if(item.objectName === "listAmbPage"){
+                    navDrawer.navDelegateDrawer.selectUserAccount()
+                }else if(item.objectName === "accountPage"){
+                    navDrawer.navDelegateDrawer.selectAmbList()
+                }
+            }else{
+                sendBackground()
+            }
+        })
     }
 }

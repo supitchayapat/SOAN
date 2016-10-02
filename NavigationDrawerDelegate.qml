@@ -20,6 +20,20 @@ Rectangle{
         accountName.text = userInfo.profile.name;
     }
 
+    function selectAmbList()
+    {
+        ambListItem.selected = true
+        accountListItem.selected = false
+        navDrawer.close()
+    }
+
+    function selectUserAccount()
+    {
+        accountListItem.selected = true
+        ambListItem.selected = false
+        navDrawer.close()
+    }
+
     Rectangle{
         id: sidebar_rct
 
@@ -109,9 +123,7 @@ Rectangle{
             }
 
             onClicked:{
-                ambListItem.selected = true
-                accountListItem.selected = false
-                navDrawer.close()
+                selectAmbList()
                 goToAmbulanceListPage()
             }
         }
@@ -127,20 +139,14 @@ Rectangle{
             }
 
             onClicked:{
-                accountListItem.selected = true
-                ambListItem.selected = false
-                navDrawer.close()
+                selectUserAccount()
                 goToAccountPage();
             }
         }
     }
 
     Component.onCompleted: {
-        Qondrite.onLogin.connect(function(){
-            loadSideBarInformation()
-        })
-        Qondrite.onResumeLogin.connect(function(){
-            loadSideBarInformation()
-        })
+        selectAmbList();
+        loadSideBarInformation()
     }
 }

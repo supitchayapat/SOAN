@@ -4,6 +4,10 @@
 #include <QQuickItem>
 #include <QObject>
 #include <QtQml>
+#ifdef Q_OS_ANDROID
+#include <QtAndroid>
+#include <QAndroidJniObject>
+#endif
 #include "qml-material/src/plugin.h"
 #include "appaction.h"
 #include "appactions.h"
@@ -21,7 +25,7 @@ static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *script
 
     QObject *qrondriteObject = qondrite.create();
     QJSValue result = scriptEngine->newQObject(qrondriteObject);
-    result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
+    result.setProperty("meteor_url",QString("ambuplus.herokuapp.com"));
     return result;
 }
 
@@ -42,6 +46,19 @@ int main(int argc, char *argv[])
     qmlRegisterType<AppAction>("Qure", 0, 1, "AppAction");
 
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
+
+    // linking between backButtonClicked (main.qml) and onBackClicked method (Android side)
+    // workaround: no direct way to use qml signals in the new QObject::connect syntax hence using lambda with qml signals
+    #ifdef Q_OS_ANDROID
+        QSignalMapper signalMapper;
+        QObject* appWindow = engine.rootObjects()[0];
+        QObject::connect( appWindow, SIGNAL(sendBackground()), &signalMapper, SLOT(map()));
+        signalMapper.setMapping( appWindow, "appWindow" );
+
+        QObject::connect( &signalMapper, static_cast<void(QSignalMapper::*)(const QString&)>(&QSignalMapper::mapped), [&]() {
+            QtAndroid::androidActivity().callMethod<void>("onBackClicked");
+        });
+    #endif
 
     //WARNING the following generate a conflict with initialItem in main.qml
 //    for(auto o:engine.rootObjects()){
