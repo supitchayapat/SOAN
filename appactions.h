@@ -10,20 +10,16 @@ class AppActions : public QObject
     Q_OBJECT
 public:
     AppActions();
-    ~AppActions();
-//    using QObject::QObject;
+    static QPointer<AppActions> instance();
 
-    static AppActions* instance();
-    QSharedPointer<QHash<QString, AppAction*>> actionsCaller() const;
-    void setActionsCaller(const QSharedPointer<QHash<QString, AppAction *> > &actionsCaller);
-
-signals:
+    QSharedPointer<QHash<QString, QPointer<AppAction> > > actionsCaller() const;
+    void setActionsCaller(const QSharedPointer<QHash<QString, QPointer<AppAction> > > &actionsCaller);
 
 public slots:
     Q_INVOKABLE void callAction(QString action);
 
 private :
-    QSharedPointer< QHash<QString,AppAction*>> _actionsCaller;
+    QSharedPointer< QHash<QString,QPointer<AppAction>>> _actionsCaller;
 };
 
 #endif // AMBUPLUSACTIONS_H

@@ -18,9 +18,6 @@ Page {
             right: parent.right
             verticalCenter: parent.verticalCenter
         }
-        onCheckedChanged: {
-            Qondrite.changeAvailability(checked)
-        }
     }
 
     property var availabilityCollection;
@@ -160,24 +157,6 @@ Page {
             anchors.centerIn: parent
             text: qsTr("Aucun élément actuellement");
             font.italic: true
-        }
-    }
-
-    AppAction{
-        name:"AVAILABLE_ACTION"
-        jobCallback : function(){
-            Qondrite.changeAvailability(true)
-            console.log("====================Setting availability to true")
-            availability_swch.checked = true
-        }
-    }
-
-    AppAction{
-        name:"BUSY_ACTION"
-        jobCallback : function(){
-            Qondrite.changeAvailability(true)
-            console.log("====================Setting availability to false")
-            availability_swch.checked = false
         }
     }
 

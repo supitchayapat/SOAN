@@ -50,6 +50,6 @@ HEADERS += \
     appactions.h
 
 SOURCES += main.cpp \
-    native.cpp \
     appaction.cpp \
-    appactions.cpp
+    appactions.cpp \
+    qureNativeAndroid.cpp

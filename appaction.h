@@ -12,7 +12,7 @@ class AppAction : public QObject
     Q_PROPERTY(QJSValue jobCallback READ job WRITE setJob NOTIFY jobChanged)
 
 public:
-    explicit AppAction(QObject *parent = 0);
+    using QObject::QObject;
 
     QString name() const;
     void setName(const QString &name);
