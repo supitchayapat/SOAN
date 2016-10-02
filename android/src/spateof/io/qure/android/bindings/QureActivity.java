@@ -33,6 +33,9 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
     };
 
     public void startNotificationProcess(){
+
+        initializeNotifactionTimerTask();
+
         Thread notificationTimerThread = new Thread(new Runnable() {
 
             public void run() {
@@ -51,6 +54,7 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
 
     public void stopNotificationProcess(){
         if(notificationTimer != null){
+            notificationTimerTask.cancel();
             notificationTimer.cancel();
         }
     }
@@ -83,11 +87,7 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
         _context = getApplicationContext();
         super.onCreate(savedInstanceState);
         _notificationService = new NotificationService(_context);
-        initializeNotifactionTimerTask();
-
-
     }
-
     @Override
     protected void onDestroy() {
         Log.d(TAG,"Activity is going  to be destroyed");
