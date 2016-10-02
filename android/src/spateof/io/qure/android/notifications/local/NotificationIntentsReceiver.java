@@ -29,7 +29,6 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
     private static final String TAG = NotificationIntentsReceiver.class.getSimpleName();
 
     private ArrayList<String> _actions;
-    private ArrayList<Intent> _intents = new ArrayList<Intent>();
     private ArrayList<PendingIntent> _pendingIntents = new ArrayList<PendingIntent>();
 
     public void initNotificationsReception() {
@@ -40,10 +39,6 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
 //                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.setAction(_actions.get(i));
             // TODO : here we need to replace the related intent instead of adding it, in case it exists already.
-            if(!_intents.contains(intent))
-            {
-                _intents.add(intent);
-            }
             if(! _pendingIntents.contains(PendingIntent.getBroadcast(QureActivity.appContext()
                     ,123456,intent,PendingIntent.FLAG_UPDATE_CURRENT)))
             {
@@ -70,14 +65,6 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
     public void set_actions(ArrayList<String> actions) {
         this._actions = actions;
         initNotificationsReception();
-    }
-
-    public ArrayList<Intent> get_intents() {
-        return _intents;
-    }
-
-    public void set_intents(ArrayList<Intent> _intents) {
-        this._intents = _intents;
     }
 
     public ArrayList<PendingIntent> get_pendingIntents() {

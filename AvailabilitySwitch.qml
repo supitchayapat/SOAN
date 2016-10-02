@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls.Styles.Material 0.1 as MaterialStyle
 import Material 0.3
 import Qure 0.1
+import Qondrite 0.1
 
 Switch {
     id: control
@@ -66,6 +67,12 @@ Switch {
     }
 
     onCheckedChanged: {
+        if(checked){
+            _notificationMonitor.startNotificationProcess();
+        }else{
+            _notificationMonitor.stopNotificationProcess();
+        }
+
         Qondrite.changeAvailability(checked)
     }
 }

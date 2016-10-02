@@ -11,6 +11,7 @@
 #include "qml-material/src/plugin.h"
 #include "appaction.h"
 #include "appactions.h"
+#include "notificationmonitor.h"
 #include <QtAndroid>
 #include "appactions.h"
 
@@ -45,8 +46,12 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType("Qondrite",0,1,"Qondrite",singletonQondrite_provider);
     qmlRegisterType<AppAction>("Qure", 0, 1, "AppAction");
 
-    engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
+    qmlRegisterUncreatableType<NotificationMonitor>("Qure",0,1,"_notificationMonitor","give some description");
 
+    NotificationMonitor *notificationMonitor = new NotificationMonitor(&engine);
+    engine.rootContext()->setContextProperty("_notificationMonitor", notificationMonitor);
+
+    engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
     // linking between backButtonClicked (main.qml) and onBackClicked method (Android side)
     // workaround: no direct way to use qml signals in the new QObject::connect syntax hence using lambda with qml signals
     #ifdef Q_OS_ANDROID

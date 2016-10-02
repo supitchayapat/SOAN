@@ -21,7 +21,7 @@ import spateof.io.qure.android.bindings.QureActivity;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class NotificationService extends IntentService {
+public class NotificationService{
 
     private static final String TAG = NotificationService.class.getSimpleName();
 
@@ -33,34 +33,17 @@ public class NotificationService extends IntentService {
     protected PendingIntent _alarmPendingIntent;
     public static  NotificationIntentsReceiver receiver = new NotificationIntentsReceiver();
 
-    private QureNotificationsManager qureNotificationsManager = new QureNotificationsManager(this);
+    private QureNotificationsManager qureNotificationsManager;
 
-    public NotificationService() {
-        super("QureNotificationService");
-        ArrayList<String> actions = new ArrayList<String>();
+    public NotificationService(Context context) {
+        qureNotificationsManager = new QureNotificationsManager(context);
+        ArrayList<String> actions = new ArrayList<>();
         actions.add("AVAILABLE_ACTION");
         actions.add("BUSY_ACTION");
         receiver.set_actions(actions);
-        loadAndConfigureAlarms(QureActivity.appContext());
     }
 
-    public void loadAndConfigureAlarms(Context context) {
-        _alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        _alarmIntent = new Intent(context ,this.getClass());
-        _alarmPendingIntent = PendingIntent.getService(context, 100, _alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        _alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 1000, 60000, _alarmPendingIntent);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            Log.d(TAG,"on Handel Intent "+ intent.getAction());
-            QureNotificationsManager.with(this);
-            buildNotification();
-        }
-    }
-
-    private void buildNotification(){
+    public void     buildNotification(){
         Log.d(TAG, "building notification");
         qureNotificationsManager.load()
                 .title("dispo ?")
@@ -76,10 +59,5 @@ public class NotificationService extends IntentService {
                 .button(R.drawable.pugnotification_ic_launcher, "Indisponible", receiver.get_pendingIntents().get(1))
                 .simple()
                 .build();
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d(TAG,"Service is now going to be destroyed");
     }
 }

@@ -41,15 +41,17 @@ DISTFILES += \
     android/res/drawable/splash.xml \
     android/res/values/style.xml \
     android/build.gradle \
-    utils/android/pull_sysroot.pym \
+    utils/android/pull_sysroot.py
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 HEADERS += \
     appaction.h \
-    appactions.h
+    appactions.h \
+    notificationmonitor.h
 
 SOURCES += main.cpp \
     appaction.cpp \
     appactions.cpp \
-    qureNativeAndroid.cpp
+    qureNativeAndroid.cpp \
+    notificationmonitor.cpp
