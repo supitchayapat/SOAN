@@ -19,6 +19,7 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
     private static Context _context;
     public static NotificationService _notificationService;
     private TimerTask notificationTimerTask;
+    private Timer notificationTimer;
 
 
     Handler handler = new Handler() {
@@ -31,14 +32,27 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
         }
     };
 
+    public void startNotificationProcess(){
+        Thread notificationTimerThread = new Thread(new Runnable() {
 
-    public void onStart() {
-        super.onStart();
+            public void run() {
+                try {
+
+                    Log.d(TAG,"We start the notification TIMER!!!");
+                    notificationTimer= new Timer();
+                    notificationTimer.schedule(notificationTimerTask,10000,60000);
+                } catch (Throwable t) {
+                }
+            }
+        });
+
+        notificationTimerThread.start();
     }
 
-
-    public void startNotificationProcess(){
-
+    public void stopNotificationProcess(){
+        if(notificationTimer != null){
+            notificationTimer.cancel();
+        }
     }
     private void initializeNotifactionTimerTask() {
         notificationTimerTask = new TimerTask() {
@@ -71,24 +85,7 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
         _notificationService = new NotificationService(_context);
         initializeNotifactionTimerTask();
 
-        // TODO : later, this should be defined in a separate class
-        Thread notificationTimer = new Thread(new Runnable() {
 
-
-
-            public void run() {
-                try {
-
-                    Log.d(TAG,"We start the notification TIMER!!!");
-                    Timer timer = new Timer();
-                    timer.schedule(notificationTimerTask,10000,60000);
-                } catch (Throwable t) {
-                    // Shot down the process
-                }
-            }
-        });
-
-        notificationTimer.start();
     }
 
     @Override
@@ -96,7 +93,6 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
         Log.d(TAG,"Activity is going  to be destroyed");
         super.onDestroy();
     }
-
     @Override
     protected  void onStop(){
         Log.d(TAG,"Activity is stopping");

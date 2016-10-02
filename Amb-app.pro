@@ -47,9 +47,11 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 HEADERS += \
     appaction.h \
-    appactions.h
+    appactions.h \
+    notificationmonitor.h
 
 SOURCES += main.cpp \
     appaction.cpp \
     appactions.cpp \
-    qureNativeAndroid.cpp
+    qureNativeAndroid.cpp \
+    notificationmonitor.cpp

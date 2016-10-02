@@ -7,6 +7,7 @@
 #include "qml-material/src/plugin.h"
 #include "appaction.h"
 #include "appactions.h"
+#include "notificationmonitor.h"
 #include <QtAndroid>
 #include "appactions.h"
 
@@ -21,7 +22,7 @@ static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *script
 
     QObject *qrondriteObject = qondrite.create();
     QJSValue result = scriptEngine->newQObject(qrondriteObject);
-    result.setProperty("meteor_url",QString("wiamb-staging.scalingo.io"));
+    result.setProperty("meteor_url",QString("ambuplus.herokuapp.com"));
     return result;
 }
 
@@ -41,15 +42,13 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType("Qondrite",0,1,"Qondrite",singletonQondrite_provider);
     qmlRegisterType<AppAction>("Qure", 0, 1, "AppAction");
 
-    engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
-    //WARNING the following generate a conflict with initialItem in main.qml
-//    for(auto o:engine.rootObjects()){
-//        QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
-//        if(item){
-//            engine.rootContext()->setContextProperty("sideNavigationPanel", item);
-//        }
-//    }
+    qmlRegisterUncreatableType<NotificationMonitor>("Qure",0,1,"_notificationMonitor","give some description");
+
+    NotificationMonitor *notificationMonitor = new NotificationMonitor(&engine);
+    engine.rootContext()->setContextProperty("_notificationMonitor", notificationMonitor);
+
+    engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
 
     return app.exec();
 }
