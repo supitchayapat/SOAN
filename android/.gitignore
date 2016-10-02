@@ -1,4 +1,5 @@
-*~
-local.*
-gradle.*
+**/*~
+**/local.*
+**/gradle.*
 .idea/
+

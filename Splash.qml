@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Window 2.0
 import Material 0.3
 
-Page {
+Item {
     id: splash
 
     property bool showErrorMessage: false
@@ -10,11 +10,8 @@ Page {
 
     signal shown()
 
-    width: Screen.desktopAvailableWidth
-    height: Screen.desktopAvailableHeight
-
-    canGoBack: false
-    actionBar.hidden: true
+    width: parent.width
+    height: parent.height
 
     Rectangle{
         id: splashRec
@@ -25,11 +22,11 @@ Page {
         Image {
             id: splashImage
             source: "qrc:/rsrc/splash_icon.png"
+            fillMode: Image.PreserveAspectFit
 
-            x: (Screen.desktopAvailableWidth - width)/2.0
-            y: (Screen.desktopAvailableHeight - height)/2.0
-            width: sourceSize.width > Screen.desktopAvailableWidth ? Screen.desktopAvailableWidth - 10 : sourceSize.width - 10
-            height: sourceSize.height * width/(Screen.desktopAvailableWidth - 10.0)
+            x: (splash.width - width)/2.0
+            y: (splash.height - height)/2.0
+            width: sourceSize.width > splash.width ? splash.width - 10 : sourceSize.width - 10
         }
 
         OpacityAnimator {
@@ -74,6 +71,19 @@ Page {
         font{
             bold: true
             pointSize: 18
+        }
+    }
+
+    ProgressCircle {
+        id: remoteCallSpinnerIcon
+        opacity: 1
+        dashThickness : 4
+        visible: !showErrorMessage && errorTextMessage.opacity === 1
+
+        anchors{
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+            bottomMargin: 150
         }
     }
 

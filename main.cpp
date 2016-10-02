@@ -4,6 +4,10 @@
 #include <QQuickItem>
 #include <QObject>
 #include <QtQml>
+#ifdef Q_OS_ANDROID
+#include <QtAndroid>
+#include <QAndroidJniObject>
+#endif
 #include "qml-material/src/plugin.h"
 #include "appaction.h"
 #include "appactions.h"
@@ -42,13 +46,32 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType("Qondrite",0,1,"Qondrite",singletonQondrite_provider);
     qmlRegisterType<AppAction>("Qure", 0, 1, "AppAction");
 
-
     qmlRegisterUncreatableType<NotificationMonitor>("Qure",0,1,"_notificationMonitor","give some description");
 
     NotificationMonitor *notificationMonitor = new NotificationMonitor(&engine);
     engine.rootContext()->setContextProperty("_notificationMonitor", notificationMonitor);
 
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
+    // linking between backButtonClicked (main.qml) and onBackClicked method (Android side)
+    // workaround: no direct way to use qml signals in the new QObject::connect syntax hence using lambda with qml signals
+    #ifdef Q_OS_ANDROID
+        QSignalMapper signalMapper;
+        QObject* appWindow = engine.rootObjects()[0];
+        QObject::connect( appWindow, SIGNAL(sendBackground()), &signalMapper, SLOT(map()));
+        signalMapper.setMapping( appWindow, "appWindow" );
+
+        QObject::connect( &signalMapper, static_cast<void(QSignalMapper::*)(const QString&)>(&QSignalMapper::mapped), [&]() {
+            QtAndroid::androidActivity().callMethod<void>("onBackClicked");
+        });
+    #endif
+
+    //WARNING the following generate a conflict with initialItem in main.qml
+//    for(auto o:engine.rootObjects()){
+//        QQuickItem *item = o->findChild<QQuickItem*>("sidePanel");
+//        if(item){
+//            engine.rootContext()->setContextProperty("sideNavigationPanel", item);
+//        }
+//    }
 
     return app.exec();
 }

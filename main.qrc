@@ -9,6 +9,8 @@
         <file>NavigationDrawerDelegate.qml</file>
         <file>AvailabilitySwitch.qml</file>
         <file>Splash.qml</file>
+        <file>NavigationDrawer.qml</file>
+        <file>navDrawerLoaderScript.js</file>
     </qresource>
     <qresource prefix="/rsrc" lang="data, images, icones..">
         <file alias="ambulance-siren">ambulance-siren.png</file>
