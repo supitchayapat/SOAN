@@ -142,12 +142,18 @@ public class QureActivity extends QtActivity {
         };
     }
 
-    public static void stopCoundDownNotification(){
-        if(_notificationTimeout_Timer != null){
+    public static void stopCoundDownNotification() {
+        if (_notificationTimeout_Timer != null) {
             _notificationTimeout_TimerTask.cancel();
             _notificationTimeout_Timer.cancel();
         }
+    }
 
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "Activity is stopping");
+        QureNotificationsManager.with(_context).cancel(1456789);
+        super.onStop();
     }
 
     public static Context appContext() {
