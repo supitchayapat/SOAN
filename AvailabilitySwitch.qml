@@ -59,19 +59,29 @@ Switch {
     AppAction{
         name :"AVAILABILITY_COUNTDOWN"
         jobCallback: function() {
-            console.log("starting timer here !")
-            availabiltyShutDown_tmr.restart()
-        }
-    }
+//            BUG : the following line works, the timer "availabiltyShutDown_tmr" commented bellow is
 
-    Timer {
-        id : availabiltyShutDown_tmr
-        interval: 1000
-        onTriggered: {
-            console.log("timer triggered : setting availablity to false")
+//            then started, but nerver get triggered
+//            availabiltyShutDown_tmr.restart()
+//            console.log("timer is running ?" + availabiltyShutDown_tmr.running)
+
+            //TODO : uncomment Timer and the code above to fix a timer to get triggered() right from QML
+
+            /*workaround : using android native java timer that calls directly
+              this AppAction */
             checked = false
         }
     }
+
+//    Timer {
+//        id : availabiltyShutDown_tmr
+//        interval: 1000
+//        triggeredOnStart: true
+//        onTriggered: {
+//            console.log("timer triggered : setting availablity to false")
+//            checked = false
+//        }
+//    }
 
     AppAction{
         name:"AVAILABLE_ACTION"
