@@ -57,6 +57,27 @@ Switch {
     }
 
     AppAction{
+        name :"AVAILABILITY_COUNTDOWN"
+        jobCallback: function() {
+            console.log("starting timer here !")
+        }
+    }
+
+    function putAvailabilityToFalseAfterNotificationTimeout() {
+         console.log("Going to set availability to false NOW!")
+         checked = false
+    }
+
+    Timer {
+        id : availabiltyShutDown_tmr
+        interval: 1000
+        onTriggered: {
+            printTimer()
+            checked = false
+        }
+    }
+
+    AppAction{
         name:"AVAILABLE_ACTION"
         jobCallback : function(){checked = true}
     }

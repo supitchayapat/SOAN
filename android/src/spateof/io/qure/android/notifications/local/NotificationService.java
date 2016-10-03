@@ -40,6 +40,7 @@ public class NotificationService{
         ArrayList<String> actions = new ArrayList<>();
         actions.add("AVAILABLE_ACTION");
         actions.add("BUSY_ACTION");
+        actions.add("AVAILABILITY_COUNTDOWN");
         receiver.set_actions(actions);
     }
 

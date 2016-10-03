@@ -28,6 +28,7 @@ public class QureActivity extends org.qtproject.qt5.android.bindings.QtActivity 
             if(msg.getData().getString("triggerNotification")!= null){
                 QureNotificationsManager.with(_context);
                 _notificationService.buildNotification();
+                QureAppActionsProvider.callAction("AVAILABILITY_COUNTDOWN");
             }
         }
     };
