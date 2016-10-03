@@ -60,19 +60,15 @@ Switch {
         name :"AVAILABILITY_COUNTDOWN"
         jobCallback: function() {
             console.log("starting timer here !")
+            availabiltyShutDown_tmr.restart()
         }
-    }
-
-    function putAvailabilityToFalseAfterNotificationTimeout() {
-         console.log("Going to set availability to false NOW!")
-         checked = false
     }
 
     Timer {
         id : availabiltyShutDown_tmr
         interval: 1000
         onTriggered: {
-            printTimer()
+            console.log("timer triggered : setting availablity to false")
             checked = false
         }
     }
