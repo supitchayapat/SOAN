@@ -32,7 +32,6 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
     private ArrayList<PendingIntent> _pendingIntents = new ArrayList<PendingIntent>();
 
     public void initNotificationsReception() {
-        Log.d(TAG,  "initNotificationsReception: "+ _actions.size());
         for (int i = 0; i <_actions.size() ; i++) {
             Intent intent = new Intent();
             intent.setAction(_actions.get(i));
@@ -44,14 +43,12 @@ public class NotificationIntentsReceiver extends BroadcastReceiver{
                        ,123456,intent,PendingIntent.FLAG_UPDATE_CURRENT));
             }
         }
-        Log.d(TAG, "initNotificationsReception: pendingIntents "+ _pendingIntents.size());
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         String action = intent.getAction();
-        Log.d(TAG,"received action :"+ action);
         QureAppActionsProvider.callAction(action);
         if(action.equals(QureAppActionsProvider.AVAILABLE_ACTION_NAME) || action.equals(QureAppActionsProvider.BUSY_ACTION_NAME)){
             QureActivity.stopCoundDownNotification();

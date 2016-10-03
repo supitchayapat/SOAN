@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QtQml>
-#include <QVariant>
 
 class AppAction : public QObject
 {

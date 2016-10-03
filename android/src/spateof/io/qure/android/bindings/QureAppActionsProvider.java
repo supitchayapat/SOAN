@@ -1,7 +1,5 @@
 package spateof.io.qure.android.bindings;
 
-import spateof.io.qure.android.notifications.local.QureNotificationsManager;
-
 /**
  * Created by issam on 9/16/2016.
  */

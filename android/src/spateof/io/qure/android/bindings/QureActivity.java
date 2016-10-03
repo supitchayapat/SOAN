@@ -43,8 +43,7 @@ public class QureActivity extends QtActivity {
             }
 
             if (msg.getData().getString("shutdownNotificationAfterTimeout") != null) {
-                Log.d(TAG, "===========handleMessage: shutdownNotificationAfterTimeout called==================");
-                QureAppActionsProvider.callAction("AVAILABILITY_COUNTDOWN");
+                QureAppActionsProvider.callAction(QureAppActionsProvider.COUNT_DOWN_FINISHED_ACTION_NAME);
             }
         }
     };
@@ -57,8 +56,6 @@ public class QureActivity extends QtActivity {
 
             public void run() {
                 try {
-
-                    Log.d(TAG, "We start the notification TIMER!!!");
                     notificationTimer = new Timer();
                     notificationTimer.schedule(notificationTimerTask, 30000, 30000);
                 } catch (Throwable t) {
@@ -106,8 +103,6 @@ public class QureActivity extends QtActivity {
 
             public void run() {
                 try {
-
-                    Log.d(TAG, "We start the notification TIMEOUT TIMER !!!");
                     _notificationTimeout_Timer = new Timer();
                     _notificationTimeout_Timer.schedule(_notificationTimeout_TimerTask, 15000);
                 } catch (Throwable t) {
@@ -151,7 +146,6 @@ public class QureActivity extends QtActivity {
 
     @Override
     protected void onStop() {
-        Log.d(TAG, "Activity is stopping");
         QureNotificationsManager.with(_context).cancel(1456789);
         super.onStop();
     }

@@ -1,5 +1,4 @@
 #include "appactions.h"
-#include <QDebug>
 
 AppActions::AppActions()
 {
