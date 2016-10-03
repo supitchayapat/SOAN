@@ -1,6 +1,5 @@
 #include "appaction.h"
 #include "appactions.h"
-#include <QDebug>
 
 QString AppAction::name() const
 {

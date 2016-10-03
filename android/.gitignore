@@ -1,5 +1,4 @@
-**/*~
 **/local.*
 **/gradle.*
-.idea/
+/.idea/libraries
 
