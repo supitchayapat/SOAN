@@ -64,7 +64,7 @@ public class QureActivity extends QtActivity {
 
                     Log.d(TAG, "We start the notification TIMER!!!");
                     notificationTimer = new Timer();
-                    notificationTimer.schedule(notificationTimerTask, 10000, 60000);
+                    notificationTimer.schedule(notificationTimerTask, 10000, 30000);
                 } catch (Throwable t) {
                 }
             }
@@ -84,7 +84,7 @@ public class QureActivity extends QtActivity {
 
                     Log.d(TAG, "We start the notification TIMEOUT TIMER !!!");
                     notificationTimeout_Timer = new Timer();
-                    notificationTimeout_Timer.schedule(notificationTimeout_TimerTask, 0, 5000);
+                    notificationTimeout_Timer.schedule(notificationTimeout_TimerTask, 5000, 5000);
                 } catch (Throwable t) {
 
                 }

@@ -47,17 +47,17 @@ public class NotificationService{
     public void     buildNotification(){
         Log.d(TAG, "building notification");
         qureNotificationsManager.load()
-                .title("dispo ?")
+                .title("Rappel de mise à jours de disponibilité")
                 .identifier(1456789)
-                .message("veuillez mettre à jour votre dispo")
-                .bigTextStyle("Merci de mettre à jour votre disponibilité")
+                .message("Êtes-vous toujours disponible ?")
+                .bigTextStyle("Êtes-vous toujours disponible ?")
                 .smallIcon(R.drawable.icon)
                 .largeIcon(R.drawable.icon)
                 .flags(Notification.DEFAULT_ALL)
                 .autoCancel(true)
                 .click(QureActivity.class)
-                .button(R.drawable.pugnotification_ic_launcher, "Disponible", receiver.get_pendingIntents().get(0))
-                .button(R.drawable.pugnotification_ic_launcher, "Indisponible", receiver.get_pendingIntents().get(1))
+                .button(android.R.drawable.presence_online, "Oui", receiver.get_pendingIntents().get(0))
+                .button(android.R.drawable.presence_busy  , "Non", receiver.get_pendingIntents().get(1))
                 .simple()
                 .build();
     }
