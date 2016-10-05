@@ -10,7 +10,7 @@ ColumnLayout{
     id : root
 
     readonly property alias password : _priv.password
-    readonly property alias isValid : _priv.isValid    
+    readonly property alias isValid : _priv.isValid
     property alias isPasswordFieldRequired : password_txtfld.isRequired
     property alias isPasswordConfirmFieldRequired : passwordConfirmation_txtfld.isRequired
     property string validatorWarning :  qsTr("6 caractères au minimum")
@@ -36,7 +36,7 @@ ColumnLayout{
         placeholderText: qsTr("mot de passe")
         Layout.fillWidth: true
         anchors.horizontalCenter: parent.horizontalCenter
-        validatorWarning: root.validatorWarning        
+        validatorWarning: root.validatorWarning
         onIsValidChanged: if(isValid && !passwordConfirmation_txtfld.isValid) passwordConfirmation_txtfld.manageValidation()
 
         Component.onCompleted: {
@@ -60,7 +60,7 @@ ColumnLayout{
         //isRequired : isPasswordConfirmFieldRequired || false
         anchors.horizontalCenter: parent.horizontalCenter
         validator: password_txtfld.validator
-        validatorWarning: root.validatorWarning        
+        validatorWarning: root.validatorWarning
         serverGateway: Qondrite
         onIsValidChanged: if(isValid && !password_txtfld.isValid) password_txtfld.manageValidation()
 
@@ -84,7 +84,7 @@ ColumnLayout{
         property bool isValid : password_txtfld.isValid && passwordConfirmation_txtfld.isValid
         function customValidation(pairedPass,thisCtxt){
             return pairedPass !== "" && pairedPass !== thisCtxt.text ? false : true
-        }        
+        }
     }
 
     onIsValidChanged: {

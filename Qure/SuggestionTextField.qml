@@ -31,14 +31,14 @@ View{
     property Row rowContainer : rowContainer_p
     property alias blockTextChangedSignal: address_txtField.blockTextChangedSignal
 
+    function checkRequired() {
+        return address_txtField.checkRequired();
+    }
+
     QtObject{
         id: _p
 
         property var dfd
-
-        function checkRequired() {
-            return address_txtField.checkRequired();
-        }
 
         function onsuccess(result){
             dfd = Qlib.Q.defer();
