@@ -15,6 +15,6 @@ public class QureAppActionsProvider {
     // ATTENTION  : Android studio warn about this method not being registered in JNI, but it's not the case
     // See bug : https://code.google.com/p/android/issues/detail?id=181918
     // workaround is using   @SuppressWarnings("JniMissingFunction")
-    @SuppressWarnings ("callAction")
+    @SuppressWarnings("JniMissingFunction")
     public static native void callAction(String action);
 }
