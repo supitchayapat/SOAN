@@ -9,6 +9,11 @@
 #include <QAndroidJniObject>
 #endif
 #include "qml-material/src/plugin.h"
+#include "appaction.h"
+#include "appactions.h"
+#include "notificationmonitor.h"
+#include <QtAndroid>
+#include "appactions.h"
 
 static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
@@ -34,15 +39,19 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-
     engine.addImportPath(":/.");
     MaterialPlugin qmlMaterial;
     qmlMaterial.registerTypes("Material");
 
     qmlRegisterSingletonType("Qondrite",0,1,"Qondrite",singletonQondrite_provider);
+    qmlRegisterType<AppAction>("Qure", 0, 1, "AppAction");
+
+    qmlRegisterUncreatableType<NotificationMonitor>("Qure",0,1,"_notificationMonitor","give some description");
+
+    NotificationMonitor *notificationMonitor = new NotificationMonitor(&engine);
+    engine.rootContext()->setContextProperty("_notificationMonitor", notificationMonitor);
 
     engine.load(QUrl(QStringLiteral("qrc:/src/main.qml")));
-
     // linking between backButtonClicked (main.qml) and onBackClicked method (Android side)
     // workaround: no direct way to use qml signals in the new QObject::connect syntax hence using lambda with qml signals
     #ifdef Q_OS_ANDROID

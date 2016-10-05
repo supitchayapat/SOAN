@@ -1,6 +1,8 @@
 import QtQuick 2.5
 import QtQuick.Controls.Styles.Material 0.1 as MaterialStyle
 import Material 0.3
+import Qure 0.1
+import Qondrite 0.1
 
 Switch {
     id: control
@@ -52,5 +54,52 @@ Switch {
                 }
             }
         }
+    }
+
+    AppAction{
+        name :"AVAILABILITY_COUNTDOWN"
+        jobCallback: function() {
+//            BUG : the following line works, the timer "availabiltyShutDown_tmr" commented bellow is
+
+//            then started, but nerver get triggered
+//            availabiltyShutDown_tmr.restart()
+//            console.log("timer is running ?" + availabiltyShutDown_tmr.running)
+
+            //TODO : uncomment Timer and the code above to fix a timer to get triggered() right from QML
+
+            /*workaround : using android native java timer that calls directly
+              this AppAction */
+            checked = false
+        }
+    }
+
+//    Timer {
+//        id : availabiltyShutDown_tmr
+//        interval: 1000
+//        triggeredOnStart: true
+//        onTriggered: {
+//            console.log("timer triggered : setting availablity to false")
+//            checked = false
+//        }
+//    }
+
+    AppAction{
+        name:"AVAILABLE_ACTION"
+        jobCallback : function(){checked = true}
+    }
+
+    AppAction{
+        name:"BUSY_ACTION"
+        jobCallback : function(){checked = false}
+    }
+
+    onCheckedChanged: {
+        if(checked){
+            _notificationMonitor.startNotificationProcess();
+        }else{
+            _notificationMonitor.stopNotificationProcess();
+        }
+
+        Qondrite.changeAvailability(checked)
     }
 }

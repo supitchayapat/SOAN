@@ -18,9 +18,6 @@ Page {
             right: parent.right
             verticalCenter: parent.verticalCenter
         }
-        onCheckedChanged: {
-            Qondrite.changeAvailability(checked)
-        }
     }
 
     property var availabilityCollection;
@@ -162,7 +159,6 @@ Page {
             font.italic: true
         }
     }
-
 
     Component.onCompleted: {
         var subscription  = Qondrite.subscribe("availability",function(){
