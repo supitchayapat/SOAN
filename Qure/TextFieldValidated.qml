@@ -181,8 +181,10 @@ TextField{
             }
         }
         onTriggered: {
-            _validateEngine.onEditingCalls( delayedStop );
-            _validateEngine.onEditingFinishedCalls( delayedStop );
+            if(text !== "") {
+                _validateEngine.onEditingCalls( delayedStop );
+                _validateEngine.onEditingFinishedCalls( delayedStop );
+            }
 
             timerDone = true
         }
