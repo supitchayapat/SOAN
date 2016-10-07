@@ -8,8 +8,7 @@ import "qrc:/Qondrite/q.js" as Qlib
 import Qure 0.1
 import QtGraphicalEffects 1.0
 
-// TODO : handle the case where the address is France, this should display a warning and put the Component on Error state
-// TODO : try to use TextFieldValidated instead of Item as a root Item so that to reduce the number of needed properties aliases
+// TODO : try to use TextFieldValidated instead of Item/View as a root Item so that to reduce the number of needed properties aliases
 View{
     id: myRoot
 
@@ -59,7 +58,6 @@ View{
                 suggestionlist.visible = false
 
                 mode_snaptoNearestAddress = (result.length === 1);
-                console.log('mode snapto '+ mode_snaptoNearestAddress.toString());
 
                 for (var i= 0; i < Math.min(maxAddressListed, result.length); i++){
                     if (mode_snaptoNearestAddress
@@ -73,13 +71,12 @@ View{
                         continue;
                     }
 
-                    console.log('include this snap result');
                     gMapsEntries.append(
                                 {
-                                    "latitude": result[i].latitude,
-                                    "longitude":result[i].longitude,
-                                    "displayAddress" : result[i].formattedAddress,
-                                    "suggestAddress":   (result[i].streetNumber ? result[i].streetNumber+', ' : '') +
+                                    "_latitude": result[i].latitude,
+                                    "_longitude":result[i].longitude,
+                                    "_displayAddress" : result[i].formattedAddress,
+                                    "_suggestAddress":   (result[i].streetNumber ? result[i].streetNumber+', ' : '') +
                                                         (result[i].streetName || '')+
                                                         "\n"+ result[i].city + (result[i].zipcode ? ', '+ result[i].zipcode : '')
                                 });
@@ -182,14 +179,13 @@ View{
 
                 width:parent.width
                 //suggestion is a suggestionlist's model's property : gMapEntries
-                text:  suggestAddress
+                text:  _suggestAddress
 
                 onClicked: {
                     myRoot.selectedFromSuggestion = true
-                    suggestionlist.add
-                    address_txtField.text = displayAddress
-                    myRoot.longitude = longitude
-                    myRoot.latitude = latitude
+                    address_txtField.text = _displayAddress
+                    myRoot.longitude = _longitude
+                    myRoot.latitude = _latitude
                     addressSelected();
                     address_txtField.isPristine = true
                     suggestionlist.model.clear()
