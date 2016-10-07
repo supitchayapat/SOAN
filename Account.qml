@@ -18,7 +18,6 @@ Page {
     property int textFieldWidth: isEditable?infoListView.width - lineH:0
     property int lineH: Device.gridUnit * Units.dp
     property int labelWidth: isEditable?infoListView.width - lineH:0
-    property var userCollection;
     property var user;
 
     function loadUserInformation()
@@ -27,11 +26,12 @@ Page {
         //from server to client with only the current user in it
         //getting the first element of the collection is getting the logged in user
         //information
-        page.userCollection = Qondrite.getCollection("users");
-        user = page.userCollection._set.toArray()[0];
+        var userCollection = Qondrite.getCollection("users");
+        user = userCollection._set.toArray()[0];
 
+        accountInfo.load(user)
         initializeFieldsAndLabelsWithUserInfo();
-        addListenerToUpdateLabelsWhenUserInfoChanged();
+        addListenerToUpdateLabelsWhenUserInfoChanged(userCollection);
     }
 
     function setFields(user)
@@ -66,13 +66,13 @@ Page {
         setLabels(user)
     }
 
-    function addListenerToUpdateLabelsWhenUserInfoChanged()
+    function addListenerToUpdateLabelsWhenUserInfoChanged(userCollection)
     {
-        var reactiveUserCollection = Qondrite.reactiveQuery(page.userCollection);
+        var reactiveUserCollection = Qondrite.reactiveQuery(userCollection);
 
         reactiveUserCollection.on("change", function(id){
             if(user._id === id){
-                user = page.userCollection._set.toArray()[0];
+                user = userCollection._set.toArray()[0];
                 setLabels(user)
             }
         });
@@ -96,7 +96,6 @@ Page {
             onTriggered: {
                 isEditable = true
                 setFields(user)
-
             }
         },
         Action{
@@ -129,7 +128,7 @@ Page {
             visible: isEditable
 
             onTriggered: {
-                setFields(user)
+                setLabels(user)
                 isEditable = false
             }
         }
@@ -144,16 +143,26 @@ Page {
                                   address     : ""   ,
                                   latitude    : 0.0  ,
                                   longitude   : 0.0  ,
-                                  tel         : ""   ,
-                                  ambulance   : ""   ,
-                                  vsl         : false,
-                                  email       : false,
-                                  password    : ""
+                                  tel         : ""
                               })
+
+        property string email: ""
+
+        function load(user) {
+            var userProfile = user.profile;
+            email = user.emails[0].address;
+            infos.name = userProfile.name;
+            infos.address = userProfile.address;
+            infos.companyName = userProfile.companyName;
+            infos.tel = userProfile.tel;
+            if(userProfile.longitude !== 0 ) infos.longitude = userProfile.longitude;
+            if(userProfile.latitude !== 0 ) infos.latitude = userProfile.latitude;
+        }
 
         onInfosChanged :validate_actBtn.enabled  =  name_txtFld.isValid && companyName_txtFld.isValid
                         && email_txtFld.isValid && address_txtField.isValid
                         && tel_txtFld.isValid ? true : false
+
     }
 
     ObjectModel{
@@ -272,10 +281,12 @@ Page {
             isRequired : true
 
             onEditingFinished: {
-                accountInfo.infos.address = text
-                accountInfo.infos.latitude = latitude
-                accountInfo.infos.longitude = longitude
-                accountInfo.infosChanged()
+                if( longitude !== 0 && latitude !== 0){
+                    accountInfo.infos.address = text
+                    accountInfo.infos.latitude = latitude
+                    accountInfo.infos.longitude = longitude
+                    accountInfo.infosChanged()
+                }
             }
 
             onIsValidChanged: accountInfo.infosChanged()
@@ -315,7 +326,7 @@ Page {
                 visible: isEditable
 
                 onEditingFinished:{
-                    accountInfo.infos.email = text
+                    accountInfo.email = text
                     accountInfo.infosChanged()
                 }
 
@@ -478,5 +489,6 @@ Page {
             }
         }
     }
+
     Component.onCompleted: loadUserInformation()
 }
