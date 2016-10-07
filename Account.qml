@@ -107,8 +107,6 @@ Page {
             visible: isEditable
 
             onTriggered: {
-
-                //TODO : add a loadingCircle in the page while waiting for server updating info
                 Qondrite.updateUser(
                             {
                                 "email" :email_txtFld.text,
@@ -121,7 +119,6 @@ Page {
                                     "longitude" : accountInfo.infos.longitude
                                 }
                             }).result.then(function success(){
-                                //TODO here the loading circle has to be hidden
                                 isEditable = false;
                                 loadUserInformation();
                             });
