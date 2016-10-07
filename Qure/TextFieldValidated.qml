@@ -243,7 +243,7 @@ TextField{
     }
 
     Keys.onReturnPressed: {
-        nextItemInFocusChain().forceActiveFocus()
+        nextItemInFocusChain().forceActiveFocus();
     }
 
     onTextChanged: {
