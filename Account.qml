@@ -279,7 +279,7 @@ Page {
             maxAddressListed: 3
             isRequired : true
 
-            onEditingFinished: {
+            onAddressSelected : {
                 if( longitude !== 0 && latitude !== 0){
                     accountInfo.infos.address = text
                     accountInfo.infos.latitude = latitude
