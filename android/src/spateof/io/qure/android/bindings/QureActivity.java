@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import org.qtproject.qt5.android.bindings.QtActivity;
 
@@ -152,5 +151,10 @@ public class QureActivity extends QtActivity {
 
     public static Context appContext() {
         return _context;
+    }
+
+    public void onBackClicked()
+    {
+        moveTaskToBack (true);
     }
 }

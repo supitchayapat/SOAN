@@ -8,8 +8,7 @@ import "qrc:/Qondrite/q.js" as Qlib
 import Qure 0.1
 import QtGraphicalEffects 1.0
 
-// TODO : handle the case where the address is France, this should display a warning and put the Component on Error state
-// TODO : try to use TextFieldValidated instead of Item as a root Item so that to reduce the number of needed properties aliases
+// TODO : try to use TextFieldValidated instead of Item/View as a root Item so that to reduce the number of needed properties aliases
 View{
     id: myRoot
 
@@ -29,13 +28,76 @@ View{
     property int heighWithoutSuggestions
     property Column columnContainer : columnContainer_p
     property Row rowContainer : rowContainer_p
+    property alias blockTextChangedSignal: address_txtField.blockTextChangedSignal
 
     function checkRequired() {
         return address_txtField.checkRequired();
     }
 
+    QtObject{
+        id: _p
+
+        property var dfd
+
+        function onsuccess(result){
+            dfd = Qlib.Q.defer();
+            gMapsEntries.clear();
+            var mode_snaptoNearestAddress = false;
+
+            if((Array.isArray(result) && result[0].formattedAddress === "France")
+                    || result.status === "ERROR"){
+                dfd.resolve({
+                                response : false,
+                                message : "error : l'adresse n'a pas pu être trouvée"
+                            });
+                suggestionlist.visible = false
+            }else{
+
+                dfd.resolve({response : false,
+                                message :"" });
+                suggestionlist.visible = false
+
+                mode_snaptoNearestAddress = (result.length === 1);
+
+                for (var i= 0; i < Math.min(maxAddressListed, result.length); i++){
+                    if (mode_snaptoNearestAddress
+                            && !result[i].hasOwnProperty('city')){
+                        continue;
+                    }
+
+                    if (!mode_snaptoNearestAddress
+                            && (!result[i].hasOwnProperty('streetName')
+                                || (result[i].streetName === undefined))){
+                        continue;
+                    }
+
+                    gMapsEntries.append(
+                                {
+                                    "_latitude": result[i].latitude,
+                                    "_longitude":result[i].longitude,
+                                    "_displayAddress" : result[i].formattedAddress,
+                                    "_suggestAddress":   (result[i].streetNumber ? result[i].streetNumber+', ' : '') +
+                                                        (result[i].streetName || '')+
+                                                        "\n"+ result[i].city + (result[i].zipcode ? ', '+ result[i].zipcode : '')
+                                });
+                }
+                suggestionlist.visible = true
+            }
+            return dfd.promise;
+        }
+
+        function onerror(resp){
+            dfd = Qlib.Q.defer();
+            dfd.resolve( {
+                            response : false,
+                            message : "error :"+resp.error.error
+                        });
+            suggestionlist.visible = false
+            return dfd.promise;
+        }
+    }
+
     height: listViewExpanded ? totalHeight : heighWithoutSuggestions
-    elevation : address_txtField.focus ? 1 : 0
 
     Column{
         id : columnContainer_p
@@ -44,11 +106,12 @@ View{
         Row{
             id : rowContainer_p
             width: parent.width
+            height: heighWithoutSuggestions
 
             Icon {
                 id: icon
                 name: "maps/place"
-                size: heighWithoutSuggestions*0.7
+                size: parent.height*0.7
             }
 
             TextFieldValidated{
@@ -79,56 +142,13 @@ View{
                     });
 
                     onEditingValidations.unshift(Err.Error.create(function(){
-                        var dfd = Qlib.Q.defer();
                         if(address_txtField.text.length > 3 && !isPristine){
-                            return serverGateway.validateAddress(text).result.then(
-                                        function onsuccess(result){
-                                            gMapsEntries.clear();
-                                            var mode_snaptoNearestAddress = false;
-
-                                            if((Array.isArray(result) && result.length ===0) || result.status === "ERROR"){
-                                                suggestionlist.visible = false
-                                            }
-                                            else
-                                            {
-                                                    mode_snaptoNearestAddress = (result.length === 1);
-                                                    console.log('mode snapto '+ mode_snaptoNearestAddress.toString());
-
-
-                                                for (var i= 0; i < Math.min(maxAddressListed,result.length); i++){
-                                                    if (mode_snaptoNearestAddress && !result[i].hasOwnProperty('city')){
-                                                        continue;
-                                                    }
-
-                                                    if (!mode_snaptoNearestAddress && (!result[i].hasOwnProperty('streetName') || result[i].streetName === undefined)){
-                                                        continue;
-                                                    }
-                                                    console.log('include this snap result');
-                                                    gMapsEntries.append({
-                                                        "latitude": result[i].latitude,
-                                                        "longitude":result[i].longitude,
-                                                        "displayAddress" : result[i].formattedAddress,
-                                                        "suggestAddress":   (result[i].streetNumber ? result[i].streetNumber+', ' : '') +
-                                                                            (result[i].streetName || '')+
-                                                                            "\n"+ result[i].city + (result[i].zipcode ? ', '+ result[i].zipcode : '')
-                                                    });
-                                                }
-                                                suggestionlist.visible = true
-                                            }
-                                            return dfd.promise;
-                                        },
-                                        function onerror(resp){
-                                            dfd.resolve( {
-                                                            response : false,
-                                                            message : "error :"+resp.error.error
-                                                        });
-                                            suggestionlist.visible = false
-                                            return dfd.promise;
-                                        });
-
+                            return serverGateway.validateAddress(text).result.then(_p.onsuccess, _p.onerror);
                         }
 
-                        return dfd.promise;
+                        suggestionlist.visible = false;
+                        _p.dfd = Qlib.Q.defer();
+                        return _p.dfd.promise;
 
                     }, Err.Error.scope.REMOTE));
                 }
@@ -143,7 +163,7 @@ View{
             id:suggestionlist
 
             width:parent.width
-            height: count  * 48 * Units.dp + 24 * Units.dp
+            height: count  * 48 * Units.dp + 24 * Units.dp + 4 * Units.dp
             clip:true
             visible:false
             highlightFollowsCurrentItem: false
@@ -159,14 +179,13 @@ View{
 
                 width:parent.width
                 //suggestion is a suggestionlist's model's property : gMapEntries
-                text:  suggestAddress
+                text:  _suggestAddress
 
                 onClicked: {
                     myRoot.selectedFromSuggestion = true
-                    suggestionlist.add
-                    address_txtField.text = displayAddress
-                    myRoot.longitude = longitude
-                    myRoot.latitude = latitude
+                    address_txtField.text = _displayAddress
+                    myRoot.longitude = _longitude
+                    myRoot.latitude = _latitude
                     addressSelected();
                     address_txtField.isPristine = true
                     suggestionlist.model.clear()
@@ -178,6 +197,17 @@ View{
 
     ListModel {
         id: gMapsEntries
+    }
+
+    onVisibleChanged: {
+        gMapsEntries.clear();
+        suggestionlist.visible = false;
+        address_txtField.focus = false;
+        address_txtField.forceValidationState(true);
+
+        if(visible){
+            forcedResult = text;
+        }
     }
 }
 

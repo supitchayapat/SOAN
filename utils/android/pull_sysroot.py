@@ -1,4 +1,5 @@
 #########################################################################################################################################
+# see this blog post : https://fw4spl-org.github.io/fw4spl-blog/2015/07/27/Native-debugging-on-Android-with-QtCreator.html
 # The goal here is to have a local copy of the sysroot of the connected device.
 # For that we use the command :
 #   adb pull <remote_dir_or_file> <local_dir_or_file>
@@ -57,21 +58,21 @@ if( not os.path.exists( LOCAL_SYSROOT  + "/vendor/lib/" ) ) :
 
 # ------------------------------------------------------------------------------------------------------------------
 # Retrieve the directories
-subprocess.check_call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/lib " + LOCAL_SYSROOT  + "/system/lib/")
-subprocess.check_call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /vendor/lib " + LOCAL_SYSROOT  + "/vendor/lib/")
+subprocess.call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/lib " + LOCAL_SYSROOT  + "/system/lib/")
+subprocess.call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /vendor/lib " + LOCAL_SYSROOT  + "/vendor/lib/")
 
 
 # ------------------------------------------------------------------------------------------------------------------
 # Retrieve the specific binaries - some of these adb commands will fail, since some files may not exist, but that's ok.
-subprocess.check_call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/linker "              + LOCAL_SYSROOT  + "/system/bin/linker")
-subprocess.check_call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/app_process "         + LOCAL_SYSROOT  + "/system/bin/app_process")
-subprocess.check_call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/app_process_init "    + LOCAL_SYSROOT  + "/system/bin/app_process_init")
-subprocess.check_call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/app_process32 "       + LOCAL_SYSROOT  + "/system/bin/app_process32")
-subprocess.check_call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/app_process64 "       + LOCAL_SYSROOT  + "/system/bin/app_process64")
+subprocess.call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/linker "              + LOCAL_SYSROOT  + "/system/bin/linker")
+subprocess.call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/app_process "         + LOCAL_SYSROOT  + "/system/bin/app_process")
+subprocess.call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/app_process_init "    + LOCAL_SYSROOT  + "/system/bin/app_process_init")
+subprocess.call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/app_process32 "       + LOCAL_SYSROOT  + "/system/bin/app_process32")
+subprocess.call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/bin/app_process64 "       + LOCAL_SYSROOT  + "/system/bin/app_process64")
 
 
-subprocess.check_call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/lib/libc.so "              + LOCAL_SYSROOT  + "/system/lib/libc.so")
-subprocess.check_call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/lib/libcutils.so "         + LOCAL_SYSROOT  + "/system/lib/libcutils.so")
+subprocess.call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/lib/libc.so "              + LOCAL_SYSROOT  + "/system/lib/libc.so")
+subprocess.call(ADB_PATH + "adb -s "+ DEVICE_NAME + " pull /system/lib/libcutils.so "         + LOCAL_SYSROOT  + "/system/lib/libcutils.so")
 
 
 # ------------------------------------------------------------------------------------------------------------------
