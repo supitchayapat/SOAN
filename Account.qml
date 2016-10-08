@@ -468,12 +468,10 @@ Page {
                                     if(isEqualToRealPassword){
                                         oldPasswordValidity = true
                                         oldPasswordVisibilityIcon = true
-                                        console.log("------MOT DE PASSE VALIDE-----")
 
                                     }else{
                                         oldPasswordValidity = false
                                         oldPasswordVisibilityIcon = false
-                                        console.log("------MOT DE PASSE INVALIDE-----")
                                     }
                                 })
                 }
