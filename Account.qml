@@ -7,7 +7,6 @@ import "define_values.js" as Defines_values
 import Qondrite 0.1
 import Qure 0.1
 import "qrc:/Qondrite/q.js" as Qlib
-import "qrc:/Qure/Error.js" as Err
 
 Page {
     id: page
