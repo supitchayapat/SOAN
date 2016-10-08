@@ -273,7 +273,7 @@ Page {
             id: address_txtField
 
             visible: isEditable
-            width: page.width
+            width: infoListView.width
             heighWithoutSuggestions: isEditable? lineH : 0
 
             maxAddressListed: 3
