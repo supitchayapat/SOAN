@@ -118,7 +118,6 @@ Page {
                                 }
                             }).result.then(function success(){
                                 isEditable = false;
-                                loadUserInformation();
                             });
             }
         },
