@@ -9,7 +9,6 @@ import com.spateof.ambuplus.R;
 
 import java.util.ArrayList;
 
-
 import spateof.io.qure.android.bindings.QureActivity;
 import spateof.io.qure.android.bindings.QureAppActionsProvider;
 
@@ -48,8 +47,8 @@ public class NotificationService{
                 .smallIcon(R.drawable.icon)
                 .largeIcon(R.drawable.icon)
                 .flags(Notification.DEFAULT_ALL)
-                .autoCancel(true)
-                .click(QureActivity.class)
+                .priority(Notification.PRIORITY_MAX)
+                .when(1)
                 .button(android.R.drawable.presence_online, "Oui", receiver.get_pendingIntents().get(0))
                 .button(android.R.drawable.presence_busy  , "Non", receiver.get_pendingIntents().get(1))
                 .simple()
