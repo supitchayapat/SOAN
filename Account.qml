@@ -274,7 +274,7 @@ Page {
             id: address_txtField
 
             visible: isEditable
-            width: parent.width
+            width: page.width
             heighWithoutSuggestions: isEditable? lineH : 0
 
             maxAddressListed: 3
