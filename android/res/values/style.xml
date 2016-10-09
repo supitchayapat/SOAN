@@ -1,0 +1,11 @@
+<resources>
+    <color name="custom_theme_color">#ffffff</color>
+    <style name="AppTheme" parent="android:Theme.Light">
+        <item name="android:windowBackground">@drawable/background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:colorBackground">@color/custom_theme_color</item>
+    </style>
+</resources>
