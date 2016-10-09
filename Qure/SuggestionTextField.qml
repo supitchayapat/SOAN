@@ -48,7 +48,7 @@ View{
                     || result.status === "ERROR"){
                 dfd.resolve({
                                 response : false,
-                                message : "error : l'adresse n'a pas pu être trouvée"
+                                message : "l'adresse renseignée n'est pas valide"
                             });
                 suggestionlist.visible = false
             }else{

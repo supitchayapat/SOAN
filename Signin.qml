@@ -39,7 +39,7 @@ Page {
             }
 
             Label {
-                text: "Verifier votre boite email pour le changement de votre mot de passe"
+                text: "Vérifiez votre boite email pour le changement de votre mot de passe"
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
                 width: parent.width
