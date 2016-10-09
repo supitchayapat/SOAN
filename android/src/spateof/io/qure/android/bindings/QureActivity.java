@@ -56,7 +56,7 @@ public class QureActivity extends QtActivity {
             public void run() {
                 try {
                     notificationTimer = new Timer();
-                    notificationTimer.schedule(notificationTimerTask, 30000, 30000);
+                    notificationTimer.schedule(notificationTimerTask, 1800000, 1800000);
                 } catch (Throwable t) {
                 }
             }
@@ -103,7 +103,7 @@ public class QureActivity extends QtActivity {
             public void run() {
                 try {
                     _notificationTimeout_Timer = new Timer();
-                    _notificationTimeout_Timer.schedule(_notificationTimeout_TimerTask, 15000);
+                    _notificationTimeout_Timer.schedule(_notificationTimeout_TimerTask, 300000);
                 } catch (Throwable t) {
 
                 }
