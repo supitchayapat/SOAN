@@ -26,7 +26,7 @@ static QJSValue singletonQondrite_provider(QQmlEngine *engine, QJSEngine *script
 
     QObject *qrondriteObject = qondrite.create();
     QJSValue result = scriptEngine->newQObject(qrondriteObject);
-    result.setProperty("meteor_url",QString("ambuplus.herokuapp.com"));
+    result.setProperty("meteor_url",QString("url/to/meteor/cloud/hosting"));
     return result;
 }
 
